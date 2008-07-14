@@ -19,11 +19,24 @@
 #
 #####################################################
 
-##  Can be commented out if causes errors, see notes above.
+########## Apache settings - begin
+## Don't show directory listings for URLs which map to a directory.
+Options -Indexes
+
+## Follow symbolic links in this directory. Can be commented out if causes errors, see notes above.
 Options +FollowSymLinks
+
+## Set the default handler.
+DirectoryIndex index.php
+
+## PHP
+php_value magic_quotes_gpc 0
+php_value register_globals 0
+########## Apache settings - end
 
 #
 #  mod_rewrite in use
+<IfModule mod_rewrite.c>
 
 RewriteEngine On
 
@@ -64,4 +77,4 @@ RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization},L]
 #
 ########## End - Joomla! core SEF Section
 
-
+</IfModule>

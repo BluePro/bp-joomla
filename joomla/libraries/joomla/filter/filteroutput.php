@@ -75,25 +75,32 @@ class JFilterOutput
 	 * This method processes a string and replaces all accented UTF-8 characters by unaccented
 	 * ASCII-7 "equivalents", whitespaces are replaced by hyphens and the string is lowercased.
 	 *
+	 *@todo Implement transliteration into Language class
+	 *
 	 * @static
 	 * @param	string	$input	String to process
 	 * @return	string	Processed string
 	 * @since	1.5
 	 */
-	function stringURLSafe($string)
+	function stringURLSafe($string, $substitution = array('&amp;' => 'and'))
 	{
-		//remove any '-' from the string they will be used as concatonater
-		$str = str_replace('-', ' ', $string);
+		// replace user defined characters
+		$url = strtr($string, $substitution);
 
-		$lang =& JFactory::getLanguage();
-		$str = $lang->transliterate($str);
+		// replace all non-alphanumeric characters with '-'
+		$url = preg_replace('~[^\\pL0-9_]+~u', '-', $url);
+		$url = trim($url, '-');
 
-		// remove any duplicate whitespace, and ensure all characters are alphanumeric
-		$str = preg_replace(array('/\s+/','/[^A-Za-z0-9\-]/'), array('-',''), $str);
+		// transliterate accented characters
+		$url = iconv('utf-8', 'us-ascii//TRANSLIT', $url);
 
-		// lowercase and trim
-		$str = trim(strtolower($str));
-		return $str;
+		// lowercase all characters
+		$url = strtolower($url);
+
+		// remove all nonalphanumeric chcracters
+		$url = preg_replace('~[^-a-z0-9_]+~', '', $url);
+
+		return $url;
 	}
 
 	/**
