@@ -40,6 +40,12 @@ php_value register_globals 0
 
 RewriteEngine On
 
+#  Uncomment following line if your webserver's URL
+#  is not directly related to physical file paths.
+#  Update Your Joomla! Directory (just / for root)
+
+RewriteBase /
+
 ########## Begin - Rewrite rules to block out some common exploits
 ## If you experience problems on your site block out the operations listed below
 ## This attempts to block the most common type of exploit `attempts` to Joomla!
@@ -58,13 +64,6 @@ RewriteCond %{QUERY_STRING} _REQUEST(=|\[|\%[0-9A-Z]{0,2})
 RewriteRule ^(.*)$ index.php [F,L]
 #
 ########## End - Rewrite rules to block out some common exploits
-
-#  Uncomment following line if your webserver's URL
-#  is not directly related to physical file paths.
-#  Update Your Joomla! Directory (just / for root)
-
-# RewriteBase /
-
 
 ########## Begin - Joomla! core SEF Section
 #
