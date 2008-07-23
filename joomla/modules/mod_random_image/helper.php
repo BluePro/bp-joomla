@@ -26,28 +26,19 @@ class modRandomImageHelper
 		$random 		= mt_rand(0, $i - 1);
 		$image 			= $images[$random];
 		$size 			= getimagesize (JPATH_BASE.DS.$image->folder .DS. $image->name);
+		$coeff			= $size[0]/$size[1];
 
 
-		if ($width == '') {
-			$width = 100;
-		}
 
-		if ($size[0] < $width) {
+		if ($width == '' && $height == '') {
 			$width = $size[0];
-		}
-
-		$coeff = $size[0]/$size[1];
-		if ($height == '') {
+			$height = $size[1];
+		} elseif ($width == '') {
+			$width = (int) ($height * $coeff);
+		} elseif ($height == '') {
 			$height = (int) ($width/$coeff);
-		} else {
-			$newheight = min ($height, (int) ($width/$coeff));
-			if ($newheight < $height) {
-				$height = $newheight;
-			} else {
-				$width = $height * $coeff;
-			}
 		}
-
+		
 		$image->width 	= $width;
 		$image->height	= $height;
 		$image->folder	= str_replace( '\\', '/', $image->folder );

@@ -684,6 +684,7 @@ class JLanguage extends JObject
 		//set locale based on the language tag
 		//TODO : add function to display locale setting in configuration
 		$locale = setlocale(LC_TIME, $this->getLocale());
+		$locale = setlocale(LC_CTYPE, $this->getLocale());
 		return $previous;
 	}
 
