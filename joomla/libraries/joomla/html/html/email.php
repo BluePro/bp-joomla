@@ -29,74 +29,38 @@ class JHTMLEmail
 	*/
 	function cloak( $mail, $mailto=1, $text='', $email=1 )
 	{
-		// convert text
-		$mail 			= JHTMLEmail::_convertEncoding( $mail );
-		// split email by @ symbol
-		$mail			= explode( '@', $mail );
-		$mail_parts		= explode( '.', $mail[1] );
-		// random number
+		$replacement = '';
 		$rand			= rand( 1, 100000 );
-
-		$replacement 	= "\n <script language='JavaScript' type='text/javascript'>";
-		$replacement 	.= "\n <!--";
-		$replacement 	.= "\n var prefix = '&#109;a' + 'i&#108;' + '&#116;o';";
-		$replacement 	.= "\n var path = 'hr' + 'ef' + '=';";
-		$replacement 	.= "\n var addy". $rand ." = '". @$mail[0] ."' + '&#64;';";
-		$replacement 	.= "\n addy". $rand ." = addy". $rand ." + '". implode( "' + '&#46;' + '", $mail_parts ) ."';";
-
+		
+		$mail 			= JHTMLEmail::_convertEncoding( $mail );
+		$mail			= explode( '@', $mail );
+		
 		if ( $mailto ) {
-			// special handling when mail text is different from mail addy
+			$replacement = sprintf( '<a href="mailto:%s&#64;%s">', @$mail[0], $mail[1] );
 			if ( $text ) {
-				if ( $email ) {
-					// convert text
-					$text 			= JHTMLEmail::_convertEncoding( $text );
-					// split email by @ symbol
-					$text 			= explode( '@', $text );
-					$text_parts		= explode( '.', $text[1] );
-					$replacement 	.= "\n var addy_text". $rand ." = '". @$text[0] ."' + '&#64;' + '". implode( "' + '&#46;' + '", @$text_parts ) ."';";
+				if ( $email ){
+					$text = JHTMLEmail::_convertEncoding( $text );
+					$text = explode( '@', $text );
+					$replacement .= sprintf( '%s&#64;<!-- %d -->%s', @$text[0], $rand, $text[1] );
 				} else {
-					$replacement 	.= "\n var addy_text". $rand ." = '". $text ."';";
+					$replacement .= $text;
 				}
-				$replacement 	.= "\n document.write( '<a ' + path + '\'' + prefix + ':' + addy". $rand ." + '\'>' );";
-				$replacement 	.= "\n document.write( addy_text". $rand ." );";
-				$replacement 	.= "\n document.write( '<\/a>' );";
 			} else {
-				$replacement 	.= "\n document.write( '<a ' + path + '\'' + prefix + ':' + addy". $rand ." + '\'>' );";
-				$replacement 	.= "\n document.write( addy". $rand ." );";
-				$replacement 	.= "\n document.write( '<\/a>' );";
+				$replacement .= sprintf( '%s&#64;<!-- %d -->%s', @$mail[0], $rand, $mail[1] );
 			}
+			$replacement .= '</a>';
 		} else {
-			$replacement 	.= "\n document.write( addy". $rand ." );";
+			$replacement = sprintf( '%s&#64;<!-- %d -->%s', @$mail[0], $rand, $mail[1] );
 		}
-		$replacement 	.= "\n //-->";
-		$replacement 	.= '\n </script>';
-
-		// XHTML compliance `No Javascript` text handling
-		$replacement 	.= "<script language='JavaScript' type='text/javascript'>";
-		$replacement 	.= "\n <!--";
-		$replacement 	.= "\n document.write( '<span style=\'display: none;\'>' );";
-		$replacement 	.= "\n //-->";
-		$replacement 	.= "\n </script>";
-		$replacement 	.= JText::_('CLOAKING');
-		$replacement 	.= "\n <script language='JavaScript' type='text/javascript'>";
-		$replacement 	.= "\n <!--";
-		$replacement 	.= "\n document.write( '</' );";
-		$replacement 	.= "\n document.write( 'span>' );";
-		$replacement 	.= "\n //-->";
-		$replacement 	.= "\n </script>";
-
+		
 		return $replacement;
 	}
 
-	function _convertEncoding( $text )
+	function _convertEncoding( $text, $table = array( 'a' => '&#97;', 'e' => '&#101;', 'i' => '&#105;', 'o' => '&#111;', 'u' => '&#117;' ) )
 	{
 		// replace vowels with character encoding
-		$text 	= str_replace( 'a', '&#97;', $text );
-		$text 	= str_replace( 'e', '&#101;', $text );
-		$text 	= str_replace( 'i', '&#105;', $text );
-		$text 	= str_replace( 'o', '&#111;', $text );
-		$text	= str_replace( 'u', '&#117;', $text );
-
+		$text 	= strtr( $text, $table );
+		
 		return $text;
 	}
 }

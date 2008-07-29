@@ -17,7 +17,7 @@ defined( '_JEXEC' ) or die( 'Restricted access' );
 $mainframe->registerEvent('onPrepareContent', 'plgContentEmailCloak');
 
 /**
- * Plugin that cloaks all emails in content from spambots via Javascript.
+ * Plugin that cloaks all emails in content from spambots via entities and comments.
  *
  * @param object|string An object with a "text" property or the string to be
  * cloaked.
@@ -50,7 +50,7 @@ function plgContentEmailCloak_searchPattern ($link, $text) {
 }
 
 /**
- * Cloak all emails in text from spambots via Javascript.
+ * Cloak all emails in text from spambots.
  *
  * @param string The string to be cloaked.
  * @param array Additional parameters. Parameter "mode" (integer, default 1)
@@ -99,7 +99,7 @@ function plgEmailCloak(&$text, &$params)
 		// Check to see if mail text is different from mail addy
 		$replacement = JHTML::_('email.cloak', $mail, $mode, $mailText);
 
-		// Replace the found address with the js cloaked email
+		// Replace the found address with the cloaked email
 		$text = substr_replace($text, $replacement, $regs[0][1], strlen($regs[0][0]));
 	}
 
@@ -114,7 +114,7 @@ function plgEmailCloak(&$text, &$params)
 
 		$replacement = JHTML::_('email.cloak', $mail, $mode, $mailText, 0);
 
-		// Replace the found address with the js cloaked email
+		// Replace the found address with the cloaked email
 		$text = substr_replace($text, $replacement, $regs[0][1], strlen($regs[0][0]));
 	}
 
@@ -132,7 +132,7 @@ function plgEmailCloak(&$text, &$params)
 		// Check to see if mail text is different from mail addy
 		$replacement = JHTML::_('email.cloak', $mail, $mode, $mailText);
 
-		// Replace the found address with the js cloaked email
+		// Replace the found address with the cloaked email
 		$text = substr_replace($text, $replacement, $regs[0][1], strlen($regs[0][0]));
 	}
 
@@ -149,7 +149,7 @@ function plgEmailCloak(&$text, &$params)
 
 		$replacement = JHTML::_('email.cloak', $mail, $mode, $mailText, 0);
 
-		// Replace the found address with the js cloaked email
+		// Replace the found address with the cloaked email
 		$text = substr_replace($text, $replacement, $regs[0][1], strlen($regs[0][0]));
 	}
 
@@ -159,7 +159,7 @@ function plgEmailCloak(&$text, &$params)
 		$mail = $regs[1][0];
 		$replacement = JHTML::_('email.cloak', $mail, $mode);
 
-		// Replace the found address with the js cloaked email
+		// Replace the found address with the cloaked email
 		$text = substr_replace($text, $replacement, $regs[1][1], strlen($mail));
 	}
 	return true;
