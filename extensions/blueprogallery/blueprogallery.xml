@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<install version="1.5" type="plugin" group="content" method="upgrade">
+	<name>BluePro Gallery Plugin</name>
+	<creationDate>2008-08-01</creationDate>	
+	<author>Ondřej Hlaváč (BluePro)</author>
+	<authorEmail>ondrej@hlavacovi.net</authorEmail>
+	<authorUrl>http://ondrej.hlavacovi.net</authorUrl>
+	<copyright>Ondřej Hlaváč 2008</copyright>
+	<license>GNU/GPL</license>
+	<version>1.0.0</version>
+	<description>Generates simple gallery from given image folder.</description>
+	<params>
+		<param name="thumbnail_width" type="text" default="120" size="5" label="Thumbnail width" description="Maximum image thumbnail width (in pixels)." />
+		<param name="thumbnail_height" type="text" default="120" size="5" label="Thumbnail height" description="Maximum image thumbnail height (in pixels)." />
+		<param name="thumbnail_quality" type="text" default="80" size="5" label="Thumbnail quality" description="Quality of the generated image thumbnail (0 - 100)." />
+		<param name="@spacer" type="spacer" default="" label="" description="" />
+		<param name="folder" type="text" default="images/gallery" size="50" label="Gallery folder" description="Path to image gallery folder." />
+	</params>
+	<files>
+		<filename plugin="blueprogallery">blueprogallery.php</filename>
+	</files>
+	<media>
+		<filename plugin="blueprogallery">blueprogallery/thumbnail.php</filename>
+		<filename plugin="blueprogallery">blueprogallery/cache/index.html</filename>
+	</media>
+</install>
