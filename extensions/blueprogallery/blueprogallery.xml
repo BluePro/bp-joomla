@@ -22,5 +22,12 @@
 	<media>
 		<filename plugin="blueprogallery">blueprogallery/thumbnail.php</filename>
 		<filename plugin="blueprogallery">blueprogallery/cache/index.html</filename>
+		<filename plugin="blueprogallery">blueprogallery/js/slimbox.js</filename>
+		<filename plugin="blueprogallery">blueprogallery/js/mootools.js</filename>
+		<filename plugin="blueprogallery">blueprogallery/css/slimbox.css</filename>
+		<filename plugin="blueprogallery">blueprogallery/css/closelabel.gif</filename>
+		<filename plugin="blueprogallery">blueprogallery/css/loading.gif</filename>
+		<filename plugin="blueprogallery">blueprogallery/css/nextlabel.gif</filename>
+		<filename plugin="blueprogallery">blueprogallery/css/prevlabel.gif</filename>
 	</media>
 </install>

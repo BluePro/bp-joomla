@@ -38,11 +38,13 @@ class plgContentBlueProGallery extends JPlugin {
 		if ($quality < 1 || $quality > 100) $quality = 80;
 		$baseurl = trim(JURI :: base(), DS);
 		
-		$document = JFactory::getDocument();
-		$document = addScript($baseurl . '/media/blueprogallery/slimbox/slimbox.js');
-		
-		
 		if (preg_match_all('~{gallery}(.*?){/gallery}~si', $article->text, $matches, PREG_SET_ORDER)) {
+			
+			$document = JFactory::getDocument();
+			$document->addScript($baseurl . '/media/blueprogallery/js/mootools.js');
+			$document->addScript($baseurl . '/media/blueprogallery/js/slimbox.js');
+			$document->addStyleSheet($baseurl . '/media/blueprogallery/css/slimbox.css');
+			
 			foreach ($matches as $index => $matchset) {
 				$path = JPath::clean(JPATH_SITE . DS . $this->_params->get('folder', 'images/gallery') . DS . $matchset[1] . DS);
 				$images = glob($path . '*.jpg');
