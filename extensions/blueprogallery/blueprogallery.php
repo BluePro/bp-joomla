@@ -54,7 +54,7 @@ class plgContentBlueProGallery extends JPlugin {
 				$html = '<div class="plug_blueprogallery">';
 				foreach ($images as $image) {
 					$url = $baseurl . JPath::clean(DS . $this->_params->get('folder', 'images/gallery') . DS . $matchset[1] . DS . strrchr($image, DS));
-					$html .= sprintf('<a href="%s" rel="lightbox[blueprogallery_%d]"><img src="%s/media/blueprogallery/thumbnail.php?img=%s&width=%d&height=%d&quality=%d" alt="Gallery" /></a>',
+					$html .= sprintf('<div><a href="%s" rel="lightbox[blueprogallery_%d]"><img src="%s/media/blueprogallery/thumbnail.php?img=%s&width=%d&height=%d&quality=%d" alt="Gallery" /></a></div>',
 						$url, $index, $baseurl, urlencode($image), $width, $height, $quality);
 				}
 				$html .= '<div class="cleaner">&nbsp;</div></div>';

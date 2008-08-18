@@ -132,7 +132,7 @@ class plgContentBlueProMap extends JPlugin {
 				if (window.addEventListener)
 						window.addEventListener('load', mapInitialize, false);
 				else if (window.attachEvent)
-					element.attachEvent('onload', mapInitialize);";
+					window.attachEvent('onload', mapInitialize);";
 			$document->addScriptDeclaration($script);
 			$article->text = strtr($article->text, $replace);
 		}
