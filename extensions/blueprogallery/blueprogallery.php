@@ -57,7 +57,7 @@ class plgContentBlueProGallery extends JPlugin {
 					$html .= sprintf('<div><a href="%s" rel="lightbox[blueprogallery_%d]"><img src="%s/media/blueprogallery/thumbnail.php?img=%s&width=%d&height=%d&quality=%d" alt="Gallery" /></a></div>',
 						$url, $index, $baseurl, urlencode($image), $width, $height, $quality);
 				}
-				$html .= '<div class="cleaner">&nbsp;</div></div>';
+				$html .= '</div>';
 				
 				$replace[$matchset[0]] = $html;
 			}
