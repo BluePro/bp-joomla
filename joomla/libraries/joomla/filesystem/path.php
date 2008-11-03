@@ -244,8 +244,8 @@ class JPath
 			{
 				// not a stream, so do a realpath() to avoid directory
 				// traversal attempts on the local file system.
-				$path = realpath($path); // needed for substr() later
-				$fullname = realpath($fullname);
+				$path = @realpath($path); // needed for substr() later
+				$fullname = @realpath($fullname);
 			}
 
 			// the substr() check added to make sure that the realpath()
