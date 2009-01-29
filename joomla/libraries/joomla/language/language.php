@@ -1,6 +1,6 @@
 <?php
 /**
-* @version		$Id: language.php 10834 2008-08-28 10:38:50Z eddieajau $
+* @version		$Id: language.php 11305 2008-11-23 19:14:25Z ian $
 * @package		Joomla.Framework
 * @subpackage	Language
 * @copyright	Copyright (C) 2005 - 2008 Open Source Matters. All rights reserved.
@@ -81,7 +81,7 @@ class JLanguage extends JObject
 	var $_paths	= array();
 
 	/**
-	 * Transaltions
+	 * Translations
 	 *
 	 * @var		array
 	 * @access	protected
@@ -335,6 +335,13 @@ class JLanguage extends JObject
 
 		if ($content = @file_get_contents( $filename ))
 		{
+
+			//Take off BOM if present in the ini file
+			if ( $content[0] == "\xEF" && $content[1] == "\xBB" && $content[2] == "\xBF" )
+            {
+				$content = substr( $content, 3 );
+		  	}
+
 			$registry	= new JRegistry();
 			$registry->loadINI($content);
 			$newStrings	= $registry->toArray( );
@@ -576,7 +583,7 @@ class JLanguage extends JObject
 	* Get the list of orphaned strings if being tracked
 	*
 	* @access	public
-	* @return	boolean True is in debug mode
+	* @return	array Orphaned text
 	* @since	1.5
 	*/
 	function getOrphans() {

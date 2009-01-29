@@ -4,7 +4,7 @@ $edit = $this->user->authorize('com_content', 'edit', 'content', 'all') || $this
 
 echo sprintf('<div class="com_content%s">', $this->params->get('pageclass_sfx'));
 
-if ($this->params->get('show_page_title', 0))
+if ($this->params->get('show_page_title', 0) && $this->params->get('page_title') != $this->article->title)
 	echo sprintf('<h1>%s</h1>', $this->escape($this->params->get('page_title')));
 
 if ($this->params->get('show_title', 0)) {
@@ -12,7 +12,7 @@ if ($this->params->get('show_title', 0)) {
 		$title = sprintf('<a href="%s">%s</a>', $this->article->readmore_link, $this->escape($this->article->title));
 	else
 		$title = $this->escape($this->article->title);
-	if ($this->params->get('show_page_title', 0))
+	if ($this->params->get('show_page_title', 0) && $this->params->get('page_title') != $this->article->title)
 		echo sprintf('<h2>%s</h2>', $title);
 	else
 		echo sprintf('<h1>%s</h1>', $title);

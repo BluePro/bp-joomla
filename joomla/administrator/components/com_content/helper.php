@@ -1,6 +1,6 @@
 <?php
 /**
- * @version		$Id: helper.php 10571 2008-07-21 01:27:35Z pasamio $
+ * @version		$Id: helper.php 11299 2008-11-22 01:40:44Z ian $
  * @package		Joomla
  * @subpackage	Content
  * @copyright	Copyright (C) 2005 - 2008 Open Source Matters. All rights reserved.
@@ -48,8 +48,9 @@ class ContentHelper
 		$user	= &JFactory::getUser();
 		$gid	= $user->get( 'gid' );
 
-		$filterGroups	= (array) $config->get( 'filter_groups' );
-		if (in_array( $gid, $filterGroups ))
+		$filterGroups	=  $config->get( 'filter_groups' );
+
+		if (is_array($filterGroups) && in_array( $gid, $filterGroups ))
 		{
 			$filterType		= $config->get( 'filter_type' );
 			$filterTags		= preg_split( '#[,\s]+#', trim( $config->get( 'filter_tags' ) ) );
@@ -60,7 +61,7 @@ class ContentHelper
 					$filter	= new JFilterInput();
 					break;
 				case 'WL':
-					$filter	= new JFilterInput( $filterTags, $filterAttrs, 0, 0 );
+					$filter	= new JFilterInput( $filterTags, $filterAttrs, 0, 0, 0);  // turn off xss auto clean
 					break;
 				case 'BL':
 				default:
@@ -69,8 +70,11 @@ class ContentHelper
 			}
 			$row->introtext	= $filter->clean( $row->introtext );
 			$row->fulltext	= $filter->clean( $row->fulltext );
+		} elseif(empty($filterGroups) && $gid != '25') { // no default filtering for super admin (gid=25)
+			$filter = new JFilterInput( array(), array(), 1, 1 );
+			$row->introtext	= $filter->clean( $row->introtext );
+			$row->fulltext	= $filter->clean( $row->fulltext );
 		}
-
 		return true;
 	}
 

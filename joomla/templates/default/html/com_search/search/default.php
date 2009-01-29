@@ -1,12 +1,17 @@
 <?php
 defined('_JEXEC') or die('Restricted access');
 
-if ($this->params->get('show_page_title'))
-	sprintf('<h2 class="com_heading%s">%s</h2>',
-		$this->params->get('pageclass_sfx'), $this->escape($this->params->get('page_title')));
+echo sprintf('<div class="com_search%s">', this->params->get('pageclass_sfx'));
 
-if (!$this->error && count($this->results) > 0) echo $this->loadTemplate('results');
-else echo $this->loadTemplate('error');
+if ($this->params->get('show_page_title', 0)) {
+	sprintf('<h1>%s</h2>', $this->escape($this->params->get('page_title')));
+}
 
 echo $this->loadTemplate('form');
+
+if (!$this->error && count($this->results) > 0) {
+	echo $this->loadTemplate('results');
+} else {
+	echo $this->loadTemplate('error');
+}
 ?>
