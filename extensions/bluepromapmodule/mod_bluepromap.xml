@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<install version="1.5" type="module" method="upgrade">
+	<name>BluePro Google Maps Module</name>
+	<creationDate>2009-02-02</creationDate>
+	<author>Ondřej Hlaváč (BluePro)</author>
+	<authorEmail>ondrej@hlavacovi.net</authorEmail>
+	<authorUrl>http://ondrej.hlavacovi.net</authorUrl>
+	<copyright>Ondřej Hlaváč 2008</copyright>
+	<license>GNU/GPL</license>
+	<version>1.0.0</version>
+	<description>Render custom Google Map.</description>
+	
+	<files>
+		<filename module="mod_bluepromap">mod_bluepromap.php</filename>
+		<filename module="mod_bluepromap">tmpl/default.php</filename>
+	</files>
+	
+	<params>
+		<param name="api_key" type="text" default="" size="20" label="API key" description="Google API key" />
+		<param name="@spacer" type="spacer" default="" label="" description="" />
+		<param name="latitude" type="text" default="" size="8" label="Latitude" />
+		<param name="longitude" type="text" default="" size="8" label="Longtitude" />
+		<param name="zoom" type="text" default="14" size="3" label="Zoom" />
+		<param name="@spacer" type="spacer" default="" label="" description="" />
+		<param name="type" type="list" default="G_NORMAL_MAP" size="8" label="Map type">
+			<option value="G_NORMAL_MAP">Normal</option>
+			<option value="G_SATELLITE_MAP">Satelite</option>
+			<option value="G_HYBRID_MAP">Hybrid</option>
+		</param>
+		<param name="type_control" type="radio" default="0" label="Map type control" description="Shows map type controllers.">
+			<option value="0">No</option>
+			<option value="1">Yes</option>
+		</param>
+        <param name="controll" type="list" default="small" label="Controller" description="Displays controll elements.">
+            <option value="none">None</option>
+            <option value="small">Small</option>
+            <option value="large">Large</option>
+        </param>
+		<param name="marker" type="radio" default="0" label="Show Marker">
+			<option value="0">No</option>
+			<option value="1">Yes</option>
+		</param>
+		<param name="draging" type="radio" default="1" label="Draging the map" description="Enable draging the map.">
+			<option value="0">No</option>
+			<option value="1">Yes</option>
+		</param>
+		<param name="mousewheel" type="radio" default="0" label="Zooming by the mousewheel" description="Enable zooming by the mousewheel.">
+			<option value="0">No</option>
+			<option value="1">Yes</option>
+		</param>
+	</params>
+	<params group="advanced">
+		<param name="cache" type="list" default="1" label="Caching" description="Select whether to cache the content of this module">
+			<option value="1">Use global</option>
+			<option value="0">No caching</option>
+		</param>
+		<param name="cache_time" type="text" default="900" label="Cache Time" description="The time before the module is recached" />
+	</params>
+
+</install>
