@@ -55,6 +55,8 @@ class plgContentBlueProMap extends JPlugin {
 				$user_params['marker'] = (bool) $this->_params->get('marker', '1');
 				$user_params['draging'] = (bool) $this->_params->get('draging', '1');
 				$user_params['mousewheel'] = (bool) $this->_params->get('mousewheel', '1');
+				$user_params['width'] = $this->_params->get('width', '');
+				$user_params['height'] = $this->_params->get('height', '300px');
 
 				if (!empty($matchset[1])) {
 					$article_params = explode('" ', $matchset[1]);
@@ -87,6 +89,12 @@ class plgContentBlueProMap extends JPlugin {
 								break;
 							case 'mousewheel':
 								$user_params['mousewheel'] = (bool) $value;
+								break;
+							case 'width':
+								$user_params['width'] = $value;
+								break;
+							case 'height':
+								$user_params['height'] = $value;
 								break;
 						}
 					}
@@ -125,7 +133,19 @@ class plgContentBlueProMap extends JPlugin {
 				}
 				
 				// Building replacement
-				$replace[$matchset[0]] = sprintf('<div class="plug_bluepromap" id="map_%d" style="height: 300px;"></div>', $index);
+				$style = '';
+				if ($user_params['width']) {
+					$style = sprintf('width: %s;', $user_params['width']);
+				}
+				if ($user_params['height']) {
+					$style .= sprintf('height: %s;', $user_params['height']);
+				}
+				if ($style) {
+					$style = sprintf(' style="%s"', $style);
+				}
+				
+				$replace[$matchset[0]] = sprintf('<div class="plug_bluepromap" id="map_%d"%s></div>',
+					$index, $style);
 			}
 			
 			$script .= "}}
@@ -139,4 +159,3 @@ class plgContentBlueProMap extends JPlugin {
 	}
 
 }
-?>
