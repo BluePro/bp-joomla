@@ -399,6 +399,11 @@ class JRouterSite extends JRouter
 		//Create the URI
 		$uri =& parent::_createURI($url);
 
+		// Leave homepage alone
+		if ($url == 'index.php') {
+			return $uri;
+		}
+		
 		// Set URI defaults
 		$menu =& JSite::getMenu();
 
