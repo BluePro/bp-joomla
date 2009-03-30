@@ -2,14 +2,14 @@
 <install version="1.5" method="upgrade" client="both" type="language">
     <name>Čeština (Česká republika)</name>
     <tag>cs-CZ</tag>
-    <version>1.5.9</version>
-    <creationdate>2009-01-10</creationdate>
+    <version>1.5.10</version>
+    <creationdate>2009-03-16</creationdate>
     <author>Svatopluk Vít</author>
     <authoremail>admin@joomla.cz</authoremail>
     <authorurl>www.joomla.cz</authorurl>
     <copyright>(C) 2005 - 2009 Open Source Matters. All rights reserved.</copyright>
     <license>http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL</license>
-    <description>Czech translation for Joomla! 1.5.9 (complete)</description>
+    <description>Czech translation for Joomla! 1.5.10 (complete)</description>
     <administration>
       <files folder="admin">
 		<filename>cs-CZ.com_admin.ini</filename>
@@ -146,7 +146,8 @@
 		<filename>cs-CZ.mod_whosonline.ini</filename>
 		<filename>cs-CZ.mod_wrapper.ini</filename>
 		<filename>cs-CZ.plg_content_vote.ini</filename>
-		<filename>cs-CZ.plg_search_categories.ini</filename>
+		<filename>cs-CZ.plg_content_pagebreak.ini</filename>
+    <filename>cs-CZ.plg_search_categories.ini</filename>
 		<filename>cs-CZ.plg_search_contacts.ini</filename>
 		<filename>cs-CZ.plg_search_content.ini</filename>
 		<filename>cs-CZ.plg_search_newsfeeds.ini</filename>
