@@ -1,7 +1,7 @@
 <?php
 defined('_JEXEC') or die('Restricted access');
 
-echo sprintf('<div class="com_search%s">', this->params->get('pageclass_sfx'));
+echo sprintf('<div class="com_search%s">', $this->params->get('pageclass_sfx'));
 
 if ($this->params->get('show_page_title', 0)) {
 	sprintf('<h1>%s</h2>', $this->escape($this->params->get('page_title')));

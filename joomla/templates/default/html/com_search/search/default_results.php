@@ -9,7 +9,7 @@ if (!empty($this->searchword)) { ?>
 <?php
 }
 
-if (this->total > 0) { ?>
+if ($this->total > 0) { ?>
 	<h3><?php echo JText :: _('Search_result'); ?></h3>
 	<ol start="<?php echo $this->pagination->limitstart + 1; ?>">
 		<?php foreach ($this->results as $result) { ?>
