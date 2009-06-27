@@ -401,3 +401,9 @@ div.current dd {
 	margin-bottom:10px;
 	clear:both;
 }
+
+/* IE Shadowbox */
+#shadowbox_title,
+#shadowbox_info {
+	border: 0px;
+}

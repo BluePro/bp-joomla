@@ -238,19 +238,28 @@ class PhocaGalleryHelperRender
 	
 	/* Random Image
 	 * Latest Image
+	 * Phoca Menu Image
 	 */
 	function renderHighslideJSRI($front_modal_box_width, $front_modal_box_height, $type = 'ri') {	
 		
 		// Random Image, Latest Image
-		if ($type = 'ri') {
-			$typeOutput = 'groupRI';
-		} else if ($type = 'li')  {
+		if ($type == 'li')  {
 			$typeOutput = 'groupLI';
+			$varImage	= 'phocaImageLI';
+			$varZoom	= 'phocaZoomLI';
+		} else if ($type == 'pm')  {
+			$typeOutput = 'groupPM';
+			$varImage	= 'phocaImagePM';
+			$varZoom	= 'phocaZoomPM';
+		} else {
+			$typeOutput = 'groupRI';
+			$varImage	= 'phocaImageRI';
+			$varZoom	= 'phocaZoomRI';
 		}
 		
 		$tag = '<script type="text/javascript">'
 		.'//<![CDATA[' ."\n"
-		.' var phocaZoomRI = { '."\n"
+		.' var '.$varZoom.' = { '."\n"
 		.' objectLoadTime : \'after\','
 		.' outlineType : \'rounded-white\','
 		.' outlineWhileAnimating : true,'
@@ -264,7 +273,7 @@ class PhocaGalleryHelperRender
 		.' objectHeight: '.$front_modal_box_height.''
 		.' };'
 		
-		.' var phocaImageRI = { '."\n"		  
+		.' var '.$varImage.' = { '."\n"		  
 		.' slideshowGroup: \''.$typeOutput.'\','."\n"
 		.' wrapperClassName: \'rounded-white\','."\n"
 		.' outlineType : \'rounded-white\','."\n"

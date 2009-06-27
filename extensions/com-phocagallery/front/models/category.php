@@ -513,7 +513,7 @@ class PhocagalleryModelCategory extends JModel
         ' FROM #__phocagallery as g' . 
         ' WHERE g.catid = c.id' .
         ' AND published = 1) > 0'.*/
-			' GROUP BY c.id'.
+		//	' GROUP BY c.id'.
 			' ORDER BY c.'.$categoryOrdering;
 
 		return $query;

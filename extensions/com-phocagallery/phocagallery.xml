@@ -2,14 +2,14 @@
 <!DOCTYPE install SYSTEM "http://dev.joomla.org/xml/1.5/component-install.dtd">
 <install method="upgrade" type="component" version="1.5.0">
 	<name>PhocaGallery</name>
-	<creationDate>23/03/2009</creationDate>
+	<creationDate>28/04/2009</creationDate>
 	<author>Jan Pavelka (www.phoca.cz)</author>
-	<authorEmail>info@phoca.cz</authorEmail>
+	<authorEmail>info[at]phoca[dot]cz</authorEmail>
 	<authorUrl>www.phoca.cz</authorUrl>
 	<copyright>Jan Pavelka</copyright>
 	<license>GNU/GPL</license>
 	<!-- The version string is recorded in the components table -->
-	<version>2.2.3</version>
+	<version>2.2.4</version>
 	<!-- The description is optional and defaults to the name -->
 	<description>Phoca Gallery</description>
 

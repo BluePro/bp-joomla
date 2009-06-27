@@ -297,7 +297,7 @@ class plgContentPhocaGallery extends JPlugin
 				$randName	= 'PhocaGalleryPl' . $iCss;
 				$randName2	= 'PhocaGalleryPl2' . $iCss;
 				
-				$sb_slideshow_delay			= $params->get( 'sb_slideshow_delay', 5 );
+				$sb_slideshow_delay			= $paramsC->get( 'sb_slideshow_delay', 5 );
 				$sb_lang					= $paramsC->get( 'sb_lang', 'en' );
 				
 				$button->set('methodname', 'shadowbox-button-rim');
@@ -320,9 +320,9 @@ class plgContentPhocaGallery extends JPlugin
 			Shadowbox.loadSkin("classic", "'.JURI::base(true).'/components/com_phocagallery/assets/js/shadowbox/src/skin");
 			Shadowbox.loadLanguage("'.$sb_lang.'", "'.JURI::base(true).'/components/com_phocagallery/assets/js/shadowbox/src/lang");
 			Shadowbox.loadPlayer(["img"], "'.JURI::base(true).'/components/com_phocagallery/assets/js/shadowbox/src/player");
-			window.addEvent(\'domready\', function(){
-              Shadowbox.init();
-			});
+			window.onload = function(){
+			Shadowbox.init();
+			}
 			</script>');
 					$library->setLibrary('pg-group-shadowbox', 1);
 				}
@@ -1038,18 +1038,15 @@ class plgContentPhocaGallery extends JPlugin
 		}
 		
 		// CUSTOM CSS - For all items it will be the same
-		
-		
 		if ( $libraries['pg-css-sbox-plugin']->value == 0 ) {
 			$document->addCustomTag( "<style type=\"text/css\">\n" . $cssSbox . "\n" . " </style>\n");
 			$library->setLibrary('pg-css-sbox-plugin', 1);
 		}
 		// All custom CSS tags will be added into one CSS area
-		// Because of frontpage, the libraries will be not applied
-		//if ( $libraries['pg-css-pg-plugin']->value == 0 ) {
+		if ( $libraries['pg-css-pg-plugin']->value == 0 ) {
 			$document->addCustomTag( "<style type=\"text/css\">\n" . $cssPgPlugin . "\n" . " </style>\n");
 			$library->setLibrary('pg-css-pg-plugin', 1);
-		//}
+		}
 		
 		if ( $libraries['pg-css-ie']->value == 0 ) {
 			$document->addCustomTag("<!--[if lt IE 8]>\n<link rel=\"stylesheet\" href=\"".JURI::base(true)."/components/com_phocagallery/assets/phocagalleryieall.css\" type=\"text/css\" />\n<![endif]-->");
