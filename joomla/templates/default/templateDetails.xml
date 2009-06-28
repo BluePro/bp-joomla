@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE install PUBLIC "-//Joomla! 1.5//DTD template 1.0//EN" "http://dev.joomla.org/xml/1.5/template-install.dtd">
-<install version="1.5" type="template">
+<install version="1.5" type="template" method="upgrade">
 	<name>Default</name>
 	<creationDate>2008-07-08</creationDate>
 	<author>Ondřej Hlaváč (BluePro)</author>
