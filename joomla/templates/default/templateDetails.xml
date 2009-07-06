@@ -24,8 +24,9 @@
     </files>
 	<positions>
 		<position>left</position>
-		<position>right</position>
 		<position>top</position>
+		<position>logo</position>
+
 		<position>breadcrumb</position>
 		<position>debug</position>
 		<position>user1</position>
