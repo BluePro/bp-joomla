@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<metafile version="1.5.11" client="installation" method="upgrade">
+<metafile version="1.5.12" client="installation" method="upgrade">
     <name>Czech (Czech republic)</name>
-    <version>1.5.11</version>
-    <creationDate>2009-06-03</creationDate>
+    <version>1.5.12</version>
+    <creationDate>2009-07-01</creationDate>
     <author>Svatopluk Vít</author>
     <authorEmail>admin@joomla.cz</authorEmail>
     <authorUrl>www.joomla.cz</authorUrl>
     <copyright>(C) 2005 - 2009 Open Source Matters. All rights reserved.</copyright>
     <license>http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL</license>
-    <description>Czech language file for Administrator backend of Joomla 1.5.11</description>
+    <description>Czech language file for Administrator backend of Joomla 1.5.12</description>
     <metadata>
     	<name>Čeština (Česká republika)</name>
     	<tag>cs-CZ</tag>
