@@ -37,7 +37,8 @@ class plgContentBlueProMap extends JPlugin {
 		
 		if (!$api_key) return false;
 		
-		if (preg_match_all('~{map\s*(.*?)}~si', $article->text, $matches, PREG_SET_ORDER)) {
+		// {map zoom="14"}[x;y][x;y]{/map}
+		if (preg_match_all('~{map\s*(.*?)}(([^{]*){/map})*~si', $article->text, $matches, PREG_SET_ORDER)) {
 			$document = JFactory::getDocument();
 			$document->addScript('http://maps.google.com/maps?file=api&amp;v=2&amp;key=' . $api_key);
 			$script = "function mapInitialize() {\n if (GBrowserIsCompatible()) {\n";
@@ -130,6 +131,15 @@ class plgContentBlueProMap extends JPlugin {
 					$script .= sprintf("map_%d.enableScrollWheelZoom();\n", $index);
 				} else {
 					$script .= sprintf("map_%d.disableScrollWheelZoom();\n", $index);
+				}
+				// Add markers
+				if (!empty($matchset[3])) {
+					$markers = explode('][', $matchset[3]);
+					foreach ($markers as $marker) {
+						$marker = trim($marker, '[]');
+						list($latitude, $longitude) = explode(';', $marker);
+						$script .= sprintf("map_%d.addOverlay(new GMarker(new GLatLng(%f, %f)));\n", $index, $latitude, $longitude);
+					}
 				}
 				
 				// Building replacement
