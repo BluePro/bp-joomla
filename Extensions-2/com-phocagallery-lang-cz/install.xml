@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<install version="1.5" client="both" type="language" method="upgrade">
+  <name>PhocaGallery cs-CZ</name>
+  <tag>cs-CZ</tag>
+  <version>2.0.2</version>
+  <creationDate>16/10/2008</creationDate>
+  <author>Jan Pavelka (www.phoca.cz)</author>
+  <authorEmail>info@phoca.cz</authorEmail>
+  <authorUrl>www.phoca.cz</authorUrl>
+  <copyright>Jan Pavelka</copyright>
+  <license>http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL</license>
+  <description>Czech translation for Phoca 2.0.2</description>
+  <administration>
+    <files folder="admin">
+      <filename>cs-CZ.com_phocagallery.ini</filename>
+      <filename>cs-CZ.com_phocagallery.menu.ini</filename>
+    </files>
+  </administration>
+  <site>
+    <files folder="site">
+      <filename>cs-CZ.com_phocagallery.ini</filename>
+      <filename>cs-CZ.com_phocagallery.menu.ini</filename>
+    </files>
+  </site>
+  <params />
+</install>
