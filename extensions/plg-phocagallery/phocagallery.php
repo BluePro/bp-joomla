@@ -81,15 +81,15 @@ class plgContentPhocaGallery extends JPlugin
 			$basic_image_id			= 0;
 			$enable_switch			= 0;
 			
-			$displayname 			= 1;
-			$displayicondetail 		= 1;
-			$displayicondownload 	= 1;
-			$tmpl['detailwindow'] 	= 0;
+			$displayname 			= 0;
+			$displayicondetail 		= 0;
+			$displayicondownload 	= 0;
+			$tmpl['detailwindow'] 	= 3;
 			$detail_buttons			= 1;
 			$hidecategories			= '';
 			
-			$namefontsize			= 12;
-			$namenumchar			= 11;
+			$namefontsize			= 11;
+			$namenumchar			= 15;
 			
 			$displaydescription		= 0;
 			$descriptionheight		= 16;
