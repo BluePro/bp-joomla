@@ -32,6 +32,8 @@ DirectoryIndex index.php
 ## PHP
 php_value magic_quotes_gpc 0
 php_value register_globals 0
+php_value magic_quotes_gpc 1
+php_value output_buffering 0
 ########## Apache settings - end
 
 #

@@ -91,7 +91,7 @@ function submitbutton(pressbutton) {
 </table>
 
 <?php
-echo $this->editor->display('text', $this->article->text, '100%', '400', '70', '15');
+echo $this->editor->display('text', htmlspecialchars($this->article->text, ENT_QUOTES, 'UTF-8'), '100%', '400', '70', '15');
 ?>
 </fieldset>
 <fieldset>

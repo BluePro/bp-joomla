@@ -162,7 +162,7 @@ class modMainMenuHelper
 					}
 
 					$result = JFilterOutput::ampReplace($xml->toString((bool)$params->get('show_whitespace')));
-					$result = str_replace(array('<ul/>', '<ul />'), '', $result);
+					$result = str_replace(array('<ul/>', '<ul />', '</li>'), array('', '', "</li>\n"), $result);
 					echo $result;
 				}
 				break;
