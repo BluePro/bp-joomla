@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<install version="1.5" type="template" method="upgrade">
+	<name>Default</name>
+	<creationDate>2008-07-08</creationDate>
+	<author>Ondřej Hlaváč (BluePro)</author>
+	<authorEmail>ondrej@hlavacovi.net</authorEmail>
+	<authorUrl>http://ondrej.hlavacovi.net</authorUrl>
+	<copyright>Ondřej Hlaváč 2008</copyright>
+	<license>GNU/GPL</license>
+	<version>1.0.0</version>
+	<description>Předloha pro šablony</description>
+	<files>
+		<filename>index.php</filename>
+		<filename>templateDetails.xml</filename>
+		<filename>template_thumbnail.png</filename>
+		<filename>css/screen.css</filename>
+		<filename>html/mod_random_image/default.php</filename>
+		<filename>html/mod_search/default.php</filename>
+		<filename>html/com_search/search/default.php</filename>
+		<filename>html/com_search/search/default_error.php</filename>
+		<filename>html/com_search/search/default_form.php</filename>
+		<filename>html/com_search/search/default_results.php</filename>
+		<filename>html/com_content/article/default.php</filename>
+    </files>
+	<positions>
+		<position>left</position>
+		<position>top</position>
+		<position>logo</position>
+
+		<position>breadcrumb</position>
+		<position>debug</position>
+		<position>user1</position>
+		<position>user2</position>
+	</positions>
+</install>
