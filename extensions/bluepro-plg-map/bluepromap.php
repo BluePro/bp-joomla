@@ -16,8 +16,8 @@ jimport('joomla.plugin.plugin');
 
 class plgContentBlueProMap extends JPlugin {
 
-	var $_plugin = null;
-	var $_params = null;
+	private $_plugin = null;
+	private $_params = null;
 
 	function __construct(&$subject, $params) {
 		$this->_plugin = JPluginHelper::getPlugin('content', 'bluepromap');

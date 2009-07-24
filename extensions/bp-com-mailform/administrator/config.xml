@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<config>
+  <params>
+    <param name="mailfrom" type="text" default="" label="Email od" description="E-mailový odesílatel" />
+    <param name="mailto" type="text" default="" label="Email komu" description="E-mailový adresát" />
+    <param name="subject" type="text" default="" label="Předmět" description="Nadpis e-mailu" />
+    <param name="prefix" type="textarea" cols="25" rows="5" default="" label="Hlavička" description="Hlavička e-mailu" />
+    <param type="spacer" />
+    <param name="confirmation" type="text" default="" label="Potvrzovací URL" description="URL, na kterou bude přesměrováno po úspěšném odeslání e-mailu." />
+  </params>
+</config>

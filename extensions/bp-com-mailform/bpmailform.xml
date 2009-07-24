@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<install type="component" version="1.5.0" method="upgrade">
+	<name>BP Mailform</name>
+	<creationDate>2009-07-07</creationDate>
+	<author>Ondøej Hlaváè</author>
+	<authorEmail>ondrej@hlavacovi.net</authorEmail>
+	<authorUrl>http://ondrej.hlavacovi.net</authorUrl>
+	<copyright>Ondøej Hlaváè 2009</copyright>
+	<license>GNU/GPL</license>
+	<version>1.1</version>
+	<description>Simple user mailform.</description>
+	
+	<files folder="site">
+		<filename>index.html</filename>
+		<filename>bpmailform.php</filename>
+		<filename>controller.php</filename>
+	</files>
+	
+	<administration>
+		<menu>BP Mailform</menu>
+		<files folder="administrator">
+			<filename>index.html</filename>
+			<filename>bpmailform.php</filename>
+			<filename>controller.php</filename>
+			<filename>config.xml</filename>
+			<filename>views/index.html</filename>
+			<filename>views/bpmailform/index.html</filename>
+			<filename>views/bpmailform/view.html.php</filename>
+			<filename>views/bpmailform/tmpl/index.html</filename>
+			<filename>views/bpmailform/tmpl/default.php</filename>
+		</files>
+	</administration>
+</install>

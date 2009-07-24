@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<install type="module" version="1.5" method="upgrade">
+	<name>BP Logo</name>
+	<creationDate>2009-07-07</creationDate>
+	<author>Ondøej Hlaváè</author>
+	<authorEmail>ondrej@hlavacovi.net</authorEmail>
+	<authorUrl>http://ondrej.hlavacovi.net</authorUrl>
+	<copyright>Ondøej Hlaváè 2009</copyright>
+	<license>GPL</license>
+	<version>1.1</version>
+	<description>Display menu image</description>
+	
+	<files>
+		<filename module="mod_bplogo">index.html</filename>
+		<filename module="mod_bplogo">mod_bplogo.xml</filename>
+		<filename module="mod_bplogo">mod_bplogo.php</filename>
+		<filename module="mod_bplogo">helper.php</filename>
+		<filename module="mod_bplogo">tmpl/index.html</filename>
+		<filename module="mod_bplogo">tmpl/default.php</filename>
+	</files>
+	
+	<params>
+		<param name="default_image" type="imagelist" directory="/images/stories" hide_default="1" default="" label="Default image" description="PARAMDEFAULTIMAGE" />
+		<param name="link" type="text" default="" label="Link" description="PARAMLINK" />
+		<param name="width" type="text" default="" label="Width" description="PARAMWIDTHPX" />
+		<param name="height" type="text" default="" label="Height" description="PARAMHEIGHTPX" />
+		<param name="@spacer" type="spacer" default="" label="" description="" />
+		<param name="moduleclass_sfx" type="text" default="" label="Module Class Suffix" description="PARAMMODULECLASSSUFFIX" />
+	</params>
+	<params group="advanced">
+		<param name="cache" type="list" default="0" label="Caching" description="Select whether to cache the content of this module">
+			<option value="1">Use global</option>
+			<option value="0">No caching</option>
+		</param>
+		<param name="cache_time" type="text" default="900" label="Cache Time" description="The time before the module is recached" />
+	</params>
+</install>

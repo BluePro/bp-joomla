@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<install version="1.5" type="plugin" group="content" method="upgrade">
+	<name>BP TOC</name>
+	<creationDate>2009-07-22</creationDate>
+	<author>Ondřej Hlaváč</author>
+	<authorEmail>ondrej@hlavacovi.net</authorEmail>
+	<authorUrl>http://ondrej.hlavacovi.net</authorUrl>
+	<copyright>Ondřej Hlaváč 2009</copyright>
+	<license>GNU/GPL</license>
+	<version>1.0</version>
+	<description>Table of content generator.</description>
+	
+	<params>
+		<param name="level" type="text" default="h2" size="10" label="Header level" />
+	</params>
+	
+	<files>
+		<filename plugin="bptoc">bptoc.xml</filename>
+		<filename plugin="bptoc">bptoc.php</filename>
+	</files>
+</install>
