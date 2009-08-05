@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<install type="module" version="1.5.0">
+    <name>Latest/Most JoomlaComments</name>
+    <author>Daniel Dimimtrov,Alain GEORGETTE</author>
+    <creationDate>April 200)</creationDate>
+    <copyright>compojoom.com All rights reserved!</copyright>
+    <license>http://www.gnu.org/copyleft/gpl.html GNU/GPL</license>
+    <authorEmail>danielsd_bg@yahoo.fr</authorEmail>
+    <authorUrl>www.compojoom.com</authorUrl>
+    <version>4.0</version>
+    <description>
+	<![CDATA[
+	  Display the 
+	  <ul>
+	  	<li>Latest comments</li>
+	  	<li>Most voting yes comments</li>
+	  	<li>Most voting no comments</li>
+	  	<li>Most rated comments</li>	  	
+	  	<li>Most commented content item</li>
+	  </ul>
+	  of the !JoomlaComment component.<br /><br />
+	  <b>!JoomlaComment component must be installed</b>.
+	]]>
+    </description>
+    <files>
+	<filename module="mod_comments">mod_comments.php</filename>
+	<filename>mod_comments/index.html</filename>
+	<filename>mod_comments/mod_comments.class.php</filename>
+    </files>
+    <params>
+	<param name="moduleclass_sfx" type="text" default="" label="Module Class Suffix" description="A suffix to be applied to the css class of the module (table.moduletable), this allows individual module styling" />
+	<param name="overflow" type="radio" default="1" label="Active overflow hidden" description="Active overflow hidden style (to avoid display break if long words as link...). Active is recommended." >
+	    <option value="0">Hide</option>
+	    <option value="1">Show</option>
+	</param>
+	<param name="component" type="list" default="" label="Component" description="Will display comments of the specified component.">
+	    <option value="">com_content</option>
+	    <option value="com_docman">com_docman</option>
+	    <option value="com_eventlist">com_eventlist</option>
+	    <option value="com_mmsblog">com_mmsblog</option>
+	</param>
+	<param name="orderby" type="list" default="date" label="Order by" description="">
+	    <option value="date">Latest</option>
+	    <option value="voting_yes">Most voting yes</option>
+	    <option value="voting_no">Most voting no</option>
+	    <option value="mostrated">Most rated</option>
+	    <option value="mostcommented">Most commented items</option>
+	</param>
+	<param name="@spacer" type="spacer" default="" label="" description="" />
+	<param name="secid" type="mos_section" default="" label="Section" description="Only the selected section comments"/>
+	<param name="secids" type="text" default="" label="Sections by id" description="List of section id separated by ,"/>
+	<param name="catid" type="mos_category" default="" label="Category" description="Only the selected category comments"/>
+	<param name="catids" type="text" default="" label="Categories by id" description="List of category id separated by ,"/>
+	<param name="@spacer" type="spacer" default="" label="" description="" />
+	<param name="maxlines" type="text" default="5" label="Number of rows" description="The number of comments OR content items you want to display." />
+	<param name="@spacer" type="spacer" default="" label="MOST COMMENTED PARAMETERS" description="Only used for Most commented content items" />
+	<param name="linesize" type="text" default="20" label="Line size" description="Number of characters of the content item title line. empty means no limit." />
+	<param name="@spacer" type="spacer" default="" label="COMMENTS PARAMETERS" description="Not used for Most commented content items" />
+	<param name="showname" type="radio" default="1" label="Show author name" description="Select to hide or show the author name" >
+	    <option value="0">Hide</option>
+	    <option value="1">Show</option>
+	</param>
+	<param name="showtime" type="radio" default="1" label="Show comment date" description="Select to hide or show the coment date">
+	    <option value="0">Hide</option>
+	    <option value="1">Show</option>
+	</param>
+	<param name="showtitle" type="radio" default="0" label="Show comment title" description="Show the title of the comment" >
+	    <option value="0">Hide</option>
+	    <option value="1">Show</option>
+	</param>
+	<param name="showconttitle" type="radio" default="0" label="Show content item title" description="Show the title of the content item" >
+	    <option value="0">Hide</option>
+	    <option value="1">Show</option>
+	</param>
+	<param name="dateusersize" type="text" default="20" label="Date and user line size" description="Number of characters of the Date and Username line, to display. 0 means no limit (not recommended)." />
+	<param name="conttitlesize" type="text" default="20" label="Content title size" description="Number of characters of the content title, to display. 0 means no limit (not recommended)." />
+	<param name="commentsize" type="text" default="40" label="Comment size" description="Number of characters of the comment, to display. 0 means no limit (not recommended)." />
+	<param name="form_date" type="text" default="%Y-%m-%d %H:%M:%S" label="Date format" description="As for the PHP strftime() function" />
+	<param name="@spacer" type="spacer" default="" label="" description="" />
+	<param name="overlay" type="radio" default="1" label="Active overlay display" description="Active display of more comment information when cursor over" >
+	    <option value="0">Hide</option>
+	    <option value="1">Show</option>
+	</param>
+	<param name="overposX" type="list" default="CENTER" label="Overlay X position" description="Horizontal position of the overlay box" >
+	    <option value="CENTER">Center</option>
+	    <option value="LEFT">Left</option>
+	    <option value="RIGHT">Right</option>
+	</param>
+	<param name="overposY" type="list" default="ABOVE" label="Overlay Y position" description="Vertical position of the overlay box" >
+	    <option value="ABOVE">Above</option>
+	    <option value="BELOW">Below</option>
+	</param>
+	<param name="overtitlesize" type="text" default="50" label="Overlay title size" description="Number of characters of overlay title" />
+	<param name="overcontentsize" type="text" default="100" label="Overlay content size" description="Number of characters of overlay content" />
+	<param name="overpictures" type="radio" default="1" label="Support pictures" description="Display pictures" >
+	    <option value="0">Hide</option>
+	    <option value="1">Show</option>
+	</param>
+	<param name="overwidthpictures" type="text" default="" label="Maximum width of pictures" description="" />
+	<param name="overlibparam" type="text" default="" label="Others overlib parameters" description="Overlay style is standard joomla overlib. To change the style, you can add overlib parameters separated by ','. Try for example the following parameters: FGCOLOR, '#999999', BGCOLOR, '#333333' . Please refer to overlib library documentation at http://www.bosrup.com/web/overlib/?Features. " />
+	<param name="@spacer" type="spacer" default="" label="" description="" />
+	<param name="@spacer" type="spacer" default="" label="" description="" />
+	<param name="@spacer" type="spacer" default="" label="" description="" />
+    </params>
+</install>
