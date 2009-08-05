@@ -12,10 +12,22 @@
 // Check to ensure this file is included in Joomla!
 defined( '_JEXEC' ) or die( 'Restricted access' );
 jimport( 'joomla.plugin.plugin' );
-include_once( JPATH_ADMINISTRATOR.DS.'components'.DS.'com_phocagallery'.DS.'helpers'.DS.'phocagallery.php' );
-include_once( JPATH_ADMINISTRATOR.DS.'components'.DS.'com_phocagallery'.DS.'helpers'.DS.'phocagalleryrender.php' );
-include_once( JPATH_SITE.DS.'components'.DS.'com_phocagallery'.DS.'helpers'.DS.'phocagallery.php' );
-require_once( JPATH_ADMINISTRATOR.DS.'components'.DS.'com_phocagallery'.DS.'helpers'.DS.'phocalibrary.php' );
+if (!JComponentHelper::isEnabled('com_phocagallery', true)) {
+	return JError::raiseError(JText::_('Phoca Gallery Error'), JText::_('Phoca Gallery is not installed on your system'));
+}
+if (! class_exists('PhocaGalleryLoader')) {
+    require_once( JPATH_ADMINISTRATOR.DS.'components'.DS.'com_phocagallery'.DS.'libraries'.DS.'loader.php');
+}
+phocagalleryimport('phocagallery.path.path');
+phocagalleryimport('phocagallery.library.library');
+phocagalleryimport('phocagallery.text.text');
+phocagalleryimport('phocagallery.access.access');
+phocagalleryimport('phocagallery.file.file');
+phocagalleryimport('phocagallery.file.filethumbnail');
+phocagalleryimport('phocagallery.image.image');
+phocagalleryimport('phocagallery.image.imagefront');
+phocagalleryimport('phocagallery.render.renderfront');
+phocagalleryimport('phocagallery.render.renderadmin');
 
 class plgContentPhocaGallery extends JPlugin
 {	
@@ -37,8 +49,14 @@ class plgContentPhocaGallery extends JPlugin
 		$menu 		= &JSite::getMenu();
 		$document	= &JFactory::getDocument();
 		
+		// PARAMS - direct from Phoca Gallery Global configuration
+		$component 		= 'com_phocagallery';
+		$table 			=& JTable::getInstance('component');
+		$table->loadByOption( $component );
+		$paramsC	 	= new JParameter( $table->params );
+		
 		// LIBRARY
-		$library 							= &PhocaLibrary::getLibrary();
+		$library 							= &PhocaGalleryLibrary::getLibrary();
 		$libraries['pg-css-sbox-plugin'] 	= $library->getLibrary('pg-css-sbox-plugin');
 		$libraries['pg-css-pg-plugin'] 		= $library->getLibrary('pg-css-pg-plugin');
 		$libraries['pg-css-ie'] 			= $library->getLibrary('pg-css-ie');
@@ -73,38 +91,48 @@ class plgContentPhocaGallery extends JPlugin
 			$catid					= 0;
 			$imageid				= 0;
 			$imagerandom			= 0;
-			$imageshadow			= 'none';
+			$image_background_shadow			= $paramsC->get( 'image_background_shadow', 'none');
 			$limitstart				= 0;
 			$limitcount				= 0;
-			$switch_width			= 640;
-			$switch_height			= 480;
-			$basic_image_id			= 0;
+			$switch_width			= $paramsC->get( 'switch_width', 640);
+			$switch_height			= $paramsC->get( 'switch_height', 480);
+			$basic_image_id			= $paramsC->get( 'switch_image', 0);
 			$enable_switch			= 0;
 			
-			$displayname 			= 0;
-			$displayicondetail 		= 0;
-			$displayicondownload 	= 0;
-			$tmpl['detailwindow'] 	= 3;
-			$detail_buttons			= 1;
-			$hidecategories			= '';
+			$display_name 			= $paramsC->get( 'display_name', 1);
+			$display_icon_detail 	= $paramsC->get( 'display_icon_detail', 1);
+			$display_icon_download 	= $paramsC->get( 'display_icon_download', 1);
+			$detail_window 			= $paramsC->get( 'detail_window', 0);
+			$detail_buttons			= $paramsC->get( 'detail_buttons', 1);
+			$hide_categories		= $paramsC->get( 'hide_categories', '');
 			
-			$namefontsize			= 11;
-			$namenumchar			= 15;
+			$namefontsize			= $paramsC->get( 'font_size_name', 12);
+			$namenumchar			= $paramsC->get( 'char_length_name', 11);
 			
-			$displaydescription		= 0;
-			$descriptionheight		= 16;
+			$display_description	= $paramsC->get( 'display_description_detail', 0);
+			$description_height		= $paramsC->get( 'description_detail_height', 16);
+			$category_box_space		= $paramsC->get( 'category_box_space', 0);
 			
 			// CSS
-			$font_color 			= '#b36b00';
-			$background_color 		= '#fcfcfc';
-			$background_color_hover = '#f5f5f5';
-			$image_background_color = '#f5f5f5';
-			$border_color 			= '#e8e8e8';
-			$border_color_hover 	= '#b36b00';
+			$font_color 			= $paramsC->get( 'font_color', '#b36b00');
+			$background_color 		= $paramsC->get( 'background_color', '#fcfcfc');
+			$background_color_hover = $paramsC->get( 'background_color_hover', '#f5f5f5');
+			$image_background_color = $paramsC->get( 'image_background_color', '#f5f5f5');
+			$border_color 			= $paramsC->get( 'border_color', '#e8e8e8');
+			$border_color_hover 	= $paramsC->get( 'border_color_hover', '#b36b00');
+			
+			$highslide_class		= $paramsC->get( 'highslide_class', 'rounded-white');
+			$highslide_opacity		= $paramsC->get( 'highslide_opacity', 0);
+			$highslide_outline_type	= $paramsC->get( 'highslide_outline_type', 'rounded-white');
+			$highslide_fullimg		= $paramsC->get( 'highslide_fullimg', 0);
+			$highslide_slideshow	= $paramsC->get( 'highslide_slideshow', 1);
+			$highslide_close_button	= $paramsC->get( 'highslide_close_button', 0);
+			$display_rating_img		= $paramsC->get( 'display_rating_img', 0);
+			
 			
 			$float					= '';
-			$piclens				= 0;
-			$overlib				= 0;
+			$enable_piclens			= $paramsC->get( 'enable_piclens', 0);
+			$enable_overlib			= $paramsC->get( 'enable_oberlib', 0);
 			
 			// Image categories
 			$img_cat				= 1;
@@ -128,21 +156,23 @@ class plgContentPhocaGallery extends JPlugin
 				else if($values[0]=='categoryid')		{$catid					= $values[1];}
 				else if($values[0]=='imageid')			{$imageid				= $values[1];}
 				else if($values[0]=='imagerandom')		{$imagerandom			= $values[1];}
-				else if($values[0]=='imageshadow')		{$imageshadow			= $values[1];}
+				else if($values[0]=='imageshadow')		{$image_background_shadow			= $values[1];}
 				else if($values[0]=='limitstart')		{$limitstart			= $values[1];}
 				else if($values[0]=='limitcount')		{$limitcount			= $values[1];}
-				else if($values[0]=='detail')			{$tmpl['detailwindow']	= $values[1];}
-				else if($values[0]=='displayname')		{$displayname			= $values[1];}
-				else if($values[0]=='displaydetail')	{$displayicondetail		= $values[1];}
-				else if($values[0]=='displaydownload')	{$displayicondownload	= $values[1];}
+				else if($values[0]=='detail')			{$detail_window			= $values[1];}
+				else if($values[0]=='displayname')		{$display_name			= $values[1];}
+				else if($values[0]=='displaydetail')	{$display_icon_detail		= $values[1];}
+				else if($values[0]=='displaydownload')	{$display_icon_download	= $values[1];}
 				else if($values[0]=='displaybuttons')	{$detail_buttons		= $values[1];}
+				else if($values[0]=='displayratingimg')	{$display_rating_img	= $values[1];}
 				
 				else if($values[0]=='namefontsize')		{$namefontsize			= $values[1];}
 				else if($values[0]=='namenumchar')		{$namenumchar			= $values[1];}
 				
-				else if($values[0]=='displaydescription'){$displaydescription	= $values[1];}
-				else if($values[0]=='descriptionheight'){$descriptionheight		= $values[1];}
-				else if($values[0]=='hidecategories')	{$hidecategories		= $values[1];}
+				else if($values[0]=='displaydescription'){$display_description	= $values[1];}
+				else if($values[0]=='descriptionheight'){$description_height	= $values[1];}
+				else if($values[0]=='hidecategories')	{$hide_categories		= $values[1];}
+				else if($values[0]=='boxspace')			{$category_box_space	= $values[1];}
 				
 				// CSS
 				else if($values[0]=='fontcolor')		{$font_color				= $values[1];}
@@ -151,6 +181,13 @@ class plgContentPhocaGallery extends JPlugin
 				else if($values[0]=='imagebgcolor')		{$image_background_color	= $values[1];}
 				else if($values[0]=='bordercolor')		{$border_color				= $values[1];}
 				else if($values[0]=='bordercolorhover')	{$border_color_hover		= $values[1];}
+				
+				else if($values[0]=='hsclass')			{$highslide_class			= $values[1];}
+				else if($values[0]=='hsopacity')		{$highslide_opacity			= $values[1];}
+				else if($values[0]=='hsoutlinetype')	{$highslide_outline_type	= $values[1];}
+				else if($values[0]=='hsfullimg')		{$highslide_fullimg			= $values[1];}
+				else if($values[0]=='hsslideshow')		{$highslide_slideshow		= $values[1];}
+				else if($values[0]=='hsclosebutton')	{$highslide_close_button	= $values[1];}
 				
 				else if($values[0]=='float')			{$float	= $values[1];}
 				
@@ -162,8 +199,8 @@ class plgContentPhocaGallery extends JPlugin
 				else if($values[0]=='basicimageid')			{$basic_image_id		= $values[1];}
 				else if($values[0]=='enableswitch')			{$enable_switch			= $values[1];}
 				
-				else if($values[0]=='piclens')				{$piclens				= $values[1];}
-				else if($values[0]=='overlib')				{$overlib				= $values[1];}
+				else if($values[0]=='piclens')				{$enable_piclens				= $values[1];}
+				else if($values[0]=='overlib')				{$enable_overlib				= $values[1];}
 			}
 			
 			
@@ -184,20 +221,23 @@ class plgContentPhocaGallery extends JPlugin
 			
 			$medium_image_width 		= $paramsC->get( 'medium_image_width', 100 );
 			$medium_image_height 		= $paramsC->get( 'medium_image_height', 100 );
-			$front_modal_box_width 		= $paramsC->get( 'front_modal_box_width', 680 );
-			$front_modal_box_height 	= $paramsC->get( 'front_modal_box_height', 560 );
-			$front_popup_window_width 	= $paramsC->get( 'front_popup_window_width', 680 );
-			$front_popup_window_height 	= $paramsC->get( 'front_popup_window_height', 560 );
+			$popup_window_width 		= $paramsC->get( 'front_modal_box_width', 680 );
+			$popup_window_height 		= $paramsC->get( 'front_modal_box_height', 560 );
 			$small_image_width 			= $paramsC->get( 'small_image_width', 50 );
 			$small_image_height 		= $paramsC->get( 'small_image_height', 50 );
 			
-			if ($displaydescription == 1) {
-				$front_popup_window_height	= $front_popup_window_height + $descriptionheight;
-				$front_modal_box_height		= $front_modal_box_height + $descriptionheight;
+			
+			if ($display_description == 1) {
+				$popup_window_height	= $popup_window_height + $description_height;
 			}
+			
+			// Detail buttons in detail view
 			if ($detail_buttons != 1) {
-				$front_popup_window_height	= $front_popup_window_height - 45;
-				$front_modal_box_height		= $front_modal_box_height - 45;
+				$popup_window_height	= $popup_window_height - 45;
+			}
+			if ($display_rating_img == 1) {
+		
+				$popup_window_height	= $popup_window_height + 35;
 			}
 			
 			$modal_box_overlay_color 	= $paramsC->get( 'modal_box_overlay_color','#000000' );
@@ -244,9 +284,9 @@ class plgContentPhocaGallery extends JPlugin
 			// STANDARD POPUP
 			// -------------------------------------------------------
 
-			if ($tmpl['detailwindow'] == 1) {
+			if ($detail_window == 1) {
 				$button->set('methodname', 'js-button');
-				$button->set('options', "window.open(this.href,'win2','width=".$front_popup_window_width.",height=".$front_popup_window_height.",menubar=no,resizable=yes'); return false;");
+				$button->set('options', "window.open(this.href,'win2','width=".$popup_window_width.",height=".$popup_window_height.",menubar=no,resizable=yes'); return false;");
 				
 				$button2->methodname 		= &$button->methodname;
 				$button2->options 			= &$button->options;
@@ -259,7 +299,7 @@ class plgContentPhocaGallery extends JPlugin
 			// MODAL BOX
 			// -------------------------------------------------------
 
-			else if ($tmpl['detailwindow'] == 0 || $tmpl['detailwindow'] == 2) { 
+			else if ($detail_window == 0 || $detail_window == 2) { 
 				
 				// Button
 				$button->set('modal', true);
@@ -271,16 +311,16 @@ class plgContentPhocaGallery extends JPlugin
 				$buttonOther->methodname  	= &$button->methodname;
 				
 				// Modal - Image only
-				if ($tmpl['detailwindow'] == 2) {
+				if ($detail_window == 2) {
 					
 					$button->set('options', "{handler: 'image', size: {x: 200, y: 150}, overlayOpacity: ".$modal_box_overlay_opacity.", classWindow: 'phocagallery-random-window', classOverlay: 'phocagallery-random-overlay'}");
 					$button2->options 		= &$button->options;
-					$buttonOther->set('options', "{handler: 'iframe', size: {x: ".$front_modal_box_width.", y: ".$front_modal_box_height."}, overlayOpacity: ".$modal_box_overlay_opacity.", classWindow: 'phocagallery-random-window', classOverlay: 'phocagallery-random-overlay'}");
+					$buttonOther->set('options', "{handler: 'iframe', size: {x: ".$popup_window_width.", y: ".$popup_window_height."}, overlayOpacity: ".$modal_box_overlay_opacity.", classWindow: 'phocagallery-random-window', classOverlay: 'phocagallery-random-overlay'}");
 				
 				// Modal - Iframe 			
 				} else {
 				
-					$button->set('options', "{handler: 'iframe', size: {x: ".$front_modal_box_width.", y: ".$front_modal_box_height."}, overlayOpacity: ".$modal_box_overlay_opacity.", classWindow: 'phocagallery-random-window', classOverlay: 'phocagallery-random-overlay'}");
+					$button->set('options', "{handler: 'iframe', size: {x: ".$popup_window_width.", y: ".$popup_window_height."}, overlayOpacity: ".$modal_box_overlay_opacity.", classWindow: 'phocagallery-random-window', classOverlay: 'phocagallery-random-overlay'}");
 					$button2->options 		= &$button->options;
 					$buttonOther->options  	= &$button->options;
 				
@@ -291,7 +331,7 @@ class plgContentPhocaGallery extends JPlugin
 			// SHADOW BOX
 			// -------------------------------------------------------
 
-			else if ($tmpl['detailwindow'] == 3) {
+			else if ($detail_window == 3) {
 
 				// Random Number - because of more plugins on the site
 				$randName	= 'PhocaGalleryPl' . $iCss;
@@ -308,7 +348,7 @@ class plgContentPhocaGallery extends JPlugin
 				
 				$buttonOther->set('modal', true);
 				$buttonOther->set('methodname', 'modal-button');
-				$buttonOther->set('options', "{handler: 'iframe', size: {x: ".$front_modal_box_width.", y: ".$front_modal_box_height."}, overlayOpacity: ".$modal_box_overlay_opacity.", classWindow: 'phocagallery-random-window', classOverlay: 'phocagallery-random-overlay'}");
+				$buttonOther->set('options', "{handler: 'iframe', size: {x: ".$popup_window_width.", y: ".$popup_window_height."}, overlayOpacity: ".$modal_box_overlay_opacity.", classWindow: 'phocagallery-random-window', classOverlay: 'phocagallery-random-overlay'}");
 				
 				
 				
@@ -332,7 +372,7 @@ class plgContentPhocaGallery extends JPlugin
 		// HIGHSLIDE JS
 		// -------------------------------------------------------
 
-		else if ($tmpl['detailwindow'] == 4) {
+		else if ($detail_window == 4) {
 			
 			$button->set('methodname', 'highslide');
 			$button2->methodname 		= &$button->methodname;
@@ -340,41 +380,46 @@ class plgContentPhocaGallery extends JPlugin
 			
 			$document->addScript(JURI::base(true).'/components/com_phocagallery/assets/js/highslide/highslide-full.js');
 			$document->addStyleSheet(JURI::base(true).'/components/com_phocagallery/assets/js/highslide/highslide.css');
-			$document->addStyleSheet(JURI::base(true).'/components/com_phocagallery/assets/js/highslide/highslideimage.css');
 					
 			if ( $libraries['pg-group-highslide']->value == 0 ) {
-				$document->addCustomTag( PhocaGalleryHelperRender::renderHighslideJSAll());
-				$library->setLibrary('pg-group-highslide', 1);
+				$document->addCustomTag( PhocaGalleryRenderFront::renderHighslideJSAll());
+				$document->addCustomTag('<!--[if lt IE 7]><link rel="stylesheet" type="text/css" href="'.JURI::base(true).'/components/com_phocagallery/assets/js/highslide/highslide-ie6.css" /><![endif]-->');
+		$library->setLibrary('pg-group-highslide', 1);
 			}
 			
-			$document->addCustomTag( PhocaGalleryHelperRender::renderHighslideJSRI($front_modal_box_width, $front_modal_box_height));
-			$tmpl['highslideonclick'] = 'return hs.htmlExpand(this, phocaZoomRI )';
+			$document->addCustomTag( PhocaGalleryRenderFront::renderHighslideJS('pl', $popup_window_width, $popup_window_height, $highslide_outline_type, $highslide_opacity));
+			$tmpl['highslideonclick'] = 'return hs.htmlExpand(this, phocaZoomPl )';
 		}
-
+		
 		// -------------------------------------------------------
 		// HIGHSLIDE JS IMAGE ONLY
 		// -------------------------------------------------------
 
-		else if ($tmpl['detailwindow'] == 5) {
+		else if ($detail_window == 5) {
 
 			$button->set('methodname', 'highslide');
 			$button2->methodname 		= &$button->methodname;
 			$buttonOther->methodname 	= &$button->methodname;
 			
 			$document->addScript(JURI::base(true).'/components/com_phocagallery/assets/js/highslide/highslide-full.js');
-			$document->addStyleSheet(JURI::base(true).'/components/com_phocagallery/assets/js/highslide/highslide.css');
-			$document->addStyleSheet(JURI::base(true).'/components/com_phocagallery/assets/js/highslide/highslideimage.css');
+		$document->addStyleSheet(JURI::base(true).'/components/com_phocagallery/assets/js/highslide/highslide.css');
 			
 			if ( $libraries['pg-group-highslide']->value == 0 ) {
-				$document->addCustomTag( PhocaGalleryHelperRender::renderHighslideJSAll());
+				$document->addCustomTag( PhocaGalleryRenderFront::renderHighslideJSAll());
+				$document->addCustomTag('<!--[if lt IE 7]><link rel="stylesheet" type="text/css" href="'.JURI::base(true).'/components/com_phocagallery/assets/js/highslide/highslide-ie6.css" /><![endif]-->');
 				$library->setLibrary('pg-group-highslide', 1);
 			}
 			
-			$document->addCustomTag( PhocaGalleryHelperRender::renderHighslideJSRI($front_modal_box_width, $front_modal_box_height));
-			$tmpl['highslideonclick2']	= 'return hs.htmlExpand(this, phocaZoomRI )';
+			$document->addCustomTag( PhocaGalleryRenderFront::renderHighslideJS('pl', $popup_window_width, $popup_window_height, $highslide_slideshow, $highslide_class, $highslide_outline_type, $highslide_opacity, $highslide_close_button));
+			$tmpl['highslideonclick2']	= 'return hs.htmlExpand(this, phocaZoomPl )';
 			$tmpl['highslideonclick']	= 'return hs.expand(this, phocaImageRI )';
+			$tmpl['highslideonclick']	= PhocaGalleryRenderFront::renderHighslideJSImage('pl', $highslide_class, $highslide_outline_type, $highslide_opacity, $highslide_fullimg);
 
 		}
+
+		$folderButton = new JObject();
+		$folderButton->set('name', 'image');
+		$folderButton->set('options', "");		
 			
 			
 			
@@ -392,8 +437,8 @@ class plgContentPhocaGallery extends JPlugin
 			//--------------------------
 			
 			
-			$hideCat		= trim( $hidecategories );
-			$hideCatArray	= explode( ';', $hidecategories );
+			$hideCat		= trim( $hide_categories );
+			$hideCatArray	= explode( ';', $hide_categories );
 			$hideCatSql		= '';
 			if (is_array($hideCatArray)) {
 				foreach ($hideCatArray as $value) {
@@ -436,7 +481,7 @@ class plgContentPhocaGallery extends JPlugin
 			
 				$tree = array();
 				$text = '';
-				$tree = PhocaGalleryHelper::CategoryTreeOption($outcome_subcategories, $tree, 0, $text, -1);
+				$tree = PhocaGalleryRenderAdmin::CategoryTreeOption($outcome_subcategories, $tree, 0, $text, -1);
 				
 				foreach ($tree as $key => $value) {
 					foreach ($outcome_data as $key2 => $value2) {
@@ -456,6 +501,9 @@ class plgContentPhocaGallery extends JPlugin
 							$data_outcome->editor			= $value2->editor;
 							$data_outcome->ordering			= $value2->ordering;
 							$data_outcome->access			= $value2->access;
+							$data_outcome->accessuserid		= $value2->accessuserid;
+							$data_outcome->uploaduserid		= $value2->uploaduserid;
+							$data_outcome->deleteuserid		= $value2->deleteuserid;
 							$data_outcome->count			= $value2->count;
 							$data_outcome->params			= $value2->params;
 							$data_outcome->catid			= $value2->catid;
@@ -463,7 +511,7 @@ class plgContentPhocaGallery extends JPlugin
 							$data_outcome->slug				= $value2->slug;
 							$data_outcome->link				= "";
 							$data_outcome->filename			= "";
-							$data_outcome->linkthumbnailpath	= "";
+							$data_outcome->linkthumbnailpath= "";
 							
 							//FILENAME
 							$queryfn = 'SELECT filename AS filename FROM #__phocagallery WHERE catid='.$value2->id.' AND published=1 ORDER BY ordering LIMIT 1';
@@ -561,13 +609,13 @@ class plgContentPhocaGallery extends JPlugin
 						
 						// we simulate that we want not to display unaccessable categories
 						// so we get rightDisplayKey = 0 then the key will be displayed
-						if (isset($category->params)) {
-							$rightDisplayKey = PhocaGalleryHelper::getUserRight ($category->params, 'accessuserid', $category->access, $user->get('aid', 0), $user->get('id', 0), 0);
+						if (isset($category)) {
+							$rightDisplayKey = PhocaGalleryAccess::getUserRight ('accessuserid', $category->accessuserid ,$category->access, $user->get('aid', 0), $user->get('id', 0), 0);
 						}
 						
-						$file_thumbnail = PhocaGalleryHelperFront::displayFileOrNoImageCategories($category->filename, $imgCatSizeHelper, $rightDisplayKey);
+						$file_thumbnail = PhocaGalleryImageFront::displayCategoriesImageOrFolder($category->filename, $imgCatSizeHelper, $rightDisplayKey);
 						
-						$category->linkthumbnailpath = $file_thumbnail['rel'];
+						$category->linkthumbnailpath = $file_thumbnail->rel;
 						
 						//Output
 						$output .= '<tr>'
@@ -677,7 +725,7 @@ class plgContentPhocaGallery extends JPlugin
 					
 					
 					// PicLens CATEGORY - loaded every time new category will be displayed on the site---------
-					if ((int)$piclens > 0) {
+					if ((int)$enable_piclens > 0) {
 						$libName = 'pg-piclens-'.$image->catid;
 						$libraries[$libName]	= $library->getLibrary($libName);
 						if ($libraries[$libName]->value == 0) {			
@@ -703,9 +751,9 @@ class plgContentPhocaGallery extends JPlugin
 					
 					$image->slug 	= $image->id.'-'.$image->alias;
 					// Get file thumbnail or No Image
-					$file_thumbnail = PhocaGalleryHelperFront::displayFileOrNoImage($image->filename, 'medium');
-					$image->linkthumbnailpath 		= $file_thumbnail['rel'];
-					$image->linkthumbnailpathabs 	= $file_thumbnail['abs'];
+					$image->linkthumbnailpath	= PhocaGalleryImageFront::displayImageOrNoImage($image->filename, 'medium');
+					$file_thumbnail 			= PhocaGalleryFileThumbnail::getThumbnailName($image->filename, 'medium');
+					$image->linkthumbnailpathabs= $file_thumbnail->abs;
 					
 					
 					// -------------------------------------------------------------- SEF PROBLEM
@@ -716,47 +764,52 @@ class plgContentPhocaGallery extends JPlugin
 					if(isset($itemscat[0]))
 					{
 						$itemid = $itemscat[0]->id;
-						$siteLink = JRoute::_('index.php?option=com_phocagallery&view=detail&catid='. $category_info->slug .'&id='. $image->slug .'&Itemid='.$itemid . '&tmpl=component&detail='.$tmpl['detailwindow'].'&buttons='.$detail_buttons );
+						$siteLink = JRoute::_('index.php?option=com_phocagallery&view=detail&catid='. $category_info->slug .'&id='. $image->slug .'&Itemid='.$itemid . '&tmpl=component&detail='.$detail_window.'&buttons='.$detail_buttons );
 					}
 					else if(isset($items[0]))
 					{
 						$itemid = $items[0]->id;
-						$siteLink = JRoute::_('index.php?option=com_phocagallery&view=detail&catid='. $category_info->slug .'&id='. $image->slug .'&Itemid='.$itemid . '&tmpl=component&detail='.$tmpl['detailwindow'].'&buttons='.$detail_buttons );
+						$siteLink = JRoute::_('index.php?option=com_phocagallery&view=detail&catid='. $category_info->slug .'&id='. $image->slug .'&Itemid='.$itemid . '&tmpl=component&detail='.$detail_window.'&buttons='.$detail_buttons );
 					}
 					else
 					{
 						$itemid = 0;
-						$siteLink = JRoute::_('index.php?option=com_phocagallery&view=detail&catid='. $category_info->slug .'&id='. $image->slug . '&tmpl=component&detail='.$tmpl['detailwindow'].'&buttons='.$detail_buttons );
+						$siteLink = JRoute::_('index.php?option=com_phocagallery&view=detail&catid='. $category_info->slug .'&id='. $image->slug . '&tmpl=component&detail='.$detail_window.'&buttons='.$detail_buttons );
 					}
 					// ---------------------------------------------------------------------------------
 					
 					
 					// Different links for different actions: image, zoom icon, download icon
-					$thumbLink	= PhocaGalleryHelper::getThumbnailName($image->filename, 'large');
-					$imgLink	= JURI::base(true) . str_replace( '..', '', $thumbLink['rel'] );
+					$thumbLink	= PhocaGalleryFileThumbnail::getThumbnailName($image->filename, 'large');
+					$imgLinkOrig= JURI::base(true) . '/' .PhocaGalleryFile::getFileOriginal($image->filename, 1);
+					$imgLink	= $thumbLink->rel;
 					
-					if ($tmpl['detailwindow'] == 2 ) {
+					if ($detail_window == 2 ) {
 						$image->link 		= $imgLink;
 						$image->link2		= $imgLink;
 						$image->linkother	= $siteLink;
+						$image->linkorig	= $imgLinkOrig;
 					
-					} else if ( $tmpl['detailwindow'] == 3 ) {
+					} else if ( $detail_window == 3 ) {
 					
 						$image->link 		= $imgLink;
 						$image->link2 	= $imgLink;
 						$image->linkother	= $siteLink;
+						$image->linkorig	= $imgLinkOrig;
 					
-					} else if ( $tmpl['detailwindow'] == 5 ) {
+					} else if ( $detail_window == 5 ) {
 						
 						$image->link 		= $imgLink;
 						$image->link2 	= $siteLink;
 						$image->linkother	= $siteLink;
+						$image->linkorig	= $imgLinkOrig;
 						
 					} else {
 					
 						$image->link 		= $siteLink;
 						$image->link2 	= $siteLink;
 						$image->linkother	= $siteLink;
+						$image->linkorig	= $imgLinkOrig;
 						
 					}
 					
@@ -770,53 +823,32 @@ class plgContentPhocaGallery extends JPlugin
 
 					// Maximum size of module image is 100 x 100
 					jimport( 'joomla.filesystem.file' );
-					$imageWidth 	= 100;
-					$imageHeight	= 100;
+					$imageWidth['size']		= 100;
+					$imageHeight['size']	= 100;
+					$imageHeight['boxsize'] = 100;
+					$imageWidth['boxsize'] 	= 120;
+					$imageOrigHeight		= 100;
+					$imageOrigWidth			= 100;
+					
 					if (JFile::exists($image->linkthumbnailpathabs)) {
-						list($width, $height) = GetImageSize( $image->linkthumbnailpath );
-						$imageWidth 	= $width;
-						$imageHeight	= $height;
+						list($width, $height) = GetImageSize( $image->linkthumbnailpathabs );
+						
+						$imageHeight 	= PhocaGalleryImage::correctSize($height, 100, 100, 0);
+						$imageWidth 	= PhocaGalleryImage::correctSize($width, 100, 120, 20);
+						$imageOrigHeight		= $height;
+						$imageOrigWidth			= $width;
 					}
-					
-					// Height of box and float = CSS style
-					if ($imageHeight > $imageWidth) {
-						if ($imageHeight < 100) {
-							$imageHeight = 100;
-						}
-						$imageWidth = $imageHeight;
-					}
-					if ($imageWidth > $imageHeight) {
-						if ($imageWidth < 100) {
-							$imageWidth = 100;
-						}
-						$imageHeight = $imageWidth;
-					}
-					
-					$boxImageHeight = $imageHeight;
-					$boxImageWidth = $imageWidth + 20;
-					
-
-					if ($displayname == 1) {
-						$boxImageHeight = $boxImageHeight + 20;
-					}
-					
-					if ( $displayicondetail == 1 || $displayicondownload == 1 || $piclens == 2) {
-						$boxImageHeight = $boxImageHeight + 20;
-					}
-					
-					
-					
-					if ( $imageshadow != 'none' ) {		
-						$boxImageHeight 		= $boxImageHeight + 18;
-						$imageHeight			= $imageHeight + 18;
-						$imageWidth 			= $imageWidth + 18;
-						$image_background_color	= 'url(\''.JURI::base(true).'/components/com_phocagallery/assets/images/'.$imageshadow.'.'.$tmpl['formaticon'].'\') 0 0 no-repeat;';
+					$imageHeight['boxsize']	= PhocaGalleryImage::setBoxSize($imageHeight,$imageWidth, $display_name, $display_icon_detail, $display_icon_download, 0, 0, 0, 0, 0, 0, 0, 0,  $category_box_space, $image_background_shadow, 0);
+					if ( $image_background_shadow != 'none' ) {		
+						$imageHeight['size']	= $imageHeight['size'] + 18;
+						$imageWidth['size'] 	= $imageWidth['size'] + 18;
+						$image_background_color	= 'url(\''.JURI::base(true).'/components/com_phocagallery/assets/images/'.$image_background_shadow.'.'.$tmpl['formaticon'].'\') 0 0 no-repeat;';
 					}
 					
 
-					$output .= '<div class="phocagallery-box-file pgplugin'.$iCss.'" style="height:'. $boxImageHeight .'px; width:'. $boxImageWidth.'px;'.$float_code.'">' . "\n"
+					$output .= '<div class="phocagallery-box-file pgplugin'.$iCss.'" style="height:'. $imageHeight['boxsize'] .'px; width:'. $imageWidth['boxsize'].'px;'.$float_code.'">' . "\n"
 						.'<center>'  . "\n"
-						.'<div class="phocagallery-box-file-first" style="background: '.$image_background_color.';height:'.$imageHeight.'px;width:'.$imageWidth.'px;">' . "\n"
+						.'<div class="phocagallery-box-file-first" style="background: '.$image_background_color.';height:'.$imageHeight['size'].'px;width:'.$imageWidth['size'].'px;">' . "\n"
 						.'<div class="phocagallery-box-file-second">' . "\n"
 						.'<div class="phocagallery-box-file-third">' . "\n"
 						.'<center>' . "\n"
@@ -824,10 +856,11 @@ class plgContentPhocaGallery extends JPlugin
 					
 					
 					// DETAIL WINDOW
-					if ($tmpl['detailwindow'] == 1) {
+					if ($detail_window == 1) {
 						$output .= ' onclick="'. $button->options.'"';
-					} else if ($tmpl['detailwindow'] == 4 || $tmpl['detailwindow'] == 5) {
-						$output .= ' onclick="'. $tmpl['highslideonclick'].'"';
+					} else if ($detail_window == 4 || $detail_window == 5) {
+						$highSlideOnClick	= str_replace('[phocahsfullimg]',$image->linkorig, $tmpl['highslideonclick']);
+						$output .= ' onclick="'. $highSlideOnClick.'"';
 					} else {
 						$output .= ' rel="'.$button->options.'"';
 					}
@@ -881,23 +914,27 @@ class plgContentPhocaGallery extends JPlugin
 							$library->setLibrary('pg-overlib-group', 1);
 						}
 						
-						if ((int)$overlib == 1) {
-							$output .= " onmouseover=\"return overlib('".htmlspecialchars( addslashes('<center>' . JHTML::_( 'image.site', str_replace ('phoca_thumb_m_','phoca_thumb_l_',$image->linkthumbnailpath), '', '', '', $image->title ) . "</center>"))."', CAPTION, '". $image->title."', BELOW, RIGHT, BGCLASS,'bgPhocaClass', FGCOLOR, '".$tmpl['olfgcolor']."', BGCOLOR, '".$tmpl['olbgcolor']."', TEXTCOLOR, '".$tmpl['oltfcolor']."', CAPCOLOR, '".$tmpl['olcfcolor']."');\"";
-							$output .= " onmouseout=\"return nd();\" ";
-						} else if ((int)$overlib == 2){
-							$output .= " onmouseover=\"return overlib('".htmlspecialchars( addslashes('<div style="'.$divPadding.'">'.$image->description.'</div>'))."', CAPTION, '". $image->title."', BELOW, RIGHT, CSSCLASS, TEXTFONTCLASS, 'fontPhocaClass', FGCLASS, 'fgPhocaClass', BGCLASS, 'bgPhocaClass', CAPTIONFONTCLASS,'capfontPhocaClass', CLOSEFONTCLASS, 'capfontclosePhocaClass');\"";
-							$output .= " onmouseout=\"return nd();\" ";
-						} else if ((int)$overlib == 3){
-							$output .= " onmouseover=\"return overlib('".htmlspecialchars( addslashes( '<div style="text-align:center"><center>' . JHTML::_( 'image.site', str_replace ('phoca_thumb_m_','phoca_thumb_l_',$image->linkthumbnailpath), '', '', '', $image->title ) . '</center></div><div style="'.$divPadding.'">' . $image->description . '</div>'))."', CAPTION, '". $image->title."', BELOW, RIGHT, BGCLASS,'bgPhocaClass', FGCLASS,'fgPhocaClass', FGCOLOR, '".$tmpl['olfgcolor']."', BGCOLOR, '".$tmpl['olbgcolor']."', TEXTCOLOR, '".$tmpl['oltfcolor']."', CAPCOLOR, '".$tmpl['olcfcolor']."');\"";
-							$output .= " onmouseout=\"return nd();\" ";
-						}
+						
+						
+						if ($enable_overlib == 1) { 
+							$output .=  " onmouseover=\"return overlib('".htmlspecialchars( addslashes('<center>' . JHTML::_( 'image.site', str_replace ('phoca_thumb_m_','phoca_thumb_l_',$image->linkthumbnailpath), '', '', '', $image->title ) . "</center>"))."', CAPTION, '". $image->title."', BELOW, RIGHT, BGCLASS,'bgPhocaClass', FGCOLOR, '".$tmpl['olfgcolor']."', BGCOLOR, '".$tmpl['olbgcolor']."', TEXTCOLOR, '".$tmpl['oltfcolor']."', CAPCOLOR, '".$tmpl['olcfcolor']."');\""
+							. " onmouseout=\"return nd();\" ";
+						} else if ($enable_overlib == 2){ 
+							$image->description		= str_replace("\n", '<br />', $image->description);
+							$output .=  " onmouseover=\"return overlib('".htmlspecialchars( addslashes('<div style="'.$divPadding.'">'.$image->description.'</div>'))."', CAPTION, '". $image->title."', BELOW, RIGHT, CSSCLASS, TEXTFONTCLASS, 'fontPhocaClass', FGCLASS, 'fgPhocaClass', BGCLASS, 'bgPhocaClass', CAPTIONFONTCLASS,'capfontPhocaClass', CLOSEFONTCLASS, 'capfontclosePhocaClass');\""
+							. " onmouseout=\"return nd();\" ";				
+						} else if ($enable_overlib == 3){ 
+							$image->description		= str_replace("\n", '<br />', $image->description);
+							$output .=  " onmouseover=\"return overlib('".PhocaGalleryText::strTrimAll(htmlspecialchars( addslashes( '<div style="text-align:center"><center>' . JHTML::_( 'image.site', str_replace ('phoca_thumb_m_','phoca_thumb_l_', $image->linkthumbnailpath), '', '', '', $image->title ) . '</center></div><div style="'.$divPadding.'">' . $image->description . '</div>')))."', CAPTION, '". $image->title."', BELOW, RIGHT, BGCLASS,'bgPhocaClass', FGCLASS,'fgPhocaClass', FGCOLOR, '".$tmpl['olfgcolor']."', BGCOLOR, '".$tmpl['olbgcolor']."', TEXTCOLOR, '".$tmpl['oltfcolor']."', CAPCOLOR, '".$tmpl['olcfcolor']."');\""
+							. " onmouseout=\"return nd();\" ";				
+						} 
 					}
 					// End Overlib
 					
 					$output .= ' >' . "\n";
 					$output .= '<img src="'.$image->linkthumbnailpath.'" alt="'.$image->title.'" />';
 					
-					if ((int)$piclens > 0) {
+					if ((int)$enable_piclens > 0) {
 						$output .= '<span class="mbf-item">#phocagallerypiclens '.$image->catid .'-phocagallerypiclenscode-'. $image->filename.'</span>';
 					}
 					
@@ -908,30 +945,30 @@ class plgContentPhocaGallery extends JPlugin
 						.'</div>' . "\n"
 						.'</center>' . "\n";
 
-					if ($displayname == 1) {
-						$output .= '<div class="name" style="color: '.$font_color.' ;font-size:'.$namefontsize.'px;margin-top:5px;text-align:center;">'.PhocaGalleryHelperFront::wordDelete($image->title, $namenumchar, '...').'</div>';
+					if ($display_name == 1) {
+						$output .= '<div class="name" style="color: '.$font_color.' ;font-size:'.$namefontsize.'px;margin-top:5px;text-align:center;">'.PhocaGalleryText::wordDelete($image->title, $namenumchar, '...').'</div>';
 					}
 		
-					if ($displayicondetail == 1 || $displayicondownload == 1 || $piclens == 2) {
+					if ($display_icon_detail == 1 || $display_icon_download == 1 || $enable_piclens == 2) {
 						
 						$output .= '<div class="detail" style="text-align:right">';
 						
-						if ($piclens == 2) {							
+						if ($enable_piclens == 2) {							
 							$output .=' <a href="javascript:PicLensLite.start();" title="PicLens" ><img src="http://lite.piclens.com/images/PicLensButton.png" alt="PicLens" width="16" height="12" border="0" style="margin-bottom:2px" /></a>';
 		  
 						}
 						
 						
-						if ($displayicondetail == 1) {
+						if ($display_icon_detail == 1) {
 							$output .= ' <a class="'.$button->methodname.'" title="'. JText::_('Image Detail').'" href="'.JRoute::_($image->link2).'"';
 							// Detail Window
-							if ($tmpl['detailwindow'] == 1) {
+							if ($detail_window == 1) {
 								$output .= ' onclick="'. $button->options.'"';
-							} else if ($tmpl['detailwindow'] == 2) {
+							} else if ($detail_window == 2) {
 								$output .= ' rel="'. $button->options.'"';
-							} else if ($tmpl['detailwindow'] == 4 ) {
+							} else if ($detail_window == 4 ) {
 								$output .= ' onclick="'. $tmpl['highslideonclick'].'"';
-							} else if ($tmpl['detailwindow'] == 5 ) {
+							} else if ($detail_window == 5 ) {
 								$output .= ' onclick="'. $tmpl['highslideonclick2'].'"';
 							} else {
 								$output .= ' rel="'. $button2->options.'"';
@@ -943,14 +980,14 @@ class plgContentPhocaGallery extends JPlugin
 							$output .= '</a>';
 						}
 						
-						if ($displayicondownload == 1) {
+						if ($display_icon_download == 1) {
 							$output .= ' <a class="'. $button->methodname.'" title="'. JText::_('Image Download').'" href="'. JRoute::_($image->linkother . '&amp;phocadownload=1').'"';
 							// Detail Window
-							if ($tmpl['detailwindow'] == 1) {
+							if ($detail_window == 1) {
 								$output .= ' onclick="'. $buttonOther->options.'"';
-							} else if ($tmpl['detailwindow'] == 4 ) {
+							} else if ($detail_window == 4 ) {
 								$output .= ' onclick="'. $tmpl['highslideonclick'].'"';
-							} else if ($tmpl['detailwindow'] == 5 ) {
+							} else if ($detail_window == 5 ) {
 								$output .= ' onclick="'. $tmpl['highslideonclick2'].'"';
 							} else {
 								$output .= ' rel="'. $buttonOther->options.'"';
@@ -976,9 +1013,9 @@ class plgContentPhocaGallery extends JPlugin
 			//--------------------------
 			if ($view == 'switchimage') {
 			
-				$imagePathFront	= PhocaGalleryHelperFront::getPathSet();
-				$waitImage 		= $imagePathFront['front_image'] . 'icon-switch.gif';
-				$basicImage		= $imagePathFront['front_image'] . 'phoca_thumb_l_no_image.' . $tmpl['formaticon'];
+				$path	= PhocaGalleryPath::getPath();
+				$waitImage 		= $path->image_rel . 'icon-switch.gif';
+				$basicImage		= $path->image_rel  . 'phoca_thumb_l_no_image.' . $tmpl['formaticon'];
 				
 				if ($basic_image_id > 0) {
 				
@@ -989,8 +1026,8 @@ class plgContentPhocaGallery extends JPlugin
 					$db->setQuery($query);
 					$basicImageArray =& $db->loadObject();
 					if (isset($basicImageArray->filename)) { 
-						$fileBasicThumb = PhocaGalleryHelperFront::getThumbnailName($basicImageArray->filename, 'large');
-						$basicImage  	= $fileBasicThumb['rel'];
+						$fileBasicThumb = PhocaGalleryFileThumbnail::getThumbnailName($basicImageArray->filename, 'large');
+						$basicImage  	= $fileBasicThumb->rel;
 					} else {
 						$basicImage  = '';
 					}
@@ -1001,7 +1038,7 @@ class plgContentPhocaGallery extends JPlugin
 				$switchWidth 	= $switch_width;//$this->switchwidth;
 				$switchCenterW	= ($switchWidth / 2) - 18;
 				
-				$document->addCustomTag(PhocaGalleryHelperRender::switchImage($waitImage));
+				$document->addCustomTag(PhocaGalleryRenderFront::switchImage($waitImage));
 				$switchHeight	= $switchHeight + 5;
 			
 				$output .='<div><center class="main-switch-image" style="margin:0px;padding:7px 5px 7px 5px;margin-bottom:15px;"><table border="0" cellspacing="5" cellpadding="5" style="border:1px solid #c2c2c2;"><tr><td align="center" valign="middle" style="text-align:center;width:'. $switchWidth .'px;height:'. $switchHeight .'px; background: url(\''. JURI::root().'components/com_phocagallery/assets/images/icon-switch.gif\') '.$switchCenterW.'px '.$switchCenterH.'px no-repeat;margin:0px;padding:0px;">
@@ -1043,10 +1080,10 @@ class plgContentPhocaGallery extends JPlugin
 			$library->setLibrary('pg-css-sbox-plugin', 1);
 		}
 		// All custom CSS tags will be added into one CSS area
-		if ( $libraries['pg-css-pg-plugin']->value == 0 ) {
+	//	if ( $libraries['pg-css-pg-plugin']->value == 0 ) {
 			$document->addCustomTag( "<style type=\"text/css\">\n" . $cssPgPlugin . "\n" . " </style>\n");
 			$library->setLibrary('pg-css-pg-plugin', 1);
-		}
+	//	}
 		
 		if ( $libraries['pg-css-ie']->value == 0 ) {
 			$document->addCustomTag("<!--[if lt IE 8]>\n<link rel=\"stylesheet\" href=\"".JURI::base(true)."/components/com_phocagallery/assets/phocagalleryieall.css\" type=\"text/css\" />\n<![endif]-->");

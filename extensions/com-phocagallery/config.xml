@@ -63,10 +63,23 @@
 			<option value="0">First Page</option>
 			<option value="2">Nowhere</option>
 		</param>
-		
-		<param name="display_icon_random_image" type="list" default="0" label="Display Icon Random Image" description="Display Icon Random Image DESC">
+	
+		<param name="display_category_icon_image" type="list" default="0" label="Display Category Icon Image" description="Display Category Icon Image DESC">
 			<option value="1">Yes</option>
 			<option value="0">No</option>
+		</param>
+		
+		<param name="category_image_ordering" type="list" default="9" label="Category Image Ordering" description="Category Image Ordering DESC">
+			<option value="1">Ordering ASC</option>
+			<option value="2">Ordering DESC</option>
+			<option value="3">Title ASC</option>
+			<option value="4">Title DESC</option>
+			<option value="5">Date ASC</option>
+			<option value="6">Date DESC</option>
+			<option value="7">Id ASC</option>
+			<option value="8">Id DESC</option>
+			<option value="9">Random</option>
+			
 		</param>
 		
 		<param name="display_back_button" type="list" default="1" label="Display Back Button" description="Display Back Button DESC">
@@ -78,6 +91,10 @@
 			<option value="1">Yes</option>
 			<option value="0">No</option>
 		</param>
+		
+		<param name="default_pagination_category" default="20" size="18" type="phocatext" label="Default Value Pagination Category" description="Default Value Pagination Category DESC" />
+		
+		<param name="pagination_category" default="5;10;15;20;50" size="18" type="phocatext" label="Pagination Category" description="Pagination Category DESC" />
 		
 		
 		<param name="@phocahead" type="phocahead" default="CATEGORY VIEW SETTINGS CV LABEL" />
@@ -93,9 +110,22 @@
 			<option value="2">Nowhere</option>
 		</param>
 		
-		<param name="display_icon_random_image_cv" type="list" default="0" label="Display Icon Random Image CV" description="Display Icon Random Image CV DESC">
+		<param name="display_category_icon_image_cv" type="list" default="0" label="Display Category Icon Image CV" description="Display Category Icon Image CV DESC">
 			<option value="1">Yes</option>
 			<option value="0">No</option>
+		</param>
+		
+		<param name="category_image_ordering_cv" type="list" default="9" label="Category Image Ordering CV" description="Category Image Ordering CV DESC">
+			<option value="1">Ordering ASC</option>
+			<option value="2">Ordering DESC</option>
+			<option value="3">Title ASC</option>
+			<option value="4">Title DESC</option>
+			<option value="5">Date ASC</option>
+			<option value="6">Date DESC</option>
+			<option value="7">Id ASC</option>
+			<option value="8">Id DESC</option>
+			<option value="9">Random</option>
+			
 		</param>
 		
 		<param name="display_back_button_cv" type="list" default="1" label="Display Back Button CV" description="Display Back Button CV DESC">
@@ -123,8 +153,6 @@
 			<option value="4">Small with Shadow</option>
 			<option value="5">Medium with Shadow</option>
 		</param>
-
-		
 		
 		<param name="@phocahead" type="phocahead" default="CATEGORIES VIEW SETTINGS LABEL" />
 		<param name="categories_columns" default="1" size="10" type="phocatext" label="Number of Columns" description="Number of Columns DESC" />
@@ -133,6 +161,9 @@
 				<option value="1">Categories and images</option>
 				<option value="2">Categories, images and detail information</option>
 		</param>
+		
+			
+		
 		<param name="image_categories_size" type="list" default="4" label="Image Categories Size" description="Image Categories Size DESC">
 			<option value="0">Small</option>
 			<option value="1">Medium</option>
@@ -143,6 +174,22 @@
 			<option value="6">Small Folder Icon with Shadow</option>
 			<option value="7">Medium Folder Icon with Shadow</option>
 		</param>
+			
+		<param name="categories_image_ordering" type="list" default="9" label="Categories Image Ordering" description="Categories Image Ordering DESC">
+			<option value="1">Ordering ASC</option>
+			<option value="2">Ordering DESC</option>
+			<option value="3">Title ASC</option>
+			<option value="4">Title DESC</option>
+			<option value="5">Date ASC</option>
+			<option value="6">Date DESC</option>
+			<option value="7">Id ASC</option>
+			<option value="8">Id DESC</option>
+			<option value="9">Random</option>
+			
+		</param>
+		
+		
+	
 		
 		<param name="@spacer" type="spacer" default="" label="" description="" />
 		
@@ -162,6 +209,10 @@
 			<option value="0">No</option>
 		</param>
 		
+		<param name="default_pagination_categories" default="0" size="18" type="phocatext" label="Default Value Pagination Categories" description="Default Value Pagination Categories DESC" />
+		
+		<param name="pagination_categories" default="5;10;15;20;50" size="18" type="phocatext" label="Pagination Categories" description="Pagination Categories DESC" />
+		
 		
 		<param name="@phocahead" type="phocahead" default="DETAIL VIEW SETTINGS LABEL" />
 		<param name="detail_window" type="list" default="0" label="Detail Window" description="Detail Window Desc">
@@ -171,6 +222,7 @@
 			<option value="3">Shadowbox</option>
 			<option value="4">Highslide</option>
 			<option value="5">Highslide (Image only)</option>
+			<option value="6">JAK Lightbox</option>
 		</param>
 		
 		<param name="@spacer" type="spacer" default="Modal Box" label="Modal Box" description="" />
@@ -211,6 +263,83 @@
 		</param>
 		
 		<param name="sb_lang" default="en" size="10" type="phocatext" label="Shadow Box Language" description="Shadow Box Language Desc" />
+		
+		<param name="@spacer" type="spacer" default="Highslide" label="Highslide" description="" />
+		
+		<param name="highslide_class" default="rounded-white" size="10" type="list" label="Highslide Class" description="Highslide Class DESC" >
+			<option value="rounded-white">Rounded White</option>
+			<option value="wide-border">Wide Border</option>
+			<option value="dark">Dark</option>
+			<option value="outer-glow">Outer Glow</option>
+			<option value="floating-caption">Floating Caption</option>
+			<option value="borderless floating-caption">Borderless Floating Caption</option>
+		</param>
+		
+		<param name="highslide_opacity" default="0" size="10" type="list" label="Highslide Opacity" description="Highslide Opacity DESC" >
+			<option value="0">0 %</option>
+			<option value="0.1">10 %</option>
+			<option value="0.2">20 %</option>
+			<option value="0.3">30 %</option>
+			<option value="0.4">40 %</option>
+			<option value="0.5">50 %</option>
+			<option value="0.6">60 %</option>
+			<option value="0.7">70 %</option>
+			<option value="0.8">80 %</option>
+			<option value="0.9">90 %</option>
+			<option value="1">100 %</option>
+		</param>
+		
+		<param name="highslide_outline_type" default="rounded-white" size="10" type="list" label="Highslide Outline Type" description="Highslide Outline Type DESC" >
+			<option value="rounded-white">Rounded White</option>
+			<option value="none">None</option>
+		</param>
+		
+		<param name="@spacer" type="spacer" default="Highslide (Image Only)" label="Highslide (Image Only)" description="" />
+		
+		<param name="highslide_fullimg" default="0" size="10" type="list" label="Highslide Full Image" description="Highslide Full Image DESC" >
+			<option value="0">No</option>
+			<option value="1">Yes</option>
+		</param>
+		
+		<param name="highslide_close_button" default="0" size="10" type="list" label="Highslide Close Button" description="Highslide Close Button DESC" >
+			<option value="0">No</option>
+			<option value="1">Yes</option>
+		</param>
+		
+		<param name="highslide_slideshow" default="1" size="10" type="list" label="Highslide Slideshow" description="Highslide Slideshow DESC" >
+			<option value="0">No</option>
+			<option value="1">Standard</option>
+			<option value="2">Slideshow with small thumbnails</option>
+		</param>
+		
+		<param name="@spacer" type="spacer" default="JAK Lightbox" label="JAK Lightbox" description="" />
+		
+		<param name="jak_slideshow_delay" default="5" size="10" type="list" label="JAK Lightbox Slideshow Delay" description="JAK Lightbox Slideshow Delay DESC" >
+			<option value="1">1</option>
+			<option value="2">2</option>
+			<option value="3">3</option>
+			<option value="4">4</option>
+			<option value="5">5</option>
+			<option value="6">6</option>
+			<option value="7">7</option>
+			<option value="8">8</option>
+			<option value="9">9</option>
+			<option value="10">10</option>
+		</param>
+		
+		<param name="jak_orientation" default="none" size="10" type="list" label="JAK Lightbox Orientation" description="JAK Lightbox Orientation DESC" >
+			<option value="vertical">Vertical</option>
+			<option value="horizontal">Horizontal</option>
+			<option value="none">None</option>
+		</param>
+		
+		<param name="jak_description" default="1" size="10" type="list" label="JAK Lightbox Description" description="JAK Lightbox Description DESC" >
+			<option value="1">Only Title</option>
+			<option value="2">Only Description</option>
+			<option value="3">Title and Description</option>
+			<option value="0">None</option>
+		</param>
+		<param name="jak_description_height" default="10" size="4" type="phocatext" label="JAK Lightbox Description Height" description="JAK Lightbox Description Height DESC" />
 		
 		<param name="@phocahead" type="phocahead" default="DESCRIPTION SETTINGS LABEL" />
 		
@@ -263,6 +392,12 @@
 		
 		<param name="@phocahead" type="phocahead" default="GENERAL SETTINGS LABEL" />
 	<param name="phocagallery_width" default="" size="10" type="phocatext" label="Phoca Gallery Width" description="Phoca Gallery Width Desc" />
+	<param name="phocagallery_center" type="list" default="0" label="Phoca Gallery Center" description="Phoca Gallery Center DESC">
+			<option value="1">Yes (Category View)</option>
+			<option value="2">Yes (Categories View)</option>
+			<option value="3">Yes (Category and Categories View)</option>
+			<option value="0">No</option>
+		</param>
 	<param name="display_phoca_info" type="list" default="1" label="Display Phoca Info" description="Display Phoca Info DESC">
 			<option value="1">Logo and Version Info</option>
 			<option value="2">Only Logo</option>
@@ -271,9 +406,6 @@
 			<option value="6">Only Seal Logo</option>
 		</param>
 		
-		<param name="default_pagination" default="20" size="18" type="phocatext" label="Default Value Pagination" description="Default Value Pagination DESC" />
-		
-		<param name="pagination" default="5;10;15;20;50" size="18" type="phocatext" label="Pagination" description="Pagination DESC" />
 		
 		<param name="category_ordering" type="list" default="1" label="Category Ordering" description="Category Ordering DESC">
 			<option value="1">Ordering ASC</option>
@@ -351,7 +483,8 @@
 		
 		<param name="@phocahead" type="phocahead" default="WATERMARK SETTINGS LABEL" />
 		<param name="create_watermark" type="list" default="0" label="Create Watermark" description="Create Watermark DESC">
-			<option value="1">Yes</option>
+			<option value="1">Yes (Folder)</option>
+			<option value="2">Yes (Root)</option>
 			<option value="0">No</option>
 		</param>
 		<param name="watermark_position_x" type="list" default="center" label="X-Position of Watermark" description="X-Position of Watermark DESC">
@@ -388,6 +521,11 @@
 		<param name="@phocahead" type="phocahead" default="RATING SETTINGS LABEL" />
 		
 		<param name="display_rating" type="list" default="0" label="Display Rating" description="Display Rating DESC">
+			<option value="0">No</option>
+			<option value="1">Yes</option>
+		</param>
+		
+		<param name="display_rating_img" type="list" default="0" label="Display Rating Image" description="Display Rating Image DESC">
 			<option value="0">No</option>
 			<option value="1">Yes</option>
 		</param>
@@ -559,6 +697,22 @@
 	
 	<param name="admin_modal_box_width" default="680" size="4" type="phocatext" label="Admin Detail Window Width" description="Admin Detail Window Width DESC" />
 	<param name="admin_modal_box_height" default="520" size="4" type="phocatext" label="Admin Detail Window Height" description="Admin Detail Window Height DESC" />
+	
+	<param name="@phocahead" type="phocahead" default="SECURITY SETTINGS LABEL" />
+	
+	<param name="folder_permissions" type="list" default="0755" label="Folder Permissions" description="Folder Permissions DESC">
+		<option value="0777">777</option>
+		<option value="0755">755</option>
+		<option value="0666">666</option>
+		<option value="0644">644</option>
+	</param>
+	
+	<param name="jfile_thumbs" type="list" default="1" label="JFile Thumbnail Creation" description="JFile Thumbnail Creation DESC">
+		<option value="0">No</option>
+		<option value="1">Yes</option>
+	</param>
+		
+		
 
 	</params>
 </config>

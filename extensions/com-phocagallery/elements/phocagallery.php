@@ -11,7 +11,10 @@
 
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
-require_once( JPATH_ADMINISTRATOR . DS.'components' .DS.'com_phocagallery'.DS.'helpers'.DS.'phocagallery.php' );
+if (! class_exists('PhocaGalleryLoader')) {
+    require_once( JPATH_ADMINISTRATOR.DS.'components'.DS.'com_phocagallery'.DS.'libraries'.DS.'loader.php');
+}
+phocagalleryimport('phocagallery.render.renderadmin');
 
 class JElementPhocagallery extends JElement
 {
@@ -32,12 +35,8 @@ class JElementPhocagallery extends JElement
 		
 		$tree = array();
 		$text = '';
-		//$tree = PhocaGalleryHelper::CategoryTree($phocagallerys, $tree, 0, $text);
-		$tree = PhocaGalleryHelper::CategoryTreeOption($phocagallerys, $tree, 0, $text, -1);
-		//$phocagallerys_tree_array = PhocaGalleryHelper::CategoryTreeCreating($phocagallerys, $tree, 0);
+		$tree = PhocaGalleryRenderAdmin::CategoryTreeOption($phocagallerys, $tree, 0, $text, -1);
 		array_unshift($tree, JHTML::_('select.option', '0', '- '.JText::_('Select Category').' -', 'value', 'text'));
-		
-	//array_unshift($gallerys, JHTML::_('select.option', '0', '- '.JText::_('Select gallery').' -', 'value', 'text'));
 
 		return JHTML::_('select.genericlist',  $tree, ''.$control_name.'['.$name.']', 'class="inputbox"', 'value', 'text', $value, $control_name.$name );
 	}

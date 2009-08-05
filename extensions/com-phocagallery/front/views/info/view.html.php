@@ -54,7 +54,7 @@ class PhocaGalleryViewInfo extends JView
 /*		$document->addCustomTag( "<style type=\"text/css\"> \n" 
 			." html,body, .contentpane{overflow:hidden;background:".$tmpl['detailwindowbackgroundcolor'].";} \n" 
 			." center, table {background:".$tmpl['detailwindowbackgroundcolor'].";} \n" 
-			." #sbox-window {background-color:#fff100;padding:5px} \n" 
+			." #sbox-window {background-color:#fff;padding:5px} \n" 
 			." </style> \n");
 	*/	
 		
@@ -86,7 +86,7 @@ class PhocaGalleryViewInfo extends JView
 		// EXIF DATA
 		$outputExif = '';
 		if (isset($info->filename) && function_exists('exif_read_data')) {
-			$originalFile = PhocaGalleryHelper::getFileOriginal($info->filename);
+			$originalFile = PhocaGalleryFile::getFileOriginal($info->filename);
 			
 			$exif = @exif_read_data( $originalFile, 'IFD0');
 		//	$exif = @exif_read_data( $originalFile, 'IFD0');
@@ -145,7 +145,7 @@ class PhocaGalleryViewInfo extends JView
 								break;
 								
 								case 'FileSize':
-									$exifValue	= PhocaGalleryHelperFront::getFileSizeReadable($exif[$section][$name]);
+									$exifValue	= PhocaGalleryFile::getFileSizeReadable($exif[$section][$name]);
 								break;
 								
 								case 'Height':

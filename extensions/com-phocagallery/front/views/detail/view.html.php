@@ -4,31 +4,42 @@
  * @copyright Copyright (C) 2005 Open Source Matters. All rights reserved.
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  *
- * @component Phoca Gallery
+ * @component Phoca Component
  * @copyright Copyright (C) Jan Pavelka www.phoca.cz
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
 jimport( 'joomla.application.component.view');
+phocagalleryimport( 'phocagallery.image.image');
+phocagalleryimport( 'phocagallery.image.imagefront');
+phocagalleryimport( 'phocagallery.file.filethumbnail');
+phocagalleryimport( 'phocagallery.rate.rateimage');
 
 class PhocaGalleryViewDetail extends JView
 {
 	function display($tpl = null) {
-		global $mainframe;
 		
+		global $mainframe;
+		$document			= &JFactory::getDocument();		
+		$params				= &$mainframe->getParams();
+		$user				= &JFactory::getUser();
+		$slideshow 			= JRequest::getVar('phocaslideshow', 0, '', 'int');
+		$download 			= JRequest::getVar('phocadownload', 0, '', 'int');
+		$uri 				= &JFactory::getURI();
 		// PLUGIN WINDOW - we get information from plugin
 		$get				= '';
 		$get['detail']		= JRequest::getVar( 'detail', '', 'get', 'string');
 		$get['buttons']		= JRequest::getVar( 'buttons', '', 'get', 'string' );
+		$get['ratingimg']	= JRequest::getVar( 'ratingimg', '', 'get', 'string' );
 		
-		$document			= &JFactory::getDocument();		
-		$params				= &$mainframe->getParams();
+		$tmpl['action']	= $uri->toString();
 		
 		// START CSS
 		$document->addStyleSheet(JURI::base(true).'/components/com_phocagallery/assets/phocagallery.css');
 		
 		// PARAMS - Open window parameters - modal popup box or standard popup window
 		$detail_window 			= $params->get( 'detail_window', 0 );
+		
 		// Plugin information
 		if (isset($get['detail']) && $get['detail'] != '') {
 			$detail_window 		= $get['detail'];
@@ -62,14 +73,20 @@ class PhocaGalleryViewDetail extends JView
 		$tmpl['descriptionlightboxfontcolor']	= $params->get( 'description_lightbox_font_color', '#ffffff' );
 		$tmpl['descriptionlightboxbgcolor']		= $params->get( 'description_lightbox_bg_color', '#000000' );
 		$tmpl['descriptionlightboxfontsize']	= $params->get( 'description_lightbox_font_size', 12 );
+		$tmpl['displayratingimg']				= $params->get( 'display_rating_img', 0 );
 		
 		$tmpl['detailwindow']					= $params->get( 'detail_window', 0 );
+		
+		// Plugin Information
+		if (isset($get['ratingimg']) && $get['ratingimg'] != '') {
+			$tmpl['displayratingimg'] = $get['ratingimg'];
+		}
 		
 		// NO SCROLLBAR IN DETAIL WINDOW
 		$document->addCustomTag( "<style type=\"text/css\"> \n" 
 			." html,body, .contentpane{overflow:hidden;background:".$tmpl['detailwindowbackgroundcolor'].";} \n" 
 			." center, table {background:".$tmpl['detailwindowbackgroundcolor'].";} \n" 
-			." #sbox-window {background-color:#fff100;padding:5px} \n" 
+			." #sbox-window {background-color:#fff;padding:5px} \n" 
 			." </style> \n");
 		
 		
@@ -97,41 +114,109 @@ class PhocaGalleryViewDetail extends JView
 		$tmpl['slideshowrandom'] 	= $params->get( 'slideshow_random', 0 );
 		
 		// MODEL
-		$model			= &$this->getModel();
-		$file	= $model->getData();
+		$model	= &$this->getModel();
+		$item	= $model->getData();
 		
-		// YouTube
-		$videoCode			= PhocaGalleryHelper::getParamsArray($file->params, 'videocode');
-		$tmpl['videocode']	= '';
-		if (!empty($videoCode[0])) {
-			$tmpl['videocode']	= $videoCode[0];
+		// Access check - don't display the image if you have no access to this image (if user add own url)
+		// USER RIGHT - ACCESS - - - - - - - - - - 
+		$rightDisplay	= 0;
+		if (!empty($item)) {
+			$rightDisplay = PhocaGalleryAccess::getUserRight('accessuserid', $item->cataccessuserid, $item->cataccess, $user->get('aid', 0), $user->get('id', 0), 0);
 		}
-		
-		
+	
+		if ($rightDisplay == 0) {
+			$mainframe->redirect('index.php?option=com_user&view=login', JText::_("ALERTNOTAUTH"));
+			exit;
+		}
+		// - - - - - - - - - - - - - - - - - - - - 
+
+	
+		phocagalleryimport('phocagallery.image.image');
+		//Javascript Slideshow buttons
+		phocagalleryimport('phocagallery.render.renderdetailbutton');
+		$detailButton 			= new PhocaGalleryRenderDetailButton();
+		$item->reloadbutton		= $detailButton->getReload($item->catslug, $item->slug);
+		$item->closebutton		= $detailButton->getClose($item->catslug, $item->slug);
+		$item->closetext		= $detailButton->getCloseText($item->catslug, $item->slug);
+		$item->nextbutton		= $detailButton->getNext((int)$item->catid, (int)$item->id, (int)$item->ordering);
+		$item->prevbutton		= $detailButton->getPrevious((int)$item->catid, (int)$item->id, (int)$item->ordering);
+		$slideshowData			= $detailButton->getJsSlideshow((int)$item->catid, (int)$item->id, (int)$slideshow, $item->catslug, $item->slug);
+		$item->slideshowbutton	= $slideshowData['icons'];
+		$item->slideshowfiles	= $slideshowData['files'];
+		$item->slideshow		= $slideshow;
+		// Download
+		$item->download			= $download;
+			
+		// Get file thumbnail or No Image
+	
+		$item->filenameno		= $item->filename;
+		$item->filename			= PhocaGalleryFile::getTitleFromFile($item->filename, 1);
+		$item->imagesize		= PhocaGalleryImage::getImageSize($item->filenameno, 1);
+		$item->filesize			= PhocaGalleryFile::getFileSize($item->filenameno);
+		$item->linkthumbnailpath= PhocaGalleryImageFront::displayImageOrNoImage($item->filenameno, 'large');
+	
 		$realImageSize	= '';
-		$realImageSize 	= PhocaGalleryHelper::getRealImageSize ($file->filenameno);
+		$realImageSize 	= PhocaGalleryImage::getRealImageSize ($item->filenameno);
 		if (isset($realImageSize['w']) && isset($realImageSize['h'])) {
-			$tmpl['realimagewidth']		= $realImageSize['w'];
-			$tmpl['realimageheight']	= $realImageSize['h'];
+			$item->realimagewidth		= $realImageSize['w'];
+			$item->realimageheight		= $realImageSize['h'];
 		} else {
-			$tmpl['realimagewidth'] 	= $tmpl['largewidth'];
-			$tmpl['realimageheight']	= $tmpl['largeheight'];
+			$item->realimagewidth	 	= $tmpl['largewidth'];
+			$item->realimageheight		= $tmpl['largeheight'];
 		}
 		
 		// ADD STATISTICS
 		$model->hit(JRequest::getVar( 'id', '', '', 'int' ));
 		
+		// R A T I N G
+		// Only registered (VOTES + COMMENTS)
+		$tmpl['notregisteredimg'] 	= true;
+		$tmpl['usernameimg']		= '';
+		if ($user->aid > 0) {
+			$tmpl['notregisteredimg'] 	= false;
+			$tmpl['usernameimg']		= $user->name;
+		}	
+			
+		// VOTES Statistics Img
+		if ((int)$tmpl['displayratingimg'] == 1) {
+			$tmpl['votescountimg']		= 0;
+			$tmpl['votesaverageimg'] 	= 0;
+			$tmpl['voteswidthimg']		= 0;
+			$votesStatistics	= PhocaGalleryRateImage::getVotesStatistics((int)$item->id);
+			if (!empty($votesStatistics->count)) {
+				$tmpl['votescountimg'] = $votesStatistics->count;
+			}
+			if (!empty($votesStatistics->average)) {
+				$tmpl['votesaverageimg'] = $votesStatistics->average;
+				if ($tmpl['votesaverageimg'] > 0) {
+					$tmpl['votesaverageimg'] 	= round(((float)$tmpl['votesaverageimg'] / 0.5)) * 0.5;
+					$tmpl['voteswidthimg']		= 22 * $tmpl['votesaverageimg'];
+				} else {
+					$tmpl['votesaverageimg'] = (int)0;// not float displaying
+				}
+			}
+			if ((int)$tmpl['votescountimg'] > 1) {
+				$tmpl['votestextimg'] = 'votes';
+			} else {
+				$tmpl['votestextimg'] = 'vote';
+			}
+		
+			// Already rated?
+			$tmpl['alreadyratedimg']	= PhocaGalleryRateImage::checkUserVote( (int)$item->id, (int)$user->id );
+		}
+		
+		
 		// ASIGN
 		$this->assignRef( 'tmpl', $tmpl );
-		$this->assignRef( 'file', $file );
+		$this->assignRef( 'item', $item );
 		
-		if ($tmpl['videocode'] != '') {
+		if (isset($item->videocode) && $item->videocode != '') {
 			parent::display('video');
 		} else {
 			parent::display('slideshowjs');
-			if ($file->slideshow == 1) {
+			if ($item->slideshow == 1) {
 				parent::display('slideshow');
-			} else if ($file->download == 1) {
+			} else if ($item->download == 1) {
 				parent::display('download');
 			} else {
 				parent::display($tpl);

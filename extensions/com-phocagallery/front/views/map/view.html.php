@@ -34,7 +34,6 @@ class PhocaGalleryViewMap extends JView
 			$detail_window = $get['map'];
 		}
 		
-		
 		// Standard popup window
 		if ($detail_window == 1) {
 			$detail_window_close 	= 'window.close();';
@@ -54,31 +53,63 @@ class PhocaGalleryViewMap extends JView
 		$document->addCustomTag( "<style type=\"text/css\"> \n" 
 			." html,body, .contentpane{overflow:hidden;background:".$tmpl['detailwindowbackgroundcolor'].";} \n" 
 			." center, table {background:".$tmpl['detailwindowbackgroundcolor'].";} \n" 
-			." #sbox-window {background-color:#fff100;padding:5px} \n" 
+			." #sbox-window {background-color:#fff;padding:5px} \n" 
 			." </style> \n");
 		
 		
 		// PARAMS - Get image height and width
-		$tmpl['boxlargewidth']		= $params->get( 'front_modal_box_width', 680 );
-		$tmpl['boxlargeheight'] 	= $params->get( 'front_modal_box_height', 560 );
-		$front_popup_window_width 	= $tmpl['boxlargewidth'];//since version 2.2
-		$front_popup_window_height 	= $tmpl['boxlargeheight'];//since version 2.2
-		
-		if ($detail_window == 1) {
-			$tmpl['windowwidth']	= $front_popup_window_width;
-			$tmpl['windowheight']	= $front_popup_window_height;
-		} else {//modal popup window
-			$tmpl['windowwidth']	= $tmpl['boxlargewidth'];
-			$tmpl['windowheight']	= $tmpl['boxlargeheight'];
-		}
-		
-		$tmpl['largemapwidth']		= (int)$tmpl['windowwidth'] - 20;
-		$tmpl['largemapheight']		= (int)$tmpl['windowheight'] - 20;
+		$tmpl['largemapwidth']		= (int)$params->get( 'front_modal_box_width', 680 ) - 20;
+		$tmpl['largemapheight']		= (int)$params->get( 'front_modal_box_height', 560 ) - 20;
 		$tmpl['googlemapsapikey']	= $params->get( 'google_maps_api_key', '' );
 			
 		// MODEL
 		$model	= &$this->getModel();
 		$map	= $model->getData();
+
+		phocagalleryimport('phocagallery.image.imagefront');
+		if (!empty($map)) {
+			if (isset($map->filename) && $map->filename != '') {
+				$file_thumbnail = PhocaGalleryImageFront::displayImageOrNoImage($map->filename, 'small');
+				$map->thumbnail = $file_thumbnail;
+			} else {
+				$map->thumbnail = '';
+			}
+			
+			if (isset($map->latitude) && $map->latitude != '' && $map->latitude != 0
+				&& isset($map->longitude) && $map->longitude != '' && $map->longitude != 0 ) {
+				
+			} else {
+				$map->longitude	= '';
+				$map->latitude	= '';
+				$map->zoom		= 2;
+				$map->geotitle	= '';
+			}
+		}
+			
+		// Second try to get category data
+		if ((empty($map)) || ($map->longitude == '' && $map->latitude	== '' && $map->geotitle == '')) {
+			
+			$map	= $model->getDataCategory();
+			
+			if (!empty($map)) {
+			
+				if (isset($map->latitude) && $map->latitude != '' && $map->latitude != 0
+					&& isset($map->longitude) && $map->longitude != '' && $map->longitude != 0 ) {
+					$map->thumbnail = '';
+					
+				} else {
+					$map->longitude	= '';
+					$map->latitude	= '';
+					$map->zoom		= 2;
+					$map->geotitle	= '';
+				}
+			} else {
+				$map->longitude	= '';
+				$map->latitude	= '';
+				$map->zoom		= 2;
+				$map->geotitle	= '';
+			}
+		}
 		
 		// ASIGN
 		$this->assignRef( 'tmpl', $tmpl );
@@ -86,3 +117,4 @@ class PhocaGalleryViewMap extends JView
 		parent::display($tpl);
 	}
 }
+?>

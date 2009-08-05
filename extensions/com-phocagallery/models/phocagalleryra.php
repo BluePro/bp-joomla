@@ -14,9 +14,10 @@ jimport('joomla.application.component.model');
 
 class PhocaGalleryCpModelPhocaGalleryRa extends JModel
 {
-	var $_data = null;
-	var $_total = null;
-	var $_pagination = null;
+	var $_data 			= null;
+	var $_total 		= null;
+	var $_pagination 	= null;
+	var $_context		= 'com_phocagallery.phocagalleryra';
 
 	function __construct() {
 		parent::__construct();
@@ -24,8 +25,8 @@ class PhocaGalleryCpModelPhocaGalleryRa extends JModel
 		global $mainframe, $option;		
 		
 		// Get the pagination request variables
-		$limit		= $mainframe->getUserStateFromRequest( 'global.list.limit', 'limit', $mainframe->getCfg('list_limit'), 'int' );
-		$limitstart	= $mainframe->getUserStateFromRequest( $option.'.limitstart', 'limitstart', 0, 'int' );
+		$limit	= $mainframe->getUserStateFromRequest( $this->_context.'.list.limit', 'limit', $mainframe->getCfg('list_limit'), 'int' );
+		$limitstart	= $mainframe->getUserStateFromRequest( $this->_context.'.limitstart', 'limitstart', 0, 'int' );
 
 		// In case limit has been changed, adjust limitstart accordingly
 		$limitstart = ($limit != 0 ? (floor($limitstart / $limit) * $limit) : 0);
@@ -80,10 +81,8 @@ class PhocaGalleryCpModelPhocaGalleryRa extends JModel
 
 	function _buildContentOrderBy() {
 		global $mainframe;
-
-		$context			= 'com_phocagallery.phocagalleryra.list.';
-		$filter_order		= $mainframe->getUserStateFromRequest( $context.'filter_order',		'filter_order',		'a.ordering',	'cmd' );
-		$filter_order_Dir	= $mainframe->getUserStateFromRequest( $context.'filter_order_Dir',	'filter_order_Dir',	'',				'word' );
+		$filter_order		= $mainframe->getUserStateFromRequest( $this->_context.'.filter_order',		'filter_order',		'a.ordering',	'cmd' );
+		$filter_order_Dir	= $mainframe->getUserStateFromRequest( $this->_context.'.filter_order_Dir',	'filter_order_Dir',	'',				'word' );
 
 		if ($filter_order == 'a.ordering'){
 			$orderby 	= ' ORDER BY category, a.ordering '.$filter_order_Dir;
@@ -93,21 +92,16 @@ class PhocaGalleryCpModelPhocaGalleryRa extends JModel
 		return $orderby;
 	}
 
-	function _buildContentWhere()
-	{
+	function _buildContentWhere() {
 		global $mainframe;
 
-		$context			= 'com_phocagallery.phocagalleryra.list.';
+		$filter_catid		= $mainframe->getUserStateFromRequest( $this->_context.'.filter_catid',	'filter_catid',	0,	'int' );
 
-		$filter_catid		= $mainframe->getUserStateFromRequest( $context.'filter_catid',		'filter_catid',		0,				'int' );
-
-		$filter_order_Dir	= $mainframe->getUserStateFromRequest( $context.'filter_order_Dir',	'filter_order_Dir',	'',				'word' );
-		$search				= $mainframe->getUserStateFromRequest( $context.'search',			'search',			'',				'string' );
+		$filter_order_Dir	= $mainframe->getUserStateFromRequest( $this->_context.'.filter_order_Dir',	'filter_order_Dir',	'',	'word' );
+		$search				= $mainframe->getUserStateFromRequest( $this->_context.'.search', 'search', '', 'string' );
 		$search				= JString::strtolower( $search );
-
-		$where = array();
-
 		
+		$where = array();
 		$where[] = 'a.userid = u.id';
 		
 		if ($filter_catid > 0) {
@@ -121,26 +115,7 @@ class PhocaGalleryCpModelPhocaGalleryRa extends JModel
 
 		return $where;
 	}
-	/*
-	function _initData() {
-		if (empty($this->_data)) {
-			$phocagallery = new stdClass();
-			$phocagallery->id				= 0;
-			$phocagallery->catid			= 0;
-			$phocagallery->userid			= 0;
-			$phocagallery->date				= 0;
-			$phocagallery->rating			= 0;
-			$phocagallery->published		= 0;
-			$phocagallery->checked_out		= 0;
-			$phocagallery->checked_out_time	= 0;
-			$phocagallery->ordering			= 0;
-			$phocagallery->params			= null;
-			$this->_data					= $phocagallery;
-			return (boolean) $this->_data;
-		}
-		return true;
-	}
-	*/
+	
 	function delete($cid = array()) {
 		
 		if (count( $cid )) {
@@ -161,9 +136,9 @@ class PhocaGalleryCpModelPhocaGalleryRa extends JModel
 				$this->setError($this->_db->getErrorMsg());
 				return false;
 			}
-			
+			phocagalleryimport('phocagallery.rate.ratecategory');
 			foreach ($catids as $valueCatid) {
-				$updated = PhocaGalleryHelperRate::updateVoteStatistics( $valueCatid->catid );
+				$updated = PhocaGalleryRateCategory::updateVoteStatistics( $valueCatid->catid );
 				if(!$updated) {
 					return false;
 				}				

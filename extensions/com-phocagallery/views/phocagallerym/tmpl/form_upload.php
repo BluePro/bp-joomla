@@ -18,7 +18,7 @@ if (isset($this->state->folder) && $this->state->folder != '') {
 <!-- File Upload Form -->
 <?php
 if ($this->require_ftp) {
-	echo PhocaGalleryHelperUpload::renderFTPaccess();
+	echo PhocaGalleryUpload::renderFTPaccess();
 }  ?>
 <fieldset>
 	<legend><?php echo JText::_( 'Upload File' ); ?> [ <?php echo JText::_( 'Max' ); ?>&nbsp;<?php echo ($this->tmpl['uploadmaxsize'] / 1000000); ?>M ]</legend>
@@ -32,6 +32,6 @@ if ($this->require_ftp) {
 </form>
 
 <?php 
-echo PhocaGalleryHelperUpload::renderCreateFolder($this->session->getName(), $this->session->getId(), $currentFolder, 'phocagallerym' );
+echo PhocaGalleryFileUpload::renderCreateFolder($this->session->getName(), $this->session->getId(), $currentFolder, 'phocagallerym' );
 ?>
 </div>

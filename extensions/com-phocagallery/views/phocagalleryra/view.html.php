@@ -13,6 +13,8 @@ jimport( 'joomla.application.component.view' );
  
 class PhocaGalleryCpViewPhocaGalleryRa extends JView
 {
+	var $_context 	= 'com_phocagallery.phocagalleryra';
+
 	function display($tpl = null) {
 		global $mainframe;
 		$uri		=& JFactory::getURI();
@@ -20,20 +22,11 @@ class PhocaGalleryCpViewPhocaGalleryRa extends JView
 		$db		    =& JFactory::getDBO();
 		
 		JHTML::stylesheet( 'phocagallery.css', 'administrator/components/com_phocagallery/assets/' );
-
-
-		// Set toolbar items for the page
-		JToolBarHelper::title(   JText::_( 'Phoca Gallery Rating' ), 'vote.png' );
-		JToolBarHelper::deleteList(  JText::_( 'WARNWANTDELLISTEDITEMS' ), 'remove', 'delete');
-		JToolBarHelper::help( 'screen.phocagallery', true );
-
 		//Filter
-		$context			= 'com_phocagallery.phocagalleryra.list.';
-		
-		$filter_catid		= $mainframe->getUserStateFromRequest( $context.'filter_catid',		'filter_catid',		0,				'int' );
-		$filter_order		= $mainframe->getUserStateFromRequest( $context.'filter_order',		'filter_order',		'a.ordering',	'cmd' );
-		$filter_order_Dir	= $mainframe->getUserStateFromRequest( $context.'filter_order_Dir',	'filter_order_Dir',	'',				'word' );
-		$search				= $mainframe->getUserStateFromRequest( $context.'search',			'search',			'',				'string' );
+		$filter_catid		= $mainframe->getUserStateFromRequest( $this->_context.'.filter_catid',	'filter_catid', 0, 'int' );
+		$filter_order		= $mainframe->getUserStateFromRequest( $this->_context.'.filter_order',	'filter_order',	'a.ordering', 'cmd' );
+		$filter_order_Dir	= $mainframe->getUserStateFromRequest( $this->_context.'.filter_order_Dir',	'filter_order_Dir',	'', 'word' );
+		$search				= $mainframe->getUserStateFromRequest( $this->_context.'.search', 'search', '',	'string' );
 		$search				= JString::strtolower( $search );
 
 		// Get data from the model
@@ -41,10 +34,8 @@ class PhocaGalleryCpViewPhocaGalleryRa extends JView
 		$total		= & $this->get( 'Total');
 		$pagination = & $this->get( 'Pagination' );
 		
-
 		// build list of categories
 		$javascript 	= 'class="inputbox" size="1" onchange="submitform( );"';
-		
 		
 		$query = 'SELECT a.title AS text, a.id AS value, a.parent_id as parentid'
 		. ' FROM #__phocagallery_categories AS a'
@@ -55,14 +46,11 @@ class PhocaGalleryCpViewPhocaGalleryRa extends JView
 
 		$tree = array();
 		$text = '';
-		$tree = PhocaGalleryHelper::CategoryTreeOption($phocagallerys, $tree, 0, $text, -1);
-	//	$phocagallerys_tree_array = PhocaGalleryHelper::CategoryTreeCreating($phocagallerys, $tree, 0);
+		$tree = PhocaGalleryRenderAdmin::CategoryTreeOption($phocagallerys, $tree, 0, $text, -1);
 		array_unshift($tree, JHTML::_('select.option', '0', '- '.JText::_('Select Category').' -', 'value', 'text'));
 		//list categories
 		$lists['catid'] = JHTML::_( 'select.genericlist', $tree, 'filter_catid',  $javascript , 'value', 'text', $filter_catid );
-		//-----------------------------------------------------------------------
 	
-
 		// table ordering
 		$lists['order_Dir'] = $filter_order_Dir;
 		$lists['order'] = $filter_order;
@@ -79,6 +67,13 @@ class PhocaGalleryCpViewPhocaGalleryRa extends JView
 		$this->assignRef('request_url',	$uri->toString());
 		
 		parent::display($tpl);
+		$this->_setToolbar();
+	}
+	
+	function _setToolbar() {
+		JToolBarHelper::title(   JText::_( 'Phoca Gallery Category Rating' ), 'vote.png' );
+		JToolBarHelper::deleteList(  JText::_( 'WARNWANTDELLISTEDITEMS' ), 'remove', 'delete');
+		JToolBarHelper::help( 'screen.phocagallery', true );
 	}
 }
 ?>

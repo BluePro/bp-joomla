@@ -42,6 +42,7 @@ if ($this->tmpl['categorypublished'] == 0) {
 
 			<?php echo JHTML::_( 'form.token' ); ?>
 			<input type="hidden" name="task" value="createCategory"/>
+			<input type="hidden" name="controller" value="category" />
 			<input type="hidden" name="view" value="user"/>
 			<input type="hidden" name="tab" value="<?php echo $this->tmpl['currenttab']['createcategory'];?>" />
 			<input type="hidden" name="Itemid" value="<?php echo JRequest::getVar('Itemid', 1, 'get', 'int') ?>"/>

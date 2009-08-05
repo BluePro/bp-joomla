@@ -8,15 +8,25 @@
  * @copyright Copyright (C) Jan Pavelka www.phoca.cz
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
-// no direct access
 defined( '_JEXEC' ) or die( 'Restricted access' );
+if (! class_exists('PhocaGalleryLoader')) {
+    require_once( JPATH_ADMINISTRATOR.DS.'components'.DS.'com_phocagallery'.DS.'libraries'.DS.'loader.php');
+}
 
 // Require the base controller
 require_once( JPATH_COMPONENT.DS.'controller.php' );
-require_once( JPATH_COMPONENT.DS.'helpers'.DS.'phocagallery.php' );
-require_once( JPATH_ADMINISTRATOR.DS.'components'.DS.'com_phocagallery'.DS.'helpers'.DS.'phocagallery.php' );
-require_once( JPATH_ADMINISTRATOR.DS.'components'.DS.'com_phocagallery'.DS.'helpers'.DS.'phocagallerycomment.php' );
-require_once( JPATH_ADMINISTRATOR.DS.'components'.DS.'com_phocagallery'.DS.'helpers'.DS.'phocalibrary.php' );
+phocagalleryimport('phocagallery.path.path');
+phocagalleryimport('phocagallery.pagination.paginationcategories');
+phocagalleryimport('phocagallery.pagination.paginationcategory');
+phocagalleryimport('phocagallery.library.library');
+phocagalleryimport('phocagallery.text.text');
+phocagalleryimport('phocagallery.access.access');
+phocagalleryimport('phocagallery.file.file');
+phocagalleryimport('phocagallery.image.image');
+phocagalleryimport('phocagallery.image.imagefront');
+phocagalleryimport('phocagallery.render.renderinfo');
+phocagalleryimport('phocagallery.render.renderfront');
+
 
 // Require specific controller if requested
 if($controller = JRequest::getWord('controller')) {

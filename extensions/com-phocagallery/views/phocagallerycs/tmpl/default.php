@@ -63,13 +63,9 @@ JHTML::_('behavior.tooltip');
 				$k = 0;
 				$i = 0;
 				$n = count( $this->items );
-				
 				$rows = &$this->items;
-		
-				if (is_array($rows))
-				{
-					foreach ($rows as $row)
-					{
+				if (is_array($rows)) {
+					foreach ($rows as $row) {
 						$link 	= JRoute::_( 'index.php?option=com_phocagallery&controller=phocagalleryc&task=edit&cid[]='. $row->id );
 						$checked 	= JHTML::_('grid.checkedout', $row, $i );
 						$published 	= JHTML::_('grid.published', $row, $i );
@@ -78,7 +74,7 @@ JHTML::_('behavior.tooltip');
 						$row->cat_link 	= JRoute::_( 'index.php?option=com_phocagallery&controller=phocagalleryc&task=edit&cid[]='. $row->parent_id );
 					?>
 					<tr class="<?php echo "row$k"; ?>">
-						<td><?php echo $this->pagination->getRowOffset( $i );?></td>
+						<td><?php echo $this->tmpl['pagination']->getRowOffset( $i );?></td>
 						<td><?php echo $checked; ?></td>
 						
 						<td>
@@ -96,9 +92,9 @@ JHTML::_('behavior.tooltip');
 						
 						<td align="center"><?php echo $published;?></td>
 						<td class="order">
-							<span><?php echo $this->pagination->orderUpIcon( $i, $row->parent_id == 0 || $row->parent_id == @$rows[$i-1]->parent_id, 'orderup', 'Move Up', $this->ordering); ?></span>
-					<span><?php echo $this->pagination->orderDownIcon( $i, $n, $row->parent_id == 0 || $row->parent_id == @$rows[$i+1]->parent_id, 'orderdown', 'Move Down', $this->ordering ); ?></span>
-						<?php $disabled = $this->ordering ?  '' : 'disabled="disabled"'; ?>
+							<span><?php echo $this->tmpl['pagination']->orderUpIcon( $i, $row->parent_id == 0 || $row->parent_id == @$rows[$i-1]->parent_id, 'orderup', 'Move Up', $this->tmpl['ordering']); ?></span>
+					<span><?php echo $this->tmpl['pagination']->orderDownIcon( $i, $n, $row->parent_id == 0 || $row->parent_id == @$rows[$i+1]->parent_id, 'orderdown', 'Move Down', $this->tmpl['ordering'] ); ?></span>
+						<?php $disabled = $this->tmpl['ordering'] ?  '' : 'disabled="disabled"'; ?>
 							<input type="text" name="order[]" size="5" value="<?php echo $row->ordering;?>" <?php echo $disabled ?> class="text_area" style="text-align: center" />
 						</td>
 						<td align="center">
@@ -112,11 +108,8 @@ JHTML::_('behavior.tooltip');
 						
 						<td align="center"><?php
 							$voteAvg 		= round(((float)$row->ratingavg / 0.5)) * 0.5;
-							$voteAvgWidth	= 22 * $voteAvg;
-							
-							
-							
-							echo '<ul class="star-rating">'
+							$voteAvgWidth	= 16 * $voteAvg;
+							echo '<ul class="star-rating-small">'
 							.'<li class="current-rating" style="width:'.$voteAvgWidth.'px"></li>'
 							.'<li><span class="star1"></span></li>';
 					
@@ -140,7 +133,7 @@ JHTML::_('behavior.tooltip');
 			
 			<tfoot>
 				<tr>
-					<td colspan="11"><?php echo $this->pagination->getListFooter(); ?></td>
+					<td colspan="11"><?php echo $this->tmpl['pagination']->getListFooter(); ?></td>
 				</tr>
 			</tfoot>
 		</table>

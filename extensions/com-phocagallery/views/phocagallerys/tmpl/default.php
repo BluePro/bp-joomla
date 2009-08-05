@@ -46,7 +46,9 @@ JHTML::_('behavior.tooltip');
 						<?php echo JHTML::_('grid.order',  $this->items ); ?></th>
 					<th width="15%"  class="title">
 						<?php echo JHTML::_('grid.sort',  'Category', 'category', $this->lists['order_Dir'], $this->lists['order'] ); ?></th>
-						
+					<th width="5%"><?php echo JHTML::_('grid.sort',  'Rating', 'v.average', $this->lists['order_Dir'], $this->lists['order'] ); ?>
+					</th>
+					
 					<th width="5%"><?php echo JHTML::_('grid.sort',  'Hits', 'a.hits', $this->lists['order_Dir'], $this->lists['order'] ); ?>
 					</th>
 					
@@ -70,7 +72,7 @@ JHTML::_('behavior.tooltip');
 					$row->cat_link 	= JRoute::_( 'index.php?option=com_phocagallery&controller=phocagalleryc&task=edit&cid[]='. $row->catid );
 				?>
 				<tr class="<?php echo "row$k"; ?>">
-					<td><?php echo $this->pagination->getRowOffset( $i ); ?></td>
+					<td><?php echo $this->tmpl['pagination']->getRowOffset( $i ); ?></td>
 					<td><?php echo $checked; ?></td>
 					<td align="center" valign="middle">
 						<div class="phocagallery-box-file">
@@ -82,7 +84,7 @@ JHTML::_('behavior.tooltip');
 											<?php if (isset ($row->fileoriginalexist) && $row->fileoriginalexist == 1)
 											{
 											?>
-												<a class="<?php echo $this->button->modalname; ?>" title="<?php echo $this->button->text; ?>" href="<?php echo $this->button->link . '&amp;cid[]='.$row->id; ?>" rel="<?php echo $this->button->options; ?>" ><?php echo JHTML::_( 'image.administrator', $row->linkthumbnailpath.'?imagesid='.md5(uniqid(time())), ''); ?></a>
+												<a class="<?php echo $this->button->modalname; ?>" title="<?php echo $this->button->text; ?>" href="<?php echo $this->button->link . '&amp;cid[]='.$row->id; ?>" rel="<?php echo $this->button->options; ?>" ><?php echo JHTML::_( 'image', $row->linkthumbnailpath.'?imagesid='.md5(uniqid(time())), ''); ?></a>
 											<?php
 											}
 											else
@@ -122,13 +124,27 @@ JHTML::_('behavior.tooltip');
 					</td>
 					<td align="center"><?php echo $published;?></td>
 					<td class="order">
-						<span><?php echo $this->pagination->orderUpIcon( $i, ($row->catid == @$this->items[$i-1]->catid),'orderup', 'Move Up', $ordering ); ?></span>
-						<span><?php echo $this->pagination->orderDownIcon( $i, $n, ($row->catid == @$this->items[$i+1]->catid), 'orderdown', 'Move Down', $ordering ); ?></span>
+						<span><?php echo $this->tmpl['pagination']->orderUpIcon( $i, ($row->catid == @$this->items[$i-1]->catid),'orderup', 'Move Up', $ordering ); ?></span>
+						<span><?php echo $this->tmpl['pagination']->orderDownIcon( $i, $n, ($row->catid == @$this->items[$i+1]->catid), 'orderdown', 'Move Down', $ordering ); ?></span>
 					<?php $disabled = $ordering ?  '' : 'disabled="disabled"'; ?>
 						<input type="text" name="order[]" size="5" value="<?php echo $row->ordering;?>" <?php echo $disabled ?> class="text_area" style="text-align: center" />
 					</td>
 					<td><a href="<?php echo $row->cat_link; ?>" title="<?php echo JText::_( 'Edit Category' ); ?>"><?php echo $row->category; ?></a>
 					</td>
+					
+					<td align="center"><?php
+							$voteAvg 		= round(((float)$row->ratingavg / 0.5)) * 0.5;
+							$voteAvgWidth	= 16 * $voteAvg;
+							echo '<ul class="star-rating-small">'
+							.'<li class="current-rating" style="width:'.$voteAvgWidth.'px"></li>'
+							.'<li><span class="star1"></span></li>';
+					
+							for ($ir = 2;$ir < 6;$ir++) {
+								echo '<li><span class="stars'.$ir.'"></span></li>';
+							}
+							echo '</ul>';
+						
+						?></td>
 
 					<td align="center"><?php echo $row->hits; ?></td>
 					
@@ -142,7 +158,7 @@ JHTML::_('behavior.tooltip');
 			
 			<tfoot>
 				<tr>
-					<td colspan="11"><?php echo $this->pagination->getListFooter(); ?></td>
+					<td colspan="11"><?php echo $this->tmpl['pagination']->getListFooter(); ?></td>
 				</tr>
 			</tfoot>
 		</table>

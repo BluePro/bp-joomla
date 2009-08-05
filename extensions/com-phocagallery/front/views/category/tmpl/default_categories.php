@@ -1,9 +1,9 @@
 <?php
 defined('_JEXEC') or die('Restricted access'); 
 
-if(!empty($this->categories)) {
+if(!empty($this->itemscv)) {
 	$columns 			= (int)$this->tmpl['categoriescolumnscv'];
-	$countCategories 	= count($this->categories);
+	$countCategories 	= count($this->itemscv);
 	$begin				= array();
 	$end				= array();
 	$begin[0]			= 0;// first
@@ -33,11 +33,11 @@ if ($this->tmpl['displayimagecategoriescv'] == 1) {
 			case 2:
 			case 4:
 			case 6:
-				$imageThumbnail = str_replace('medium', 'small-main', $this->categories[$i]->linkthumbnailpath);
+				$imageThumbnail = str_replace('medium', 'small-main', $this->itemscv[$i]->linkthumbnailpath);
 				$imageThumbnail = str_replace('phoca_thumb_m_', 'phoca_thumb_s_', $imageThumbnail);
 			break;
 			default:
-				$imageThumbnail = str_replace('small-main', 'medium', $this->categories[$i]->linkthumbnailpath);
+				$imageThumbnail = str_replace('small-main', 'medium', $this->itemscv[$i]->linkthumbnailpath);
 				$imageThumbnail = str_replace('phoca_thumb_s_', 'phoca_thumb_m_', $imageThumbnail);
 			break;
 		 } 
@@ -59,10 +59,10 @@ if ($this->tmpl['displayimagecategoriescv'] == 1) {
 		}
 
 		echo '<tr>';		
-		echo '<td align="center" valign="middle" style="'.$this->tmpl['imagebgcv'].';text-align:center;"><a href="'.$this->categories[$i]->link.'">'.JHTML::_( 'image.site',$imageThumbnail, '', '', '', $this->categories[$i]->title, 'style="border:0"' ).'</a></td>';
-		echo '<td><a href="'.$this->categories[$i]->link.'" class="category'.$this->params->get( 'pageclass_sfx' ).'">'.$this->categories[$i]->title.'</a>&nbsp;';
+		echo '<td align="center" valign="middle" style="'.$this->tmpl['imagebgcv'].';text-align:center;"><a href="'.$this->itemscv[$i]->link.'">'.JHTML::_( 'image.site',$imageThumbnail, '', '', '', $this->itemscv[$i]->title, 'style="border:0"' ).'</a></td>';
+		echo '<td><a href="'.$this->itemscv[$i]->link.'" class="category'.$this->params->get( 'pageclass_sfx' ).'">'.$this->itemscv[$i]->title.'</a>&nbsp;';
 		
-		if ($this->categories[$i]->numlinks > 0) {echo '<span class="small">('.$this->categories[$i]->numlinks.')</span>';}
+		if ($this->itemscv[$i]->numlinks > 0) {echo '<span class="small">('.$this->itemscv[$i]->numlinks.')</span>';}
 		
 		echo '</td>';
 		echo '</tr>';
@@ -101,11 +101,11 @@ else {
 			case 2:
 			case 4:
 			case 6:
-				$imageThumbnail = str_replace('medium', 'small-main', $this->categories[$i]->linkthumbnailpath);
+				$imageThumbnail = str_replace('medium', 'small-main', $this->itemscv[$i]->linkthumbnailpath);
 				$imageThumbnail = str_replace('phoca_thumb_m_', 'phoca_thumb_s_', $imageThumbnail);
 			break;
 			default:
-				$imageThumbnail = str_replace('small-main', 'medium', $this->categories[$i]->linkthumbnailpath);
+				$imageThumbnail = str_replace('small-main', 'medium', $this->itemscv[$i]->linkthumbnailpath);
 				$imageThumbnail = str_replace('phoca_thumb_s_', 'phoca_thumb_m_', $imageThumbnail);
 			break;
 		 } 
@@ -126,9 +126,9 @@ else {
 			}
 		}
 		
-		echo '<li><a href="'.$this->categories[$i]->link.'" class="category'.$this->params->get( 'pageclass_sfx' ).'">'.$this->categories[$i]->title.'</a>&nbsp;';
+		echo '<li><a href="'.$this->itemscv[$i]->link.'" class="category'.$this->params->get( 'pageclass_sfx' ).'">'.$this->itemscv[$i]->title.'</a>&nbsp;';
 		
-		if ($this->categories[$i]->numlinks > 0) {echo '<span class="small">('.$this->categories[$i]->numlinks.')</span>';}
+		if ($this->itemscv[$i]->numlinks > 0) {echo '<span class="small">('.$this->itemscv[$i]->numlinks.')</span>';}
 		
 		echo '</li>';
 		

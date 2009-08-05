@@ -1,15 +1,16 @@
 <?php defined('_JEXEC') or die('Restricted access');
+phocagalleryimport('phocagallery.text.text');
 
 if ($this->tmpl['googlemapsapikey'] == '') {
 	echo '<p>' . JText::_('Google Maps API Key Error Front') . '</p>';
-} else if ($this->map['longitude'] == '' || $this->map['latitude'] == '') {
+} else if (empty($this->map) || $this->map->longitude == '' || $this->map->latitude == '') {
 	echo '<p>' . JText::_('Google Maps Error Front') . '</p>';
 } else {
 
-	$text = '<div style="text-align:left"><table border="0" cellspacing="5" cellpadding="5"><tr><td align="left" colspan="2"><b>'. $this->map['geotitle'].'</b></td></tr>';
+	$text = '<div style="text-align:left"><table border="0" cellspacing="5" cellpadding="5"><tr><td align="left" colspan="2"><b>'. addslashes($this->map->geotitle).'</b></td></tr>';
 	$text .='<tr>';
-	$text .='<td valign="top" align="left">'.JHTML::_( 'image.site', $this->map['thumbnail'], '', '', '', $this->map['geotitle'] ) . '</td>';
-	$text .='<td valign="top" align="left">'. PhocaGalleryHelper::strTrimAll($this->map['description']).'</td>';
+	$text .='<td valign="top" align="left">'.JHTML::_( 'image.site', $this->map->thumbnail, '', '', '', addslashes($this->map->geotitle)) . '</td>';
+	$text .='<td valign="top" align="left">'. PhocaGalleryText::strTrimAll(addslashes($this->map->description)).'</td>';
 	$text .='</tr></table></div>';
 	?>
 
@@ -62,18 +63,18 @@ function getPhocaGeoMap(){
 	
 		map_phoca_geo = new GMap2(document.getElementById('phoca_geo_map'));
 		map_phoca_geo.addControl(new GMapTypeControl());
-		map_phoca_geo.addControl(new GLargeMapControl());
+		map_phoca_geo.addControl(new GLargeMapControl3D());
 		var overviewmap = new GOverviewMapControl();
 		map_phoca_geo.addControl(overviewmap, new GControlPosition(G_ANCHOR_BOTTOM_RIGHT));
 		
-		map_phoca_geo.setCenter(new GLatLng(<?php echo $this->map['latitude'];?>, <?php echo $this->map['longitude'];?>), <?php echo $this->map['zoom'];?>);
+		map_phoca_geo.setCenter(new GLatLng(<?php echo $this->map->latitude;?>, <?php echo $this->map->longitude;?>), <?php echo $this->map->zoom;?>);
 		map_phoca_geo.setMapType(G_NORMAL_MAP);
 		map_phoca_geo.enableContinuousZoom();
 		map_phoca_geo.enableDoubleClickZoom();
 		map_phoca_geo.enableScrollWheelZoom();
 		
-		var point = new GPoint( <?php echo $this->map['longitude'];?>, <?php echo $this->map['latitude'];?>);
-		var marker_phoca_geo = new GMarker(point, {title:"<?php echo $this->map['geotitle'];?>"});
+		var point = new GPoint( <?php echo $this->map->longitude;?>, <?php echo $this->map->latitude;?>);
+		var marker_phoca_geo = new GMarker(point, {title:"<?php echo addslashes($this->map->geotitle);?>"});
 		map_phoca_geo.addOverlay(marker_phoca_geo);
 		
 		GEvent.addListener(marker_phoca_geo, 'click', function() {

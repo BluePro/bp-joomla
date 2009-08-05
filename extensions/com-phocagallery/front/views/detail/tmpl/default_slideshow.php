@@ -15,11 +15,11 @@ defined('_JEXEC') or die('Restricted access');
 		</tr>
 		
 		<tr>
-			<td align="left" width="30%" style="padding-left:48px"><?php echo $this->file->prevbutton ;?></td>
-			<td><?php echo $this->file->slideshowbutton ;?></td>
-			<td><?php echo str_replace("%onclickreload%", $this->tmpl['detailwindowreload'], $this->file->reloadbutton);?></td>
-			<td><?php echo str_replace("%onclickclose%", $this->tmpl['detailwindowclose'], $this->file->closebutton);?></td>
-			<td align="right" width="30%" style="padding-right:48px"><?php echo $this->file->nextbutton ;?></td>
+			<td align="left" width="30%" style="padding-left:48px"><?php echo $this->item->prevbutton ;?></td>
+			<td><?php echo $this->item->slideshowbutton ;?></td>
+			<td><?php echo str_replace("%onclickreload%", $this->tmpl['detailwindowreload'], $this->item->reloadbutton);?></td>
+			<td><?php echo str_replace("%onclickclose%", $this->tmpl['detailwindowclose'], $this->item->closebutton);?></td>
+			<td align="right" width="30%" style="padding-right:48px"><?php echo $this->item->nextbutton ;?></td>
 		</tr>
 	</table>
 </center><?php

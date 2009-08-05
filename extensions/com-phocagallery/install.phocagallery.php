@@ -25,7 +25,7 @@ function com_install() {
 	{
 		if (!JFolder::exists( $value[1]))
 		{
-			if (JFolder::create( $value[1], 0777 ))
+			if (JFolder::create( $value[1], 0755 ))
 			{
 				@JFile::write($value[1].DS."index.html", "<html>\n<body bgcolor=\"#FFFFFF\">\n</body>\n</html>");
 			//	@JFile::write($value[1].DS.".htaccess", "deny from all");

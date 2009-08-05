@@ -1,7 +1,12 @@
-<?php defined('_JEXEC') or die('Restricted access'); ?>
+<?php defined('_JEXEC') or die('Restricted access');
 
-<?php echo $this->loadTemplate('up'); ?>
-<?php if (count($this->folders) > 0) { ?>
+$currentFolder = '';
+if (isset($this->state->folder) && $this->state->folder != '') {
+ $currentFolder = $this->state->folder;
+}
+
+echo $this->loadTemplate('up');
+if (count($this->folders) > 0) { ?>
 <div>
 		<?php for ($i=0,$n=count($this->folders); $i<$n; $i++) :
 			$this->setFolder($i);
@@ -15,7 +20,12 @@
 		<?php echo JText::_( 'There is no folder' ); ?>
 	</center>
 </div>
-<?php } ?>
+
+<?php
+}
+echo '<div style="clear:both"></div>';
+echo PhocaGalleryFileUpload::renderCreateFolder($this->session->getName(), $this->session->getId(), $currentFolder, 'phocagalleryf' );
+?>
 
 
 

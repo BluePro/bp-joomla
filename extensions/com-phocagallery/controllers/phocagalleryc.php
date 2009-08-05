@@ -8,27 +8,21 @@
  * @copyright Copyright (C) Jan Pavelka www.phoca.cz
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
-
-// Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
-
 class PhocaGalleryCpControllerPhocaGalleryc extends PhocaGalleryCpController
 {
-	function __construct()
-	{
+	function __construct() {
+		
 		parent::__construct();
-		// Register Extra tasks
 		$this->registerTask( 'add'  , 	'edit' );
 		$this->registerTask( 'apply'  , 'save' );
 		$this->registerTask( 'accesspublic', 'accessMenu');
 		$this->registerTask( 'accessregistered', 'accessMenu');
 		$this->registerTask( 'accessspecial', 'accessMenu');
 		$this->registerTask( 'PicLens', 'piclens');
-
 	}
 	
-	function edit()
-	{
+	function edit() {
 		
 		JRequest::setVar( 'view', 'phocagalleryc' );
 		JRequest::setVar( 'layout', 'form'  );
@@ -36,18 +30,16 @@ class PhocaGalleryCpControllerPhocaGalleryc extends PhocaGalleryCpController
 
 		parent::display();
 
-		// Checkin the Phoca gallery
 		$model = $this->getModel( 'phocagalleryc' );
 		$model->checkout();
 	}
 
-	function save()
-	{
+	function save() {
 		$post					= JRequest::get('post');
 		$cid					= JRequest::getVar( 'cid', array(0), 'post', 'array' );
 		$post['description']	= JRequest::getVar( 'description', '', 'post', 'string', JREQUEST_ALLOWRAW );
 		$post['parent_id']		= JRequest::getVar( 'parentid', '', 'post', 'int' );
-		$post['id'] 	= (int) $cid[0];
+		$post['id'] 			= (int) $cid[0];
 
 		// DEFAULT VALUES FOR Rights in FRONTEND
 		// ACCESS -  0: all users can see the category (registered or not registered)
@@ -55,90 +47,22 @@ class PhocaGalleryCpControllerPhocaGalleryc extends PhocaGalleryCpController
 		//			   if -1 - user was not selected so every registered or special users can see category
 		// UPLOAD - -2: nobody can upload or add images in front (if 0 - every users can do it)
 		// DELETE - -2: nobody can upload or add images in front (if 0 - every users can do it)
-		
-		
-		$accessUserId	= JRequest::getVar( 'accessuserid', 0, 'post', 'array' );
-		$uploadUserId	= JRequest::getVar( 'uploaduserid', -2, 'post', 'array' );
-		$deleteUserId	= JRequest::getVar( 'deleteuserid', -2, 'post', 'array' );
+		$accessUserId	= JRequest::getVar( 'accessuserid', array(0 => 0), 'post', 'array' );
+		$uploadUserId	= JRequest::getVar( 'uploaduserid', array(0 => -2), 'post', 'array' );
+		$deleteUserId	= JRequest::getVar( 'deleteuserid', array(0 => -2), 'post', 'array' );
 		$userFolder		= JRequest::getVar( 'userfolder', '', 'post', 'string' );
 		$longitude		= JRequest::getVar( 'longitude', '', 'post', 'string' );
 		$latitude		= JRequest::getVar( 'latitude', '', 'post', 'string' );
 		$zoom			= JRequest::getVar( 'zoom', '', 'post', 'string' );
 		$geotitle		= JRequest::getVar( 'geotitle', '', 'post', 'string' );
 		
-		// Set all registered users if not selected but 'registered' selected
-		if (isset($post['access']) && (int)$post['access'] > 0 && (int)$accessUserId[0] == 0) {
-			
+		// Set all registered users if not selected, but 'registered' in access selected
+		if (isset($post['access']) && (int)$post['access'] > 0 && (int)$accessUserId[0] == 0) {		
 			$accessUserId[0]	= -1;
 		}
-		
-		// Access level for selected users
-		$post['params'] = '';
-		if (!empty($accessUserId)) {
-			$post['params'] .= 'accessuserid=';
-			foreach ($accessUserId as $key => $value) {
-				$post['params'] .= $value.',';
-			}
-			$post['params'] .=';';
-		} 
-
-		// Upload (add) level for selected users
-		if (!empty($uploadUserId)) {
-			$post['params'] .= 'uploaduserid=';
-			foreach ($uploadUserId as $key => $value) {
-				$post['params'] .= $value.',';
-			}
-			$post['params'] .=';';
-		}
-
-		// Delete (publish) level for selected users
-		if (!empty($uploadUserId)) {
-			$post['params'] .= 'deleteuserid=';
-			foreach ($deleteUserId as $key => $value) {
-				$post['params'] .= $value.',';
-			}
-			$post['params'] .=';';
-		}
-		// User folder for selected users
-		if (!empty($userFolder)) {
-			$post['params'] .= 'userfolder=';
-			$post['params'] .= $userFolder;
-			
-			$post['params'] .=';';
-		}
-		
-		// longitude
-		if (!empty($longitude)) {
-			$post['params'] .= 'longitude=';
-			$post['params'] .= $longitude;
-			
-			$post['params'] .=';';
-		}
-		
-		// longitude
-		if (!empty($latitude)) {
-			$post['params'] .= 'latitude=';
-			$post['params'] .= $latitude;
-			
-			$post['params'] .=';';
-		}
-		
-		// geotagging zoom
-		if (!empty($zoom)) {
-			$post['params'] .= 'zoom=';
-			$post['params'] .= $zoom;
-			
-			$post['params'] .=';';
-		}
-		
-		// geotagging title
-		if (!empty($geotitle)) {
-			$post['params'] .= 'geotitle=';
-			$post['params'] .= $geotitle;
-			
-			$post['params'] .=';';
-		}
-		
+		$post['accessuserid'] = implode(',',$accessUserId);
+		$post['uploaduserid'] = implode(',',$uploadUserId);
+		$post['deleteuserid'] = implode(',',$deleteUserId);
 		
 		$model = $this->getModel( 'phocagalleryc' );
 		
@@ -203,14 +127,12 @@ class PhocaGalleryCpControllerPhocaGalleryc extends PhocaGalleryCpController
 		$model->checkin();
 	}
 	
-	function accessMenu()
-	{
+	function accessMenu() {
 		$post			= JRequest::get('post');
 		$cid			= JRequest::getVar( 'cid', array(0), 'post', 'array' );
 		$access			= $post['task'];
 		
-		switch ($access)
-		{
+		switch ($access) {
 			case 'accessregistered':
 			$access_id= 1;
 			break;
@@ -233,8 +155,7 @@ class PhocaGalleryCpControllerPhocaGalleryc extends PhocaGalleryCpController
 		$this->setRedirect($link, $msg);
 	}
 
-	function remove()
-	{
+	function remove() {
 		global $mainframe;
 
 		$cid = JRequest::getVar( 'cid', array(), 'post', 'array' );
@@ -243,32 +164,13 @@ class PhocaGalleryCpControllerPhocaGalleryc extends PhocaGalleryCpController
 		if (count( $cid ) < 1) {
 			JError::raiseError(500, JText::_( 'Select an item to delete' ) );
 		}
-
-	/*	
-		$cids = implode( ',', $cid );
-		
-		$query = 'SELECT c.id, c.name, c.title, COUNT( s.catid ) AS numcat'
-		. ' FROM #__phocagallery_categories AS c'
-		. ' LEFT JOIN #__phocagallery AS s ON s.catid = c.id'
-		. ' WHERE c.id IN ( '.$cids.' )'
-		. ' GROUP BY c.id'
-		;
-		
-		$db->setQuery( $query );
-
-		if (!($rows = $db->loadObjectList())) {
-			JError::raiseError( 500, $db->stderr() );
-			return false;
-		}*/
 		
 		
 		$model = $this->getModel( 'phocagalleryc' );
-		if(!$model->delete($cid))
-		{
+		if(!$model->delete($cid)) {
 			echo "<script> alert('".$model->getError(true)."'); window.history.go(-1); </script>\n";
 			$msg = JText::_( 'Error Deleting Phoca Gallery Categories' );
-		}
-		else {
+		} else {
 			$msg = JText::_( 'Phoca Gallery Categories Deleted' );
 		}
 
@@ -276,8 +178,7 @@ class PhocaGalleryCpControllerPhocaGalleryc extends PhocaGalleryCpController
 		$this->setRedirect( $link, $msg );
 	}
 
-	function publish()
-	{
+	function publish() {
 		global $mainframe;
 
 		$cid = JRequest::getVar( 'cid', array(), 'post', 'array' );
@@ -295,8 +196,7 @@ class PhocaGalleryCpControllerPhocaGalleryc extends PhocaGalleryCpController
 		$this->setRedirect($link);
 	}
 
-	function unpublish()
-	{
+	function unpublish() {
 		global $mainframe;
 
 		$cid = JRequest::getVar( 'cid', array(), 'post', 'array' );
@@ -314,8 +214,7 @@ class PhocaGalleryCpControllerPhocaGalleryc extends PhocaGalleryCpController
 		$this->setRedirect($link);
 	}
 
-	function cancel()
-	{
+	function cancel() {
 		$model = $this->getModel( 'phocagalleryc' );
 		$model->checkin();
 
@@ -323,8 +222,7 @@ class PhocaGalleryCpControllerPhocaGalleryc extends PhocaGalleryCpController
 		$this->setRedirect( $link );
 	}
 
-	function orderup()
-	{
+	function orderup() {
 		$model = $this->getModel( 'phocagalleryc' );
 		$model->move(-1);
 
@@ -332,8 +230,7 @@ class PhocaGalleryCpControllerPhocaGalleryc extends PhocaGalleryCpController
 		$this->setRedirect( $link );
 	}
 
-	function orderdown()
-	{
+	function orderdown() {
 		$model = $this->getModel( 'phocagalleryc' );
 		$model->move(1);
 
@@ -341,8 +238,7 @@ class PhocaGalleryCpControllerPhocaGalleryc extends PhocaGalleryCpController
 		$this->setRedirect( $link );
 	}
 
-	function saveorder()
-	{
+	function saveorder() {
 		$cid 	= JRequest::getVar( 'cid', array(), 'post', 'array' );
 		$order 	= JRequest::getVar( 'order', array(), 'post', 'array' );
 		JArrayHelper::toInteger($cid);
@@ -356,8 +252,7 @@ class PhocaGalleryCpControllerPhocaGalleryc extends PhocaGalleryCpController
 		$this->setRedirect( $link, $msg  );
 	}
 	
-	function piclens()
-	{
+	function piclens() {
 		$cids	= JRequest::getVar( 'cid', array(0), 'post', 'array' );	
 		
 		$model = $this->getModel( 'phocagalleryc' );

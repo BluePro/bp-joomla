@@ -8,15 +8,9 @@
  * @copyright Copyright (C) Jan Pavelka www.phoca.cz
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
-
-// no direct access
 defined('_JEXEC') or die('Restricted access');
 
-// Include library dependencies
-jimport('joomla.filter.input');
-
-class TablePhocaGalleryc extends JTable
-{
+class TablePhocaGalleryc extends JTable {
 
 	var $id 				= null;
 	var $parent_id 			= null;
@@ -36,6 +30,14 @@ class TablePhocaGalleryc extends JTable
 	var $access				= null;
 	var $hits				= null;
 	var $count 				= null;
+	var $accessuserid		= null;
+	var $uploaduserid		= null;
+	var $deleteuserid		= null;
+	var $userfolder			= null;
+	var $latitude			= null;
+	var $longitude			= null;
+	var $zoom				= null;
+	var $geotitle			= null;
 	var $params 			= null;
 
 	function __construct(& $db) {

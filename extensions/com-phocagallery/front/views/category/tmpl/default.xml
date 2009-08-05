@@ -12,20 +12,26 @@
 			<param name="id" type="phocagallery" section="com_phocagallery" default="0" label="Select Category" description="A Phoca gallery category" />
 		</url>
 		<params>
-			<param name="show_pagination" type="radio" default="1" label="Pagination" description="Show/Hide Pagination support">
+		
+			<param name="show_pagination_categories" type="radio" default="0" label="Show Pagination Categories" description="Show/Hide Pagination support (Categories View)">
 				<option value="0">Hide</option>
 				<option value="1">Show</option>
 			</param>
 			
-			<param name="show_pagination_limit" type="radio" default="1" label="Display Select" description="Show/Hide the Display Select dropdown">
+			<param name="show_pagination_category" type="radio" default="1" label="Show Pagination Category" description="Show/Hide Pagination support (Category View)">
 				<option value="0">Hide</option>
 				<option value="1">Show</option>
 			</param>
 			
-			<param name="show_feed_link" type="radio" default="1" label="Show a feed link" description="PARAMSHOWFEEDLINK">
+			<param name="show_pagination_limit_categories" type="radio" default="0" label="Display Select (Categories View)" description="Show/Hide the Display Select dropdown (Categories View)">
 				<option value="0">Hide</option>
 				<option value="1">Show</option>
 			</param>
+			<param name="show_pagination_limit_category" type="radio" default="1" label="Display Select (Category View)" description="Show/Hide the Display Select dropdown (Category View)">
+				<option value="0">Hide</option>
+				<option value="1">Show</option>
+			</param>
+			
 			
 			<param name="@spacer" type="spacer" default="" label="" description="" />
 			<param name="display_cat_name_title" type="radio" default="1" label="Display Category Name in Page Title" description="Display Category Name in Page Title DESC">

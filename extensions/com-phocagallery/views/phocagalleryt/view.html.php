@@ -19,9 +19,6 @@ class PhocaGalleryCpViewPhocaGalleryT extends JView
 		global $mainframe;
 	
 		JHTML::stylesheet( 'phocagallery.css', 'administrator/components/com_phocagallery/assets/' );
-		JToolBarHelper::title(   JText::_( 'Phoca Gallery Themes' ), 'theme' );
-		JToolBarHelper::cancel( 'cancel', 'Close' );
-		JToolBarHelper::help( 'screen.phocagallery', true );
 		
 		$ftp	=& JClientHelper::setCredentialsFromRequest('ftp');
 		
@@ -33,13 +30,19 @@ class PhocaGalleryCpViewPhocaGalleryT extends JView
 		$this->assignRef('themename', $themeName);
 		$this->assignRef('ftp', $ftp);
 		parent::display($tpl);
+		$this->_setToolbar();
 	}
 	
+	function _setToolbar() {
+		JToolBarHelper::title(   JText::_( 'Phoca Gallery Themes' ), 'theme' );
+		JToolBarHelper::cancel( 'cancel', 'Close' );
+		JToolBarHelper::help( 'screen.phocagallery', true );
+	}
 	
 	function themeName() {
 		// Get an array of all the xml files from teh installation directory
-		$path		= JPATH_SITE.DS.'components'.DS.'com_phocagallery'.DS.'assets'.DS.'images';
-		$xmlFiles 	= JFolder::files($path, '.xml$', 1, true);
+		$path		= PhocaGalleryPath::getPath();
+		$xmlFiles 	= JFolder::files($path->image_abs, '.xml$', 1, true);
 		
 		// If at least one xml file exists
 		if (count($xmlFiles) > 0) {

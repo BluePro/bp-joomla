@@ -9,13 +9,18 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined( '_JEXEC' ) or die( 'Restricted access' );
+if (! class_exists('PhocaGalleryLoader')) {
+    require_once( JPATH_ADMINISTRATOR.DS.'components'.DS.'com_phocagallery'.DS.'libraries'.DS.'loader.php');
+}
 // Require the base controller and helpers
 require_once( JPATH_COMPONENT.DS.'controller.php' );
-require_once( JPATH_COMPONENT.DS.'helpers'.DS.'phocagallery.php' );
-require_once( JPATH_COMPONENT.DS.'helpers'.DS.'phocagalleryupload.php' );
-require_once( JPATH_COMPONENT.DS.'helpers'.DS.'phocagallerycp.php' );
-require_once( JPATH_COMPONENT.DS.'helpers'.DS.'phocagalleryrate.php' );
-require_once( JPATH_COMPONENT.DS.'helpers'.DS.'phocagalleryadminrender.php' );
+phocagalleryimport('phocagallery.path.path');
+phocagalleryimport('phocagallery.file.file');
+phocagalleryimport('phocagallery.file.filethumbnail');
+phocagalleryimport('phocagallery.file.fileupload');
+phocagalleryimport('phocagallery.render.renderadmin');
+phocagalleryimport('phocagallery.text.text');
+phocagalleryimport('phocagallery.render.renderprocess');
 
 // Require specific controller if requested
 if($controller = JRequest::getWord('controller')) {
@@ -36,5 +41,4 @@ $controller->execute( JRequest::getVar( 'task' ) );
 
 // Redirect if set by the controller
 $controller->redirect();
-
 ?>

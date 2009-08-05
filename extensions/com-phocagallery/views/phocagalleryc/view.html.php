@@ -10,7 +10,8 @@
  */
 defined('_JEXEC') or die();
 jimport( 'joomla.application.component.view' );
-
+phocagalleryimport('phocagallery.access.access');
+phocagalleryimport('phocagallery.rate.ratecategory');
 class PhocaGalleryCpViewPhocaGalleryC extends JView
 {
 	function display($tpl = null) {
@@ -25,6 +26,7 @@ class PhocaGalleryCpViewPhocaGalleryC extends JView
 	}
 
 	function _displayForm($tpl) {
+		
 		global $mainframe, $option;
 
 		$db		=& JFactory::getDBO();
@@ -34,11 +36,11 @@ class PhocaGalleryCpViewPhocaGalleryC extends JView
 		$editor =& JFactory::getEditor();	
 		
 		JHTML::_('behavior.calendar');
-		
-		//Data from model
-		$phocagallery	=& $this->get('Data');
 		JHTML::stylesheet( 'phocagallery.css', 'administrator/components/com_phocagallery/assets/' );
 		
+		//Data from model
+		$items	=& $this->get('Data');
+	
 		//Image button
 		$link = 'index.php?option=com_phocagallery&amp;view=phocagalleryf&amp;tmpl=component';
 		JHTML::_('behavior.modal', 'a.modal-button');
@@ -51,68 +53,46 @@ class PhocaGalleryCpViewPhocaGalleryC extends JView
 		$button->set('options', "{handler: 'iframe', size: {x: 620, y: 400}}");
 		
 		$lists 	= array();		
-		$isNew	= ((int)$phocagallery->id < 1);
+		$isNew	= ((int)$items->id < 1);
 
 		// fail if checked out not by 'me'
 		if ($model->isCheckedOut( $user->get('id') )) {
-			$msg = JText::sprintf( 'DESCBEINGEDITTED', JText::_( 'Phoca Gallery Categories' ), $phocagallery->title );
+			$msg = JText::sprintf( 'DESCBEINGEDITTED', JText::_( 'Phoca Gallery Categories' ), $items->title );
 			$mainframe->redirect( 'index.php?option='. $option, $msg );
 		}
-
-		// Set toolbar items for the page
-		$text = $isNew ? JText::_( 'New' ) : JText::_( 'Edit' );
-		JToolBarHelper::title(   JText::_( 'Phoca Gallery Category' ).': <small><small>[ ' . $text.' ]</small></small>' , 'category');
-		JToolBarHelper::save();
-		JToolBarHelper::apply();
-		if ($isNew)  {
-			JToolBarHelper::cancel();
-		} else {
-			// for existing items the button is renamed `close`
-			JToolBarHelper::cancel( 'cancel', 'Close' );
-		}
-		JToolBarHelper::help( 'screen.phocagallery', true );
 
 		// Edit or Create?
 		if (!$isNew) {
 			$model->checkout( $user->get('id') );
 		} else {
 			// initialise new record
-			$phocagallery->published 		= 1;
-			$phocagallery->order 			= 0;
-			$phocagallery->access			= 0;
+			$items->published 		= 1;
+			$items->order 			= 0;
+			$items->access			= 0;
 		}
 
 		// build the html select list for ordering
 		$query = 'SELECT ordering AS value, title AS text'
 			. ' FROM #__phocagallery_categories'
 			. ' ORDER BY ordering';
-		$lists['ordering'] 			= JHTML::_('list.specificordering',  $phocagallery, $phocagallery->id, $query, false );
+		$lists['ordering'] 			= JHTML::_('list.specificordering',  $items, $items->id, $query, false );
 		// build the html select list
-		$lists['published'] 		= JHTML::_('select.booleanlist',  'published', 'class="inputbox"', $phocagallery->published );
+		$lists['published'] 		= JHTML::_('select.booleanlist',  'published', 'class="inputbox"', $items->published );
 		
-		$active =  ( $phocagallery->image_position ? $phocagallery->image_position : 'left' );
+		$active =  ( $items->image_position ? $items->image_position : 'left' );
 		$lists['image_position'] 	= JHTML::_('list.positions',  'image_position', $active, NULL, 0, 0 );
 		// Imagelist
-		$lists['image'] 			= JHTML::_('list.images',  'image', $phocagallery->image );
+		$lists['image'] 			= JHTML::_('list.images',  'image', $items->image );
 		// build the html select list for the group access
-		$lists['access'] 			= JHTML::_('list.accesslevel',  $phocagallery );
+		$lists['access'] 			= JHTML::_('list.accesslevel',  $items );
 		
 		// All selected users
-		// Get all users id from params string
-		$accessActive 		= PhocaGalleryHelper::getParamsArray($phocagallery->params, 'accessuserid');
-		$uploadActive 		= PhocaGalleryHelper::getParamsArray($phocagallery->params, 'uploaduserid');
-		$deleteActive 		= PhocaGalleryHelper::getParamsArray($phocagallery->params, 'deleteuserid');
-		$userFolder		 	= PhocaGalleryHelper::getParamsArray($phocagallery->params, 'userfolder');
-		$longitude		 	= PhocaGalleryHelper::getParamsArray($phocagallery->params, 'longitude');
-		$latitude		 	= PhocaGalleryHelper::getParamsArray($phocagallery->params, 'latitude');
-		$zoom			 	= PhocaGalleryHelper::getParamsArray($phocagallery->params, 'zoom');
-		$geotitle			= PhocaGalleryHelper::getParamsArray($phocagallery->params, 'geotitle');
 		
 		// Create a multiple selectbox
-		$lists['accessusers'] = PhocaGalleryHelper::usersList('accessuserid[]',$accessActive,1, NULL,'name',0 );
-		$lists['uploadusers'] = PhocaGalleryHelper::usersList('uploaduserid[]',$uploadActive,1, NULL,'name',0 );
-		$lists['deleteusers'] = PhocaGalleryHelper::usersList('deleteuserid[]',$deleteActive,1, NULL,'name',0 );
-		$lists['author'] = PhocaGalleryHelper::usersListAuthor('authorid',$phocagallery->userid,1, NULL,'name',0 );
+		$lists['accessusers'] 	= PhocaGalleryAccess::usersList('accessuserid[]',$items->accessuserid,1, NULL,'name',0 );
+		$lists['uploadusers'] 	= PhocaGalleryAccess::usersList('uploaduserid[]',$items->uploaduserid,1, NULL,'name',0 );
+		$lists['deleteusers'] 	= PhocaGalleryAccess::usersList('deleteuserid[]',$items->deleteuserid,1, NULL,'name',0 );
+		$lists['author'] 		= PhocaGalleryAccess::usersListAuthor('authorid',$items->userid,1, NULL,'name',0 );
 		
 		// - - - - - - - - - - - - - - - 
 		// Build the list of categories
@@ -121,80 +101,80 @@ class PhocaGalleryCpViewPhocaGalleryC extends JView
 	//	. ' WHERE a.published = 1'
 		. ' ORDER BY a.ordering';
 		$db->setQuery( $query );
-		$phocagallerys = $db->loadObjectList();
+		$itemss = $db->loadObjectList();
 		
 		// New or Edit
 		if (!$isNew) {
-			$phocaGalleryId = $phocagallery->id;
+			$itemsId = $items->id;
 		} else {
-			$phocaGalleryId = -1;
+			$itemsId = -1;
 		}
 		$tree = array();
 		$text = '';
-		$tree = PhocaGalleryHelper::CategoryTreeOption($phocagallerys, $tree, 0, $text, $phocaGalleryId);
+		$tree = PhocaGalleryRenderAdmin::CategoryTreeOption($itemss, $tree, 0, $text, $itemsId);
 		array_unshift($tree, JHTML::_('select.option', '0', '- '.JText::_('Select Parent Category').' -', 'value', 'text'));
 		
 		//list categories
-		$lists['parentid'] = JHTML::_( 'select.genericlist', $tree, 'parentid',  '', 'value', 'text', $phocagallery->parent_id);
-		
+		$lists['parentid'] = JHTML::_( 'select.genericlist', $tree, 'parentid',  '', 'value', 'text', $items->parent_id);
 		// - - - - - - - - - - - - - - - 
 		
 		// Clean gallery data
 		jimport('joomla.filter.output');
-		JFilterOutput::objectHTMLSafe( $phocagallery, ENT_QUOTES, 'description' );
+		JFilterOutput::objectHTMLSafe( $items, ENT_QUOTES, 'description' );
 
-		//Params
-		#$file 	= JPATH_COMPONENT.DS.'models'.DS.'phocagallery.xml';
-		#$params = new JParameter( $phocagallery->params, $file );
-		
-		//Longitude Latitude
-		if (!isset($longitude[0]) || (isset($longitude[0]) && ($longitude[0] == '' || $longitude[0] == 0))) {
-			$longitude[0] = '';
-			$longitudeLink = '14.429919719696045';
-		} else {
-			$longitudeLink = $longitude[0];
+
+		// Link To GeoMap - Geo Button - - - - - -
+		$longitudeLink = '14.429919719696045';
+		if (isset($items->longitude) && $items->longitude != '' && $items->longitude != 0) {
+			$longitudeLink = $items->longitude;
 		}
 		
-		if (!isset($latitude[0]) || (isset($latitude[0]) && ($latitude[0] == '' || $latitude[0] == 0))) {
-			$latitude[0] = '';
-			$latitudeLink = '50.079623358200884';
-		} else {
-			$latitudeLink = $latitude[0];
+		$latitudeLink = '50.079623358200884';
+		if (isset($items->latitude) && $items->latitude != '' && $items->latitude != 0) {
+			$latitudeLink = $items->latitude;
+		} 
+		
+		$zoomLink = 2;
+		if (isset($items->zoom) && $items->zoom != '' && $items->zoom != 0) {
+			$zoomLink = $items->zoom;
 		}
 		
-		if (!isset($zoom[0]) || (isset($zoom[0]) && ($zoom[0] == '' || $zoom[0] == 0))) {
-			$zoom[0] = 2;
-		}
-		if (!isset($geotitle[0]) || (isset($geotitle[0]) && $geotitle[0] == '')) {
-			$geotitle[0] = '';
-		}
-		
-		//Get button
-		$linkg = 'index.php?option=com_phocagallery&amp;view=phocagalleryg&amp;tmpl=component&amp;lat='.$latitudeLink.'&amp;lng='.$longitudeLink.'&amp;zoom='.$zoom[0];
+		$linkGeo = 'index.php?option=com_phocagallery&amp;view=phocagalleryg&amp;tmpl=component&amp;lat='.$latitudeLink.'&amp;lng='.$longitudeLink.'&amp;zoom='.$zoomLink;
 		JHTML::_('behavior.modal', 'a.modal-button');
-		$buttong = new JObject();
-		$buttong->set('modal', true);
-		$buttong->set('link', $linkg);
-		$buttong->set('text', JText::_( 'coordinates' ));
-		$buttong->set('name', 'image');
-		$buttong->set('modalname', 'modal-button');
-		$buttong->set('options', "{handler: 'iframe', size: {x: 640, y: 560}}");
+		$buttonGeo = new JObject();
+		$buttonGeo->set('modal', true);
+		$buttonGeo->set('link', $linkGeo);
+		$buttonGeo->set('text', JText::_( 'coordinates' ));
+		$buttonGeo->set('name', 'image');
+		$buttonGeo->set('modalname', 'modal-button');
+		$buttonGeo->set('options', "{handler: 'iframe', size: {x: 640, y: 560}}");
+		// - - - - - - - - - - - - - - - - - - - - - 
 		
-		$tmpl['longitude']	= $longitude[0];
-		$tmpl['latitude']	= $latitude[0];
-		$tmpl['zoom']		= $zoom[0];
-		$tmpl['geotitle']	= $geotitle[0];
-			
-		$this->assignRef('userfolder', $userFolder[0]);
+		
 		$this->assignRef('editor', $editor);
 		$this->assignRef('lists', $lists);
-		$this->assignRef('phocagallery', $phocagallery);
+		$this->assignRef('items', $items);
 		$this->assignRef('button', $button);
-		$this->assignRef('buttong', $buttong);		
+		$this->assignRef('buttongeo', $buttonGeo);		
 		$this->assignRef('tmpl', $tmpl);
 		$this->assignRef('request_url',	$uri->toString());
 
 		parent::display($tpl);
+		$this->_setToolbar($isNew);
+	}
+	
+	function _setToolbar($isNew) {
+		
+		$text = $isNew ? JText::_( 'New' ) : JText::_( 'Edit' );
+		JToolBarHelper::title(   JText::_( 'Phoca Gallery Category' ).': <small><small>[ ' . $text.' ]</small></small>' , 'category');
+		JToolBarHelper::save();
+		JToolBarHelper::apply();
+		if ($isNew)  {
+			JToolBarHelper::cancel();
+		} else {
+			JToolBarHelper::cancel( 'cancel', 'Close' );
+		}
+		JToolBarHelper::help( 'screen.phocagallery', true );
 	}
 }
 ?>

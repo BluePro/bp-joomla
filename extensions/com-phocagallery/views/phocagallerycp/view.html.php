@@ -11,6 +11,7 @@
 defined('_JEXEC') or die();
 jimport( 'joomla.application.component.view' );
 jimport('joomla.html.pane');
+phocagalleryimport('phocagallery.render.renderinfo');
 
 class PhocaGalleryCpViewPhocaGallerycp extends JView
 {
@@ -22,19 +23,19 @@ class PhocaGalleryCpViewPhocaGallerycp extends JView
 		$uri		=& JFactory::getURI();
 		$document	=& JFactory::getDocument();
 		$db		    =& JFactory::getDBO();
-		
-		
-
-		JToolBarHelper::title(   '&nbsp;&nbsp;' .JText::_( 'Phoca Gallery Control Panel' ), 'phoca' );
-		
-		JToolBarHelper::preferences('com_phocagallery', '460');
-		JToolBarHelper::help( 'screen.phocagallery', true );
 
 		JHTML::_('behavior.tooltip');
-		$version = PhocaGalleryHelper::getPhocaVersion();
+		$version = PhocaGalleryRenderInfo::getPhocaVersion();
 		$this->assignRef('version',	$version);
 		
 		parent::display($tpl);
+		$this->_setToolbar();
+	}
+	
+	function _setToolbar() {
+		JToolBarHelper::title( JText::_( 'Phoca Gallery Control Panel' ), 'phoca' );
+		JToolBarHelper::preferences('com_phocagallery', '460');
+		JToolBarHelper::help( 'screen.phocagallery', true );
 	}
 }
 ?>

@@ -6,19 +6,19 @@
 	if (!empty($this->commentitem)){
 		$userImage	= JHTML::_( 'image.site', 'components/com_phocagallery/assets/images/icon-user.'.$this->tmpl['formaticon'],'', '', '', '', '');
 	
-		$smileys = PhocaGalleryHelperComment::getSmileys();
+		$smileys = PhocaGalleryComment::getSmileys();
 		
 		foreach ($this->commentitem as $itemValue) {
 			$date		= JHTML::_('date',  $itemValue->date, JText::_('DATE_FORMAT_LC2') );
 			$comment	= $itemValue->comment;
-			$comment 	= PhocaGalleryHelperComment::bbCodeReplace($comment);
+			$comment 	= PhocaGalleryComment::bbCodeReplace($comment);
 			foreach ($smileys as $smileyKey => $smileyValue) {
 				$comment = str_replace($smileyKey, JHTML::_( 'image.site', 'components/com_phocagallery/assets/images/'.$smileyValue .'.'.$this->tmpl['formaticon'],'', '', '', '', ''), $comment);
 			}
 			
 			echo '<fieldset>'
-			    .'<legend>'.$userImage.'&nbsp;'.$itemValue->username.'</legend>'
-				.'<p><strong>'.PhocaGalleryHelperFront::wordDelete($itemValue->title, 50, '...').'</strong></p>'
+			    .'<legend>'.$userImage.'&nbsp;'.$itemValue->name.'</legend>'
+				.'<p><strong>'.PhocaGalleryText::wordDelete($itemValue->title, 50, '...').'</strong></p>'
 				.'<p style="overflow:auto;width:'.$this->tmpl['commentwidth'].'px;">'.$comment.'</p>'
 				.'<p style="text-align:right"><small>'.$date.'</small></p>'
 				.'</fieldset>';
@@ -45,7 +45,7 @@
 		<table>
 			<tr>
 				<td><?php echo JText::_('Name');?>:</td>
-				<td><?php echo $this->tmpl['username']; ?></td>
+				<td><?php echo $this->tmpl['name']; ?></td>
 			</tr>
 			
 			<tr>
@@ -93,6 +93,7 @@
 		
 		<input type="hidden" name="task" value="comment"/>
 		<input type="hidden" name="view" value="category"/>
+		<input type="hidden" name="controller" value="category"/>
 		<input type="hidden" name="tab" value="<?php echo $this->tmpl['currenttab']['comment'];?>" />
 		<input type="hidden" name="catid" value="<?php echo $this->category->slug ?>"/>
 		<input type="hidden" name="Itemid" value="<?php echo JRequest::getVar('Itemid', 1, 'get', 'int') ?>"/>

@@ -8,47 +8,36 @@
  * @copyright Copyright (C) Jan Pavelka www.phoca.cz
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
-
-// Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
-
 jimport( 'joomla.application.component.view' );
- 
+phocagalleryimport('phocagallery.rate.ratecategory');
 class PhocaGalleryCpViewPhocaGalleryCs extends JView
 {
-	function display($tpl = null)
-	{
+	var $_context 	= 'com_phocagallery.phocagalleryc';
+
+	function display($tpl = null) {
+		
 		global $mainframe;
 		$document	=& JFactory::getDocument();
 		$uri		=& JFactory::getURI();
 
 		JHTML::stylesheet( 'phocagallery.css', 'administrator/components/com_phocagallery/assets/' );
-		// Set toolbar items for the page
-		JToolBarHelper::title(   JText::_( 'Phoca Gallery Categories' ), 'category' );
-		JToolBarHelper::publishList();
-		JToolBarHelper::unpublishList();
-		JToolBarHelper::deleteList(  JText::_( 'WARNWANTDELLISTEDITEMS' ), 'remove', 'delete');
-		JToolBarHelper::editListX();
-		JToolBarHelper::addNewX();
 		
-		JToolBarHelper::customX('PicLens', 'piclens.png', '', JText::_( 'PicLens' ), true);
-		
-		JToolBarHelper::help( 'screen.phocagallery', true );
-
 		//Filter
 		$context			= 'com_phocagallery.phocagalleryc.list.';
-		$filter_state		= $mainframe->getUserStateFromRequest( $context.'filter_state',		'filter_state',		'',				'word' );
-		$filter_order		= $mainframe->getUserStateFromRequest( $context.'filter_order',		'filter_order',		'a.ordering',	'cmd' );
-		$filter_order_Dir	= $mainframe->getUserStateFromRequest( $context.'filter_order_Dir',	'filter_order_Dir',	'',				'word' );
-		$search				= $mainframe->getUserStateFromRequest( $context.'search',			'search',			'',				'string' );
+		$filter_state		= $mainframe->getUserStateFromRequest( $this->_context.'.filter_state',	'filter_state',	'',	'word' );
+		$filter_order		= $mainframe->getUserStateFromRequest( $this->_context.'.filter_order',	'filter_order',	'a.ordering', 'cmd' );
+		$filter_order_Dir	= $mainframe->getUserStateFromRequest( $this->_context.'.filter_order_Dir',	'filter_order_Dir',	'',	'word' );
+		$search				= $mainframe->getUserStateFromRequest( $this->_context.'.search', 'search',	'',	'string' );
 		$search				= JString::strtolower( $search );
-		
-		
 	
 		// Get data from the model
+		$model		= &$this->getModel();
 		$items		= & $this->get( 'Data');
-		$total		= & $this->get( 'Total');
-		$pagination = & $this->get( 'Pagination' );
+		$tmpl['total'] = count($items);
+		$model->setTotal($tmpl['total']);
+		$tmpl['pagination'] = &$this->get( 'Pagination' );
+		$items 				= array_slice($items,(int)$tmpl['pagination']->limitstart, (int)$tmpl['pagination']->limit);
 	
 		// build list of categories
 		$javascript 	= 'onchange="document.adminForm.submit();"';
@@ -58,22 +47,32 @@ class PhocaGalleryCpViewPhocaGalleryCs extends JView
 
 		// table ordering
 		$lists['order_Dir'] = $filter_order_Dir;
-		$lists['order'] = $filter_order;
+		$lists['order'] 	= $filter_order;
 
 		// search filter
 		$lists['search']= $search;
 
-		$ordering = ($lists['order'] == 'a.ordering');//Ordering allowed ?
+		$tmpl['ordering'] = ($lists['order'] == 'a.ordering');//Ordering allowed ?
 		
 		$this->assignRef('user',		JFactory::getUser());
 		$this->assignRef('lists',		$lists);
 		$this->assignRef('items',		$items);
-		$this->assignRef('total',		$total);
-		$this->assignRef('pagination',	$pagination);
-		$this->assignRef('ordering', $ordering);
+		$this->assignRef('tmpl',		$tmpl);
 		$this->assignRef('request_url',	$uri->toString());
 
 		parent::display($tpl);
+		$this->_setToolbar();
+	}
+	
+	function _setToolbar() {
+		JToolBarHelper::title( JText::_( 'Phoca Gallery Categories' ), 'category' );
+		JToolBarHelper::publishList();
+		JToolBarHelper::unpublishList();
+		JToolBarHelper::deleteList( JText::_( 'WARNWANTDELLISTEDITEMS' ), 'remove', 'delete');
+		JToolBarHelper::editListX();
+		JToolBarHelper::addNewX();
+		JToolBarHelper::customX('PicLens', 'piclens.png', '', JText::_( 'PicLens' ), true);
+		JToolBarHelper::help( 'screen.phocagallery', true );
 	}
 }
 ?>

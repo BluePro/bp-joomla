@@ -16,7 +16,6 @@ class PhocaGalleryCpViewPhocaGalleryCo extends JView
 
 	function display($tpl = null) {
 		global $mainframe;
-		
 		if($this->getLayout() == 'form') {
 			$this->_displayForm($tpl);
 			return;
@@ -48,19 +47,6 @@ class PhocaGalleryCpViewPhocaGalleryCo extends JView
 			$mainframe->redirect( 'index.php?option='. $option, $msg );
 		}
 
-		// Set toolbar items for the page
-		$text = $isNew ? JText::_( 'New' ) : JText::_( 'Edit' );
-		JToolBarHelper::title(   JText::_( 'Phoca Gallery Comment' ).': <small><small>[ ' . $text.' ]</small></small>', 'gallery' );
-		JToolBarHelper::save();
-		if ($isNew)  {
-			JToolBarHelper::cancel();
-		} else {
-			// for existing items the button is renamed `close`
-			JToolBarHelper::cancel( 'cancel', 'Close' );
-		}
-		JToolBarHelper::help( 'screen.phocagallery', true );
-
-	
 		// Edit or Create?
 		if (!$isNew) {
 			$model->checkout( $user->get('id') );
@@ -80,7 +66,7 @@ class PhocaGalleryCpViewPhocaGalleryCo extends JView
 
 			$lists['ordering'] 			= JHTML::_('list.specificordering',  $phocagallery, $phocagallery->id, $query, false );
 
-		//------------------------------------------------------------------------
+		// - - - - - - - - - - - - - - - 
 		//build the list of categories
 		$query = 'SELECT a.title AS text, a.id AS value, a.parent_id as parentid'
 		. ' FROM #__phocagallery_categories AS a'
@@ -91,20 +77,16 @@ class PhocaGalleryCpViewPhocaGalleryCo extends JView
 
 		$tree = array();
 		$text = '';
-		$tree = PhocaGalleryHelper::CategoryTreeOption($phocagallerys, $tree, 0, $text, -1);
-	//	$phocagallerys_tree_array = PhocaGalleryHelper::CategoryTreeCreating($phocagallerys, $tree, 0);
+		$tree = PhocaGalleryRenderAdmin::CategoryTreeOption($phocagallerys, $tree, 0, $text, -1);
 		array_unshift($tree, JHTML::_('select.option', '0', '- '.JText::_('Select Category').' -', 'value', 'text'));
-		
 		//list categories
 		$lists['catid'] = JHTML::_( 'select.genericlist', $tree, 'catid',  '', 'value', 'text', $phocagallery->catid);
-		//-----------------------------------------------------------------------
+		// - - - - - - - - - - - - - - - 
 		
 		
 		// build the html select list
 		$lists['published'] 		= JHTML::_('select.booleanlist',  'published', 'class="inputbox"', $phocagallery->published );
 
-	
-		
 		//clean gallery data
 		jimport('joomla.filter.output');
 		JFilterOutput::objectHTMLSafe( $phocagallery, ENT_QUOTES, 'description' );
@@ -115,6 +97,19 @@ class PhocaGalleryCpViewPhocaGalleryCo extends JView
 		$this->assignRef('request_url',	$uri->toString());
 
 		parent::display($tpl);
+		$this->_setToolbar($isNew);
+	}
+	
+	function _setToolbar($isNew) {
+		$text = $isNew ? JText::_( 'New' ) : JText::_( 'Edit' );
+		JToolBarHelper::title(   JText::_( 'Phoca Gallery Comment' ).': <small><small>[ ' . $text.' ]</small></small>', 'gallery' );
+		JToolBarHelper::save();
+		if ($isNew)  {
+			JToolBarHelper::cancel();
+		} else {
+			JToolBarHelper::cancel( 'cancel', 'Close' );
+		}
+		JToolBarHelper::help( 'screen.phocagallery', true );
 	}
 }
 ?>

@@ -13,13 +13,9 @@ jimport( 'joomla.application.component.view');
 
 class PhocaGalleryCpViewPhocaGalleryD extends JView
 {
-	function display($tpl = null)
-	{
-		global $mainframe;
-
+	function display($tpl = null) {
 		$file =& $this->get('Data');
 		$this->assignRef('file', $file);
-
 		parent::display($tpl);
 	}
 }

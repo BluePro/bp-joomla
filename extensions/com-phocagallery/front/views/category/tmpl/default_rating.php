@@ -43,15 +43,10 @@ if ($isThereQMR) {
 		
 		echo '<ul class="star-rating">'
 		    .'<li class="current-rating" style="width:'.$this->tmpl['voteswidth'].'px"></li>'
-		
-		//   .'<li><a href="'.JRoute::_('index.php?option=com_phocagallery&view=category&catid='.$this->category->slug.'&task=rate&rating=1&tab='.$this->tmpl['currenttab']['rating'].'&Itemid='. JRequest::getVar('Itemid', 1, 'get', 'int') ).$this->tmpl['limitstarturl'].'" title="1 '. JText::_('star out of').' 5" class="star1">1</a></li>';
-			
-			.'<li><a href="'.$this->tmpl['action'].$amp.'task=rate&rating=1&tab='.$this->tmpl['currenttab']['rating'].$this->tmpl['limitstarturl'].'" title="1 '. JText::_('star out of').' 5" class="star1">1</a></li>';
+			.'<li><a href="'.$this->tmpl['action'].$amp.'controller=category&task=rate&rating=1&tab='.$this->tmpl['currenttab']['rating'].$this->tmpl['limitstarturl'].'" title="1 '. JText::_('star out of').' 5" class="star1">1</a></li>';
 		
 		for ($i = 2;$i < 6;$i++) {
-			//echo '<li><a href="'.JRoute::_('index.php?option=com_phocagallery&view=category&catid='.$this->category->slug.'&task=rate&rating='.$i.'&tab='.$this->tmpl['currenttab']['rating'].'&Itemid='. JRequest::getVar('Itemid', 1, 'get', 'int') ).$this->tmpl['limitstarturl'].'" title="'.$i.' '. JText::_('star out of').' 5" class="stars'.$i.'">'.$i.'</a></li>';
-			
-			echo '<li><a href="'.$this->tmpl['action'].$amp.'task=rate&rating='.$i.'&tab='.$this->tmpl['currenttab']['rating'].$this->tmpl['limitstarturl'].'" title="'.$i.' '. JText::_('star out of').' 5" class="stars'.$i.'">'.$i.'</a></li>';
+			echo '<li><a href="'.$this->tmpl['action'].$amp.'controller=category&task=rate&rating='.$i.'&tab='.$this->tmpl['currenttab']['rating'].$this->tmpl['limitstarturl'].'" title="'.$i.' '. JText::_('star out of').' 5" class="stars'.$i.'">'.$i.'</a></li>';
 		}
 		echo '</ul>';
 	}

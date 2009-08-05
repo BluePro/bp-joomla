@@ -9,7 +9,7 @@ defined('_JEXEC') or die('Restricted access');
 ***********************************************/
  
 var fadeimages=new Array()
-<?php echo $this->file->slideshowfiles ;?>
+<?php echo $this->item->slideshowfiles ;?>
  
 var fadebgcolor="<?php echo $this->tmpl['detailwindowbackgroundcolor'] ;?>"
  

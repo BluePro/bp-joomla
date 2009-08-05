@@ -107,7 +107,7 @@ class PhocagalleryModelUser extends JModel
 		
 	}
 	
-
+/* ///
 	function getCategoryParams($id) {
 		
 		// current category info, id is catid
@@ -119,6 +119,6 @@ class PhocagalleryModelUser extends JModel
 		$categoryParams = $this->_db->loadObject();
 		
 		return $categoryParams;
-	}
+	}*/
 }
 ?>

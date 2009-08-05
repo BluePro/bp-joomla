@@ -212,11 +212,8 @@ function PhocaGalleryBuildRoute(&$query)
  * Method to parse Route
  * @param array $segments
  */ 
-function PhocaGalleryParseRoute($segments)
-{
+function PhocaGalleryParseRoute($segments) {
 	$vars = array();
-
-	//Get the active menu item
 	$menu =& JSite::getMenu();
 	$item =& $menu->getActive();
 
@@ -224,82 +221,86 @@ function PhocaGalleryParseRoute($segments)
 	$count = count($segments);
 	
 	//Standard routing
-	if(!isset($item)) 
-	{
-		if($count == 4 )
-		{
+	if(!isset($item))  {
+		if($count == 4 ) {
 			$vars['view']  = $segments[$count - 3];
-		}
-		else
-		{
+		} else {
 			$vars['view'] = 'category';
 		}
-		$vars['id']    = $segments[$count - 1];
-	}
-	else
-	{
-		//Handle View and Identifier
-		switch($item->query['view'])
-		{
+		$vars['catid']	= $segments[$count - 4];
+		$vars['id']    	= $segments[$count - 1];
+		
+		
+	} else {
+		switch($item->query['view']) {
 			case 'categories' :
-			{
-				
 				if($count == 1) {
 					$vars['view'] = 'category';
-					$vars['id'] = $segments[$count-1];
 				}
 
 				if($count == 2) {
 					$vars['view'] = 'category';
-					$vars['id'] = $segments[$count-1];
+					$vars['id'] 	= $segments[$count-1];
 				}
 				
 				if($count == 3) {
-					$vars['view'] = $segments[$count-2];
-					$vars['id'] = $segments[$count-1];
+					$vars['catid']	= $segments[$count-3];
+					$vars['view']	= $segments[$count-2];
+					$vars['id']		= $segments[$count-1];
 				}
-
-				
-
-			} break;
+			break;
 
 			case 'category'   :
-			{
 				if($count == 1) {
-					$vars['view'] = 'category';
-					$vars['id'] = $segments[$count-1];
+					$vars['view'] 	= 'category';
 				}
 
 				if($count == 2) {
-					$vars['view'] = 'category';
-					$vars['id'] = $segments[$count-1];
+					$vars['view'] 	= 'category';
+					$vars['id'] 	= $segments[$count-1];
 				}
 				
 				if($count == 3) {
-					$vars['view'] = $segments[$count-2];
-					$vars['id'] = $segments[$count-1];
+					$vars['catid']	= $segments[$count-3];
+					$vars['view']	= $segments[$count-2];
+					$vars['id']		= $segments[$count-1];
 				}
-
-			} break;
+			break;
 			
 			case 'user'   :
-			{
 				if($count == 1) {
-					$vars['view'] = 'user';
-				//	$vars['id'] = $segments[$count-1];
+					$vars['view'] 	= 'user';
 				}
 
 				if($count == 2) {
-					$vars['view'] = 'user';
-				//	$vars['id'] = $segments[$count-1];
+					$vars['view'] 	= 'user';
+					$vars['id'] 	= $segments[$count-1];
 				}
 				
 				if($count == 3) {
-					$vars['view'] = $segments[$count-2];
-				//	$vars['id'] = $segments[$count-1];
+					$vars['catid']	= $segments[$count-3];
+					$vars['view']	= $segments[$count-2];
+					$vars['id']		= $segments[$count-1];
+				}
+			break;
+			
+			case 'detail'   :
+				if($count == 1) {
+					$vars['view'] 	= 'detail';
 				}
 
-			} break;
+				if($count == 2) {
+					$vars['view'] 	= 'detail';
+					$vars['id'] 	= $segments[$count-1];
+				}
+				
+				if($count == 3) {
+					$vars['catid']	= $segments[$count-3];
+					$vars['view']	= $segments[$count-2];
+					$vars['id']		= $segments[$count-1];
+				}
+			break;
+		
 		}
 	}
 

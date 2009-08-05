@@ -27,7 +27,6 @@ class PhocaGalleryCpControllerPhocaGalleryu extends PhocaGalleryCpController
 	/*
 	 * Folder
 	 */
-	
 	function createfolder() {
 		global $mainframe;
 		// Check for request forgeries
@@ -37,7 +36,7 @@ class PhocaGalleryCpControllerPhocaGalleryu extends PhocaGalleryCpController
 		jimport('joomla.client.helper');
 		JClientHelper::setCredentialsFromRequest('ftp');
 
-		$path			= PhocaGalleryHelper::getPathSet();
+		$path			= PhocaGalleryPath::getPath();
 		$folderNew		= JRequest::getCmd( 'foldername', '');
 		$folderCheck	= JRequest::getVar( 'foldername', null, '', 'string', JREQUEST_ALLOWRAW);
 		$parent			= JRequest::getVar( 'folderbase', '', '', 'path' );
@@ -53,6 +52,10 @@ class PhocaGalleryCpControllerPhocaGalleryu extends PhocaGalleryCpController
 				$link = 'index.php?option=com_phocagallery&view=phocagallerym&layout=form&hidemainmenu=1&folder='.$parent;
 			break;
 			
+			case 'phocagalleryf':
+				$link = 'index.php?option=com_phocagallery&view=phocagalleryf&tmpl=component&folder='.$parent;
+			break;
+			
 			default:
 				$mainframe->redirect('index.php?option=com_phocagallery', 'Controller U Error');
 			break;
@@ -66,9 +69,8 @@ class PhocaGalleryCpControllerPhocaGalleryu extends PhocaGalleryCpController
 		}
 
 		if (strlen($folderNew) > 0) {
-			$path = JPath::clean($path['orig_abs_ds'].DS.$parent.DS.$folderNew);
-			if (!is_dir($path) && !is_file($path))
-			{
+			$path = JPath::clean($path->image_abs.DS.$parent.DS.$folderNew);
+			if (!JFolder::exists($path) && !JFile::exists($path)) {
 				JFolder::create($path);
 				JFile::write($path.DS."index.html", "<html>\n<body bgcolor=\"#FFFFFF\">\n</body>\n</html>");
 				
@@ -78,15 +80,14 @@ class PhocaGalleryCpControllerPhocaGalleryu extends PhocaGalleryCpController
 			}
 			//JRequest::setVar('folder', ($parent) ? $parent.'/'.$folder : $folder);
 		}
-		
 		$mainframe->redirect($link);
 	}
 	
 	/*
 	 * Java Upload
+	 * To test messages disable both name="afterUploadURL" in form_javaupload exit( 'ERROR: ' . $errUploadMsg);
 	 */
-	
-	function javaupload() {			    
+	function javaupload() {	
 		global $mainframe;
 		// Check for request forgeries
 		JRequest::checkToken( 'request' ) or jexit( 'Invalid Token' );
@@ -94,8 +95,8 @@ class PhocaGalleryCpControllerPhocaGalleryu extends PhocaGalleryCpController
 
 		if (!PhocaGalleryCpControllerPhocaGalleryu::_realJavaUpload($errUploadMsg)	) {		
 			exit( 'ERROR: '.$errUploadMsg);		
-		} else {					
-			exit( 'SUCCESS');		
+		} else {		
+			exit( 'SUCCESS');
 		}
 	}
 	
@@ -110,6 +111,7 @@ class PhocaGalleryCpControllerPhocaGalleryu extends PhocaGalleryCpController
 			foreach ($fileArray as $item=>$val) {
 				echo(' Data received: ' . $item.'=>'.$val . "\n");
 			}
+			
 			if (!PhocaGalleryCpControllerPhocaGalleryu::_uploadJava($errUploadMsg, $fileArray)) {
 				$errUploadMsg = JText::_($errUploadMsg);
 				return false;
@@ -124,8 +126,8 @@ class PhocaGalleryCpControllerPhocaGalleryu extends PhocaGalleryCpController
 		JRequest::checkToken( 'request' ) or jexit( 'Invalid Token' );
 
 		// Set FTP credentials, if given
-		$ftp =& JClientHelper::setCredentialsFromRequest('ftp');
-		$path		= PhocaGalleryHelper::getPathSet();
+		$ftp 		=& JClientHelper::setCredentialsFromRequest('ftp');
+		$path		= PhocaGalleryPath::getPath();
 		$folder		= JRequest::getVar( 'folder', '', '', 'path' );
 
 		// Make the filename safe
@@ -134,11 +136,11 @@ class PhocaGalleryCpControllerPhocaGalleryu extends PhocaGalleryCpController
 		}
 	
 		if (isset($file['name'])) {
-			$filepath = JPath::clean($path['orig_abs_ds'].$folder.DS.strtolower($file['name']));
+			
+			$filepath = JPath::clean($path->image_abs.$folder.DS.strtolower($file['name']));
 
 			
-			
-			if (!PhocaGalleryHelperUpload::canUpload( $file, $errUploadMsg )) {
+			if (!PhocaGalleryFileUpload::canUpload( $file, $errUploadMsg )) {
 				$errUploadMsg = JText::_($errUploadMsg);
 				return false;
 			}
@@ -151,7 +153,8 @@ class PhocaGalleryCpControllerPhocaGalleryu extends PhocaGalleryCpController
 			if (!JFile::upload($file['tmp_name'], $filepath)) {
 				$errUploadMsg = JText::_('Error. Unable to upload file');
 				return false;
-			} 
+			}
+			
 			return true;
 		} else {
 			$errUploadMsg = JText::_('Error. Unable to upload file');
@@ -173,7 +176,7 @@ class PhocaGalleryCpControllerPhocaGalleryu extends PhocaGalleryCpController
 		// Set FTP credentials, if given
 		$ftp =& JClientHelper::setCredentialsFromRequest('ftp');
 		
-		$path			= PhocaGalleryHelper::getPathSet();
+		$path			= PhocaGalleryPath::getPath();
 		$file 			= JRequest::getVar( 'Filedata', '', 'files', 'array' );
 		$folder			= JRequest::getVar( 'folder', '', '', 'path' );
 		$format			= JRequest::getVar( 'format', 'html', '', 'cmd');
@@ -189,9 +192,9 @@ class PhocaGalleryCpControllerPhocaGalleryu extends PhocaGalleryCpController
 		
 		// All HTTP header will be overwritten with js message
 		if (isset($file['name'])) {
-			$filepath = JPath::clean($path['orig_abs_ds'].$folder.DS.strtolower($file['name']));
+			$filepath = JPath::clean($path->image_abs.$folder.DS.strtolower($file['name']));
 
-			if (!PhocaGalleryHelperUpload::canUpload( $file, $errUploadMsg )) {
+			if (!PhocaGalleryFileUpload::canUpload( $file, $errUploadMsg )) {
 				
 				if ($format == 'json') {					
 					switch ($errUploadMsg) {

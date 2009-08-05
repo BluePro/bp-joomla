@@ -9,9 +9,7 @@ function submitbutton(pressbutton, parent_id) {
 		return;
 	}
 	
-/*	if (form.parentid.value == "0"){
-	alert( "<?php echo JText::_( 'You must select a category', true ); ?>" );
-} else */ if ( form.title.value == "" ) {
+	if ( form.title.value == "" ) {
 		alert("<?php echo JText::_( 'Category must have a title', true ); ?>");
 	} else {
 		<?php
@@ -35,7 +33,7 @@ function submitbutton(pressbutton, parent_id) {
 					</label>
 				</td>
 				<td colspan="2">
-					<input class="text_area" type="text" name="title" id="title" value="<?php echo $this->phocagallery->title; ?>" size="50" maxlength="255" title="<?php echo JText::_( 'A long name to be displayed in headings' ); ?>" />
+					<input class="text_area" type="text" name="title" id="title" value="<?php echo $this->items->title; ?>" size="50" maxlength="255" title="<?php echo JText::_( 'A long name to be displayed in headings' ); ?>" />
 				</td>
 			</tr>
 			<tr>
@@ -45,7 +43,7 @@ function submitbutton(pressbutton, parent_id) {
 					</label>
 				</td>
 				<td colspan="2">
-					<input class="text_area" type="text" name="alias" id="alias" value="<?php echo $this->phocagallery->alias; ?>" size="50" maxlength="255" title="<?php echo JText::_( 'A short name to appear in menus' ); ?>" />
+					<input class="text_area" type="text" name="alias" id="alias" value="<?php echo $this->items->alias; ?>" size="50" maxlength="255" title="<?php echo JText::_( 'A short name to appear in menus' ); ?>" />
 				</td>
 			</tr>
 			
@@ -130,7 +128,7 @@ function submitbutton(pressbutton, parent_id) {
 					</label>
 				</td>
 				<td valign="middle">
-					<input class="text_area" type="text" name="userfolder" id="userfolder" value="<?php echo $this->userfolder; ?>" size="32" maxlength="250" />
+					<input class="text_area" type="text" name="userfolder" id="userfolder" value="<?php echo $this->items->userfolder; ?>" size="32" maxlength="250" />
 				</td>
 				<td align="left" valign="middle">
 					<div class="button2-left" style="display:inline">
@@ -149,12 +147,12 @@ function submitbutton(pressbutton, parent_id) {
 					</label>
 				</td>
 				<td valign="middle">
-					<input class="text_area" type="text" name="longitude" id="longitude" value="<?php echo $this->tmpl['longitude']; ?>" size="32" maxlength="250" />
+					<input class="text_area" type="text" name="longitude" id="longitude" value="<?php echo $this->items->longitude; ?>" size="32" maxlength="250" />
 				</td>
 				<td align="left" valign="middle">
 					<div class="button2-left" style="display:inline">
-						<div class="<?php echo $this->buttong->name; ?>">
-							<a class="<?php echo $this->buttong->modalname; ?>" title="<?php echo $this->buttong->text; ?>" href="<?php echo $this->buttong->link; ?>" rel="<?php echo $this->buttong->options; ?>"  ><?php echo $this->buttong->text; ?></a>
+						<div class="<?php echo $this->buttongeo->name; ?>">
+							<a class="<?php echo $this->buttongeo->modalname; ?>" title="<?php echo $this->buttongeo->text; ?>" href="<?php echo $this->buttongeo->link; ?>" rel="<?php echo $this->buttongeo->options; ?>"  ><?php echo $this->buttongeo->text; ?></a>
 						</div>
 					</div>
 				</td>
@@ -167,7 +165,7 @@ function submitbutton(pressbutton, parent_id) {
 					</label>
 				</td>
 				<td valign="middle">
-					<input class="text_area" type="text" name="latitude" id="latitude" value="<?php echo $this->tmpl['latitude']; ?>" size="32" maxlength="250" />
+					<input class="text_area" type="text" name="latitude" id="latitude" value="<?php echo $this->items->latitude; ?>" size="32" maxlength="250" />
 				</td>
 			</tr>
 			
@@ -178,7 +176,7 @@ function submitbutton(pressbutton, parent_id) {
 					</label>
 				</td>
 				<td valign="middle">
-					<input class="text_area" type="text" name="zoom" id="zoom" value="<?php echo $this->tmpl['zoom']; ?>" size="32" maxlength="250" />
+					<input class="text_area" type="text" name="zoom" id="zoom" value="<?php echo $this->items->zoom; ?>" size="32" maxlength="250" />
 				</td>
 			</tr>
 			
@@ -189,7 +187,7 @@ function submitbutton(pressbutton, parent_id) {
 					</label>
 				</td>
 				<td valign="middle">
-					<input class="text_area" type="text" name="geotitle" id="geotitle" value="<?php echo $this->tmpl['geotitle']; ?>" size="32" maxlength="250" />
+					<input class="text_area" type="text" name="geotitle" id="geotitle" value="<?php echo $this->items->geotitle; ?>" size="32" maxlength="250" />
 				</td>
 			</tr>
 			
@@ -211,7 +209,7 @@ function submitbutton(pressbutton, parent_id) {
 					</label>
 				</td>
 				<td colspan="2">
-					<input class="text_area" type="text" name="hits" id="hits" value="<?php echo $this->phocagallery->hits; ?>" size="15" maxlength="11" title="<?php echo JText::_( 'Hits' ); ?>" />
+					<input class="text_area" type="text" name="hits" id="hits" value="<?php echo $this->items->hits; ?>" size="15" maxlength="11" title="<?php echo JText::_( 'Hits' ); ?>" />
 				</td>
 			</tr>
 			
@@ -222,7 +220,7 @@ function submitbutton(pressbutton, parent_id) {
 					</label>
 				</td>
 				<td colspan="2" valign="middle">
-					<?php echo JHTML::_('calendar', $this->phocagallery->date, 'date', 'date', "%Y-%m-%d", array('class'=>'inputbox', 'size'=>'32',  'maxlength'=>'45')); ?>
+					<?php echo JHTML::_('calendar', $this->items->date, 'date', 'date', "%Y-%m-%d", array('class'=>'inputbox', 'size'=>'32',  'maxlength'=>'45')); ?>
 				</td>
 			</tr>
 			
@@ -271,7 +269,7 @@ function submitbutton(pressbutton, parent_id) {
 				<td valign="top" colspan="3">
 					<?php
 					// parameters : areaname, content, width, height, cols, rows, show xtd buttons
-					echo $this->editor->display( 'description',  $this->phocagallery->description, '550', '300', '60', '20', array('pagebreak', 'readmore') ) ;
+					echo $this->editor->display( 'description',  $this->items->description, '550', '300', '60', '20', array('pagebreak', 'readmore') ) ;
 					?>
 				</td>
 			</tr>
@@ -281,7 +279,7 @@ function submitbutton(pressbutton, parent_id) {
 <div class="clr"></div>
 
 <input type="hidden" name="option" value="com_phocagallery" />
-<input type="hidden" name="cid[]" value="<?php echo $this->phocagallery->id; ?>" />
+<input type="hidden" name="cid[]" value="<?php echo $this->items->id; ?>" />
 <input type="hidden" name="task" value="" />
 <input type="hidden" name="controller" value="phocagalleryc" />
 </form>

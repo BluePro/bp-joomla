@@ -74,25 +74,28 @@ a img {
 }
 
 div.icon-48-gallery {
-	background: url('images/icon-48-gal.png') no-repeat left;
+	background: url('images/icon-48-pg-gal.png') no-repeat left;
 }
 div.icon-48-category {
-	background: url('images/icon-48-cat.png') no-repeat left;
+	background: url('images/icon-48-pg-cat.png') no-repeat left;
 }
 div.icon-48-theme{
-	background: url('images/icon-48-theme.png') no-repeat left;
+	background: url('images/icon-48-pg-theme.png') no-repeat left;
 }
 div.icon-48-vote {
-	background: url('images/icon-48-vote.png') no-repeat left;
+	background: url('images/icon-48-pg-vote.png') no-repeat left;
+}
+div.icon-48-vote-img {
+	background: url('images/icon-48-pg-vote-img.png') no-repeat left;
 }
 div.icon-48-comment {
-	background: url('images/icon-48-comment.png') no-repeat left;
+	background: url('images/icon-48-pg-comment.png') no-repeat left;
 }
 div.icon-48-info {
-	background: url('images/icon-48-info.png') no-repeat left;
+	background: url('images/icon-48-pg-info.png') no-repeat left;
 }
 div.icon-48-phoca {
-	background: url('images/icon-48-phoca.png') no-repeat left;
+	background: url('images/icon-48-pg-phoca.png') no-repeat left;
 }
 
 span.icon-32-piclens {
@@ -103,7 +106,6 @@ span.icon-32-multiple {
 }
 
 /* Voting - style by http://www.jluvip.com/works/css/starvote/index2-1.html*/
-
  .star-rating{
 	list-style:none;
 	margin: 0px;
@@ -179,6 +181,92 @@ span.icon-32-multiple {
 	text-indent: -9000px;
 	z-index: 1;
 }
+
+/* Voting small */
+.star-rating-box-small {
+	border:		1px solid #e7e7e7;
+	padding:	1px;
+	margin:		0px;
+	background:	#fff;
+}
+
+.star-rating-small{
+	list-style:none;
+	margin: 0px;
+	margin-top:5px;
+	margin-bottom:5px;
+	padding:0px;
+	width: 80px;
+	height: 16px;
+	position: relative;
+	background: url(images/icon-voting-small.gif) top left repeat-x;
+}
+
+.star-rating-small li{
+	list-style-type:none;
+	padding:0px;
+	margin:0px;
+	/*\*/
+	float: left;
+	/* */
+}
+
+.star-rating-small li a{
+	display:block;
+	width:16px;
+	height: 16px;
+	text-decoration: none;
+	text-indent: -9000px;
+	z-index: 20;
+	position: absolute;
+	padding: 0px;
+}
+.star-rating-small li a:hover{
+	background: url(images/icon-voting-small.gif) left center;
+	z-index: 2;
+	left: 0px;
+}
+.star-rating-small a.star1{
+	left: 0px;
+}
+.star-rating-small a.star1:hover{
+	width:16px;
+}
+.star-rating-small a.stars2{
+	left:16px;
+}
+.star-rating-small a.stars2:hover{
+	width: 32px;
+}
+.star-rating-small a.stars3{
+	left: 32px;
+}
+.star-rating-small a.stars3:hover{
+	width: 48px;
+}
+.star-rating-small a.stars4{
+	left: 48px;
+}
+.star-rating-small a.stars4:hover{
+	width: 64px;
+}
+.star-rating-small a.stars5{
+	left: 64px;
+}
+.star-rating-small a.stars5:hover{
+	width: 80px;
+}
+.star-rating-small li.current-rating{
+	background: url(images/icon-voting-small.gif) left bottom;
+	position: absolute;
+	height: 16px;
+	/*width:77px;*/
+	display: block;
+	text-indent: -9000px;
+	z-index: 1;
+}
+
+
 
 .license {
 	text-align:justify;

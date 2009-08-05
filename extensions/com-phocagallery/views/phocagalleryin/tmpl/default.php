@@ -10,6 +10,60 @@
 
 <?php echo  JHTML::_('image', 'components/com_phocagallery/assets/images/icon-phoca-logo.png', 'Phoca.cz');?>
 
+<h3><?php echo JText::_('Information');?></h3>
+<p><?php echo JText::_('These are the recommended settings for Phoca Gallery')?></p>
+<table cellpadding="5" cellspacing="1">
+<tr><td></td><td align="center"><?php echo JText::_('Recommended');?></td><td align="center"><?php echo JText::_('Actual');?></td></tr>
+
+<?php if ($this->tmpl['enablethumbcreation'] == 1) {
+	$bgStyle = 'style="background:#ffcccc"';
+} else {
+	$bgStyle = 'style="background:#ccffcc"';
+}?>
+<tr <?php echo $bgStyle;?> >
+	<td><?php echo JText::_('Enable Thumbnails Creation');?></td>
+	<td align="center"><?php echo JHTML::_('image.site',  'icon-16-false.png', '/components/com_phocagallery/assets/images/', NULL, NULL, JText::_('Disabled') ) ?></td>
+	<td align="center"><?php echo $this->tmpl['enablethumbcreationstatus']; ?></td>
+</tr>
+<tr><td colspan="3"><?php echo JText::_('Enable Thumbnails Creation Info DESC');?></td></tr>
+
+
+<?php if ($this->tmpl['paginationthumbnailcreation'] == 1) {
+	$bgStyle 	= 'style="background:#ccffcc"';
+	$icon		= 'true';
+	$iconText	= JText::_('Enabled');
+} else {
+	$bgStyle 	= 'style="background:#ffcccc"';
+	$icon		= 'false';
+	$iconText	= JText::_('Disabled');
+}?>
+<tr <?php echo $bgStyle;?> >
+	<td><?php echo JText::_('Pagination Thumbnail Creation');?></td>
+	<td align="center"><?php echo JHTML::_('image.site',  'icon-16-true.png', '/components/com_phocagallery/assets/images/', NULL, NULL, JText::_('Enabled') ) ?></td>
+	<td align="center"><?php echo JHTML::_('image.site',  'icon-16-'.$icon.'.png', '/components/com_phocagallery/assets/images/', NULL, NULL, JText::_($iconText) ) ?></td>
+</tr>
+<tr><td colspan="3"><?php echo JText::_('Pagination Thumbnail Creation Info DESC');?></td></tr>
+
+<?php if ($this->tmpl['cleanthumbnails'] == 1) {
+	$bgStyle = 'style="background:#ffcccc"';
+	$icon		= 'true';
+	$iconText	= JText::_('Enabled');
+
+} else {
+	$bgStyle = 'style="background:#ccffcc"';
+	$icon		= 'false';
+	$iconText	= JText::_('Disabled');
+}?>
+<tr <?php echo $bgStyle;?> >
+	<td><?php echo JText::_('Clean Thumbnails');?></td>
+	<td align="center"><?php echo JHTML::_('image.site',  'icon-16-false.png', '/components/com_phocagallery/assets/images/', NULL, NULL, JText::_('Disabled') ) ?></td>
+	<td align="center"><?php echo JHTML::_('image.site',  'icon-16-'.$icon.'.png', '/components/com_phocagallery/assets/images/', NULL, NULL, JText::_($iconText) ) ?></td>
+</tr>
+<tr><td colspan="3"><?php echo JText::_('Clean Thumbnails Info DESC');?></td></tr>
+
+<?php echo $this->foutput; ?>
+</table>
+
 <h3><?php echo JText::_('Help');?></h3>
 
 <p>
@@ -37,11 +91,3 @@
 
 <div style="border-top:1px solid #c2c2c2"></div>
 <div id="pg-update" ><a href="http://www.phoca.cz/version/index.php?phocagallery=<?php echo $this->tmpl['version'] ;?>" target="_blank"><?php echo JText::_('Check for update'); ?></a></div>
-<div style="border-top:1px solid #c2c2c2"></div>
-<h3><?php echo JText::_('Main Functions Support');?></h3>
-<p><?php echo JText::_('List of Functions Support');?>:</p>
-<?php echo $this->foutput; ?>
-<div>&nbsp;</div>
-<div style="border-top:1px solid #c2c2c2"></div>
-<h3><?php echo JText::_('Thumbnail Creation Status');?></h3>
-<?php echo $this->tmpl['enablethumbcreationstatus']; ?>

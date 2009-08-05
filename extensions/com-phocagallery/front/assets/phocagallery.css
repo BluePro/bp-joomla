@@ -50,8 +50,8 @@ a img {
 	text-decoration:none;
 }
 
-#phocagallery .name,
-#phocagallery-statistics .name{ 
+#phocagallery .phocaname,
+#phocagallery-statistics .phocaname{ 
 	margin:0px;
 	padding:0px;
 	margin-top:2px;
@@ -167,7 +167,6 @@ a img {
 }
 
 /* Voting - style by http://www.jluvip.com/works/css/starvote/index2-1.html*/
-
 .star-rating{
 	list-style:none;
 	margin: 0px;
@@ -243,6 +242,86 @@ a img {
 	text-indent: -9000px;
 	z-index: 1;
 }
+
+/* Voting small */
+.star-rating-small{
+	list-style:none;
+	margin: 0px;
+	margin-top:5px;
+	margin-bottom:5px;
+	padding:0px;
+	width: 80px;
+	height: 16px;
+	position: relative;
+	background: url(images/icon-voting-small.gif) top left repeat-x;
+}
+
+.star-rating-small li{
+	list-style-type:none;
+	padding:0px;
+	margin:0px;
+	/*\*/
+	float: left;
+	/* */
+}
+
+.star-rating-small li a{
+	display:block;
+	width:16px;
+	height: 16px;
+	text-decoration: none;
+	text-indent: -9000px;
+	z-index: 20;
+	position: absolute;
+	padding: 0px;
+}
+.star-rating-small li a:hover{
+	background: url(images/icon-voting-small.gif) left center;
+	z-index: 2;
+	left: 0px;
+}
+.star-rating-small a.star1{
+	left: 0px;
+}
+.star-rating-small a.star1:hover{
+	width:16px;
+}
+.star-rating-small a.stars2{
+	left:16px;
+}
+.star-rating-small a.stars2:hover{
+	width: 32px;
+}
+.star-rating-small a.stars3{
+	left: 32px;
+}
+.star-rating-small a.stars3:hover{
+	width: 48px;
+}
+.star-rating-small a.stars4{
+	left: 48px;
+}
+.star-rating-small a.stars4:hover{
+	width: 64px;
+}
+.star-rating-small a.stars5{
+	left: 64px;
+}
+.star-rating-small a.stars5:hover{
+	width: 80px;
+}
+.star-rating-small li.current-rating{
+	background: url(images/icon-voting-small.gif) left bottom;
+	position: absolute;
+	height: 16px;
+	/*width:77px;*/
+	display: block;
+	text-indent: -9000px;
+	z-index: 1;
+}
+
+
+
 #phocagallery-votes, #phocagallery-comments, #phocagallery-upload {
 	margin-top:0px;/*IE bug*/
 	margin-bottom:15px;
@@ -406,4 +485,11 @@ div.current dd {
 #shadowbox_title,
 #shadowbox_info {
 	border: 0px;
+}
+
+#phocagallery-img-votes {
+	margin:0;
+	padding:0;
+	margin-left:10px;
+	margin-right:10px;
 }

@@ -20,6 +20,7 @@ class PhocaGalleryCpControllerPhocaGallery extends PhocaGalleryCpController
 
 		// Register Extra tasks
 		$this->registerTask( 'add'  , 	'edit' );
+		$this->registerTask( 'apply'  , 'save' );
 		$this->registerTask( 'thumbs'  , 'thumbs' );
 		$this->registerTask( 'multiple'  , 'multiple' );
 		$this->registerTask( 'install'  , 'install' );
@@ -45,50 +46,35 @@ class PhocaGalleryCpControllerPhocaGallery extends PhocaGalleryCpController
 		$this->setRedirect($link, $msg);
 	}
 	
-	function rotate()
-	{
+	function rotate() {
 		$cid	= JRequest::getVar( 'cid', array(0), 'get', 'array' );
 		$angle	= JRequest::getVar( 'angle', 90, 'get', 'int' );
 		$model	= &$this->getModel( 'phocagallery' );
 		
-		$rotateError	= false;
-		$rotateReturn 	= $model->rotate($cid[0], $angle);
-		$rotateError 	= preg_match("/Error/i", $rotateReturn);
-		if ($rotateError) {
-			$msg = JText::_( 'Error Rotating Phoca Gallery Image' ) . ': ' . $rotateReturn;
+		$errorMsg 		= '';
+		$rotateReturn 	= $model->rotate($cid[0], $angle, $errorMsg);
+		
+		if (!$rotateReturn) {
+			$msg = JText::_( 'Error Rotating Phoca Gallery Image' ) . ': ' . $errorMsg;
 		} else {
 			$msg = JText::_( 'Phoca Gallery Image Rotated' );
 		}
 		
-		
 		$link = 'index.php?option=com_phocagallery&view=phocagallerys';
 		$this->setRedirect($link, $msg);
 	}
+
 	
-	function install()
-	{
-		$msg = JText::_( 'Phoca Gallery succesfully installed' );
-		$link = 'index.php?option=com_phocagallery';
-		$this->setRedirect($link, $msg);
-	}
-	
-	function upgrade()
-	{
-		$msg = JText::_( 'Phoca Gallery succesfully upgraded' );
-		$link = 'index.php?option=com_phocagallery';
-		$this->setRedirect($link, $msg);
-	}
-	
-	//if thumbnails are created - show message after creating thumbnails - show that files was saved in database
-	function thumbs()
-	{
+	/*
+	 *if thumbnails are created - show message after creating thumbnails - show that files was saved in database
+	 */
+	function thumbs() {
 		$msg = JText::_( 'Phoca gallery Saved Multiple' );
 		$link = 'index.php?option=com_phocagallery&view=phocagallerys';
 		$this->setRedirect($link, $msg);
 	}
 	
-	function disablethumbs()
-	{
+	function disablethumbs() {
 		
 		$model	= &$this->getModel( 'phocagallery' );
 		if ($model->disableThumbs()) {
@@ -101,47 +87,29 @@ class PhocaGalleryCpControllerPhocaGallery extends PhocaGalleryCpController
 	}
 	
 	
-	function multiple()
-	{
+	function multiple() {
 		JRequest::setVar( 'view', 'phocagallerym' );
 		JRequest::setVar( 'layout', 'form'  );
 		JRequest::setVar( 'hidemainmenu', 1 );
-		
 		parent::display();
-		
-		// Checkin the Phoca gallery
-		//$model = $this->getModel( 'phocagallery' );
-		//$model->checkout();
 	}
 		
-	function edit()
-	{
+	function edit() {
 		JRequest::setVar( 'view', 'phocagallery' );
 		JRequest::setVar( 'layout', 'form'  );
 		JRequest::setVar( 'hidemainmenu', 1 );
-
 		parent::display();
-
 		// Checkin the Phoca gallery
 		$model = $this->getModel( 'phocagallery' );
 		$model->checkout();
 	}
 
-	function save()
-	{
+	function save() {
 		$post					= JRequest::get('post');
 		$cid					= JRequest::getVar( 'cid', array(0), 'post', 'array' );
 		$post['id'] 			= (int) $cid[0];
-		
 		$post['description']	= JRequest::getVar( 'description', '', 'post', 'string', JREQUEST_ALLOWRAW );
-		
-		$vmProductId			= JRequest::getVar( 'vmproductid', 0, 'post', 'int' );
-		$videoCode				= JRequest::getVar( 'videocode', '', 'post', 'string', JREQUEST_ALLOWRAW );
-		$longitude				= JRequest::getVar( 'longitude', '', 'post', 'string' );
-		$latitude				= JRequest::getVar( 'latitude', '', 'post', 'string' );
-		$zoom					= JRequest::getVar( 'zoom', '', 'post', 'string' );
-		$geotitle				= JRequest::getVar( 'geotitle', '', 'post', 'string' );
-		
+		$post['videocode']		= JRequest::getVar( 'videocode', '', 'post', 'string', JREQUEST_ALLOWRAW );
 		$extlink1				= JRequest::getVar( 'extlink1', '', 'post', 'string' );
 		$extlinkname1			= JRequest::getVar( 'extlinkname1', '', 'post', 'string' );
 		$targetlist1			= JRequest::getVar( 'targetlist1', '_self', 'post', 'string' );
@@ -159,64 +127,42 @@ class PhocaGalleryCpControllerPhocaGallery extends PhocaGalleryCpController
 			$extlink2			= str_replace('http://','', $extlink2);
 			$post['extlink2'] 	= $extlink2 . '|'.$extlinkname2.'|'.$targetlist2.'|'.$displaylist2;
 		}
-		
-		$post['params'] = '';
-		// VirtueMart link
-		if ($vmProductId > 0) {
-			$post['params'] .= 'vmproductid='.$vmProductId.';';
-		}
-		// YouTube
-		if ($videoCode != '') {
-			$post['params'] .= 'videocode='.$videoCode.';';
-		}
-		// longitude
-		if (!empty($longitude)) {
-			$post['params'] .= 'longitude=';
-			$post['params'] .= $longitude;
-			
-			$post['params'] .=';';
-		}
-		
-		// longitude
-		if (!empty($latitude)) {
-			$post['params'] .= 'latitude=';
-			$post['params'] .= $latitude;
-			
-			$post['params'] .=';';
-		}
-		
-		// geotagging zoom
-		if (!empty($zoom)) {
-			$post['params'] .= 'zoom=';
-			$post['params'] .= $zoom;
-			
-			$post['params'] .=';';
-		}
-		
-		// geotagging title
-		if (!empty($geotitle)) {
-			$post['params'] .= 'geotitle=';
-			$post['params'] .= $geotitle;
-			
-			$post['params'] .=';';
-		}
-
+	
 		$model = $this->getModel( 'phocagallery' );
-
+		
 		if ($model->store($post)) {
 			$msg = JText::_( 'Phoca gallery Saved' );
 		} else {
 			$msg = JText::_( 'Error Saving Phoca gallery' );
 		}
+		
+		switch ( JRequest::getCmd('task') ) {
+			case 'apply':
+				$id	= $model->store($post);//you get id and you store the table data
+				if ($id && $id > 0) {
+					$msg = JText::_( 'Changes to Phoca Gallery Saved' );
+				} else {
+					$msg = JText::_( 'Error Saving Phoca gallery' );
+					$id		= $post['id'];
+				}
+				$this->setRedirect( 'index.php?option=com_phocagallery&controller=phocagallery&task=edit&cid[]='. $id, $msg );
+				break;
 
-		// Check the table in so it can be edited.... we are done with it anyway
+			case 'save':
+			default:
+				$id	= $model->store($post);//you get id and you store the table data
+				if ($id && $id > 0) {
+					$msg = JText::_( 'Phoca Gallery Saved' );
+				} else {
+					$msg = JText::_( 'Phoca gallery Saved' );
+				}
+				$this->setRedirect( 'index.php?option=com_phocagallery&view=phocagallerys', $msg );
+				break;
+		}
 		$model->checkin();
-		$link = 'index.php?option=com_phocagallery&view=phocagallerys';
-		$this->setRedirect($link, $msg);
 	}
 
-	function remove()
-	{
+	function remove() {
 		global $mainframe;
 
 		$cid = JRequest::getVar( 'cid', array(), 'post', 'array' );
@@ -238,8 +184,7 @@ class PhocaGalleryCpControllerPhocaGallery extends PhocaGalleryCpController
 		$this->setRedirect( 'index.php?option=com_phocagallery&view=phocagallerys', $msg );
 	}
 
-	function publish()
-	{
+	function publish() {
 		global $mainframe;
 
 		$cid = JRequest::getVar( 'cid', array(), 'post', 'array' );
@@ -257,8 +202,7 @@ class PhocaGalleryCpControllerPhocaGallery extends PhocaGalleryCpController
 		$this->setRedirect( 'index.php?option=com_phocagallery&view=phocagallerys' );
 	}
 
-	function unpublish()
-	{
+	function unpublish() {
 		global $mainframe;
 
 		$cid = JRequest::getVar( 'cid', array(), 'post', 'array' );
@@ -276,32 +220,25 @@ class PhocaGalleryCpControllerPhocaGallery extends PhocaGalleryCpController
 		$this->setRedirect( 'index.php?option=com_phocagallery&view=phocagallerys' );
 	}
 
-	function cancel()
-	{
+	function cancel() {
 		$model = $this->getModel( 'phocagallery' );
 		$model->checkin();
-
 		$this->setRedirect( 'index.php?option=com_phocagallery&view=phocagallerys' );
 	}
 
-	function orderup()
-	{
+	function orderup() {
 		$model = $this->getModel( 'phocagallery' );
 		$model->move(-1);
-
 		$this->setRedirect( 'index.php?option=com_phocagallery&view=phocagallerys' );
 	}
 
-	function orderdown()
-	{
+	function orderdown() {
 		$model = $this->getModel( 'phocagallery' );
 		$model->move(1);
-
 		$this->setRedirect( 'index.php?option=com_phocagallery&view=phocagallerys' );
 	}
 
-	function saveorder()
-	{
+	function saveorder() {
 		$cid 	= JRequest::getVar( 'cid', array(), 'post', 'array' );
 		$order 	= JRequest::getVar( 'order', array(), 'post', 'array' );
 		JArrayHelper::toInteger($cid);

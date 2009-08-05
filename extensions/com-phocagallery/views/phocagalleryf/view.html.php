@@ -27,9 +27,9 @@ class PhocaGalleryCpViewPhocagalleryF extends JView
 
 		$document->addCustomTag("<!--[if IE]>\n<link rel=\"stylesheet\" href=\"../administrator/components/com_phocagallery/assets/phocagalleryieall.css\" type=\"text/css\" />\n<![endif]-->");
 
-		$path 			= PhocaGalleryHelper::getPathSet();
-		$path_orig_rel 	= $path['orig_rel_ds'];
-		$this->assign('path_orig_rel', $path_orig_rel);
+		$path 			= PhocaGalleryPath::getPath();
+		$this->assignRef('session', JFactory::getSession());
+		$this->assign('path_orig_rel', $path->image_rel);
 		$this->assignRef('folders', $this->get('folders'));
 		$this->assignRef('state', $this->get('state'));
 
@@ -37,14 +37,12 @@ class PhocaGalleryCpViewPhocagalleryF extends JView
 		parent::display($tpl);
 	}
 
-	function setFolder($index = 0)
-	{
+	function setFolder($index = 0) {
 		if (isset($this->folders[$index])) {
 			$this->_tmp_folder = &$this->folders[$index];
 		} else {
 			$this->_tmp_folder = new JObject;
 		}
 	}
-
 }
 ?>

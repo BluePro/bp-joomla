@@ -116,8 +116,8 @@
 				</td>
 			</tr>
 				
-			<?php if (count($this->images) > 0 || count($this->folders) > 0) 
-			{
+			<?php 
+			if (count($this->images) > 0 || count($this->folders) > 0) {
 				//FOLDERS
 				for ($i=0,$n=count($this->folders); $i<$n; $i++) :
 				$checked 	= JHTML::_('grid.id', $i, $this->folders[$i]->path_with_name_relative_no, 0, 'foldercid' );
@@ -135,13 +135,13 @@
 				//IMAGES
 				for ($i=0,$n=count($this->images); $i<$n; $i++) :
 				$row 		= &$this->images[$i];
-				$checked 	= JHTML::_('grid.id', $i+count($this->folders), $this->images[$i]->path_with_name_relative_no );
+				$checked 	= JHTML::_('grid.id', $i+count($this->folders), $this->images[$i]->nameno );
 				//$checked	= '<input type="checkbox" name="cid[]" value="'.$i.'" />';
 				?>
 				<tr>
 					<td><?php echo $checked; ?></td>
 					<td><p><?php echo JHTML::_( 'image.administrator', 'components/com_phocagallery/assets/images/icon-image-small.gif', ''); ?></p></td>
-					<td><p><?php echo  $this->images[$i]->path_with_name_relative_no; ?></p></td>
+					<td><p><?php echo  $this->images[$i]->nameno; ?></p></td>
 				</tr>
 				<?php endfor; 
 			}

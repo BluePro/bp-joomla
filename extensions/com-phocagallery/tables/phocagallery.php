@@ -27,6 +27,12 @@ class TablePhocaGallery extends JTable
 	var $description 		= null;
 	var $date 				= null;
 	var $hits 				= null;
+	var $latitude			= null;
+	var $longitude			= null;
+	var $zoom				= null;
+	var $geotitle			= null;
+	var $videocode			= null;
+	var $vmproductid		= null;
 	var $published 			= null;
 	var $checked_out 		= 0;
 	var $checked_out_time 	= 0;

@@ -8,8 +8,6 @@
  * @copyright Copyright (C) Jan Pavelka www.phoca.cz
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
-
-// Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
 jimport('joomla.application.component.model');
 
@@ -19,50 +17,27 @@ class PhocaGalleryCpModelPhocaGalleryC extends JModel
 	var $_id;
 	var $_data;
 	
-	function __construct()
-	{
+	function __construct() {
 		parent::__construct();
-
-		$array = JRequest::getVar('cid',  0, '', 'array');
-		$this->setId((int)$array[0]);
+		$cid = JRequest::getVar('cid',  0, '', 'array');
+		$this->setId((int)$cid[0]);
 	}
 
-	function setId($id)
-	{
-		// Set id and wipe data
+	function setId($id) {
 		$this->_id		= $id;
 		$this->_data	= null;
 	}
 
-	function &getData()
-	{
-		if ($this->_loadData())
-		{
-			$user = &JFactory::getUser();
-			
-	/*		// Check to see if the category is published
-			if (!$this->_data->cat_pub) {
-				JError::raiseError( 404, JText::_("Resource Not Found") );
-				return;
-			}
-			
-			// Check whether category access level allows access
-			if ($this->_data->cat_access > $user->get('aid', 0)) {
-				JError::raiseError( 403, JText::_('ALERTNOTAUTH') );
-				return;
-			}*/
-		}
-		else
-		{
+	function &getData() {
+		if ($this->_loadData()) {
+		} else {
 			$this->_initData();
 		}
 		return $this->_data;
 	}
 	
-	function isCheckedOut( $uid=0 )
-	{
-		if ($this->_loadData())
-		{
+	function isCheckedOut( $uid=0 ) {
+		if ($this->_loadData()) {
 			if ($uid) {
 				return ($this->_data->checked_out && $this->_data->checked_out != $uid);
 			} else {
@@ -71,12 +46,10 @@ class PhocaGalleryCpModelPhocaGalleryC extends JModel
 		}
 	}
 
-	function checkin()
-	{
-		if ($this->_id)
-		{
-			$phocagallery = & $this->getTable();
-			if(! $phocagallery->checkin($this->_id)) {
+	function checkin() {
+		if ($this->_id) {
+			$table = & $this->getTable();
+			if(! $table->checkin($this->_id)) {
 				$this->setError($this->_db->getErrorMsg());
 				return false;
 			}
@@ -84,18 +57,14 @@ class PhocaGalleryCpModelPhocaGalleryC extends JModel
 		return false;
 	}
 
-	function checkout($uid = null)
-	{
-		if ($this->_id)
-		{
-			// Make sure we have a user id to checkout the article with
+	function checkout($uid = null) {
+		if ($this->_id) {
 			if (is_null($uid)) {
 				$user	=& JFactory::getUser();
 				$uid	= $user->get('id');
 			}
-			// Lets get to it and checkout the thing...
-			$phocagallery = & $this->getTable();
-			if(!$phocagallery->checkout($uid, $this->_id)) {
+			$table = & $this->getTable();
+			if(!$table->checkout($uid, $this->_id)) {
 				$this->setError($this->_db->getErrorMsg());
 				return false;
 			}
@@ -104,14 +73,12 @@ class PhocaGalleryCpModelPhocaGalleryC extends JModel
 		return false;
 	}
 	
-	function store($data)
-	{
+	function store($data) {
 		
-		//clean alias name (no bad characters)
 		if ($data['alias'] == '') {
 			$data['alias'] = $data['title'];
 		}
-		$data['alias'] = PhocaGalleryHelper::getAliasName($data['alias']);
+		$data['alias'] = PhocaGalleryText::getAliasName($data['alias']);
 		
 		$row =& $this->getTable();
 		
@@ -128,7 +95,6 @@ class PhocaGalleryCpModelPhocaGalleryC extends JModel
 		// if new item, order last in appropriate group
 		if (!$row->id) {
 			$where = 'parent_id = ' . (int) $row->parent_id ;
-			//$where = '';
 			$row->ordering = $row->getNextOrder( $where );
 		}
 
@@ -143,7 +109,6 @@ class PhocaGalleryCpModelPhocaGalleryC extends JModel
 			$this->setError($this->_db->getErrorMsg());
 			return false;
 		}
-
 		return $row->id;
 	}
 	
@@ -211,8 +176,7 @@ class PhocaGalleryCpModelPhocaGalleryC extends JModel
 		return $userCategoryId->id;
 	}
 	
-	function accessmenu($id, $access)
-	{
+	function accessmenu($id, $access) {
 		global $mainframe;
 		$row =& $this->getTable();
 		$row->id = $id;
@@ -228,18 +192,16 @@ class PhocaGalleryCpModelPhocaGalleryC extends JModel
 		}
 	}
 
-	function delete($cid = array())
-	{
+	function delete($cid = array()) {
 		global $mainframe;
 		$db =& JFactory::getDBO();
 		
 		$result = false;
-		if (count( $cid ))
-		{
+		if (count( $cid )) {
 			JArrayHelper::toInteger($cid);
 			$cids = implode( ',', $cid );
 			
-			// FIRST - if there are subcategories ---------------------------------------------------	
+			// FIRST - if there are subcategories - - - - - 	
 			$query = 'SELECT c.id, c.name, c.title, COUNT( s.parent_id ) AS numcat'
 			. ' FROM #__phocagallery_categories AS c'
 			. ' LEFT JOIN #__phocagallery_categories AS s ON s.parent_id = c.id'
@@ -248,7 +210,6 @@ class PhocaGalleryCpModelPhocaGalleryC extends JModel
 			;
 			$db->setQuery( $query );
 				
-			
 			if (!($rows2 = $db->loadObjectList())) {
 				JError::raiseError( 500, $db->stderr('Load Data Problem') );
 				return false;
@@ -264,24 +225,19 @@ class PhocaGalleryCpModelPhocaGalleryC extends JModel
 					$err_cat[] = $row->title;
 				}
 			}
+			// - - - - - - - - - - - - - - -
 			
-			
-			// End subcategories ----------------------------------------------------------------------
-			
-			// Images with new cid
-			if (count( $cid ))
-			{
+			// Images with new cid - - - - -
+			if (count( $cid )) {
 				JArrayHelper::toInteger($cid);
 				$cids = implode( ',', $cid );
 			
-
 				// Select id's from phocagallery tables. If the category has some images, don't delete it
 				$query = 'SELECT c.id, c.name, c.title, COUNT( s.catid ) AS numcat'
 				. ' FROM #__phocagallery_categories AS c'
 				. ' LEFT JOIN #__phocagallery AS s ON s.catid = c.id'
 				. ' WHERE c.id IN ( '.$cids.' )'
-				. ' GROUP BY c.id'
-				;
+				. ' GROUP BY c.id';
 			
 				$db->setQuery( $query );
 
@@ -303,8 +259,7 @@ class PhocaGalleryCpModelPhocaGalleryC extends JModel
 				if (count( $cid )) {
 					$cids = implode( ',', $cid );
 					$query = 'DELETE FROM #__phocagallery_categories'
-					. ' WHERE id IN ( '.$cids.' )'
-					;
+					. ' WHERE id IN ( '.$cids.' )';
 					$db->setQuery( $query );
 					if (!$db->query()) {
 						$this->setError($this->_db->getErrorMsg());
@@ -313,8 +268,7 @@ class PhocaGalleryCpModelPhocaGalleryC extends JModel
 					
 					// Delete items in phocagallery_user_category
 					$query = 'DELETE FROM #__phocagallery_user_category'
-					. ' WHERE catid IN ( '.$cids.' )'
-					;
+					. ' WHERE catid IN ( '.$cids.' )';
 					$db->setQuery( $query );
 					if (!$db->query()) {
 						$this->setError($this->_db->getErrorMsg());
@@ -325,42 +279,35 @@ class PhocaGalleryCpModelPhocaGalleryC extends JModel
 			
 			// There are some images in the category - don't delete it
 			$msg = '';
-			if (count( $err_cat ) || count( $err_img ))
-			{
-				if (count( $err_cat ))
-				{
+			if (count( $err_cat ) || count( $err_img )) {
+				if (count( $err_cat )) {
 					$cids_cat = implode( ", ", $err_cat );
 					$msg .= JText::sprintf( 'WARNNOTREMOVEDRECORDS PHOCA GALLERY CAT', $cids_cat );
 				}
 				
-				if (count( $err_img ))
-				{
+				if (count( $err_img )) {
 					$cids_img = implode( ", ", $err_img );
 					$msg .= JText::sprintf( 'WARNNOTREMOVEDRECORDS PHOCA GALLERY', $cids_img );
 				}
-					
-					
-					$link = 'index.php?option=com_phocagallery&view=phocagallerycs';
-					$mainframe->redirect($link, $msg);
+				$link = 'index.php?option=com_phocagallery&view=phocagallerycs';
+				$mainframe->redirect($link, $msg);
 			}
 		}
 		return true;
 	}
 
-	function publish($cid = array(), $publish = 1)
-	{
+	function publish($cid = array(), $publish = 1) {
+		
 		$user 	=& JFactory::getUser();
-
-		if (count( $cid ))
-		{
+		if (count( $cid )) {
 			JArrayHelper::toInteger($cid);
 			$cids = implode( ',', $cid );
 
 			$query = 'UPDATE #__phocagallery_categories'
 				. ' SET published = '.(int) $publish
 				. ' WHERE id IN ( '.$cids.' )'
-				. ' AND ( checked_out = 0 OR ( checked_out = '.(int) $user->get('id').' ) )'
-			;
+				. ' AND ( checked_out = 0 OR ( checked_out = '.(int) $user->get('id').' ) )';
+				
 			$this->_db->setQuery( $query );
 			if (!$this->_db->query()) {
 				$this->setError($this->_db->getErrorMsg());
@@ -370,8 +317,7 @@ class PhocaGalleryCpModelPhocaGalleryC extends JModel
 		return true;
 	}
 
-	function move($direction)
-	{
+	function move($direction) {
 		$row =& $this->getTable();
 		if (!$row->load($this->_id)) {
 			$this->setError($this->_db->getErrorMsg());
@@ -385,24 +331,16 @@ class PhocaGalleryCpModelPhocaGalleryC extends JModel
 		return true;
 	}
 	
-	
+	function saveorder($cid = array(), $order){
+		$row 		=& $this->getTable();
+		$groupings 	= array();
 
-
-	function saveorder($cid = array(), $order)
-	{
-		$row =& $this->getTable();
-		$groupings = array();
-
-		//$catid is null
-		// update ordering values
-		for( $i=0; $i < count($cid); $i++ )
-		{
+		// $catid is null -  update ordering values
+		for( $i=0; $i < count($cid); $i++ ) {
 			$row->load( (int) $cid[$i] );
-			// track categories
-			$groupings[] = $row->parent_id;
+			$groupings[] = $row->parent_id; // track categories
 
-			if ($row->ordering != $order[$i])
-			{
+			if ($row->ordering != $order[$i]) {
 				$row->ordering = $order[$i];
 				if (!$row->store()) {
 					$this->setError($this->_db->getErrorMsg());
@@ -419,10 +357,8 @@ class PhocaGalleryCpModelPhocaGalleryC extends JModel
 		return true;
 	}
 	
-	function _loadData()
-	{
-		if (empty($this->_data))
-		{		
+	function _loadData() {
+		if (empty($this->_data)) {		
 			$query = 'SELECT p.*, uc.userid AS userid '	
 					.' FROM #__phocagallery_categories AS p'
 					.' LEFT JOIN #__phocagallery_user_category AS uc ON uc.catid = p.id'
@@ -434,54 +370,56 @@ class PhocaGalleryCpModelPhocaGalleryC extends JModel
 		return true;
 	}
 	
-	
-	function _initData()
-	{
-		// Lets load the content if it doesn't already exist
-		if (empty($this->_data))
-		{
-			$phocagallery = new stdClass();
-			$phocagallery->id				= 0;
-			$phocagallery->parent_id		= 0;
-			$phocagallery->title			= null;
-			$phocagallery->name				= null;
-			$phocagallery->alias			= null;
-			$phocagallery->image			= null;
-			$phocagallery->section        	= null;
-			$phocagallery->image_position	= null;
-			$phocagallery->description		= null;
-			$phocagallery->date				= null;
-			$phocagallery->published		= 0;
-			$phocagallery->checked_out		= 0;
-			$phocagallery->checked_out_time	= 0;
-			$phocagallery->editor			= null;
-			$phocagallery->ordering			= 0;
-			$phocagallery->access			= 0;
-			$phocagallery->hits				= 0;
-			$phocagallery->count			= 0;
-			$phocagallery->params			= null;
-			$phocagallery->userid			= 0;
-			$this->_data					= $phocagallery;
+	function _initData() {
+		if (empty($this->_data)) {
+			$table = new stdClass();
+			$table->id				= 0;
+			$table->parent_id		= 0;
+			$table->title			= null;
+			$table->name			= null;
+			$table->alias			= null;
+			$table->image			= null;
+			$table->section        	= null;
+			$table->image_position	= null;
+			$table->description		= null;
+			$table->date			= null;
+			$table->published		= 0;
+			$table->checked_out		= 0;
+			$table->checked_out_time= 0;
+			$table->editor			= null;
+			$table->ordering		= 0;
+			$table->access			= 0;
+			$table->hits			= 0;
+			$table->count			= 0;
+			$table->params			= null;
+			$table->userid			= 0;
+			$table->accessuserid	= null;
+			$table->uploaduserid	= null;
+			$table->deleteuserid	= null;
+			$table->userfolder		= null;
+			$table->latitude		= null;
+			$table->longitude		= null;
+			$table->zoom			= null;
+			$table->geotitle		= null;
+			$this->_data			= $table;
 			return (boolean) $this->_data;
 		}
 		return true;
 	}
+
 	
-	
-	
-	function piclens($cids)
-	{
-		$db 	=& JFactory::getDBO();
-		$path 	= PhocaGalleryHelper:: getPathSet();
+	function piclens($cids) {
+		$db 		=& JFactory::getDBO();
+		$path 		= PhocaGalleryPath::getPath();
+		$piclensImg = $path->image_rel_front.'phoca-piclens.png';
 		$paramsC= JComponentHelper::getParams('com_phocagallery') ;
 		
 		// PARAMS
 		$piclens_image 	= $paramsC->get( 'piclens_image', 1);
 		
-		if (JFolder::exists($path['orig_abs_ds'])) {  
+		if (JFolder::exists($path->image_abs)) {  
 			
-			foreach ($cids as $kcid =>$vcid)
-			{
+			foreach ($cids as $kcid =>$vcid) {
 				$this->setXMLFile();
 				
 				if (!$this->_XMLFile) {
@@ -500,7 +438,6 @@ class PhocaGalleryCpModelPhocaGalleryC extends JModel
 				
 				$this->_XMLFile->setDocumentElement( $node );
 				
-				
 				if (!$root =& $this->_XMLFile->documentElement) {
 					$this->setError( 'Could not obtain root element!' );
 					return false;
@@ -508,10 +445,11 @@ class PhocaGalleryCpModelPhocaGalleryC extends JModel
 			
 				$channel =& $this->_XMLFile->createElement( 'channel' );
 				$atomIcon=& $this->_XMLFile->createElement( 'atom:icon' );
-				$atomIcon->setText( 'http://www.phoca.cz/images/phoca-piclens.png' );
+				$atomIcon->setText( JURI::root() . $piclensImg );
 				$channel->appendChild( $atomIcon );	
 				
-				$query = 'SELECT a.id AS id, a.title AS title, a.filename AS filename FROM #__phocagallery AS a'
+				$query = 'SELECT a.id, a.title, a.filename, a.description'
+				. ' FROM #__phocagallery AS a'
 				. ' WHERE a.catid = '.(int)$vcid
 				. ' AND a.published = 1'
 				. ' ORDER BY a.catid, a.ordering';
@@ -519,33 +457,31 @@ class PhocaGalleryCpModelPhocaGalleryC extends JModel
 				$db->setQuery($query);
 				$rows = $db->loadObjectList();
 				
-				foreach ($rows as $krow => $vrow)
-				{
-					$file = PhocaGalleryHelper::getOrCreateThumbnail('', $vrow->filename, '');	
-					
-					
-					
-					$orig_file			 	= str_replace( "../", "", $file['path_with_name_relative'] );
-					$orig_file			 	= str_replace( "//", "/", $orig_file );
-					$thumb_name_l_no_rel 	= str_replace( "../", "", $file['thumb_name_l_no_rel'] );
-					$thumb_name_l_no_rel	= str_replace( "//", "/", $thumb_name_l_no_rel );
-					$juri_base			 	= str_replace( "administrator", "", JURI::base(true));
-					$thumb_image_path		= $juri_base . $thumb_name_l_no_rel;
-					$orig_file_path			= $juri_base . $orig_file;					
+				foreach ($rows as $krow => $vrow) {
+					$file 		= PhocaGalleryFileThumbnail::getOrCreateThumbnail($vrow->filename, '');	
+					$thumbFile	= str_replace( "administrator", "",  $file['thumb_name_l_no_rel']);
+					$origFile	= str_replace( "administrator", "",  $file['name_original_rel']);					
+
 					
 					$item=& $this->_XMLFile->createElement( 'item' );
 					$item->appendChild( $this->_buildXMLElement( 'title', $vrow->title ) );
-					$item->appendChild( $this->_buildXMLElement( 'link', $thumb_image_path ) );
+
 					
+					$item->appendChild( $this->_buildXMLElement( 'link', JURI::root().$thumbFile ) );
+					
+					$item->appendChild( $this->_buildXMLElement( 'media:description', $vrow->description  ) );
 					$thumbnail=& $this->_XMLFile->createElement( 'media:thumbnail' );
-					$thumbnail->setAttribute( 'url', $thumb_image_path );
+					$thumbnail->setAttribute( 'url', JURI::root().$thumbFile );
 					
 					$content=& $this->_XMLFile->createElement( 'media:content' );
 					if ($piclens_image == 1) {
-						$content->setAttribute( 'url', $thumb_image_path );
+						$content->setAttribute( 'url', JURI::root().$thumbFile );
 					} else {
-						$content->setAttribute( 'url', $orig_file_path );
+						$content->setAttribute( 'url', JURI::root().$origFile );
 					}
+					
+					
+					
 					$item->appendChild( $thumbnail );
 					$item->appendChild( $content );
 					
@@ -553,6 +489,10 @@ class PhocaGalleryCpModelPhocaGalleryC extends JModel
 					$guid->setText( $vcid .'-phocagallerypiclenscode-'.$vrow->filename );
 					$guid->setAttribute( 'isPermaLink', "false" );
 					$item->appendChild( $guid );
+					
+					$channel->appendChild( $this->_buildXMLElement(  'title', 'Phoca Gallery' ));
+					$channel->appendChild( $this->_buildXMLElement( 'link', 'http://www.phoca.cz/' ));
+					$channel->appendChild( $this->_buildXMLElement( 'description', 'Phoca Gallery' ));
 					
 					$channel->appendChild( $item );
 				}
@@ -563,25 +503,22 @@ class PhocaGalleryCpModelPhocaGalleryC extends JModel
 				
 				//echo $this->_XMLFile->toNormalizedString( true );exit;
 				// saveXML_utf8 doesn't save setXMLDeclaration
-				if (!$this->_XMLFile->saveXML( $path['orig_abs_ds'] . DS . $vcid.'.rss', true )) {
+				if (!$this->_XMLFile->saveXML( $path->image_abs . DS . $vcid.'.rss', true )) {
 					$this->setError( 'Could not save XML file!' );
 					return false;
 				}
 			}
-			
 			return true;
 		} else {
 			$this->setError( 'Phoca Gallery image folder not exists' );
 		}
 	}
 	
-	function setXMLFile()
-	{
+	function setXMLFile() {
 		$this->_XMLFile =& JFactory::getXMLParser();
 	}
 	
-	function &_buildXMLElement( $elementName, $text )
-	{
+	function &_buildXMLElement( $elementName, $text ) {
 		$node = $this->_XMLFile->createElement( $elementName );
 		$node->setText( $text );
 		return $node;

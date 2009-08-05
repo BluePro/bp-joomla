@@ -1,26 +1,22 @@
 <?php defined('_JEXEC') or die('Restricted access');
 
-if ( $this->params->def( 'show_page_title', 1 ) ) { ?>
-   <div class="componentheading<?php echo $this->params->get( 'pageclass_sfx' ); ?>">
-      <?php echo $this->params->get('page_title'); ?>
-   </div>
-<?php } 
+if ( $this->params->def( 'show_page_title', 1 ) ) {
+   echo '<div class="componentheading'.$this->params->get( 'pageclass_sfx' ).'">'.$this->params->get('page_title').'</div>';
+} 
 
-if ($this->tmpl2['googlemapsapikey'] == '') {
+if ($this->tmplGeo['googlemapsapikey'] == '') {
 	echo '<p>' . JText::_('Google Maps API Key Error Front') . '</p>';
-} else if ($this->tmpl2['categorieslng'] == '' || $this->tmpl2['categorieslat'] == '') {
+} else if ($this->tmplGeo['categorieslng'] == '' || $this->tmplGeo['categorieslat'] == '') {
 	echo '<p>' . JText::_('Google Maps Error Front') . '</p>';
 } else {
 	?>
 	
-
-
-<script src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=<?php echo $this->tmpl2['googlemapsapikey'];?>" type="text/javascript"></script>
+<script src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=<?php echo $this->tmplGeo['googlemapsapikey'];?>" type="text/javascript"></script>
 
 <noscript><?php echo JText::_('GOOGLE MAP ENABLE JAVASCRIPT');?></noscript>
 
 <div align="center" style="margin:0;padding:0;margin-top:10px;">
-	<div id="phoca_geo_map" style="margin:0;padding:0;width:<?php echo $this->tmpl2['categoriesmapwidth'];?>px;height:<?php echo $this->tmpl2['categoriesmapheight'];?>px"></div>
+	<div id="phoca_geo_map" style="margin:0;padding:0;width:<?php echo $this->tmplGeo['categoriesmapwidth'];?>px;height:<?php echo $this->tmplGeo['categoriesmapheight'];?>px"></div>
 </div>
 
 <script type='text/javascript'>//<![CDATA[
@@ -63,71 +59,51 @@ function getPhocaGeoMap(){
 	
 		map_phoca_geo = new GMap2(document.getElementById('phoca_geo_map'));
 		map_phoca_geo.addControl(new GMapTypeControl());
-		map_phoca_geo.addControl(new GLargeMapControl());
+		map_phoca_geo.addControl(new GLargeMapControl3D());
 		var overviewmap = new GOverviewMapControl();
 		map_phoca_geo.addControl(overviewmap, new GControlPosition(G_ANCHOR_BOTTOM_RIGHT));
 		
-		map_phoca_geo.setCenter(new GLatLng(<?php echo $this->tmpl2['categorieslat'];?>, <?php echo $this->tmpl2['categorieslng'];?>), <?php echo $this->tmpl2['categorieszoom'];?>);
-		map_phoca_geo.setMapType(G_NORMAL_MAP);
+		map_phoca_geo.setCenter(new GLatLng(<?php echo $this->tmplGeo['categorieslat'];?>, <?php echo $this->tmplGeo['categorieslng'];?>), <?php echo $this->tmplGeo['categorieszoom'];?>);
+		//map_phoca_geo.setMapType(G_NORMAL_MAP);
 		map_phoca_geo.enableContinuousZoom();
 		map_phoca_geo.enableDoubleClickZoom();
 		map_phoca_geo.enableScrollWheelZoom();
 
 <?php
-$data = array();
+
 foreach ($this->categories as $category) {
-	if (isset($category->params)) {
-		$longitude	= PhocaGalleryHelper::getParamsArray($category->params, 'longitude');
-		$latitude	= PhocaGalleryHelper::getParamsArray($category->params, 'latitude');
-		//$zoom		= PhocaGalleryHelper::getParamsArray($category->params, 'zoom');
-		$geotitle	= PhocaGalleryHelper::getParamsArray($category->params, 'geotitle');
+
+	if ((isset($category->longitude) && $category->longitude != '' && $category->longitude != 0)
+		&& (isset($category->latitude) && $category->latitude != '' && $category->latitude != 0)) {
 		
-		if (!isset($longitude[0]) || (isset($longitude[0]) && ($longitude[0] == '' || $longitude[0] == 0))) {
-			$data['longitude'] = '';
-		} else {
-			$data['longitude'] = $longitude[0];
+		if ($category->geotitle == '') {
+			$category->geotitle = $category->title;
 		}
 	
-		if (!isset($latitude[0]) || (isset($latitude[0]) && ($latitude[0] == '' || $latitude[0] == 0))) {
-			$data['latitude'] = '';
-		} else {
-			$data['latitude'] = $latitude[0];
-		}
+		$text = '<div style="text-align:left">'
+		.'<table border="0" cellspacing="5" cellpadding="5">'
+		.'<tr>'
+		.'<td align="left" colspan="2"><b><a href="'.$category->link.'">'. $category->geotitle.'</a></b></td>'
+		.'</tr>'
+		.'<tr>'
+		.'<td valign="top" align="left"><a href="'.$category->link.'">'.JHTML::_( 'image.site', $category->linkthumbnailpath, '', '', '', $category->geotitle ) . '</a></td>'
+		.'<td valign="top" align="left">'. PhocaGalleryText::strTrimAll(addslashes($category->description)).'</td>'
+		.'</tr></table></div>';
 		
-		if (!isset($geotitle[0]) || (isset($geotitle[0]) && $geotitle[0] == '')) {
-			$data['geotitle'] = $category->title;
-		} else {
-			$data['geotitle'] = $geotitle[0];
-		}
-	} else {
-		$data['longitude']	= '';
-		$data['latitude']	= '';
-		$data['geotitle'] 	= $category->title;
-	}
-					
-	if ($data['longitude'] != '' && $data['latitude'] != '') {
-		$text = '<div style="text-align:left"><table border="0" cellspacing="5" cellpadding="5"><tr><td align="left" colspan="2"><b><a href="'.$category->link.'">'. $data['geotitle'].'</a></b></td></tr>';
-		$text .='<tr>';
-		$text .='<td valign="top" align="left"><a href="'.$category->link.'">'.JHTML::_( 'image.site', $category->linkthumbnailpath, '', '', '', $data['geotitle'] ) . '</a></td>';
-		$text .='<td valign="top" align="left">'. PhocaGalleryHelper::strTrimAll($category->description).'</td>';
-		$text .='</tr></table></div>';
-		?>
-	
-		var point<?php echo $category->id;?> = new GPoint( <?php echo $data['longitude'];?>, <?php echo $data['latitude'];?>);
-		var marker_phoca_geo<?php echo $category->id;?> = new GMarker(point<?php echo $category->id;?>, {title:"<?php echo $data['geotitle'];?>"});
-		map_phoca_geo.addOverlay(marker_phoca_geo<?php echo $category->id;?>);
 		
-		GEvent.addListener(marker_phoca_geo<?php echo $category->id;?>, 'click', function() {
-			marker_phoca_geo<?php echo $category->id;?>.openInfoWindowHtml('<?php echo $text;?>');
-			});
+		echo 'var point'.$category->id.' = new GPoint( '.$category->longitude.', '.$category->latitude.');'."\n";
+		echo 'var marker_phoca_geo'.$category->id.' = new GMarker(point'.$category->id.', {title:"'. $category->id.'"});'."\n";
+		echo 'map_phoca_geo.addOverlay(marker_phoca_geo'.$category->id.');'."\n";
+		
+		echo 'GEvent.addListener(marker_phoca_geo'.$category->id.', \'click\', function() {'."\n"
+			.'marker_phoca_geo'.$category->id.'.openInfoWindowHtml(\''.$text.'\');'."\n"
+			.'});'."\n";
 			
-		GEvent.addDomListener(tst_phoca_geo, 'DOMMouseScroll', CancelEventPhocaGeoMap);
-		GEvent.addDomListener(tst_phoca_geo, 'mousewheel', CancelEventPhocaGeoMap);
-	<?php
+		echo 'GEvent.addDomListener(tst_phoca_geo, \'DOMMouseScroll\', CancelEventPhocaGeoMap);'."\n";
+		echo 'GEvent.addDomListener(tst_phoca_geo, \'mousewheel\', CancelEventPhocaGeoMap);'."\n";
 	}
 }
 ?>
-
 	}
 }
 //]]></script>
@@ -139,7 +115,6 @@ if (GBrowserIsCompatible()) {
 	tstint_phoca_geo=setInterval("CheckPhocaGeoMap()",500);
 }
 //]]></script>		
-
 
 <?php
 }

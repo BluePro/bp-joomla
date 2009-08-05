@@ -33,16 +33,17 @@ class PhocaGalleryCpViewPhocaGallery extends JView
 		$editor =& JFactory::getEditor();
 		$tmpl	= array();
 		
+		JHTML::stylesheet( 'phocagallery.css', 'administrator/components/com_phocagallery/assets/' );
+		
 		$params = JComponentHelper::getParams('com_phocagallery');
 		
 		$tmpl['enablethumbcreation']		= $params->get('enable_thumb_creation', 1 );
-		$tmpl['enablethumbcreationstatus'] 	= PhocaGalleryAdminRender::renderThumbnailCreationStatus((int)$tmpl['enablethumbcreation']);
+		$tmpl['enablethumbcreationstatus'] 	= PhocaGalleryRenderAdmin::renderThumbnailCreationStatus((int)$tmpl['enablethumbcreation']);
 
 		JHTML::_('behavior.calendar');
 		
 		//Data from model
-		$phocagallery	=& $this->get('Data');
-		JHTML::stylesheet( 'phocagallery.css', 'administrator/components/com_phocagallery/assets/' );
+		$items	=& $this->get('Data');
 		
 		//Image button
 		$link = 'index.php?option=com_phocagallery&amp;view=phocagalleryi&amp;tmpl=component';
@@ -57,42 +58,31 @@ class PhocaGalleryCpViewPhocaGallery extends JView
 		
 		
 		$lists 	= array();		
-		$isNew	= ($phocagallery->id < 1);
+		$isNew	= ($items->id < 1);
 
 		// fail if checked out not by 'me'
 		if ($model->isCheckedOut( $user->get('id') )) {
-			$msg = JText::sprintf( 'DESCBEINGEDITTED', JText::_( 'Phoca gallery' ), $phocagallery->title );
+			$msg = JText::sprintf( 'DESCBEINGEDITTED', JText::_( 'Phoca gallery' ), $items->title );
 			$mainframe->redirect( 'index.php?option='. $option, $msg );
 		}
-
-		// Set toolbar items for the page
-		$text = $isNew ? JText::_( 'New' ) : JText::_( 'Edit' );
-		JToolBarHelper::title(   JText::_( 'Phoca Gallery Image' ).': <small><small>[ ' . $text.' ]</small></small>', 'gallery' );
-		JToolBarHelper::save();
-		if ($isNew)  {
-			JToolBarHelper::cancel();
-		} else {
-			// for existing items the button is renamed `close`
-			JToolBarHelper::cancel( 'cancel', 'Close' );
-		}
-		JToolBarHelper::help( 'screen.phocagallery', true );
+		
 
 		// Edit or Create?
 		if (!$isNew) {
 			$model->checkout( $user->get('id') );
 		} else {
 			// initialise new record
-			$phocagallery->published 	= 1;
-			$phocagallery->order 		= 0;
-			$phocagallery->catid 		= JRequest::getVar( 'catid', 0, 'post', 'int' );
+			$items->published 	= 1;
+			$items->order 		= 0;
+			$items->catid 		= JRequest::getVar( 'catid', 0, 'post', 'int' );
 		}
 
 		// build the html select list for ordering
 		$query = 'SELECT ordering AS value, title AS text'
 			. ' FROM #__phocagallery'
-			. ' WHERE catid = ' . (int) $phocagallery->catid
+			. ' WHERE catid = ' . (int) $items->catid
 			. ' ORDER BY ordering';
-		$lists['ordering'] 			= JHTML::_('list.specificordering',  $phocagallery, $phocagallery->id, $query, false );
+		$lists['ordering'] 			= JHTML::_('list.specificordering',  $items, $items->id, $query, false );
 
 		// - - - - - - - - - - - - - - -
 		// Build the list of categories
@@ -101,110 +91,81 @@ class PhocaGalleryCpViewPhocaGallery extends JView
 	//	. ' WHERE a.published = 1'
 		. ' ORDER BY a.ordering';
 		$db->setQuery( $query );
-		$phocagallerys = $db->loadObjectList();
+		$itemss = $db->loadObjectList();
 
 		$tree = array();
 		$text = '';
-		$tree = PhocaGalleryHelper::CategoryTreeOption($phocagallerys, $tree, 0, $text, -1);
+		$tree = PhocaGalleryRenderAdmin::CategoryTreeOption($itemss, $tree, 0, $text, -1);
 		array_unshift($tree, JHTML::_('select.option', '0', '- '.JText::_('Select Category').' -', 'value', 'text'));
 		
 		//list categories
-		$lists['catid'] = JHTML::_( 'select.genericlist', $tree, 'catid',  '', 'value', 'text', $phocagallery->catid);
+		$lists['catid'] = JHTML::_( 'select.genericlist', $tree, 'catid',  '', 'value', 'text', $items->catid);
 		// - - - - - - - - - - - - - - -
 		
 		// Build the html select list
-		$lists['published'] = JHTML::_('select.booleanlist',  'published', 'class="inputbox"', $phocagallery->published );
+		$lists['published'] = JHTML::_('select.booleanlist',  'published', 'class="inputbox"', $items->published );
 
-		
-
-		// Params
-		$videoCode 		= PhocaGalleryHelper::getParamsArray($phocagallery->params, 'videocode');
-		$vmProductId 	= PhocaGalleryHelper::getParamsArray($phocagallery->params, 'vmproductid');
-		$longitude		= PhocaGalleryHelper::getParamsArray($phocagallery->params, 'longitude');
-		$latitude		= PhocaGalleryHelper::getParamsArray($phocagallery->params, 'latitude');
-		$zoom			= PhocaGalleryHelper::getParamsArray($phocagallery->params, 'zoom');
-		$geotitle		= PhocaGalleryHelper::getParamsArray($phocagallery->params, 'geotitle');
-		
-		//Longitude Latitude
-		if (!isset($longitude[0]) || (isset($longitude[0]) && ($longitude[0] == '' || $longitude[0] == 0))) {
-			$longitude[0] = '';
-			$longitudeLink = '14.429919719696045';
-		} else {
-			$longitudeLink = $longitude[0];
+		// Link To GeoMap - Geo Button - - - - - -
+		$longitudeLink = '14.429919719696045';
+		if (isset($items->longitude) && $items->longitude != '' && $items->longitude != 0) {
+			$longitudeLink = $items->longitude;
 		}
 		
-		if (!isset($latitude[0]) || (isset($latitude[0]) && ($latitude[0] == '' || $latitude[0] == 0))) {
-			$latitude[0] = '';
-			$latitudeLink = '50.079623358200884';
-		} else {
-			$latitudeLink = $latitude[0];
-		}
+		$latitudeLink = '50.079623358200884';
+		if (isset($items->latitude) && $items->latitude != '' && $items->latitude != 0) {
+			$latitudeLink = $items->latitude;
+		} 
 		
-		if (!isset($zoom[0]) || (isset($zoom[0]) && ($zoom[0] == '' || $zoom[0] == 0))) {
-			$zoom[0] = 2;
+		$zoomLink = 2;
+		if (isset($items->zoom) && $items->zoom != '' && $items->zoom != 0) {
+			$zoomLink = $items->zoom;
 		}
-		if (!isset($geotitle[0]) || (isset($geotitle[0]) && $geotitle[0] == '')) {
-			$geotitle[0] = '';
-		}
-		
-		if (!isset($videoCode[0])) {
-			$tmpl['videocode'] = '';
-		} else {
-			$tmpl['videocode'] = $videoCode[0];
-		}
-		
-		if (!isset($vmProductId[0])) {
-			$tmpl['vmproductid'] = '';
-		} else {
-			$tmpl['vmproductid'] = $vmProductId[0];
-		}
-
-		$tmpl['longitude']	= $longitude[0];
-		$tmpl['latitude']	= $latitude[0];
-		$tmpl['zoom']		= $zoom[0];
-		$tmpl['geotitle']	= $geotitle[0];
 		
 		//Get button
-		$linkg = 'index.php?option=com_phocagallery&amp;view=phocagalleryg&amp;tmpl=component&amp;lat='.$latitudeLink.'&amp;lng='.$longitudeLink.'&amp;zoom='.$zoom[0];
+		$linkg = 'index.php?option=com_phocagallery&amp;view=phocagalleryg&amp;tmpl=component&amp;lat='.$latitudeLink.'&amp;lng='.$longitudeLink.'&amp;zoom='.$zoomLink;
 		JHTML::_('behavior.modal', 'a.modal-button');
-		$buttong = new JObject();
-		$buttong->set('modal', true);
-		$buttong->set('link', $linkg);
-		$buttong->set('text', JText::_( 'coordinates' ));
-		$buttong->set('name', 'image');
-		$buttong->set('modalname', 'modal-button');
-		$buttong->set('options', "{handler: 'iframe', size: {x: 640, y: 560}}");
+		$buttonGeo = new JObject();
+		$buttonGeo->set('modal', true);
+		$buttonGeo->set('link', $linkg);
+		$buttonGeo->set('text', JText::_( 'coordinates' ));
+		$buttonGeo->set('name', 'image');
+		$buttonGeo->set('modalname', 'modal-button');
+		$buttonGeo->set('options', "{handler: 'iframe', size: {x: 640, y: 560}}");
+		// - - - - - - - - - - - - - - - - 
 		
 		
-		if (isset($phocagallery->extlink1)) {
-			$tmpl['extlink1']	= explode("|", $phocagallery->extlink1, 4);
-		}
-		if (!isset($tmpl['extlink1'][0])) {$tmpl['extlink1'][0] = '';}
-		if (!isset($tmpl['extlink1'][1])) {$tmpl['extlink1'][1] = '';}
-		if (!isset($tmpl['extlink1'][2])) {$tmpl['extlink1'][2] = '_self';}
-		if (!isset($tmpl['extlink1'][3])) {$tmpl['extlink1'][3] = 1;}
-		
-		if (isset($phocagallery->extlink2)) {
-			$tmpl['extlink2']	= explode("|", $phocagallery->extlink2, 4);
-		}
-		if (!isset($tmpl['extlink2'][0])) {$tmpl['extlink2'][0] = '';}
-		if (!isset($tmpl['extlink2'][1])) {$tmpl['extlink2'][1] = '';}
-		if (!isset($tmpl['extlink2'][2])) {$tmpl['extlink2'][2] = '_self';}
-		if (!isset($tmpl['extlink2'][3])) {$tmpl['extlink2'][3] = 1;}
+		phocagalleryimport('phocagallery.render.renderadmin');
+		$tmpl['extlink1'] = PhocaGalleryRenderAdmin::renderExternalLink($items->extlink1);
+		$tmpl['extlink2'] = PhocaGalleryRenderAdmin::renderExternalLink($items->extlink2);
 		
 		//clean gallery data
 		jimport('joomla.filter.output');
-		JFilterOutput::objectHTMLSafe( $phocagallery, ENT_QUOTES, 'description' );
+		JFilterOutput::objectHTMLSafe( $items, ENT_QUOTES, 'description' );
 		
 		$this->assignRef('editor', $editor);
 		$this->assignRef('tmpl', $tmpl);
 		$this->assignRef('lists', $lists);
-		$this->assignRef('phocagallery', $phocagallery);
+		$this->assignRef('items', $items);
 		$this->assignRef('button', $button);
-		$this->assignRef('buttong', $buttong);
+		$this->assignRef('buttongeo', $buttonGeo);
 		$this->assignRef('request_url',	$uri->toString());
 
 		parent::display($tpl);
+		$this->_setToolbar($isNew);
+	}
+	
+	function _setToolbar($isNew) {
+		
+		$text = $isNew ? JText::_( 'New' ) : JText::_( 'Edit' );
+		JToolBarHelper::title(   JText::_( 'Phoca Gallery Image' ).': <small><small>[ ' . $text.' ]</small></small>', 'gallery' );
+		JToolBarHelper::save();
+		JToolBarHelper::apply();
+		if ($isNew)  {
+			JToolBarHelper::cancel();
+		} else {
+			JToolBarHelper::cancel( 'cancel', 'Close' );
+		}
+		JToolBarHelper::help( 'screen.phocagallery', true );
 	}
 }
 ?>

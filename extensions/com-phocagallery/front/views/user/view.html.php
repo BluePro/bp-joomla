@@ -12,8 +12,7 @@ defined( '_JEXEC' ) or die();
 jimport( 'joomla.client.helper' );
 jimport( 'joomla.application.component.view' );
 jimport( 'joomla.html.pane' );
-require_once( JPATH_ADMINISTRATOR.DS.'components'.DS.'com_phocagallery'.DS.'helpers'.DS.'phocagalleryupload.php' );
-require_once( JPATH_ADMINISTRATOR.DS.'components'.DS.'com_phocagallery'.DS.'helpers'.DS.'phocagalleryrender.php' );
+phocagalleryimport('phocagallery.file.fileupoload');
 
 class PhocaGalleryViewUser extends JView
 {
@@ -28,7 +27,7 @@ class PhocaGalleryViewUser extends JView
 		$user 		= &JFactory::getUser();
 		
 		// LIBRARY
-		$library 							= &PhocaLibrary::getLibrary();
+		$library 							= &PhocaGalleryLibrary::getLibrary();
 		$libraries['pg-css-ie'] 			= $library->getLibrary('pg-css-ie');
 		
 		// Only registered users
@@ -49,13 +48,13 @@ class PhocaGalleryViewUser extends JView
 		
 		//$id 						= JRequest::getVar('id', 0, '', 'int');
 		$tmpl['tab'] 				= JRequest::getVar('tab', 0, '', 'string');
-		$tmpl['formaticon'] 		= PhocaGalleryHelperFront::getFormatIcon();
+		$tmpl['formaticon'] 		= PhocaGalleryImage::getFormatIcon();
 		$tmpl['displaytitleupload']	= $params->get( 'display_title_upload', 0 );
 		$tmpl['displaydescupload'] 	= $params->get( 'display_description_upload', 0 );
 		$tmpl['maxuploadchar']		= $params->get( 'max_upload_char', 1000 );
 		$tmpl['maxcreatecatchar']	= $params->get( 'max_create_cat_char', 1000 );
 		$tmpl['phocagalleryic']		= $params->get( 'display_phoca_info', 1 );
-		$tmpl['phocagalleryic'] 	= PhocaGalleryHelper::getPhocaIc((int)$tmpl['phocagalleryic']);
+		$tmpl['phocagalleryic'] 	= PhocaGalleryRenderInfo::getPhocaIc((int)$tmpl['phocagalleryic']);
 		$tmpl['showpagetitle'] 		= $params->get( 'show_page_title', 1 );
 		$tmpl['enablejava']			= $params->get( 'enable_java', 0 );
 		$tmpl['javaresizewidth'] 	= $params->get( 'java_resize_width', -1 );
@@ -64,15 +63,14 @@ class PhocaGalleryViewUser extends JView
 		$tmpl['javaboxheight'] 		= $params->get( 'java_box_height', 480 );
 		
 		// UCP is disabled (security reasons)
-		$enable_user_cp		 		= $params->get( 'enable_user_cp', 0 );
-		if ($enable_user_cp == 0) {
+		if ((int)$params->get( 'enable_user_cp', 0 ) == 0) {
 			$mainframe->redirect(JURI::base(true), JText::_("User Control Panel is disabled"));
 			exit;
 		}
 		
 		// PANE - CATEGORY EDIT | CREATE
 		// MODEL - Get user's category		
-		$model 		= $this->getModel('user');
+		$model 			= $this->getModel('user');
 		$userCategory 	= $model->getUserCategory($user->id);
 		
 		if (!empty($userCategory->categoryid)) {
@@ -98,48 +96,45 @@ class PhocaGalleryViewUser extends JView
 		}
 		
 		
-		$document->addCustomTag(PhocaGalleryHelperRender::renderDescriptionCreateCatJS((int)$tmpl['maxcreatecatchar']));
+		$document->addCustomTag(PhocaGalleryRenderFront::renderDescriptionCreateCatJS((int)$tmpl['maxcreatecatchar']));
 		
 		// PANE - UPLOAD
 		// Category Params
 		if (!empty($userCategory->categoryid)) {
-			$catParams		= $model->getCategoryParams((int)$userCategory->categoryid);
+			$catAccess		= PhocaGalleryAccess::getCategoryAccess((int)$userCategory->categoryid);
 			
-			// ===========================================================
 			// Upload
 			$tmpl['displayupload']	= 0;
-			// USER RIGHT - UPLOAD =======================================
+			// USER RIGHT - UPLOAD - - - - - - - - - - -
 			// 2, 2 means that user access will be ignored in function getUserRight for display Delete button
 			$rightDisplayUpload = 0;// default is to null (all users cannot upload)
-			if (isset($catParams->params)) {
-				$rightDisplayUpload = PhocaGalleryHelper::getUserRight($catParams->params, 'uploaduserid', 1, $user->get('aid', 0), $user->get('id', 0), 0);
+			if (!empty($catAccess)) {
+				$rightDisplayUpload = PhocaGalleryAccess::getUserRight('uploaduserid', $catAccess->uploaduserid, 1, $user->get('aid', 0), $user->get('id', 0), 0);
 			}
-
 			if ($rightDisplayUpload == 1) {
 				$tmpl['displayupload']	= 1;
-				$document->addCustomTag(PhocaGalleryHelperRender::renderDescriptionUploadJS((int)$tmpl['maxuploadchar']));
+				$document->addCustomTag(PhocaGalleryRenderFront::renderDescriptionUploadJS((int)$tmpl['maxuploadchar']));
 			}
-			// ===========================================================
+			// - - - - - - - - - - - - - - - - - - - - - 
 			
-			// USER RIGHT - ACCESS =======================================
+			// USER RIGHT - ACCESS - - - - - - - - - - - 
 			$rightDisplay = 1;//default is set to 1 (all users can see the category)
-			if (isset($catParams->params)) {
-				$rightDisplay = PhocaGalleryHelper::getUserRight ($catParams->params, 'accessuserid', 0, $user->get('aid', 0), $user->get('id', 0), 1);
+			if (!empty($catAccess)) {
+				$rightDisplay = PhocaGalleryAccess::getUserRight ('accessuserid', $catAccess->accessuserid, 0, $user->get('aid', 0), $user->get('id', 0), 1);
 			}
-			
 			if ($rightDisplay == 0) {
 				$mainframe->redirect(JRoute::_('index.php?option=com_user&view=login', false), JText::_("ALERTNOTAUTH"));
 				exit;
 			}		
-			// ===========================================================
+			// - - - - - - - - - - - - - - - - - - - - - 
 		
-			// Upload Form -----------------------------------------------
+			// Upload Form - - - - - - - - - - - - - - - 
 			// Set FTP form
 			$ftp = !JClientHelper::hasCredentials('ftp');
 			// PARAMS - Upload size
 			$tmpl['uploadmaxsize'] = $params->get( 'upload_maxsize', 3000000 );
 			$this->assignRef('session', JFactory::getSession());
-			// END Upload Form -------------------------------------------
+			// END Upload Form - - - - - - - - - - - - - 
 			
 		} else {
 			$tmpl['displayupload'] = 0;

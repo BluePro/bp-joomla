@@ -9,10 +9,7 @@ function submitbutton(pressbutton) {
 		return;
 	}
 
-	// do field validation
-	/*if (form.title.value == ""){
-		alert( "<?php echo JText::_( 'Gallery item must have a title', true ); ?>" );
-	} else*/ if (form.catid.value == "0"){
+	if (form.catid.value == "0"){
 		alert( "<?php echo JText::_( 'You must select a category', true ); ?>" );
 	} else if (form.filename.value == ""){
 		alert( "<?php echo JText::_( 'You must select a filename', true ); ?>" );
@@ -42,7 +39,7 @@ table.paramlist td.paramlist_key {
 				</label>
 			</td>
 			<td colspan="2">
-				<input class="text_area" type="text" name="title" id="title" size="32" maxlength="250" value="<?php echo $this->phocagallery->title;?>" />
+				<input class="text_area" type="text" name="title" id="title" size="32" maxlength="250" value="<?php echo $this->items->title;?>" />
 			</td>
 		</tr>
 		<tr>
@@ -52,7 +49,7 @@ table.paramlist td.paramlist_key {
 				</label>
 			</td>
 			<td>
-				<input class="text_area" type="text" name="alias" id="alias" size="32" maxlength="250" value="<?php echo $this->phocagallery->alias;?>" />
+				<input class="text_area" type="text" name="alias" id="alias" size="32" maxlength="250" value="<?php echo $this->items->alias;?>" />
 			</td>
 		</tr>
 		<tr>
@@ -80,7 +77,7 @@ table.paramlist td.paramlist_key {
 				</label>
 			</td>
 			<td valign="middle">
-				<input class="text_area" type="text" name="filename" id="filename" value="<?php echo $this->phocagallery->filename; ?>" size="32" maxlength="250" />
+				<input class="text_area" type="text" name="filename" id="filename" value="<?php echo $this->items->filename; ?>" size="32" maxlength="250" />
 			</td>
 			<td align="left" valign="middle">
 				<div class="button2-left" style="display:inline">
@@ -98,7 +95,7 @@ table.paramlist td.paramlist_key {
 				</label>
 			</td>
 			<td colspan="2" valign="middle">
-				<?php echo JHTML::_('calendar', $this->phocagallery->date, 'date', 'date', "%Y-%m-%d", array('class'=>'inputbox', 'size'=>'32',  'maxlength'=>'45')); ?>
+				<?php echo JHTML::_('calendar', $this->items->date, 'date', 'date', "%Y-%m-%d", array('class'=>'inputbox', 'size'=>'32',  'maxlength'=>'45')); ?>
 			</td>
 		</tr>
 		
@@ -120,7 +117,7 @@ table.paramlist td.paramlist_key {
 				</label>
 			</td>
 			<td>
-				<input class="text_area" type="vmproductid" name="vmproductid" id="vmproductid" size="32" maxlength="10" value="<?php echo $this->tmpl['vmproductid'] ?>" />
+				<input class="text_area" type="vmproductid" name="vmproductid" id="vmproductid" size="32" maxlength="10" value="<?php echo $this->items->vmproductid ?>" />
 			</td>
 		</tr>
 		
@@ -131,7 +128,7 @@ table.paramlist td.paramlist_key {
 				</label>
 			</td>
 			<td colspan="2">
-				<textarea cols="46" rows="4" id="videocode" name="videocode"><?php echo $this->tmpl['videocode'] ?></textarea>
+				<textarea cols="46" rows="4" id="videocode" name="videocode"><?php echo $this->items->videocode ?></textarea>
 			</td>
 		</tr>
 		
@@ -143,12 +140,12 @@ table.paramlist td.paramlist_key {
 					</label>
 				</td>
 				<td valign="middle">
-					<input class="text_area" type="text" name="longitude" id="longitude" value="<?php echo $this->tmpl['longitude']; ?>" size="32" maxlength="250" />
+					<input class="text_area" type="text" name="longitude" id="longitude" value="<?php echo $this->items->longitude; ?>" size="32" maxlength="250" />
 				</td>
 				<td align="left" valign="middle">
 					<div class="button2-left" style="display:inline">
-						<div class="<?php echo $this->buttong->name; ?>">
-							<a class="<?php echo $this->buttong->modalname; ?>" title="<?php echo $this->buttong->text; ?>" href="<?php echo $this->buttong->link; ?>" rel="<?php echo $this->buttong->options; ?>"  ><?php echo $this->buttong->text; ?></a>
+						<div class="<?php echo $this->buttongeo->name; ?>">
+							<a class="<?php echo $this->buttongeo->modalname; ?>" title="<?php echo $this->buttongeo->text; ?>" href="<?php echo $this->buttongeo->link; ?>" rel="<?php echo $this->buttongeo->options; ?>"  ><?php echo $this->buttongeo->text; ?></a>
 						</div>
 					</div>
 				</td>
@@ -161,7 +158,7 @@ table.paramlist td.paramlist_key {
 					</label>
 				</td>
 				<td valign="middle">
-					<input class="text_area" type="text" name="latitude" id="latitude" value="<?php echo $this->tmpl['latitude']; ?>" size="32" maxlength="250" />
+					<input class="text_area" type="text" name="latitude" id="latitude" value="<?php echo $this->items->latitude; ?>" size="32" maxlength="250" />
 				</td>
 			</tr>
 			
@@ -172,7 +169,7 @@ table.paramlist td.paramlist_key {
 					</label>
 				</td>
 				<td valign="middle">
-					<input class="text_area" type="text" name="zoom" id="zoom" value="<?php echo $this->tmpl['zoom']; ?>" size="32" maxlength="250" />
+					<input class="text_area" type="text" name="zoom" id="zoom" value="<?php echo $this->items->zoom; ?>" size="32" maxlength="250" />
 				</td>
 			</tr>
 			
@@ -183,7 +180,7 @@ table.paramlist td.paramlist_key {
 					</label>
 				</td>
 				<td valign="middle">
-					<input class="text_area" type="text" name="geotitle" id="geotitle" value="<?php echo $this->tmpl['geotitle']; ?>" size="32" maxlength="250" />
+					<input class="text_area" type="text" name="geotitle" id="geotitle" value="<?php echo $this->items->geotitle; ?>" size="32" maxlength="250" />
 				</td>
 			</tr>
 		
@@ -194,7 +191,7 @@ table.paramlist td.paramlist_key {
 				</label>
 			</td>
 			<td colspan="2">
-				<input class="text_area" type="text" name="hits" id="hits" value="<?php echo $this->phocagallery->hits; ?>" size="15" maxlength="11" title="<?php echo JText::_( 'Hits' ); ?>" />
+				<input class="text_area" type="text" name="hits" id="hits" value="<?php echo $this->items->hits; ?>" size="15" maxlength="11" title="<?php echo JText::_( 'Hits' ); ?>" />
 			</td>
 		</tr>
 		
@@ -297,7 +294,7 @@ table.paramlist td.paramlist_key {
 				<table class="admintable">
 			<?php /*		<tr>
 						<td valign="top" colspan="3">
-							<textarea cols="60" rows="3" id="description" name="description"><?php echo $this->phocagallery->description ?></textarea>
+							<textarea cols="60" rows="3" id="description" name="description"><?php echo $this->items->description ?></textarea>
 						</td>
 					</tr>*/ ?>
 					
@@ -305,7 +302,7 @@ table.paramlist td.paramlist_key {
 						<td valign="top" colspan="3">
 							<?php
 							// parameters : areaname, content, width, height, cols, rows, show xtd buttons
-							echo $this->editor->display( 'description',  $this->phocagallery->description, '550', '300', '60', '20', array('pagebreak', 'readmore') ) ;
+							echo $this->editor->display( 'description',  $this->items->description, '550', '300', '60', '20', array('pagebreak', 'readmore') ) ;
 							?>
 						</td>
 					</tr>
@@ -316,7 +313,7 @@ table.paramlist td.paramlist_key {
 
 <div class="clr"></div>
 
-<input type="hidden" name="cid[]" value="<?php echo $this->phocagallery->id; ?>" />
+<input type="hidden" name="cid[]" value="<?php echo $this->items->id; ?>" />
 <input type="hidden" name="task" value="" />
 <input type="hidden" name="controller" value="phocagallery" />
 </form>

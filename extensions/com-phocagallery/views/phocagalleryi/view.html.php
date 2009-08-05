@@ -23,31 +23,27 @@ class PhocaGalleryCpViewPhocagalleryI extends JView
 		
 		JHTML::stylesheet( 'phocagallery.css', 'administrator/components/com_phocagallery/assets/' );
 
-		$document->addCustomTag("<!--[if IE]>\n<link rel=\"stylesheet\" href=\"../administrator/components/com_phocagallery/assets/phocagalleryieall.css\" type=\"text/css\" />\n<![endif]-->");
+		$document->addCustomTag("<!--[if lt IE 8]>\n<link rel=\"stylesheet\" href=\"../administrator/components/com_phocagallery/assets/phocagalleryieall.css\" type=\"text/css\" />\n<![endif]-->");
 		
 		$tmpl['large_image_width']	= $params->get( 'large_image_width', 640 );
 		$tmpl['large_image_height']	= $params->get( 'large_image_height', 480 );
 		$tmpl['uploadmaxsize'] 		= $params->get( 'upload_maxsize', 3000000 );
 		$tmpl['javaresizewidth'] 	= $params->get( 'java_resize_width', -1 );
 		$tmpl['javaresizeheight'] 	= $params->get( 'java_resize_height', -1 );
-		
 		$tmpl['tab'] 				= JRequest::getVar('tab', 0, '', 'int');
 		
 		// Do not allow cache
 		JResponse::allowCache(false);
 
-		$path 			= PhocaGalleryHelper::getPathSet();
-		$path_orig_rel 	= $path['orig_rel_ds'];
+		$path 	= PhocaGalleryPath::getPath();
 		
-		$this->assign('path_orig_rel', $path_orig_rel);
+		$this->assign('path_orig_rel', $path->image_abs);
 		$this->assignRef('images', $this->get('images'));
 		$this->assignRef('folders', $this->get('folders'));
 		$this->assignRef('state', $this->get('state'));
 		
-	
 		// Upload Form ------------------------------------
 		JHTML::_('behavior.mootools');
-		//$document->addScript('components/com_phocagallery/assets/upload/mediamanager.js');
 		$document->addStyleSheet('components/com_phocagallery/assets/upload/mediamanager.css');
 
 		// Set FTP form
@@ -57,9 +53,8 @@ class PhocaGalleryCpViewPhocagalleryI extends JView
 		$state			= $this->get('state');
 		$refreshSite 	= 'index.php?option=com_phocagallery&view=phocagalleryi&tmpl=component&tab=2&folder='.$state->folder;
 		if (!$ftp) {
-		//	if ($params->get('enable_flash', 0)) {
-				PhocaGalleryHelperUpload::uploader('file-upload', array('onAllComplete' => 'function(){ window.location.href="'.$refreshSite.'"; }'));
-		//	}
+			phocagalleryimport('phocagallery.upload.upload');
+			PhocaGalleryFileUpload::uploader('file-upload', array('onAllComplete' => 'function(){ window.location.href="'.$refreshSite.'"; }'));
 		}
 		// END Upload Form ------------------------------------
 		//TABS
@@ -85,8 +80,7 @@ class PhocaGalleryCpViewPhocagalleryI extends JView
 		echo JHTML::_('behavior.keepalive');
 	}
 
-	function setFolder($index = 0)
-	{
+	function setFolder($index = 0) {
 		if (isset($this->folders[$index])) {
 			$this->_tmp_folder = &$this->folders[$index];
 		} else {
@@ -94,8 +88,7 @@ class PhocaGalleryCpViewPhocagalleryI extends JView
 		}
 	}
 
-	function setImage($index = 0)
-	{
+	function setImage($index = 0) {
 		if (isset($this->images[$index])) {
 			$this->_tmp_img = &$this->images[$index];
 		} else {

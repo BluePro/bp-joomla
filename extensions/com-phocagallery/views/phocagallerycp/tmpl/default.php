@@ -7,25 +7,28 @@
 			<div id="cpanel">
 	<?php
 	$link = 'index.php?option=com_phocagallery&view=phocagallerys';
-	echo PhocaGalleryHelperControlPanel::quickIconButton( $link, 'icon-48-gal.png', JText::_( 'Images' ) );
+	echo PhocaGalleryRenderAdmin::quickIconButton( $link, 'icon-48-pg-gal.png', JText::_( 'Images' ) );
 	
 	$link = 'index.php?option=com_phocagallery&view=phocagallerycs';
-	echo PhocaGalleryHelperControlPanel::quickIconButton( $link, 'icon-48-cat.png', JText::_( 'Categories' ) );
+	echo PhocaGalleryRenderAdmin::quickIconButton( $link, 'icon-48-pg-cat.png', JText::_( 'Categories' ) );
 	
 	$link = 'index.php?option=com_phocagallery&view=phocagalleryt';
-	echo PhocaGalleryHelperControlPanel::quickIconButton( $link, 'icon-48-theme.png', JText::_( 'Themes' ) );
+	echo PhocaGalleryRenderAdmin::quickIconButton( $link, 'icon-48-pg-theme.png', JText::_( 'Themes' ) );
 	
 	$link = 'index.php?option=com_phocagallery&view=phocagalleryra';
-	echo PhocaGalleryHelperControlPanel::quickIconButton( $link, 'icon-48-vote.png', JText::_( 'Rating' ) );
+	echo PhocaGalleryRenderAdmin::quickIconButton( $link, 'icon-48-pg-vote.png', JText::_( 'Category Rating' ) );
+	
+	$link = 'index.php?option=com_phocagallery&view=phocagalleryraimg';
+	echo PhocaGalleryRenderAdmin::quickIconButton( $link, 'icon-48-pg-vote-img.png', JText::_( 'Image Rating' ) );
 	
 	$link = 'index.php?option=com_phocagallery&view=phocagallerycos';
-	echo PhocaGalleryHelperControlPanel::quickIconButton( $link, 'icon-48-comment.png', JText::_( 'Comments' ) );
+	echo PhocaGalleryRenderAdmin::quickIconButton( $link, 'icon-48-pg-comment.png', JText::_( 'Comments' ) );
 	
 	//$link = 'index.php?option=com_phocagallery&view=phocagalleryucs';
-	//echo PhocaGalleryHelperControlPanel::quickIconButton( $link, 'icon-48-users-cat.png', JText::_( 'Users Categories' ) );
+	//echo PhocaGalleryRenderAdmin::quickIconButton( $link, 'icon-48-pg-users-cat.png', JText::_( 'Users Categories' ) );
 	
 	$link = 'index.php?option=com_phocagallery&view=phocagalleryin';
-	echo PhocaGalleryHelperControlPanel::quickIconButton( $link, 'icon-48-info.png', JText::_( 'Info' ) );
+	echo PhocaGalleryRenderAdmin::quickIconButton( $link, 'icon-48-pg-info.png', JText::_( 'Info' ) );
 	?>
 			
 			<div style="clear:both">&nbsp;</div>
@@ -41,7 +44,7 @@
 		</td>
 		
 		<td width="45%" valign="top">
-			<div style="300px;border:1px solid #ccc;background:#fff;margin:15px;padding:15px">
+			<div style="border:1px solid #ccc;background:#fff;margin:15px;padding:15px">
 			<div style="float:right;margin:10px;">
 				<?php
 					echo JHTML::_('image.site',  'logo-phoca.png', '/components/com_phocagallery/assets/images/', NULL, NULL, 'Phoca.cz' )

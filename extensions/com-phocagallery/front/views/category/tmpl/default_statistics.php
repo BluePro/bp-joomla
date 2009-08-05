@@ -21,51 +21,37 @@ echo '<div style="font-size:1px;height:1px;margin:0px;padding:0px;">&nbsp;</div>
 // MOST VIEWED			
 if ($this->tmpl['displaymostviewedcatstat']) {
 	
-	echo '<fieldset>'
-		.'<legend>'.JText::_('Most viewed images in category').'</legend>';
+	echo '<fieldset><legend>'.JText::_('Most viewed images in category').'</legend>';
 		
 	if (!empty($this->tmpl['mostviewedimg'])) {
-		
 		foreach($this->tmpl['mostviewedimg'] as $key => $value) {
 			
-			$imageHeight 	= $this->tmpl['imageheight'];
-			if ($imageHeight < 100 ) {
-				$imageHeight	= 100;
-				$boxImageHeight = 100;
-			} else {
-				$boxImageHeight = $imageHeight;
-			}
-			
-			$imageWidth		= $this->tmpl['imagewidth'];
-			if ($imageWidth < 100 ) {
-				$imageWidth    = 100;
-				$boxImageWidth = 120;
-			} else {
-				$boxImageWidth = $imageWidth + 20;
-			}
+			$imageHeight 	= PhocaGalleryImage::correctSize($this->tmpl['imageheight'], 100, 100, 0);
+			$imageWidth 	= PhocaGalleryImage::correctSize($this->tmpl['imagewidth'], 100, 120, 20);
+
 
 			if ($this->tmpl['displayname'] == 1 || $this->tmpl['displayname'] == 2) {
-				$boxImageHeight = $boxImageHeight + 20;
+				$imageHeight['boxsize'] = $imageHeight['boxsize'] + 20;
 			}
 			
 			if ($this->tmpl['displayicondetail'] == 1 || $this->tmpl['displayicondownload'] == 1 || $this->tmpl['displayiconfolder == 1'] || $this->tmpl['displayiconvm'] == 1 || $this->tmpl['startpiclens'] == 1 || $this->tmpl['trash'] == 1 || $this->tmpl['publishunpublish'] == 1 || $this->tmpl['displayicongeo']) {
-				$boxImageHeight = $boxImageHeight + 20;
+				$imageHeight['boxsize'] = $imageHeight['boxsize'] + 20;
 			}
 			
 			if ( $this->tmpl['displayimageshadow'] != 'none' ) {		
-				$boxImageHeight = $boxImageHeight + 18;
-				$imageHeight	= $imageHeight + 18;
-				$imageWidth 	= $imageWidth + 18;
+				$imageHeight['boxsize'] = $imageHeight['boxsize'] + 18;
+				$imageHeight['size']	= $imageHeight['size'] + 18;
+				$imageWidth['size'] 	= $imageWidth['size'] + 18;
 			}
 			
 			if ( $this->tmpl['categoryboxspace'] > 0 ) {		
-				$boxImageHeight = $boxImageHeight + $this->tmpl['categoryboxspace'];
+				$imageHeight['boxsize'] = $imageHeight['boxsize'] + $this->tmpl['categoryboxspace'];
 			}
 				
 			?>
-			<div class="phocagallery-box-file" style="height:<?php echo $boxImageHeight; ?>px; width:<?php echo $boxImageWidth; ?>px">
+			<div class="phocagallery-box-file" style="height:<?php echo $imageHeight['boxsize']; ?>px; width:<?php echo $imageWidth['boxsize']; ?>px">
 				<center>
-					<div class="phocagallery-box-file-first" style="height:<?php echo $imageHeight; ?>px;width:<?php echo $imageWidth; ?>px;">
+					<div class="phocagallery-box-file-first" style="height:<?php echo $imageHeight['size']; ?>px;width:<?php echo $imageWidth['size']; ?>px;">
 						<div class="phocagallery-box-file-second">
 							<div class="phocagallery-box-file-third">
 								<center>
@@ -99,18 +85,18 @@ if ($this->tmpl['displaymostviewedcatstat']) {
 			// subfolder
 			if ($value->type == 1) {
 				if ($value->displayname == 1 || $value->displayname == 2) {
-					echo '<div class="name" style="font-size:'.$this->tmpl['fontsizename'].'px">'
-					.PhocaGalleryHelperFront::wordDelete($value->title, $this->tmpl['charlengthname'], '...').'</div>';
+					echo '<div class="phocaname" style="font-size:'.$this->tmpl['fontsizename'].'px">'
+					.PhocaGalleryText::wordDelete($value->title, $this->tmpl['charlengthname'], '...').'</div>';
 				}
 			}
 			// image
 			if ($value->type == 2) {
 				if ($value->displayname == 1) {
-					echo '<div class="name" style="font-size:'.$this->tmpl['fontsizename'].'px">'
-					.PhocaGalleryHelperFront::wordDelete($value->title, $this->tmpl['charlengthname'], '...').'</div>';
+					echo '<div class="phocaname" style="font-size:'.$this->tmpl['fontsizename'].'px">'
+					.PhocaGalleryText::wordDelete($value->title, $this->tmpl['charlengthname'], '...').'</div>';
 				}
 				if ($value->displayname == 2) {
-					echo '<div class="name" style="font-size:'.$this->tmpl['fontsizename'].'px">&nbsp;</div>';
+					echo '<div class="phocaname" style="font-size:'.$this->tmpl['fontsizename'].'px">&nbsp;</div>';
 				}
 			}
 
@@ -142,44 +128,44 @@ if ($this->tmpl['displaylastaddedcatstat']) {
 		
 		foreach($this->tmpl['lastaddedimg'] as $key => $value) {
 			
-			$imageHeight 	= $this->tmpl['imageheight'];
-			if ($imageHeight < 100 ) {
-				$imageHeight	= 100;
-				$boxImageHeight = 100;
+			$imageHeight['size'] 	= $this->tmpl['imageheight'];
+			if ($imageHeight['size'] < 100 ) {
+				$imageHeight['size']	= 100;
+				$imageHeight['boxsize'] = 100;
 			} else {
-				$boxImageHeight = $imageHeight;
+				$imageHeight['boxsize'] = $imageHeight['size'];
 			}
 			
-			$imageWidth		= $this->tmpl['imagewidth'];
-			if ($imageWidth < 100 ) {
-				$imageWidth    = 100;
-				$boxImageWidth = 120;
+			$imageWidth['size']		= $this->tmpl['imagewidth'];
+			if ($imageWidth['size'] < 100 ) {
+				$imageWidth['size']    = 100;
+				$imageWidth['boxsize'] = 120;
 			} else {
-				$boxImageWidth = $imageWidth + 20;
+				$imageWidth['boxsize'] = $imageWidth['size'] + 20;
 			}
 
 			if ($this->tmpl['displayname'] == 1 || $this->tmpl['displayname'] == 2) {
-				$boxImageHeight = $boxImageHeight + 20;
+				$imageHeight['boxsize'] = $imageHeight['boxsize'] + 20;
 			}
 			
 			if ($this->tmpl['displayicondetail'] == 1 || $this->tmpl['displayicondownload'] == 1 || $this->tmpl['displayiconfolder == 1'] || $this->tmpl['displayiconvm'] == 1 || $this->tmpl['startpiclens'] == 1 || $this->tmpl['trash'] == 1 || $this->tmpl['publishunpublish'] == 1 || $this->tmpl['displayicongeo']) {
-				$boxImageHeight = $boxImageHeight + 20;
+				$imageHeight['boxsize'] = $imageHeight['boxsize'] + 20;
 			}
 			
 			if ( $this->tmpl['displayimageshadow'] != 'none' ) {		
-				$boxImageHeight = $boxImageHeight + 18;
-				$imageHeight	= $imageHeight + 18;
-				$imageWidth 	= $imageWidth + 18;
+				$imageHeight['boxsize'] = $imageHeight['boxsize'] + 18;
+				$imageHeight['size']	= $imageHeight['size'] + 18;
+				$imageWidth['size'] 	= $imageWidth['size'] + 18;
 			}
 			
 			if ( $this->tmpl['categoryboxspace'] > 0 ) {		
-				$boxImageHeight = $boxImageHeight + $this->tmpl['categoryboxspace'];
+				$imageHeight['boxsize'] = $imageHeight['boxsize'] + $this->tmpl['categoryboxspace'];
 			}
 				
 			?>
-			<div class="phocagallery-box-file" style="height:<?php echo $boxImageHeight; ?>px; width:<?php echo $boxImageWidth; ?>px">
+			<div class="phocagallery-box-file" style="height:<?php echo $imageHeight['boxsize']; ?>px; width:<?php echo $imageWidth['boxsize']; ?>px">
 				<center>
-					<div class="phocagallery-box-file-first" style="height:<?php echo $imageHeight; ?>px;width:<?php echo $imageWidth; ?>px;">
+					<div class="phocagallery-box-file-first" style="height:<?php echo $imageHeight['size']; ?>px;width:<?php echo $imageWidth['size']; ?>px;">
 						<div class="phocagallery-box-file-second">
 							<div class="phocagallery-box-file-third">
 								<center>
@@ -213,18 +199,18 @@ if ($this->tmpl['displaylastaddedcatstat']) {
 			// subfolder
 			if ($value->type == 1) {
 				if ($value->displayname == 1 || $value->displayname == 2) {
-					echo '<div class="name" style="font-size:'.$this->tmpl['fontsizename'].'px">'
-					.PhocaGalleryHelperFront::wordDelete($value->title, $this->tmpl['charlengthname'], '...').'</div>';
+					echo '<div class="phocaname" style="font-size:'.$this->tmpl['fontsizename'].'px">'
+					.PhocaGalleryText::wordDelete($value->title, $this->tmpl['charlengthname'], '...').'</div>';
 				}
 			}
 			// image
 			if ($value->type == 2) {
 				if ($value->displayname == 1) {
-					echo '<div class="name" style="font-size:'.$this->tmpl['fontsizename'].'px">'
-					.PhocaGalleryHelperFront::wordDelete($value->title, $this->tmpl['charlengthname'], '...').'</div>';
+					echo '<div class="phocaname" style="font-size:'.$this->tmpl['fontsizename'].'px">'
+					.PhocaGalleryText::wordDelete($value->title, $this->tmpl['charlengthname'], '...').'</div>';
 				}
 				if ($value->displayname == 2) {
-					echo '<div class="name" style="font-size:'.$this->tmpl['fontsizename'].'px">&nbsp;</div>';
+					echo '<div class="phocaname" style="font-size:'.$this->tmpl['fontsizename'].'px">&nbsp;</div>';
 				}
 			}
 

@@ -12,6 +12,7 @@ defined('_JEXEC') or die();
 jimport('joomla.client.helper');
 jimport( 'joomla.application.component.view' );
 jimport('joomla.html.pane');
+phocagalleryimport('phocagallery.upload.upload');
 
 class PhocaGalleryCpViewPhocaGalleryM extends JView
 {
@@ -35,11 +36,10 @@ class PhocaGalleryCpViewPhocaGalleryM extends JView
 		$params 		= &JComponentHelper::getParams( 'com_phocagallery' );
 		$lists 			= array();
 		$tmpl			= array();
-		$params = JComponentHelper::getParams('com_phocagallery');
+		$params 		= JComponentHelper::getParams('com_phocagallery');
 		
 		$tmpl['enablethumbcreation']		= $params->get('enable_thumb_creation', 1 );
-		$tmpl['enablethumbcreationstatus'] 	= PhocaGalleryAdminRender::renderThumbnailCreationStatus((int)$tmpl['enablethumbcreation']);		
-		
+		$tmpl['enablethumbcreationstatus'] 	= PhocaGalleryRenderAdmin::renderThumbnailCreationStatus((int)$tmpl['enablethumbcreation']);		
 		JHTML::stylesheet( 'phocagallery.css', 'administrator/components/com_phocagallery/assets/' );
 		
 		$tmpl['large_image_width']	= $params->get( 'large_image_width', 640 );
@@ -49,13 +49,6 @@ class PhocaGalleryCpViewPhocaGalleryM extends JView
 		$tmpl['javaresizeheight'] 	= $params->get( 'java_resize_height', -1 );
 		$tmpl['javaboxwidth'] 		= $params->get( 'java_box_width', 480 );
 		$tmpl['javaboxheight'] 		= $params->get( 'java_box_height', 480 );
-		
-		// Toolbars
-		JToolBarHelper::title( JText::_( 'Phoca gallery' ).': <small><small>[ ' . JText::_( 'Multiple Add' ).' ]</small></small>' );
-		JToolBarHelper::save();
-		JToolBarHelper::cancel();
-		JToolBarHelper::help( 'screen.phocagallery', true );
-
 		
 		$phocagallery->published 	= 1;
 		$phocagallery->order 		= 0;
@@ -69,9 +62,9 @@ class PhocaGalleryCpViewPhocaGalleryM extends JView
 			. ' WHERE catid = ' . (int) $phocagallery->catid
 			. ' ORDER BY ordering';
 		
-		$lists['ordering'] 			= JHTML::_('list.specificordering',  $phocagallery, $phocagallery->id, $query, false );
+		$lists['ordering'] 	= JHTML::_('list.specificordering',  $phocagallery, $phocagallery->id, $query, false );
 		
-		//------------------------------------------------------------------------
+		// - - - - - - - - - - - - - - 
 		//build the list of categories
 		$query = 'SELECT a.title AS text, a.id AS value, a.parent_id as parentid'
 		. ' FROM #__phocagallery_categories AS a'
@@ -82,16 +75,14 @@ class PhocaGalleryCpViewPhocaGalleryM extends JView
 
 		$tree = array();
 		$text = '';
-		$tree = PhocaGalleryHelper::CategoryTreeOption($phocagallerys, $tree, 0, $text, -1);
-	//	$phocagallerys_tree_array = PhocaGalleryHelper::CategoryTreeCreating($phocagallerys, $tree, 0);
+		$tree = PhocaGalleryRenderAdmin::CategoryTreeOption($phocagallerys, $tree, 0, $text, -1);
 		array_unshift($tree, JHTML::_('select.option', '0', '- '.JText::_('Select Category').' -', 'value', 'text'));
-		
-		//list categories
+		// list categories
 		$lists['catid'] = JHTML::_( 'select.genericlist', $tree, 'catid',  '', 'value', 'text', $phocagallery->catid);
-		//-----------------------------------------------------------------------
+		// - - - - - - - - - - - - - - 
 	
 		// build the html select list
-		$lists['published'] 		= JHTML::_('select.booleanlist',  'published', 'class="inputbox"', $phocagallery->published );
+		$lists['published'] 	= JHTML::_('select.booleanlist',  'published', 'class="inputbox"', $phocagallery->published );
 
 		//clean gallery data
 		jimport('joomla.filter.output');
@@ -102,14 +93,13 @@ class PhocaGalleryCpViewPhocaGalleryM extends JView
 		$this->assignRef('button', $button);
 		$this->assignRef('request_url',	$uri->toString());
 
-		//-----------------------------------------------
+		// - - - - - - - - - - - - -
 		/*image manager*/
 		JResponse::allowCache(false);// Do not allow cache
-		$path 			= PhocaGalleryHelper::getPathSet();
+		$path 	= PhocaGalleryPath::getPath();
 		
-		// Upload Form ------------------------------------
+		// Upload Form - - - - - - - - - - - -
 		JHTML::_('behavior.mootools');
-		//$document->addScript('components/com_phocagallery/assets/upload/mediamanager.js');
 		$document->addStyleSheet('components/com_phocagallery/assets/upload/mediamanager.css');
 
 		// Set FTP form
@@ -119,12 +109,11 @@ class PhocaGalleryCpViewPhocaGalleryM extends JView
 		$state			= $this->get('state');
 		$refreshSite 	= 'index.php?option=com_phocagallery&view=phocagallerym&layout=form&hidemainmenu=1&tab=2&folder='.$state->folder;
 		if (!$ftp) {
-		//	if ($params->get('enable_flash', 0)) {
-				PhocaGalleryHelperUpload::uploader('file-upload', array('onAllComplete' => 'function(){ window.location.href="'.$refreshSite.'"; }'));
-		//	}
+			phocagalleryimport('phocagallery.upload.upload');
+			PhocaGalleryFileUpload::uploader('file-upload', array('onAllComplete' => 'function(){ window.location.href="'.$refreshSite.'"; }'));
 		}
 		
-		// END Upload Form ------------------------------------
+		// END Upload Form - - - - - - - - - - - - 
 		//TABS
 		$tmpl['displaytabs']	= 0;
 		
@@ -140,20 +129,24 @@ class PhocaGalleryCpViewPhocaGalleryM extends JView
 		$tmpl['currenttab']['flashupload'] = $tmpl['displaytabs'];
 		$tmpl['displaytabs']++;		
 		
-		
-		
 		$this->assignRef('session', JFactory::getSession());
 		$this->assign('require_ftp', $ftp);
-
-		$this->assignRef('path_orig_rel', $path['orig_rel_ds']);
+		$this->assignRef('path_orig_rel', $path->image_abs);
 		$this->assignRef('images', $this->get('images'));
 		$this->assignRef('folders', $this->get('folders'));
 		$this->assignRef('state', $this->get('state'));
 		$this->assignRef('tmpl', $tmpl);
 
-		
 		parent::display($tpl);
+		$this->_setToolbar();
 		echo JHTML::_('behavior.keepalive');
+	}
+	
+	function _setToolbar() {
+		JToolBarHelper::title( JText::_( 'Phoca gallery' ).': <small><small>[ ' . JText::_( 'Multiple Add' ).' ]</small></small>' );
+		JToolBarHelper::save();
+		JToolBarHelper::cancel();
+		JToolBarHelper::help( 'screen.phocagallery', true );
 	}
 }
 ?>

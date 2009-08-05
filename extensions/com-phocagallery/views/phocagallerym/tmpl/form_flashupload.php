@@ -12,7 +12,7 @@ if (isset($this->state->folder) && $this->state->folder != '') {
 <!-- File Upload Form -->
 <?php
 if ($this->require_ftp) {
-	echo PhocaGalleryHelperUpload::renderFTPaccess();
+	echo PhocaGalleryFileUpload::renderFTPaccess();
 } ?>
 
 	<fieldset>
@@ -30,6 +30,6 @@ if ($this->require_ftp) {
 	<?php /* !!!!!! $refreshSite for flash upload is set in view.html.php */ ?>
 </form>
 <?php
-echo PhocaGalleryHelperUpload::renderCreateFolder($this->session->getName(), $this->session->getId(), $currentFolder, 'phocagallerym' );
+echo PhocaGalleryFileUpload::renderCreateFolder($this->session->getName(), $this->session->getId(), $currentFolder, 'phocagallerym' );
 ?>
 </div>

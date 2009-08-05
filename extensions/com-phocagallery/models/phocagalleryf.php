@@ -8,26 +8,20 @@
  * @copyright Copyright (C) Jan Pavelka www.phoca.cz
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
-
-// Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
-
 jimport('joomla.application.component.model');
 jimport('joomla.filesystem.folder');
 jimport('joomla.filesystem.file');
 
 class PhocaGalleryCpModelPhocaGalleryF extends JModel
 {
-	function getState($property = null)
-	{
+	function getState($property = null) {
 		static $set;
 
 		if (!$set) {
 			$folder = JRequest::getVar( 'folder', '', '', 'path' );
 			$upload = JRequest::getVar( 'upload', '', '', 'int' );
-						
 			$this->setState('folder', $folder);
-
 			$parent = str_replace("\\", "/", dirname($folder));
 			$parent = ($parent == '.') ? null : $parent;
 			$this->setState('parent', $parent);
@@ -38,14 +32,12 @@ class PhocaGalleryCpModelPhocaGalleryF extends JModel
 
 
 
-	function getFolders()
-	{
+	function getFolders() {
 		$list = $this->getList();
 		return $list['folders'];
 	}
 
-	function getList()
-	{
+	function getList() {
 		static $list;		
 		
 		// Only process the list once per request
@@ -62,34 +54,29 @@ class PhocaGalleryCpModelPhocaGalleryF extends JModel
 		}
 		
 		//Get folder variables from Helper
-		$path = PhocaGalleryHelper::getPathSet();
+		$path = PhocaGalleryPath::getPath();
 		
 		// Initialize variables
 		if (strlen($current) > 0) {
-			$orig_path = $path['orig_abs_ds'].$current;
+			$orig_path = JPath::clean($path->image_abs.$current);
 		} else {
-			$orig_path = $path['orig_abs_ds'];
+			$orig_path = $path->image_abs;
 		}
-		$orig_path_server 	= str_replace(DS, '/', $path['orig_abs'] .'/');
+		$orig_path_server 	= str_replace(DS, '/', $path->image_abs);
 		
 		$folders 	= array ();
 
 		// Get the list of files and folders from the given folder
 		$folder_list 	= JFolder::folders($orig_path, '', false, false, array(0 => 'thumbs'));
 		
-		
-		
 		// Iterate over the folders if they exist
-		if ($folder_list !== false)
-		{
-			foreach ($folder_list as $folder)
-			{
+		if ($folder_list !== false) {
+			foreach ($folder_list as $folder) {
 				$tmp 							= new JObject();
 				$tmp->name 						= basename($folder);
 				$tmp->path_with_name 			= str_replace(DS, '/', JPath::clean($orig_path . DS . $folder));
-				$tmp->path_without_name_relative= $path['orig_rel_ds'] . str_replace($orig_path_server, '', $tmp->path_with_name);
+				$tmp->path_without_name_relative= $path->image_rel . str_replace($orig_path_server, '', $tmp->path_with_name);
 				$tmp->path_with_name_relative_no= str_replace($orig_path_server, '', $tmp->path_with_name);	
-
 				$folders[] = $tmp;
 			}
 		}

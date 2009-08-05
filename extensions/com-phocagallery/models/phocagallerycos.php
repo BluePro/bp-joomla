@@ -16,9 +16,10 @@ jimport( 'joomla.filesystem.file' );
 class PhocaGalleryCpModelPhocaGalleryCos extends JModel
 {
 
-	var $_data = null;
-	var $_total = null;
-	var $_pagination = null;
+	var $_data 			= null;
+	var $_total 		= null;
+	var $_pagination 	= null;
+	var $_context		= 'com_phocagallery.phocagalleryco';
 
 	function __construct()
 	{
@@ -27,8 +28,8 @@ class PhocaGalleryCpModelPhocaGalleryCos extends JModel
 		global $mainframe, $option;		
 		
 		// Get the pagination request variables
-		$limit		= $mainframe->getUserStateFromRequest( 'global.list.limit', 'limit', $mainframe->getCfg('list_limit'), 'int' );
-		$limitstart	= $mainframe->getUserStateFromRequest( $option.'.limitstart', 'limitstart', 0, 'int' );
+		$limit	= $mainframe->getUserStateFromRequest( $this->_context.'.list.limit', 'limit', $mainframe->getCfg('list_limit'), 'int' );
+		$limitstart	= $mainframe->getUserStateFromRequest( $this->_context.'.limitstart', 'limitstart', 0, 'int' );
 
 		// In case limit has been changed, adjust limitstart accordingly
 		$limitstart = ($limit != 0 ? (floor($limitstart / $limit) * $limit) : 0);
@@ -50,8 +51,7 @@ class PhocaGalleryCpModelPhocaGalleryCos extends JModel
 
 	function getTotal() {
 	
-		if (empty($this->_total))
-		{
+		if (empty($this->_total)) {
 			$query = $this->_buildQuery();
 			$this->_total = $this->_getListCount($query);
 		}
@@ -60,8 +60,7 @@ class PhocaGalleryCpModelPhocaGalleryCos extends JModel
 
 	function getPagination() {
 
-		if (empty($this->_pagination))
-		{
+		if (empty($this->_pagination)) {
 			jimport('joomla.html.pagination');
 			$this->_pagination = new JPagination( $this->getTotal(), $this->getState('limitstart'), $this->getState('limit') );
 		}
@@ -90,10 +89,8 @@ class PhocaGalleryCpModelPhocaGalleryCos extends JModel
 	function _buildContentOrderBy() {
 	
 		global $mainframe;
-
-		$context			= 'com_phocagallery.phocagalleryco.list.';
-		$filter_order		= $mainframe->getUserStateFromRequest( $context.'filter_order',		'filter_order',		'a.ordering',	'cmd' );
-		$filter_order_Dir	= $mainframe->getUserStateFromRequest( $context.'filter_order_Dir',	'filter_order_Dir',	'',				'word' );
+		$filter_order		= $mainframe->getUserStateFromRequest( $this->_context.'.filter_order',		'filter_order',		'a.ordering',	'cmd' );
+		$filter_order_Dir	= $mainframe->getUserStateFromRequest( $this->_context.'.filter_order_Dir',	'filter_order_Dir',	'',				'word' );
 
 		if ($filter_order == 'a.ordering'){
 			$orderby 	= ' ORDER BY category, a.ordering '.$filter_order_Dir;
@@ -108,12 +105,11 @@ class PhocaGalleryCpModelPhocaGalleryCos extends JModel
 	{
 		global $mainframe;
 
-		$context			= 'com_phocagallery.phocagallery.list.';
-		$filter_state		= $mainframe->getUserStateFromRequest( $context.'filter_state',		'filter_state',		'',				'word' );
-		$filter_catid		= $mainframe->getUserStateFromRequest( $context.'filter_catid',		'filter_catid',		0,				'int' );
-		$filter_order		= $mainframe->getUserStateFromRequest( $context.'filter_order',		'filter_order',		'a.ordering',	'cmd' );
-		$filter_order_Dir	= $mainframe->getUserStateFromRequest( $context.'filter_order_Dir',	'filter_order_Dir',	'',				'word' );
-		$search				= $mainframe->getUserStateFromRequest( $context.'search',			'search',			'',				'string' );
+		$filter_state		= $mainframe->getUserStateFromRequest( $this->_context.'.filter_state',	'filter_state',	'',	'word' );
+		$filter_catid		= $mainframe->getUserStateFromRequest( $this->_context.'.filter_catid',	'filter_catid',	0, 'int' );
+		$filter_order		= $mainframe->getUserStateFromRequest( $this->_context.'.filter_order',	'filter_order',	'a.ordering', 'cmd' );
+		$filter_order_Dir	= $mainframe->getUserStateFromRequest( $this->_context.'.filter_order_Dir',	'filter_order_Dir',	'',	'word' );
+		$search				= $mainframe->getUserStateFromRequest( $this->_context.'.search', 'search', '', 'string' );
 		$search				= JString::strtolower( $search );
 
 		$where = array();
