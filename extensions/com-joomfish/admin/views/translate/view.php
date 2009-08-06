@@ -49,7 +49,7 @@ class TranslateViewTranslate extends JoomfishViewDefault
 	 * Setting up special general attributes within this view
 	 * These attributes are independed of the specifc view
 	 */
-	function _initialize() {
+	function _initialize($layout="overview") {
 		// get list of active languages
 		$langOptions[] = JHTML::_('select.option',  '-1', JText::_('Select Language') );
 		// Get data from the model
@@ -66,8 +66,17 @@ class TranslateViewTranslate extends JoomfishViewDefault
 				}
 			}
 		}
-		$langlist = JHTML::_('select.genericlist', $langOptions, 'select_language_id', 'class="inputbox" size="1" onchange="if(document.getElementById(\'catid\').value.length>0) document.adminForm.submit();"', 'value', 'text', $this->select_language_id );
+		if ($layout == "overview" || $layout == "default"){
+			$langlist = JHTML::_('select.genericlist', $langOptions, 'select_language_id', 'class="inputbox" size="1" onchange="if(document.getElementById(\'catid\').value.length>0) document.adminForm.submit();"', 'value', 'text', $this->select_language_id );
+		}
+		else {
+			$confirm="";
+			if ($this->actContentObject->language_id!=0){
+				$confirm="onchange=\"confirmChangeLanguage('".$this->actContentObject->language."','".$this->actContentObject->language_id."')\"";
+			}
 
+			$langlist = JHTML::_('select.genericlist', $langOptions, 'language_id', 'class="inputbox" size="1" '.$confirm, 'value', 'text', $this->actContentObject->language_id );
+		}
 		$this->assignRef('langlist'   , $langlist);
 	}
 	/**
@@ -83,9 +92,9 @@ class TranslateViewTranslate extends JoomfishViewDefault
 		// Set  page title
 		JToolBarHelper::title( JText::_( 'TITLE_TRANSLATION' ), 'jftranslations' );
 
-		$this->_initialize();
-
 		$layout = $this->getLayout();
+
+		$this->_initialize($layout);
 		if (method_exists($this,$layout)){
 			$this->$layout($tpl);
 		} else {

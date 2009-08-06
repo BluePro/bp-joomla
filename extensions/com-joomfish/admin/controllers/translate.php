@@ -231,6 +231,9 @@ class TranslateController extends JController   {
 			list($translation_id, $contentid, $language_id) = explode('|', $cid[0]);
 			$select_language_id = ($this->_select_language_id == -1 && $language_id != -1) ? $language_id : $this->_select_language_id;
 		}
+		else {
+			$select_language_id = -1;
+		}
 		$catid=$this->_catid;
 
 		global  $mainframe;
@@ -254,24 +257,6 @@ class TranslateController extends JController   {
 			"The content item $actContentObject->title is currently being edited by another administrator" );
 		}
 
-		// get list of active languages
-		$langOptions[] = JHTML::_('select.option',  'NULL', JText::_('Select no translation') );
-
-		$langActive = $this->_joomfishManager->getActiveLanguages();
-
-		if ( count($langActive)>0 ) {
-			foreach( $langActive as $language )
-			{
-				$langOptions[] = JHTML::_('select.option',  $language->id, $language->name );
-			}
-		}
-		$confirm="";
-		if ($actContentObject->language_id!=0){
-			$confirm="onchange=\"confirmChangeLanguage('".$actContentObject->language."','".$actContentObject->language_id."')\"";
-		}
-
-		$langlist = JHTML::_('select.genericlist', $langOptions, 'language_id', 'class="inputbox" size="1" '.$confirm, 'value', 'text', $actContentObject->language_id );
-
 		// get existing filters so I can remember them!
 		JLoader::import( 'models.TranslationFilter',JOOMFISH_ADMINPATH);
 		$tranFilters = getTranslationFilters($catid,$contentElement);
@@ -288,8 +273,8 @@ class TranslateController extends JController   {
 		
 		// Assign data for view - should really do this as I go along
 		$this->view->assignRef('actContentObject'   , $actContentObject);
-		$this->view->assignRef('langlist'   , $langlist);
 		$this->view->assignRef('tranFilters'   , $tranFilters);
+		$this->view->assignRef('select_language_id'   , $select_language_id);
 		$filterlist= array();
 		$this->view->assignRef('filterlist',$filterlist);
 
