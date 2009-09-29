@@ -917,7 +917,8 @@ class subscribers {
 							continue;
 						} else {
 							 $subscriber = null;
-							 $values[0] = compa::encodeutf(trim($values[0]));
+//							 $values[0] = compa::encodeutf(trim($values[0]));
+							 $values[0] = trim($values[0]);
 				 			 $subscriber->name = addslashes($values[0]);
 				 			 $subscriber->email = $values[1];
 				 			 $subscriber->receive_html  = (empty($values[2])) ? '0' : '1';
