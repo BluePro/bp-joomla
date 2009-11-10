@@ -132,7 +132,7 @@ class acajoom_mail {
 		}
 
 
-		if ($GLOBALS[ACA.'show_signature'] ==1 ) {
+		if (false && $GLOBALS[ACA.'show_signature'] ==1) {
 			if($html) {
 				$signatureText ='<a href="http://www.ijoobi.com" target="_blank">';
 				$signatureText .='<br /><center><span style="color:#666666; font-size: .8em; text-align: center; ">Powered by Joobi</span></center>';

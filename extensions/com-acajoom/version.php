@@ -65,6 +65,7 @@ $localVersion[ WADMIN . 'pro' . DS . 'index.html'] = '1.0.7';
 $localVersion[ WADMIN . 'pro' . DS . 'class.form.php'] = '1.2.5';
 $localVersion[ WADMIN . 'pro' . DS . 'class.aca_tags.php'] = '1.2.5';
 $localVersion[ WADMIN . 'language' . DS . 'brazilian.php'] = '1.2.3';
+$localVersion[ WADMIN . 'language' . DS . 'czech.php'] = '1.0.0';
 $localVersion[ WADMIN . 'language' . DS . 'danish.php'] = '1.2.3';
 $localVersion[ WADMIN . 'language' . DS . 'dutch.php'] = '1.2.3';
 $localVersion[ WADMIN . 'language' . DS . 'english.php'] = '1.2.3';
