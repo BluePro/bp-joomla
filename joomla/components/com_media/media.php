@@ -1,6 +1,6 @@
 <?php
 /**
- * @version		$Id: media.php 11784 2009-04-24 17:34:11Z kdevine $
+ * @version		$Id: media.php 12696 2009-09-12 02:08:54Z ian $
  * @package		Joomla
  * @subpackage	Massmail
  * @copyright	Copyright (C) 2005 - 2008 Open Source Matters. All rights reserved.
@@ -14,14 +14,7 @@
 
 // no direct access
 defined('_JEXEC') or die('Restricted access');
-
 $params =& JComponentHelper::getParams('com_media');
-$ranks = array('publisher', 'editor', 'author', 'registered');
-$acl = & JFactory::getACL();
-for($i = 0; $i < $params->get('allowed_media_usergroup', 3); $i++)
-{
-	$acl->addACL( 'com_media', 'popup', 'users', $ranks[$i] );
-}
 // Make sure the user is authorized to view this page
 $user = & JFactory::getUser();
 if (!$user->authorize( 'com_media', 'popup' )) {
@@ -29,7 +22,7 @@ if (!$user->authorize( 'com_media', 'popup' )) {
 }
 
 // Set the path definitions
-define('COM_MEDIA_BASE',    JPATH_ROOT.DS.$params->get('image_path', 'images'.DS.'stories'));
+define('COM_MEDIA_BASE',    JPath::clean(JPATH_ROOT.DS.$params->get('image_path', 'images'.DS.'stories')));
 define('COM_MEDIA_BASEURL', JURI::root(true).'/'.$params->get('image_path', 'images/stories'));
 
 // Load the admin HTML view

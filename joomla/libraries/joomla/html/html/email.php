@@ -1,6 +1,6 @@
 <?php
 /**
-* @version		$Id: email.php 11236 2008-11-02 02:44:35Z ian $
+* @version		$Id: email.php 13341 2009-10-27 03:03:54Z ian $
 * @package		Joomla.Framework
 * @subpackage	HTML
 * @copyright	Copyright (C) 2005 - 2008 Open Source Matters. All rights reserved.
@@ -11,7 +11,7 @@
 * other free or open source software licenses.
 * See COPYRIGHT.php for copyright notices and details.
 */
-
+defined('JPATH_BASE') or die();
 /**
  * Utility class for cloaking email adresses
  *
@@ -27,16 +27,15 @@ class JHTMLEmail
 	*
  	* By default replaces an email with a mailto link with email cloacked
 	*/
-	function cloak( $mail, $mailto=1, $text='', $email=1 )
+	function cloak( $mail, $mailto=1, $text='', $email=1, $prefix='mailto:', $suffix='', $attribs='' )
 	{
 		$replacement = '';
 		$rand			= rand( 1, 100000 );
 		
 		$mail 			= JHTMLEmail::_convertEncoding( $mail );
 		$mail			= explode( '@', $mail );
-		
 		if ( $mailto ) {
-			$replacement = sprintf( '<a href="mailto:%s&#64;%s">', @$mail[0], $mail[1] );
+			$replacement = sprintf( '<a href="%s%s&#64;%s"%s>', $prefix, @$mail[0], $mail[1], $attribs );
 			if ( $text ) {
 				if ( $email ){
 					$text = JHTMLEmail::_convertEncoding( $text );
@@ -52,7 +51,6 @@ class JHTMLEmail
 		} else {
 			$replacement = sprintf( '%s&#64;<!-- %d -->%s', @$mail[0], $rand, $mail[1] );
 		}
-		
 		return $replacement;
 	}
 
@@ -64,4 +62,3 @@ class JHTMLEmail
 		return $text;
 	}
 }
-
