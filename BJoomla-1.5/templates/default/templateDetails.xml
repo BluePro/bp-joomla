@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<install version="1.5" type="template" method="upgrade">
+	<name>Default</name>
+	<creationDate>2008-07-08</creationDate>
+	<author>Ondřej Hlaváč (BluePro)</author>
+	<authorEmail>ondrej@hlavacovi.net</authorEmail>
+	<authorUrl>http://ondrej.hlavacovi.net</authorUrl>
+	<copyright>Ondřej Hlaváč 2009</copyright>
+	<license>GNU/GPL</license>
+	<version>1.1.0</version>
+	<description>Předloha pro šablony</description>
+	<files>
+		<filename>index.php</filename>
+		<filename>templateDetails.xml</filename>
+		<filename>template_thumbnail.png</filename>
+		<filename>css/screen.css</filename>
+		<filename>css/content.css</filename>
+		<filename>css/editor.css</filename>
+		<filename>css/print.css</filename>
+		<filename>css/ie6.css</filename>
+		<filename>html/com_content/article/default.php</filename>
+		<filename>html/com_content/category/blog.php</filename>
+		<filename>html/com_content/category/blog_item.php</filename>
+		<filename>html/com_content/category/blog_links.php</filename>
+		<filename>html/com_content/category/default.php</filename>
+		<filename>html/com_content/frontpage/default.php</filename>
+		<filename>html/com_content/frontpage/default_item.php</filename>
+		<filename>html/com_content/frontpage/default_links.php</filename>
+		<filename>html/com_search/search/default.php</filename>
+		<filename>html/com_search/search/default_error.php</filename>
+		<filename>html/com_search/search/default_form.php</filename>
+		<filename>html/com_search/search/default_results.php</filename>
+		<filename>html/mod_breadcrumbs/default.php</filename>
+		<filename>html/mod_footer/default.php</filename>
+		<filename>html/mod_newsflash/_item.php</filename>
+		<filename>html/mod_newsflash/vert.php</filename>
+		<filename>html/mod_random_image/default.php</filename>
+		<filename>html/mod_search/default.php</filename>
+		<filename>html/modules.php</filename>
+		<filename>images/favicon.ico</filename>
+    </files>
+	<positions>
+		<position>logo</position>
+		<position>left</position>
+		<position>top</position>
+		<position>bottom</position>
+	</positions>
+</install>
