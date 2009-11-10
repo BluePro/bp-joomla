@@ -2,19 +2,6 @@
 defined('_JEXEC') or die('Restricted access');
 
 $config = new JConfig();
-$user = JFactory::getUser();
-	
-if ($user->get('guest') == 1 or $user->usertype == 'Registered') {
-	$header = $this->getHeadData();
-	$scripts = array();
-	foreach ($header['scripts'] as $script => $type) {
-		if ($script != '/media/system/js/mootools.js' && $script != '/media/system/js/caption.js') {
-			$scripts[$script] = $type;
-		}
-	}
-	$header['scripts'] = $scripts;
-	$this->setHeadData($header);
-}
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $this->language; ?>" lang="<?php echo $this->language; ?>">
@@ -26,7 +13,7 @@ if ($user->get('guest') == 1 or $user->usertype == 'Registered') {
 <!--[if lte IE 6]>
 	<link rel="stylesheet" href="<?php echo $this->baseurl ?>/templates/default/css/ie6.css" type="text/css" media="screen" />
 <![endif]-->
-	<link rel="shortcut icon" href="<?php echo $this->baseurl ?>/templates/default/images/favicon.gif" />
+	<link rel="shortcut icon" href="<?php echo $this->baseurl ?>/templates/default/images/favicon.ico" />
 </head>
 
 <body>
