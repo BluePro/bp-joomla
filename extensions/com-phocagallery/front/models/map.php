@@ -57,8 +57,11 @@ class PhocaGalleryModelMap extends JModel
 		global $mainframe;
 
 		if (empty($this->_data)) {
-			$query = 'SELECT a.title, a.filename, a.description, a.latitude, a.longitude, a.zoom, a.geotitle'
+			$query = 'SELECT a.title, a.filename, a.description, a.latitude, a.longitude, a.zoom, a.geotitle,'
+				.' CASE WHEN CHAR_LENGTH(c.alias) THEN CONCAT_WS(\':\', c.id, c.alias) ELSE c.id END as catslug,'
+				.' CASE WHEN CHAR_LENGTH(a.alias) THEN CONCAT_WS(\':\', a.id, a.alias) ELSE a.id END as slug'
 				.' FROM #__phocagallery AS a'
+				.' LEFT JOIN #__phocagallery_categories AS c ON c.id = a.catid'
 				.' WHERE a.id = '. (int) $this->_id;
 			$this->_db->setQuery($query, 0, 1);
 			$this->_data	= $this->_db->loadObject();

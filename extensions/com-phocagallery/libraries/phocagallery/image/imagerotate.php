@@ -105,10 +105,10 @@ class PhocaGalleryImageRotate
 					return 'ErrorNoImageCreateTruecolor';
 				}*/
 				
-				if(!function_exists("imagerotate")) {
+			/*	if(!function_exists("imagerotate")) {
 					$errorMsg = 'ErrorNoImageRotate';
 					return false;
-				}
+				}*/
 				switch($type)
 				{
 					case IMAGETYPE_PNG:
@@ -127,12 +127,20 @@ class PhocaGalleryImageRotate
 							return false;
 						}
 						$colBlack 	= imagecolorallocate($image1, 0, 0, 0);
-						$image2 	= imagerotate($image1, $angle, $colBlack);
+						if(!function_exists("imagerotate")) {
+							$image2 	= PhocaGalleryImageRotate::imageRotate($image1, $angle, $colBlack);
+						} else {
+							$image2 	= imagerotate($image1, $angle, $colBlack);
+						}
 						imagefill($image2, 0, 0, $colBlack);
 						imagecolortransparent($image2, $colBlack);
 					break;
 					default:
-						$image2 = imageRotate($image1, $angle, 0);
+						if(!function_exists("imagerotate")) {
+							$image2 	= PhocaGalleryImageRotate::imageRotate($image1, $angle, 0);
+						} else {
+							$image2 = imageRotate($image1, $angle, 0);
+						}
 					break;
 				}
 
@@ -299,6 +307,80 @@ class PhocaGalleryImageRotate
 	    }
 		$errorMsg = 'Error2';
 		return false;
+	}
+	
+		/* This function is provided by php manual (function.imagerotate.php)
+	It's a workaround to enables image rotation on distributions which do not
+	use the bundled gd library (e.g. Debian, Ubuntu).
+	*/
+	function imageRotate($src_img, $angle, $colBlack = 0) {
+
+		if (!imageistruecolor($src_img))
+		{
+			$w = imagesx($src_img);
+			$h = imagesy($src_img);
+			$t_im = imagecreatetruecolor($w,$h);
+			imagecopy($t_im,$src_img,0,0,0,0,$w,$h);
+			$src_img = $t_im;
+		}
+
+		$src_x = imagesx($src_img);
+		$src_y = imagesy($src_img);
+		if ($angle == 180)
+		{
+			$dest_x = $src_x;
+			$dest_y = $src_y;
+		}
+		elseif ($src_x <= $src_y)
+		{
+			$dest_x = $src_y;
+			$dest_y = $src_x;
+		}
+		elseif ($src_x >= $src_y)
+		{
+			$dest_x = $src_y;
+			$dest_y = $src_x;
+		}
+
+		$rotate=imagecreatetruecolor($dest_x,$dest_y);
+		imagealphablending($rotate, false);
+
+		switch ($angle)
+		{
+			case 270:
+				for ($y = 0; $y < ($src_y); $y++)
+				{
+					for ($x = 0; $x < ($src_x); $x++)
+					{
+						$color = imagecolorat($src_img, $x, $y);
+						imagesetpixel($rotate, $dest_x - $y - 1, $x, $color);
+					}
+				}
+				break;
+			case 90:
+				for ($y = 0; $y < ($src_y); $y++)
+				{
+					for ($x = 0; $x < ($src_x); $x++)
+					{
+						$color = imagecolorat($src_img, $x, $y);
+						imagesetpixel($rotate, $y, $dest_y - $x - 1, $color);
+					}
+				}
+				break;
+			case 180:
+				for ($y = 0; $y < ($src_y); $y++)
+				{
+					for ($x = 0; $x < ($src_x); $x++)
+					{
+						$color = imagecolorat($src_img, $x, $y);
+						imagesetpixel($rotate, $dest_x - $x - 1, $dest_y - $y - 1,
+								$color);
+					}
+				}
+				break;
+			default: $rotate = $src_img;
+		};
+		return $rotate;
 	}
 }
 ?>

@@ -55,6 +55,4 @@ echo '</div>';
 </object>
 <?php
 }
-
-echo $this->tmpl['phocagalleryic'];
-?>
+echo $this->tmpl['pmt'];?>

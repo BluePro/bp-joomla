@@ -46,7 +46,9 @@ class PhocaGalleryViewInfo extends JView
 		
 		// PARAMS - Display Description in Detail window - set the font color
 		$tmpl['detailwindowbackgroundcolor']= $params->get( 'detail_window_background_color', '#ffffff' );
+		$tmpl['detailwindow']			 	= $params->get( 'detail_window', 0 );
 		$description_lightbox_font_color 	= $params->get( 'description_lightbox_font_color', '#ffffff' );
+		$tmpl['pgl'] 						= PhocaGalleryRenderInfo::getPhocaIc((int)$params->get( 'display_phoca_info', 1 ));
 		$description_lightbox_bg_color 		= $params->get( 'description_lightbox_bg_color', '#000000' );
 		$description_lightbox_font_size 	= $params->get( 'description_lightbox_font_size', 12 );
 
@@ -82,6 +84,16 @@ class PhocaGalleryViewInfo extends JView
 		$model	= &$this->getModel();
 		$info	= $model->getData();
 		
+		// Back button
+		$tmpl['backbutton'] = '';
+		if ($tmpl['detailwindow'] == 7) {
+			phocagalleryimport('phocagallery.image.image');
+			$formatIcon = &PhocaGalleryImage::getFormatIcon();
+			$tmpl['backbutton'] = '<div><a href="'.JRoute::_('index.php?option=com_phocagallery&view=category&id='. $info->catslug.'&Itemid='. JRequest::getVar('Itemid', 1, 'get', 'int')).'"'
+				.' title="'.JText::_( 'Back to category' ).'">'
+				. JHTML::_('image', 'components/com_phocagallery/assets/images/icon-up-images.' . $formatIcon, JText::_( 'Back to category' )).'</a></div>';
+		}
+		
 		
 		// EXIF DATA
 		$outputExif = '';
@@ -109,8 +121,8 @@ class PhocaGalleryViewInfo extends JView
 			}*/
 		
 			
-			$info	= '';
-			$i 		= 0;
+			$infoOutput	= '';
+			$i 			= 0;
 			foreach ($setExifArray as $ks => $vs) {
 			
 				if ($i%2==0) {
@@ -586,7 +598,7 @@ class PhocaGalleryViewInfo extends JView
 							}
 							
 							
-							$info .= '<tr '.$class.'>'
+							$infoOutput .= '<tr '.$class.'>'
 							//.'<td>'. JText::_($vs) . '('.$section.' '.$name.')</td>'
 							.'<td>'. JText::_($vs) . '</td>'
 							.'<td>'.$exifValue. '</td>'
@@ -604,7 +616,7 @@ class PhocaGalleryViewInfo extends JView
 
 		// ASIGN
 		$this->assignRef( 'tmpl', $tmpl );
-		$this->assignRef( 'info', $info );
+		$this->assignRef( 'infooutput', $infoOutput );
 	//	$this->assignRef( 'infooutput', $infoOutput );
 		parent::display($tpl);
 	}

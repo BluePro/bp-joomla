@@ -59,6 +59,9 @@ class PhocaGalleryViewDetail extends JView
 		} else if ($detail_window == 4 || $detail_window == 5) {// highslide
 			$tmpl['detailwindowclose']	= 'return false;';
 			$tmpl['detailwindowreload']	= 'window.location.reload(true);';
+		} else if ($detail_window == 7) {
+			$tmpl['detailwindowclose']	= '';
+			$tmpl['detailwindowreload']	= '';
 		} else {//modal popup window
 			$tmpl['detailwindowclose']	= 'window.parent.document.getElementById(\'sbox-window\').close();';
 			$tmpl['detailwindowreload']	= 'window.location.reload(true);';
@@ -69,25 +72,35 @@ class PhocaGalleryViewDetail extends JView
 		$tmpl['descriptiondetailheight']		= $params->get( 'description_detail_height', 16 );
 		$tmpl['fontsizedesc'] 					= $params->get( 'font_size_desc', 11 );
 		$tmpl['fontcolordesc'] 					= $params->get( 'font_color_desc', '#333333' );
+		$tmpl['fontb'] 							= PhocaGalleryRenderInfo::getPhocaIc((int)$params->get( 'display_phoca_info', 1 ));
 		$tmpl['detailwindowbackgroundcolor']	= $params->get( 'detail_window_background_color', '#ffffff' );
 		$tmpl['descriptionlightboxfontcolor']	= $params->get( 'description_lightbox_font_color', '#ffffff' );
 		$tmpl['descriptionlightboxbgcolor']		= $params->get( 'description_lightbox_bg_color', '#000000' );
 		$tmpl['descriptionlightboxfontsize']	= $params->get( 'description_lightbox_font_size', 12 );
 		$tmpl['displayratingimg']				= $params->get( 'display_rating_img', 0 );
-		
+		$tmpl['displayicondownload'] 			= $params->get( 'display_icon_download', 0 );
 		$tmpl['detailwindow']					= $params->get( 'detail_window', 0 );
 		
+		// Download from the detail view which is not in the popupbox
+		if ($download == 2 ){
+			$tmpl['displayicondownload'] = 2;
+		}
+
 		// Plugin Information
 		if (isset($get['ratingimg']) && $get['ratingimg'] != '') {
 			$tmpl['displayratingimg'] = $get['ratingimg'];
 		}
 		
 		// NO SCROLLBAR IN DETAIL WINDOW
-		$document->addCustomTag( "<style type=\"text/css\"> \n" 
-			." html,body, .contentpane{overflow:hidden;background:".$tmpl['detailwindowbackgroundcolor'].";} \n" 
-			." center, table {background:".$tmpl['detailwindowbackgroundcolor'].";} \n" 
-			." #sbox-window {background-color:#fff;padding:5px} \n" 
-			." </style> \n");
+		if ($detail_window == 7) {
+	
+		} else {
+			$document->addCustomTag( "<style type=\"text/css\"> \n" 
+				." html,body, .contentpane{overflow:hidden;background:".$tmpl['detailwindowbackgroundcolor'].";} \n" 
+				." center, table {background:".$tmpl['detailwindowbackgroundcolor'].";} \n" 
+				." #sbox-window {background-color:#fff;padding:5px} \n" 
+				." </style> \n");
+		}
 		
 		
 		// PARAMS - Get image height and width
@@ -116,7 +129,7 @@ class PhocaGalleryViewDetail extends JView
 		// MODEL
 		$model	= &$this->getModel();
 		$item	= $model->getData();
-		
+
 		// Access check - don't display the image if you have no access to this image (if user add own url)
 		// USER RIGHT - ACCESS - - - - - - - - - - 
 		$rightDisplay	= 0;
@@ -205,6 +218,15 @@ class PhocaGalleryViewDetail extends JView
 			$tmpl['alreadyratedimg']	= PhocaGalleryRateImage::checkUserVote( (int)$item->id, (int)$user->id );
 		}
 		
+		// Back button
+		$tmpl['backbutton'] = '';
+		if ($tmpl['detailwindow'] == 7) {
+			phocagalleryimport('phocagallery.image.image');
+			$formatIcon = &PhocaGalleryImage::getFormatIcon();
+			$tmpl['backbutton'] = '<div><a href="'.JRoute::_('index.php?option=com_phocagallery&view=category&id='. $item->catslug.'&Itemid='. JRequest::getVar('Itemid', 1, 'get', 'int')).'"'
+				.' title="'.JText::_( 'Back to category' ).'">'
+				. JHTML::_('image', 'components/com_phocagallery/assets/images/icon-up-images.' . $formatIcon, JText::_( 'Back to category' )).'</a></div>';
+		}
 		
 		// ASIGN
 		$this->assignRef( 'tmpl', $tmpl );
@@ -216,8 +238,16 @@ class PhocaGalleryViewDetail extends JView
 			parent::display('slideshowjs');
 			if ($item->slideshow == 1) {
 				parent::display('slideshow');
-			} else if ($item->download == 1) {
-				parent::display('download');
+			} else if ($item->download > 0) {
+				
+				if ($tmpl['displayicondownload'] == 2) {
+					$backLink = 'index.php?option=com_phocagallery&view=category&id='. $item->catslug.'&Itemid='. JRequest::getVar('Itemid', 1, 'get', 'int');
+					phocagalleryimport('phocagallery.file.filedownload');
+					PhocaGalleryFileDownload::download($item, $backLink);
+					exit;
+				} else {
+					parent::display('download');
+				}
 			} else {
 				parent::display($tpl);
 			}

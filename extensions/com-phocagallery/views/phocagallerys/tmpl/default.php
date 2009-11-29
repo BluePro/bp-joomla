@@ -158,7 +158,7 @@ JHTML::_('behavior.tooltip');
 			
 			<tfoot>
 				<tr>
-					<td colspan="11"><?php echo $this->tmpl['pagination']->getListFooter(); ?></td>
+					<td colspan="12"><?php echo $this->tmpl['pagination']->getListFooter(); ?></td>
 				</tr>
 			</tfoot>
 		</table>

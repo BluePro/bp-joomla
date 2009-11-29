@@ -46,6 +46,12 @@ class PhocaGalleryOrdering
 			break;
 			
 			// Random will be used e.g. ORDER BY RAND()
+			/* if ($imageOrdering == 9) {
+					$imageOrdering = ' ORDER BY RAND()'; 
+				} else {
+					$imageOrdering = ' ORDER BY '.PhocaGalleryOrdering::getOrderingString($image_ordering);
+				}
+			*/
 			case 9:
 				$orderingOutput = '';
 			break;

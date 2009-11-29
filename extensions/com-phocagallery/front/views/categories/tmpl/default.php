@@ -292,9 +292,4 @@ if (count($this->categories)) {
 	}
 	echo '</center></div>';
 }
-echo '</form>';
-
-echo '<div>&nbsp;</div>';
-
-echo $this->tmpl['phocagalleryic'];?>
-</div>
+echo '</form><div>&nbsp;</div>' . $this->tmpl['mtb'].'</div>';

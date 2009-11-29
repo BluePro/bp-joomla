@@ -90,11 +90,35 @@ class PhocaGalleryFileFolder
 	function createFolder($folder, &$errorMsg) {
 		$paramsC = JComponentHelper::getParams('com_phocagallery');
 		$folder_permissions = $paramsC->get( 'folder_permissions', 0755 );
+		// Doesn't work on some servers
+		//$folder_permissions = octdec((int)$folder_permissions);
+		
 		$path 	= PhocaGalleryPath::getPath();
 		$folder = JPath::clean($path->image_abs . $folder);	
 		if (strlen($folder) > 0) {				
 			if (!JFolder::exists($folder) && !JFile::exists($folder)) {
-				@JFolder::create($folder, $folder_permissions );
+			
+				// Because of problems on some servers:
+				// It is temporary solution
+				switch((int)$folder_permissions) {
+					case 777:
+						@JFolder::create($folder, 0777 );
+					break;
+					case 705:
+						@JFolder::create($folder, 0705 );
+					break;
+					case 666:
+						@JFolder::create($folder, 0666 );
+					break;
+					case 644:
+						@JFolder::create($folder, 0644 );
+					break;				
+					case 755:
+					default:
+						@JFolder::create($folder, 0755 );
+					break;
+				}
+				//@JFolder::create($folder, $folder_permissions );
 				@JFile::write($folder.DS."index.html", "<html>\n<body bgcolor=\"#FFFFFF\">\n</body>\n</html>");
 				// folder was not created
 				if (!JFolder::exists($folder)) {

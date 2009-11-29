@@ -35,6 +35,10 @@ class PhocaGalleryCpControllerPhocaGalleryu extends PhocaGalleryCpController
 		// Set FTP credentials, if given
 		jimport('joomla.client.helper');
 		JClientHelper::setCredentialsFromRequest('ftp');
+		
+		$paramsC = JComponentHelper::getParams('com_phocagallery');
+		$folder_permissions = $paramsC->get( 'folder_permissions', 0755 );
+		//$folder_permissions = octdec((int)$folder_permissions);
 
 		$path			= PhocaGalleryPath::getPath();
 		$folderNew		= JRequest::getCmd( 'foldername', '');
@@ -69,10 +73,28 @@ class PhocaGalleryCpControllerPhocaGalleryu extends PhocaGalleryCpController
 		}
 
 		if (strlen($folderNew) > 0) {
-			$path = JPath::clean($path->image_abs.DS.$parent.DS.$folderNew);
-			if (!JFolder::exists($path) && !JFile::exists($path)) {
-				JFolder::create($path);
-				JFile::write($path.DS."index.html", "<html>\n<body bgcolor=\"#FFFFFF\">\n</body>\n</html>");
+			$folder = JPath::clean($path->image_abs.DS.$parent.DS.$folderNew);
+			if (!JFolder::exists($folder) && !JFile::exists($folder)) {
+				//@JFolder::create($path, $folder_permissions );
+				switch((int)$folder_permissions) {
+					case 777:
+						@JFolder::create($folder, 0777 );
+					break;
+					case 705:
+						@JFolder::create($folder, 0705 );
+					break;
+					case 666:
+						@JFolder::create($folder, 0666 );
+					break;
+					case 644:
+						@JFolder::create($folder, 0644 );
+					break;				
+					case 755:
+					default:
+						@JFolder::create($folder, 0755 );
+					break;
+				}
+				@JFile::write($folderThumbnail.DS."index.html", "<html>\n<body bgcolor=\"#FFFFFF\">\n</body>\n</html>");
 				
 				$mainframe->redirect($link, JText::_('Folder Created'));
 			} else {

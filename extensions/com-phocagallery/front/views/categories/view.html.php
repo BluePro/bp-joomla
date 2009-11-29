@@ -30,17 +30,16 @@ class PhocaGalleryViewCategories extends JView
 		$this->_setLibraries();
 		
 		// PARAMS - - - - - - - - - -
-		$image_categories_size 		= $params->get( 'image_categories_size', 4 );
-		$medium_image_width 		= (int)$params->get( 'medium_image_width', 100 ) + 18;
-		$medium_image_height 		= (int)$params->get( 'medium_image_height', 100 ) + 18;
-		$small_image_width 			= (int)$params->get( 'small_image_width', 50 ) + 18;
-		$small_image_height 		= (int)$params->get( 'small_image_height', 50 ) + 18;
-		$tmpl['phocagallerywidth'] 	= $params->get( 'phocagallery_width', '' );
-		$tmpl['categoriescolumns'] 	= $params->get( 'categories_columns', 1 );
-		$tmpl['displayrating']		= $params->get( 'display_rating', 0 );
-		$tmpl['phocagallerycenter']	= $params->get( 'phocagallery_center', '');
+		$image_categories_size 			= $params->get( 'image_categories_size', 4 );
+		$medium_image_width 			= (int)$params->get( 'medium_image_width', 100 ) + 18;
+		$medium_image_height 			= (int)$params->get( 'medium_image_height', 100 ) + 18;
+		$small_image_width 				= (int)$params->get( 'small_image_width', 50 ) + 18;
+		$small_image_height 			= (int)$params->get( 'small_image_height', 50 ) + 18;
+		$tmpl['phocagallerywidth'] 		= $params->get( 'phocagallery_width', '' );
+		$tmpl['categoriescolumns'] 		= $params->get( 'categories_columns', 1 );
+		$tmpl['displayrating']			= $params->get( 'display_rating', 0 );
+		$tmpl['phocagallerycenter']		= $params->get( 'phocagallery_center', '');
 		$tmpl['categoriesimageordering']= $params->get( 'categories_image_ordering', 9 );
-		$tmpl['phocagalleryic'] 	= PhocaGalleryRenderInfo::getPhocaIc((int)$params->get( 'display_phoca_info', 1 ));
 		$tmpl['displayimagecategories'] = $params->get( 'display_image_categories', 1 );// Display or hide image beside the category name
 		$display_categories_geotagging 	= $params->get( 'display_categories_geotagging', 0 );// Display Geo CATEGORIES VIEW
 		// Access Category - display category in CATEGORIES VIEW, which user cannot access
@@ -124,6 +123,7 @@ class PhocaGalleryViewCategories extends JView
 			}
 
 			
+			
 			$items[$key]->filename			= $model->getRandomImageRecursive($items[$key]->id, $categoriesImageOrdering);
 			$fileThumbnail	= PhocaGalleryImageFront::displayCategoriesImageOrFolder($items[$key]->filename, $image_categories_size, $rightDisplayKey); 
 			$items[$key]->linkthumbnailpath	= $fileThumbnail->rel;
@@ -135,7 +135,7 @@ class PhocaGalleryViewCategories extends JView
 			// - - - - - - - - - - - - - - - 	
 			
 		}
-		
+		$tmpl['mtb'] = PhocaGalleryRenderInfo::getPhocaIc((int)$params->get( 'display_phoca_info', 1 ));
 		// ACCESS - - - - - - 
 		// In case we unset some category from the list, we must sort the array new
 		if ($unSet == 1) {

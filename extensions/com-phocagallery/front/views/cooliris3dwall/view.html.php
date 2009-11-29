@@ -27,11 +27,10 @@ class PhocaGalleryViewCooliris3DWall extends JView
 		// PARAMS
 		$tmpl['displaycatnametitle'] 		= $params->get( 'display_cat_name_title', 1 );
 		$display_cat_name_breadcrumbs 		= $params->get( 'display_cat_name_breadcrumbs', 1 );
-		$tmpl['phocagalleryic']				= $params->get( 'display_phoca_info', 1 );
 		$tmpl['showpagetitle'] 				= $params->get( 'show_page_title', 1 );
 		$tmpl['cooliris3d_wall_width']		= $params->get( 'cooliris3d_wall_width', 600 );
 		$tmpl['cooliris3d_wall_height']		= $params->get( 'cooliris3d_wall_height', 370 );
-		$tmpl['phocagalleryic'] 			= PhocaGalleryRenderInfo::getPhocaIc((int)$tmpl['phocagalleryic']);
+		$tmpl['pmt'] 			= PhocaGalleryRenderInfo::getPhocaIc((int)$params->get( 'display_phoca_info', 1 ));
 		$idCategory							= $params->get( 'categoryid', 0 );
 		
 		if ((int)$idCategory > 0) {

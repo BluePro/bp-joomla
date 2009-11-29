@@ -503,7 +503,15 @@ class PhocaGalleryCpModelPhocaGalleryC extends JModel
 				
 				//echo $this->_XMLFile->toNormalizedString( true );exit;
 				// saveXML_utf8 doesn't save setXMLDeclaration
-				if (!$this->_XMLFile->saveXML( $path->image_abs . DS . $vcid.'.rss', true )) {
+				/*if (!$this->_XMLFile->saveXML( $path->image_abs . DS . $vcid.'.rss', true )) {
+					$this->setError( 'Could not save XML file!' );
+					return false;
+				}*/
+				ob_start();
+				echo $this->_XMLFile->toNormalizedString(false, true);
+				$xmlToWrite = ob_get_contents();
+				ob_end_clean();
+				if(!JFile::write( $path->image_abs . DS . $vcid.'.rss', $xmlToWrite)) {
 					$this->setError( 'Could not save XML file!' );
 					return false;
 				}

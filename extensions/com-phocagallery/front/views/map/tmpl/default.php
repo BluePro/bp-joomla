@@ -1,5 +1,8 @@
 <?php defined('_JEXEC') or die('Restricted access');
 phocagalleryimport('phocagallery.text.text');
+if ($this->tmpl['backbutton'] != '') {
+	echo $this->tmpl['backbutton'];
+}
 
 if ($this->tmpl['googlemapsapikey'] == '') {
 	echo '<p>' . JText::_('Google Maps API Key Error Front') . '</p>';
@@ -97,5 +100,8 @@ if (GBrowserIsCompatible()) {
 
 
 <?php
+}
+if ($this->tmpl['detailwindow'] == 7) {
+	echo $this->tmpl['pgl'];
 }
 ?>

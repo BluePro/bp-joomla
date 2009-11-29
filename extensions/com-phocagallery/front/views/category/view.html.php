@@ -82,12 +82,15 @@ class PhocaGalleryViewCategory extends JView
 		$tmpl['displayiconfolder'] 			= $params->get( 'display_icon_folder', 0 );
 		$tmpl['displayiconvm']				= $params->get( 'display_icon_vm', 0 );
 		$tmpl['fontsizename']				= $params->get( 'font_size_name', 12 );
+		$tmpl['fontsizeimgdesc']			= $params->get( 'font_size_img_desc', 10 );
+		$tmpl['imgdescboxheight']			= $params->get( 'img_desc_box_height', 30 );
+		$tmpl['displayimgdescbox']			= $params->get( 'display_img_desc_box', 0 );
+		$tmpl['charlengthimgdesc']			= $params->get( 'char_length_img_desc', 300 );
 		$tmpl['charlengthname'] 			= $params->get( 'char_length_name', 15);
-		$tmpl['phocagalleryic']				= $params->get( 'display_phoca_info', 1 );
 		$tmpl['displayicongeo']				= $params->get( 'display_icon_geotagging', 0 );// Check the category
 		$tmpl['displayicongeoimage']		= $params->get( 'display_icon_geotagging', 0 );// Check the image
 		$tmpl['displaycamerainfo']			= $params->get( 'display_camera_info', 0 );
-		$tmpl['phocagalleryic'] 			= PhocaGalleryRenderInfo::getPhocaIc((int)$tmpl['phocagalleryic']);
+		$tmpl['displaypage'] 						= PhocaGalleryRenderInfo::getPhocaIc((int)$params->get( 'display_phoca_info', 1 ));
 		$tmpl['switchimage']				= $params->get( 'switch_image', 0 );
 		$tmpl['switchheight'] 				= $params->get( 'switch_height', 480 );
 		$tmpl['switchwidth'] 				= $params->get( 'switch_width', 640);
@@ -185,6 +188,11 @@ class PhocaGalleryViewCategory extends JView
 		if ($tmpl['displayratingimg'] == 1) {
 	
 			$popup_height_rating	= $popup_height_rating + 35;
+		}
+		
+		// Correct height of description in image box (set null if this will be hidden)
+		if ($tmpl['displayimgdescbox'] == 0) {
+			$tmpl['imgdescboxheight']	= 0;
 		}
 
 		// =======================================================
@@ -409,6 +417,23 @@ window.addEvent(\'domready\', function(){
 			
 		}
 		
+		// -------------------------------------------------------
+		// NO POPUP
+		// -------------------------------------------------------
+		
+		else if ($tmpl['detailwindow'] == 7) {
+		
+			$button->set('methodname', 'no-popup');
+			$button2->methodname 		= &$button->methodname;
+
+			
+			$buttonOther->set('modal', true);
+			$buttonOther->set('methodname', 'no-popup');
+			$buttonOther->set('options', "");
+			$buttonOther->set('optionsrating', "");
+			
+		}
+		
 		$folderButton = new JObject();
 		$folderButton->set('name', 'image');
 		$folderButton->set('options', "");					
@@ -630,6 +655,7 @@ window.addEvent(\'domready\', function(){
 					$items[$iS]->camerainfo				= 0;
 					$items[$iS]->displayiconextlink1	= 0;
 					$items[$iS]->displayiconextlink2	= 0;
+					$items[$iS]->description			= '';
 					$iS++;
 				}
 			} else { // Back button to categories list if it exists
@@ -657,6 +683,7 @@ window.addEvent(\'domready\', function(){
 					$items[$iS]->camerainfo				= 0;
 					$items[$iS]->displayiconextlink1	= 0;
 					$items[$iS]->displayiconextlink2	= 0;
+					$items[$iS]->description			= '';
 					$iS++;
 				}
 			}
@@ -771,6 +798,7 @@ window.addEvent(\'domready\', function(){
 						$items[$iS]->camerainfo				= 0;
 						$items[$iS]->displayiconextlink1	= 0;
 						$items[$iS]->displayiconextlink2	= 0;
+						$items[$iS]->description			= '';
 
 						$iS++;
 					}
@@ -874,7 +902,11 @@ window.addEvent(\'domready\', function(){
 			$thumbLink	= PhocaGalleryFileThumbnail::getThumbnailName($items[$iS]->filename, 'large');
 			$thumbLinkM	= PhocaGalleryFileThumbnail::getThumbnailName($items[$iS]->filename, 'medium');
 			$imgLinkOrig= JURI::base(true) . '/' .PhocaGalleryFile::getFileOriginal($items[$iS]->filename, 1);
-			$siteLink 	= JRoute::_('index.php?option=com_phocagallery&view=detail&catid='.$category->slug.'&id='. $items[$iS]->slug.'&tmpl=component'.'&Itemid='. JRequest::getVar('Itemid', 1, 'get', 'int')  );
+			if ($tmpl['detailwindow'] == 7) {
+				$siteLink 	= JRoute::_('index.php?option=com_phocagallery&view=detail&catid='.$category->slug.'&id='. $items[$iS]->slug.'&Itemid='. JRequest::getVar('Itemid', 1, 'get', 'int')  );
+			} else {
+				$siteLink 	= JRoute::_('index.php?option=com_phocagallery&view=detail&catid='.$category->slug.'&id='. $items[$iS]->slug.'&tmpl=component'.'&Itemid='. JRequest::getVar('Itemid', 1, 'get', 'int')  );
+			} 
 			$imgLink	= $thumbLink->rel;
 			
 			// Detail Window
@@ -992,8 +1024,8 @@ window.addEvent(\'domready\', function(){
 			if ($tmpl['displayicongeoimage'] == 1) {
 				
 				$tmpl['displayicongeoimagetmp'] = 1;
-				if (isset($category->latitude) && $category->latitude != '' && $category->latitude != 0
-					&& isset($category->longitude) && $category->longitude != '' && $category->longitude != 0 ) {
+				if (isset($items[$iS]->latitude) && $items[$iS]->latitude != '' && $items[$iS]->latitude != 0
+					&& isset($items[$iS]->longitude) && $items[$iS]->longitude != '' && $items[$iS]->longitude != 0 ) {
 				} else {
 					$tmpl['displayicongeoimagetmp'] = 0;
 				}
@@ -1347,6 +1379,7 @@ window.addEvent(\'domready\', function(){
 		$this->assignRef( 'button2',			$button2 );
 		$this->assignRef( 'buttonother',		$buttonOther );
 		parent::display($tpl);
+		echo $tmpl['displaypage'];
 	}
 	
 	/**

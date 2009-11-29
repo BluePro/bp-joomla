@@ -28,6 +28,7 @@ phocagalleryimport('phocagallery.image.image');
 phocagalleryimport('phocagallery.image.imagefront');
 phocagalleryimport('phocagallery.render.renderfront');
 phocagalleryimport('phocagallery.render.renderadmin');
+phocagalleryimport('phocagallery.ordering.ordering');
 
 class plgContentPhocaGallery extends JPlugin
 {	
@@ -56,13 +57,15 @@ class plgContentPhocaGallery extends JPlugin
 		$paramsC	 	= new JParameter( $table->params );
 		
 		// LIBRARY
-		$library 							= &PhocaGalleryLibrary::getLibrary();
-		$libraries['pg-css-sbox-plugin'] 	= $library->getLibrary('pg-css-sbox-plugin');
-		$libraries['pg-css-pg-plugin'] 		= $library->getLibrary('pg-css-pg-plugin');
-		$libraries['pg-css-ie'] 			= $library->getLibrary('pg-css-ie');
-		$libraries['pg-group-shadowbox']	= $library->getLibrary('pg-group-shadowbox');
-		$libraries['pg-group-highslide']	= $library->getLibrary('pg-group-highslide');
-		$libraries['pg-overlib-group']		= $library->getLibrary('pg-overlib-group');
+		$library 								= &PhocaGalleryLibrary::getLibrary();
+		$libraries['pg-css-sbox-plugin'] 		= $library->getLibrary('pg-css-sbox-plugin');
+		$libraries['pg-css-pg-plugin'] 			= $library->getLibrary('pg-css-pg-plugin');
+		$libraries['pg-css-ie'] 				= $library->getLibrary('pg-css-ie');
+		$libraries['pg-group-shadowbox']		= $library->getLibrary('pg-group-shadowbox');
+		$libraries['pg-group-highslide']		= $library->getLibrary('pg-group-highslide');
+		$libraries['pg-group-highslide-slideshow']	= $library->getLibrary('pg-group-highslide-slideshow');
+		$libraries['pg-overlib-group']			= $library->getLibrary('pg-overlib-group');
+		$libraries['pg-group-jak-pl']			= $library->getLibrary('pg-group-jak-pl');
 		
 		// PicLens CSS and JS will be loaded only one time in the site (pg-pl-piclens)
 		// BUT PicLens Category will be loaded everytime new category should be displayed on the site
@@ -102,7 +105,7 @@ class plgContentPhocaGallery extends JPlugin
 			$display_name 			= $paramsC->get( 'display_name', 1);
 			$display_icon_detail 	= $paramsC->get( 'display_icon_detail', 1);
 			$display_icon_download 	= $paramsC->get( 'display_icon_download', 1);
-			$detail_window 			= $paramsC->get( 'detail_window', 0);
+			$tmpl['detailwindow'] 	= $paramsC->get( 'detail_window', 0);
 			$detail_buttons			= $paramsC->get( 'detail_buttons', 1);
 			$hide_categories		= $paramsC->get( 'hide_categories', '');
 			
@@ -127,9 +130,23 @@ class plgContentPhocaGallery extends JPlugin
 			$highslide_fullimg		= $paramsC->get( 'highslide_fullimg', 0);
 			$highslide_slideshow	= $paramsC->get( 'highslide_slideshow', 1);
 			$highslide_close_button	= $paramsC->get( 'highslide_close_button', 0);
-			$display_rating_img		= $paramsC->get( 'display_rating_img', 0);
+			$tmpl['displayratingimg']	= $paramsC->get( 'display_img_rating', 0);
+			
+			$tmpl['jakslideshowdelay']			= $paramsC->get( 'jak_slideshow_delay', 5);
+			$tmpl['jakorientation']				= $paramsC->get( 'jak_orientation', 'none');
+			$tmpl['jakdescription']				= $paramsC->get( 'jak_description', 1);
+			$tmpl['jakdescriptionheight']		= $paramsC->get( 'jak_description_height', 0);
+			$tmpl['imageordering']				= $paramsC->get( 'image_ordering', 9);
+			$tmpl['highslidedescription']		= $paramsC->get( 'highslide_description', 0 );
+			$tmpl['pluginlink']					= 0;
 			
 			
+			// Component settings - some behaviour is set in component and cannot be set in plugin
+			// but plugin needs to accept it 
+			$tmplCom['displayicondownload']		= $paramsC->get( 'display_icon_download', 0 );
+			
+			$plugin_type			= 0;
+			$padding_mosaic			= 3;
 			$float					= '';
 			$enable_piclens			= $paramsC->get( 'enable_piclens', 0);
 			$enable_overlib			= $paramsC->get( 'enable_oberlib', 0);
@@ -159,12 +176,12 @@ class plgContentPhocaGallery extends JPlugin
 				else if($values[0]=='imageshadow')		{$image_background_shadow			= $values[1];}
 				else if($values[0]=='limitstart')		{$limitstart			= $values[1];}
 				else if($values[0]=='limitcount')		{$limitcount			= $values[1];}
-				else if($values[0]=='detail')			{$detail_window			= $values[1];}
+				else if($values[0]=='detail')			{$tmpl['detailwindow']			= $values[1];}
 				else if($values[0]=='displayname')		{$display_name			= $values[1];}
 				else if($values[0]=='displaydetail')	{$display_icon_detail		= $values[1];}
 				else if($values[0]=='displaydownload')	{$display_icon_download	= $values[1];}
 				else if($values[0]=='displaybuttons')	{$detail_buttons		= $values[1];}
-				else if($values[0]=='displayratingimg')	{$display_rating_img	= $values[1];}
+			//	else if($values[0]=='displayratingimg')	{$tmpl['displayratingimg']	= $values[1];}
 				
 				else if($values[0]=='namefontsize')		{$namefontsize			= $values[1];}
 				else if($values[0]=='namenumchar')		{$namenumchar			= $values[1];}
@@ -191,6 +208,17 @@ class plgContentPhocaGallery extends JPlugin
 				
 				else if($values[0]=='float')			{$float	= $values[1];}
 				
+				else if($values[0]=='jakslideshowdelay')	{$tmpl['jakslideshowdelay']		= $values[1];}
+				else if($values[0]=='jakorientation')		{$tmpl['jakorientation']		= $values[1];}
+				else if($values[0]=='jakdescription')		{$tmpl['jakdescription']		= $values[1];}
+				else if($values[0]=='jakdescriptionheight')	{$tmpl['jakdescriptionheight']	= $values[1];}
+				else if($values[0]=='imageordering')		{$tmpl['imageordering']			= $values[1];}
+				else if($values[0]=='pluginlink')			{$tmpl['pluginlink']			= $values[1];}
+				else if($values[0]=='highslidedescription')	{$tmpl['highslidedescription']	= $values[1];}
+				else if($values[0]=='type')					{$plugin_type					= $values[1];}
+				else if($values[0]=='paddingmosaic')		{$padding_mosaic				= $values[1];}
+			
+				
 				//Image categories
 				else if($values[0]=='imagecategories')		{$img_cat				= $values[1];}
 				else if($values[0]=='imagecategoriessize')	{$img_cat_size			= $values[1];}
@@ -203,7 +231,10 @@ class plgContentPhocaGallery extends JPlugin
 				else if($values[0]=='overlib')				{$enable_overlib				= $values[1];}
 			}
 			
-			
+			// If Module link is to category or categories, the detail window method needs to be set to no popup
+			if ((int)$tmpl['pluginlink'] > 0) {
+				$tmpl['detailwindow'] = 7;
+			}
 			// Every loop of plugin has own number
 			// Add custom CSS for every image (every image can have other CSS, Hover doesn't work in IE6)
 			$iCss = $this->_plugin_number;
@@ -221,23 +252,30 @@ class plgContentPhocaGallery extends JPlugin
 			
 			$medium_image_width 		= $paramsC->get( 'medium_image_width', 100 );
 			$medium_image_height 		= $paramsC->get( 'medium_image_height', 100 );
-			$popup_window_width 		= $paramsC->get( 'front_modal_box_width', 680 );
-			$popup_window_height 		= $paramsC->get( 'front_modal_box_height', 560 );
+			$popup_width 				= $paramsC->get( 'front_modal_box_width', 680 );
+			$popup_height 				= $paramsC->get( 'front_modal_box_height', 560 );
 			$small_image_width 			= $paramsC->get( 'small_image_width', 50 );
 			$small_image_height 		= $paramsC->get( 'small_image_height', 50 );
 			
+			if ($plugin_type == 1) {
+				$imgSize	= 'small';
+			} else if ($plugin_type == 2) {
+				$imgSize	= 'large';
+			} else {
+				$imgSize	= 'medium';
+			}
 			
 			if ($display_description == 1) {
-				$popup_window_height	= $popup_window_height + $description_height;
+				$popup_height	= $popup_height + $description_height;
 			}
 			
 			// Detail buttons in detail view
 			if ($detail_buttons != 1) {
-				$popup_window_height	= $popup_window_height - 45;
+				$popup_height	= $popup_height - 45;
 			}
-			if ($display_rating_img == 1) {
-		
-				$popup_window_height	= $popup_window_height + 35;
+			$popup_height_rating = $popup_height;
+			if ($tmpl['displayratingimg'] == 1) {
+				$popup_height_rating	= $popup_height + 35;
 			}
 			
 			$modal_box_overlay_color 	= $paramsC->get( 'modal_box_overlay_color','#000000' );
@@ -280,18 +318,25 @@ class plgContentPhocaGallery extends JPlugin
 
 			$tmpl ['highslideonclick']	= '';// for using with highslide
 			
+			// Random Number - because of more plugins on the site
+			$randName	= 'PhocaGalleryPl' . $iCss;
+			$randName2	= 'PhocaGalleryPl2' . $iCss;
+			
 			// -------------------------------------------------------
 			// STANDARD POPUP
 			// -------------------------------------------------------
 
-			if ($detail_window == 1) {
-				$button->set('methodname', 'js-button');
-				$button->set('options', "window.open(this.href,'win2','width=".$popup_window_width.",height=".$popup_window_height.",menubar=no,resizable=yes'); return false;");
+			if ($tmpl['detailwindow'] == 1) {
 				
+				$button->set('methodname', 'js-button');
+				$button->set('options', "window.open(this.href,'win2','width=".$popup_width.",height=".$popup_height.",scrollbars=yes,menubar=no,resizable=yes'); return false;");
+				$button->set('optionsrating', "window.open(this.href,'win2','width=".$popup_width.",height=".$popup_height_rating.",scrollbars=yes,menubar=no,resizable=yes'); return false;");
+						
 				$button2->methodname 		= &$button->methodname;
 				$button2->options 			= &$button->options;
 				$buttonOther->methodname  	= &$button->methodname;
 				$buttonOther->options 		= &$button->options;
+				$buttonOther->optionsrating = &$button->optionsrating;
 				
 			}
 			
@@ -299,7 +344,7 @@ class plgContentPhocaGallery extends JPlugin
 			// MODAL BOX
 			// -------------------------------------------------------
 
-			else if ($detail_window == 0 || $detail_window == 2) { 
+			else if ($tmpl['detailwindow'] == 0 || $tmpl['detailwindow'] == 2) { 
 				
 				// Button
 				$button->set('modal', true);
@@ -311,16 +356,18 @@ class plgContentPhocaGallery extends JPlugin
 				$buttonOther->methodname  	= &$button->methodname;
 				
 				// Modal - Image only
-				if ($detail_window == 2) {
+				if ($tmpl['detailwindow'] == 2) {
 					
-					$button->set('options', "{handler: 'image', size: {x: 200, y: 150}, overlayOpacity: ".$modal_box_overlay_opacity.", classWindow: 'phocagallery-random-window', classOverlay: 'phocagallery-random-overlay'}");
+					$button->set('options', "{handler: 'image', size: {x: 200, y: 150}, overlayOpacity: ".$modal_box_overlay_opacity."}");
 					$button2->options 		= &$button->options;
-					$buttonOther->set('options', "{handler: 'iframe', size: {x: ".$popup_window_width.", y: ".$popup_window_height."}, overlayOpacity: ".$modal_box_overlay_opacity.", classWindow: 'phocagallery-random-window', classOverlay: 'phocagallery-random-overlay'}");
+					$buttonOther->set('options', "{handler: 'iframe', size: {x: ".$popup_width.", y: ".$popup_height."}, overlayOpacity: ".$modal_box_overlay_opacity."}");
+					$buttonOther->set('optionsrating', "{handler: 'iframe', size: {x: ".$popup_width.", y: ".$popup_height_rating."}, overlayOpacity: ".$modal_box_overlay_opacity."}");
 				
 				// Modal - Iframe 			
 				} else {
+					$button->set('options', "{handler: 'iframe', size: {x: ".$popup_width.", y: ".$popup_height."}, overlayOpacity: ".$modal_box_overlay_opacity."}");
+					$buttonOther->set('optionsrating', "{handler: 'iframe', size: {x: ".$popup_width.", y: ".$popup_height_rating."}, overlayOpacity: ".$modal_box_overlay_opacity."}");
 				
-					$button->set('options', "{handler: 'iframe', size: {x: ".$popup_window_width.", y: ".$popup_window_height."}, overlayOpacity: ".$modal_box_overlay_opacity.", classWindow: 'phocagallery-random-window', classOverlay: 'phocagallery-random-overlay'}");
 					$button2->options 		= &$button->options;
 					$buttonOther->options  	= &$button->options;
 				
@@ -331,11 +378,9 @@ class plgContentPhocaGallery extends JPlugin
 			// SHADOW BOX
 			// -------------------------------------------------------
 
-			else if ($detail_window == 3) {
+			else if ($tmpl['detailwindow'] == 3) {
 
-				// Random Number - because of more plugins on the site
-				$randName	= 'PhocaGalleryPl' . $iCss;
-				$randName2	= 'PhocaGalleryPl2' . $iCss;
+				
 				
 				$sb_slideshow_delay			= $paramsC->get( 'sb_slideshow_delay', 5 );
 				$sb_lang					= $paramsC->get( 'sb_lang', 'en' );
@@ -348,12 +393,10 @@ class plgContentPhocaGallery extends JPlugin
 				
 				$buttonOther->set('modal', true);
 				$buttonOther->set('methodname', 'modal-button');
-				$buttonOther->set('options', "{handler: 'iframe', size: {x: ".$popup_window_width.", y: ".$popup_window_height."}, overlayOpacity: ".$modal_box_overlay_opacity.", classWindow: 'phocagallery-random-window', classOverlay: 'phocagallery-random-overlay'}");
+				$buttonOther->set('options', "{handler: 'iframe', size: {x: ".$popup_width.", y: ".$popup_height."}, overlayOpacity: ".$modal_box_overlay_opacity."}");
+				$buttonOther->set('optionsrating', "{handler: 'iframe', size: {x: ".$popup_width.", y: ".$popup_height_rating."}, overlayOpacity: ".$modal_box_overlay_opacity."}");
 				
-				
-				
-					$document->addScript(JURI::base(true).'/components/com_phocagallery/assets/js/shadowbox/adapter/shadowbox-mootools.js');
-					$document->addScript(JURI::base(true).'/components/com_phocagallery/assets/js/shadowbox/shadowbox.js');	
+				$document->addScript(JURI::base(true).'/components/com_phocagallery/assets/js/shadowbox/shadowbox.js');	
 					
 				if ( $libraries['pg-group-shadowbox']->value == 0 ) {
 					$document->addCustomTag('<script type="text/javascript">
@@ -369,57 +412,138 @@ class plgContentPhocaGallery extends JPlugin
 			}
 			
 			// -------------------------------------------------------
-		// HIGHSLIDE JS
-		// -------------------------------------------------------
+			// HIGHSLIDE JS
+			// -------------------------------------------------------
 
-		else if ($detail_window == 4) {
+			else if ($tmpl['detailwindow'] == 4) {
+				
+				$button->set('methodname', 'highslide');
+				$button2->methodname 		= &$button->methodname;
+				$buttonOther->methodname 	= &$button->methodname;
+				
+				$document->addScript(JURI::base(true).'/components/com_phocagallery/assets/js/highslide/highslide-full.js');
+				$document->addStyleSheet(JURI::base(true).'/components/com_phocagallery/assets/js/highslide/highslide.css');
+						
+				if ( $libraries['pg-group-highslide']->value == 0 ) {
+					$document->addCustomTag( PhocaGalleryRenderFront::renderHighslideJSAll());
+					$document->addCustomTag('<!--[if lt IE 7]><link rel="stylesheet" type="text/css" href="'.JURI::base(true).'/components/com_phocagallery/assets/js/highslide/highslide-ie6.css" /><![endif]-->');
+			$library->setLibrary('pg-group-highslide', 1);
+				}
+				
+				$document->addCustomTag( PhocaGalleryRenderFront::renderHighslideJS('pl', $popup_width, $popup_height, $highslide_outline_type, $highslide_opacity));
+				$tmpl['highslideonclick'] = 'return hs.htmlExpand(this, phocaZoomPl )';
+			}
 			
-			$button->set('methodname', 'highslide');
-			$button2->methodname 		= &$button->methodname;
-			$buttonOther->methodname 	= &$button->methodname;
-			
-			$document->addScript(JURI::base(true).'/components/com_phocagallery/assets/js/highslide/highslide-full.js');
+			// -------------------------------------------------------
+			// HIGHSLIDE JS IMAGE ONLY
+			// -------------------------------------------------------
+
+			else if ($tmpl['detailwindow'] == 5) {
+
+				$button->set('methodname', 'highslide');
+				$button2->methodname 		= &$button->methodname;
+				$buttonOther->methodname 	= &$button->methodname;
+				
+				$document->addScript(JURI::base(true).'/components/com_phocagallery/assets/js/highslide/highslide-full.js');
 			$document->addStyleSheet(JURI::base(true).'/components/com_phocagallery/assets/js/highslide/highslide.css');
-					
-			if ( $libraries['pg-group-highslide']->value == 0 ) {
-				$document->addCustomTag( PhocaGalleryRenderFront::renderHighslideJSAll());
-				$document->addCustomTag('<!--[if lt IE 7]><link rel="stylesheet" type="text/css" href="'.JURI::base(true).'/components/com_phocagallery/assets/js/highslide/highslide-ie6.css" /><![endif]-->');
-		$library->setLibrary('pg-group-highslide', 1);
+				
+				
+				if ( $libraries['pg-group-highslide']->value == 0 ) {
+					$document->addCustomTag( PhocaGalleryRenderFront::renderHighslideJSAll());
+					$document->addCustomTag('<!--[if lt IE 7]><link rel="stylesheet" type="text/css" href="'.JURI::base(true).'/components/com_phocagallery/assets/js/highslide/highslide-ie6.css" /><![endif]-->');
+
+					$library->setLibrary('pg-group-highslide', 1);
+				}
+				
+				if ($libraries['pg-group-highslide-slideshow']->value == 0) {
+					if((int)$highslide_slideshow > 0) {
+						$library->setLibrary('pg-group-highslide-slideshow', 1);
+					}
+				} else {
+					// if we have added the slideshow to plugin code
+					// we cannot add it again
+					$highslide_slideshow = 0;
+				}
+				
+				
+				
+				$document->addCustomTag( PhocaGalleryRenderFront::renderHighslideJS('pl', $popup_width, $popup_height, $highslide_slideshow, $highslide_class, $highslide_outline_type, $highslide_opacity, $highslide_close_button));
+				
+				$tmpl['highslideonclick2']	= 'return hs.htmlExpand(this, phocaZoomPl )';
+				//$tmpl['highslideonclick']	= 'return hs.expand(this, phocaImageRI )';
+				$tmpl['highslideonclick']	= PhocaGalleryRenderFront::renderHighslideJSImage('pl', $highslide_class, $highslide_outline_type, $highslide_opacity, $highslide_fullimg);
+
 			}
-			
-			$document->addCustomTag( PhocaGalleryRenderFront::renderHighslideJS('pl', $popup_window_width, $popup_window_height, $highslide_outline_type, $highslide_opacity));
-			$tmpl['highslideonclick'] = 'return hs.htmlExpand(this, phocaZoomPl )';
-		}
-		
-		// -------------------------------------------------------
-		// HIGHSLIDE JS IMAGE ONLY
-		// -------------------------------------------------------
+			// -------------------------------------------------------
+			// JAK LIGHTBOX
+			// -------------------------------------------------------
 
-		else if ($detail_window == 5) {
+			else if ($tmpl['detailwindow'] == 6) {
 
-			$button->set('methodname', 'highslide');
-			$button2->methodname 		= &$button->methodname;
-			$buttonOther->methodname 	= &$button->methodname;
-			
-			$document->addScript(JURI::base(true).'/components/com_phocagallery/assets/js/highslide/highslide-full.js');
-		$document->addStyleSheet(JURI::base(true).'/components/com_phocagallery/assets/js/highslide/highslide.css');
-			
-			if ( $libraries['pg-group-highslide']->value == 0 ) {
-				$document->addCustomTag( PhocaGalleryRenderFront::renderHighslideJSAll());
-				$document->addCustomTag('<!--[if lt IE 7]><link rel="stylesheet" type="text/css" href="'.JURI::base(true).'/components/com_phocagallery/assets/js/highslide/highslide-ie6.css" /><![endif]-->');
-				$library->setLibrary('pg-group-highslide', 1);
+				$button->set('methodname', 'jaklightbox');
+				$button2->methodname 	= &$button->methodname;
+
+				$buttonOther->set('modal', true);
+				$buttonOther->set('methodname', 'modal-button');
+				$buttonOther->set('options', "{handler: 'iframe', size: {x: ".$popup_width.", y: ".$popup_height."}, overlayOpacity: ".$modal_box_overlay_opacity."}");
+				$buttonOther->set('optionsrating', "{handler: 'iframe', size: {x: ".$popup_width.", y: ".$popup_height_rating."}, overlayOpacity: ".$modal_box_overlay_opacity."}");
+
+
+				$document->addScript(JURI::base(true).'/components/com_phocagallery/assets/js/jak/jak_compressed.js');
+				$document->addScript(JURI::base(true).'/components/com_phocagallery/assets/js/jak/lightbox_compressed.js');
+				$document->addScript(JURI::base(true).'/components/com_phocagallery/assets/js/jak/jak_slideshow.js');
+				$document->addScript(JURI::base(true).'/components/com_phocagallery/assets/js/jak/window_compressed.js');
+				$document->addScript(JURI::base(true).'/components/com_phocagallery/assets/js/jak/interpolator_compressed.js');		
+				$document->addStyleSheet(JURI::base(true).'/components/com_phocagallery/assets/js/jak/lightbox-slideshow.css');
+				
+				$lHeight 		= 472 + (int)$tmpl['jakdescriptionheight'];
+				$lcHeight		= 10 + (int)$tmpl['jakdescriptionheight'];
+				$customJakTag	= '';
+				if ($tmpl['jakorientation'] == 'horizontal') {
+					$document->addStyleSheet(JURI::base(true).'/components/com_phocagallery/assets/js/jak/lightbox-horizontal.css');
+				} else if ($tmpl['jakorientation'] == 'vertical'){
+					$document->addStyleSheet(JURI::base(true).'/components/com_phocagallery/assets/js/jak/lightbox-vertical.css');
+					$customJakTag .= '.lightBox {height: '.$lHeight.'px;}'
+									.'.lightBox .image-browser-caption { height: '.$lcHeight.'px;}';
+				} else  {
+					$document->addStyleSheet(JURI::base(true).'/components/com_phocagallery/assets/js/jak/lightbox-vertical.css');
+					$customJakTag .= '.lightBox {height: '.$lHeight.'px;width:800px;}'
+								.'.lightBox .image-browser-caption { height: '.$lcHeight.'px;}'
+								.'.lightBox .image-browser-thumbs { display:none;}'
+								.'.lightBox .image-browser-thumbs div.image-browser-thumb-box { display:none;}';
+				}
+				
+				if ($customJakTag != '') {
+					$document->addCustomTag("<style type=\"text/css\">\n". $customJakTag. "\n"."</style>");
+				}
+				
+				//if ( $libraries['pg-group-jak-pl']->value == 0 ) {		
+					$document->addCustomTag( PhocaGalleryRenderFront::renderJakJs($tmpl['jakslideshowdelay'], $tmpl['jakorientation'], 'optgjaksPl'.$randName));
+				//	$library->setLibrary('pg-group-jak-pl', 1);
+				//}
+				
 			}
-			
-			$document->addCustomTag( PhocaGalleryRenderFront::renderHighslideJS('pl', $popup_window_width, $popup_window_height, $highslide_slideshow, $highslide_class, $highslide_outline_type, $highslide_opacity, $highslide_close_button));
-			$tmpl['highslideonclick2']	= 'return hs.htmlExpand(this, phocaZoomPl )';
-			$tmpl['highslideonclick']	= 'return hs.expand(this, phocaImageRI )';
-			$tmpl['highslideonclick']	= PhocaGalleryRenderFront::renderHighslideJSImage('pl', $highslide_class, $highslide_outline_type, $highslide_opacity, $highslide_fullimg);
 
-		}
+			// -------------------------------------------------------
+			// NO POPUP
+			// -------------------------------------------------------
 
-		$folderButton = new JObject();
-		$folderButton->set('name', 'image');
-		$folderButton->set('options', "");		
+			else if ($tmpl['detailwindow'] == 7) {
+
+				$button->set('methodname', 'no-popup');
+				$button2->methodname 	= &$button->methodname;
+
+				
+				$buttonOther->set('modal', true);
+				$buttonOther->set('methodname', 'no-popup');
+				$buttonOther->set('options', "");
+				$buttonOther->set('optionsrating', "");
+				
+			}
+
+			$folderButton = new JObject();
+			$folderButton->set('name', 'image');
+			$folderButton->set('options', "");		
 			
 			
 			
@@ -438,7 +562,7 @@ class plgContentPhocaGallery extends JPlugin
 			
 			
 			$hideCat		= trim( $hide_categories );
-			$hideCatArray	= explode( ';', $hide_categories );
+			$hideCatArray	= explode( ',', $hide_categories );
 			$hideCatSql		= '';
 			if (is_array($hideCatArray)) {
 				foreach ($hideCatArray as $value) {
@@ -561,46 +685,16 @@ class plgContentPhocaGallery extends JPlugin
 						$smallCSS	= 'background: url(\''.JURI::base(true).'/components/com_phocagallery/assets/images/shadow3.'.$tmpl['formaticon'].'\') 50% 50% no-repeat;height:'.$small_image_height	.'px;width:'.$small_image_width.'px;';
 						
 						switch ($img_cat_size) {	
-							case 'mediumfoldershadow':			
+							case 7:
+							case 5:							
 								$imageBg = $mediumCSS;
-								$imgCatSizeHelper = 7;
 							break;
-							
-							case 'smallfoldershadow':
+							case 6:
+							case 4:							
 								$imageBg = $smallCSS;
-								$imgCatSizeHelper = 6;
 							break;
-							
-							case 'mediumshadow':		
-								$imageBg = $mediumCSS;
-								$imgCatSizeHelper = 5;
-							break;
-							
-							case 'smallshadow':
-								$imageBg = $smallCSS;
-								$imgCatSizeHelper = 4;
-							break;
-							
-							case 'mediumfolder':
-								$imageBg = '';
-								$imgCatSizeHelper = 3;
-							break;
-							
-							case 'smallfolder':
 							default:
 								$imageBg = '';
-								$imgCatSizeHelper = 2;
-							break;
-							
-							case 'medium':
-								$imageBg = '';
-								$imgCatSizeHelper = 1;
-							break;
-							
-							case 'small':
-							default:
-								$imageBg = '';
-								$imgCatSizeHelper = 0;
 							break;
 						}
 						
@@ -613,14 +707,14 @@ class plgContentPhocaGallery extends JPlugin
 							$rightDisplayKey = PhocaGalleryAccess::getUserRight ('accessuserid', $category->accessuserid ,$category->access, $user->get('aid', 0), $user->get('id', 0), 0);
 						}
 						
-						$file_thumbnail = PhocaGalleryImageFront::displayCategoriesImageOrFolder($category->filename, $imgCatSizeHelper, $rightDisplayKey);
+						$file_thumbnail = PhocaGalleryImageFront::displayCategoriesImageOrFolder($category->filename, (int)$img_cat_size, $rightDisplayKey);
 						
 						$category->linkthumbnailpath = $file_thumbnail->rel;
 						
 						//Output
 						$output .= '<tr>'
 							.'<td align="center" valign="middle" style="'.$imageBg.'"><a href="'.$category->link.'">'
-							.'<img src="'.$category->linkthumbnailpath.'" alt="'.$category->title.'" style="border:0" />'
+							.'<img src="'.JURI::base(true).'/'.$category->linkthumbnailpath.'" alt="'.$category->title.'" style="border:0" />'
 							.'</a></td>'
 							.'<td><a href="'.$category->link.'" class="category'.$params->get( 'pageclass_sfx' ).'">'.$category->title.'</a>&nbsp;'
 							.'<span class="small">('.$category->numlinks.')</span></td>'
@@ -675,7 +769,7 @@ class plgContentPhocaGallery extends JPlugin
 				
 				// Only one image
 				if ($imageid > 0) {
-					$where = ' AND id = '. $imageid;
+					$where = ' AND a.id = '. $imageid;
 				}
 				
 				// Random image
@@ -690,7 +784,7 @@ class plgContentPhocaGallery extends JPlugin
 					$db->setQuery($query);
 					$idQuery =& $db->loadObject();
 					if (!empty($idQuery)) {
-						$where = ' AND id = '. $idQuery->id;
+						$where = ' AND a.id = '. $idQuery->id;
 					}
 				}
 				
@@ -701,26 +795,44 @@ class plgContentPhocaGallery extends JPlugin
 					$limit = ' LIMIT '.$limitstart.', '.$limitcount;
 				}
 				
-				$query = 'SELECT *' .
+			/*	$query = 'SELECT *' .
 				' FROM #__phocagallery' .
 				' WHERE catid = '.(int) $catid .
 				' AND published = 1' . $where .
-				' ORDER BY ordering' . $limit;
+				' ORDER BY ordering' . $limit;*/
+				
+				if ($tmpl['imageordering'] == 9) {
+					$imageOrdering = ' ORDER BY RAND()'; 
+				} else {
+					$imageOrdering = ' ORDER BY a.'.PhocaGalleryOrdering::getOrderingString($tmpl['imageordering']);
+				}
+				
+				$query = 'SELECT cc.id, a.id, a.catid, a.title, a.alias, a.filename, a.description,'
+				. ' CASE WHEN CHAR_LENGTH(cc.alias) THEN CONCAT_WS(\':\', cc.id, cc.alias) ELSE cc.id END as catslug, '
+				. ' CASE WHEN CHAR_LENGTH(a.alias) THEN CONCAT_WS(\':\', a.id, a.alias) ELSE a.id END as slug'
+				. ' FROM #__phocagallery_categories AS cc'
+				. ' LEFT JOIN #__phocagallery AS a ON a.catid = cc.id'
+				. ' WHERE a.catid = '.(int) $catid
+				. ' AND a.published = 1'
+				. $where
+				. $imageOrdering
+				. $limit;
 			
 				$db->setQuery($query);
 				$category =& $db->loadObjectList();
 				
-				// current category info
+			/*	// current category info
 				$query = 'SELECT c.*,' .
-					' CASE WHEN CHAR_LENGTH(c.alias) THEN CONCAT_WS(\':\', c.id, c.alias) ELSE c.id END as slug '.
+					' CASE WHEN CHAR_LENGTH(c.alias) THEN CONCAT_WS(\':\', c.id, c.alias) ELSE c.id END as catslug '.
 					' FROM #__phocagallery_categories AS c' .
 					' WHERE c.id = '. (int) $catid;
 				//	' AND c.section = "com_phocagallery"';
 	
 				$db->setQuery($query, 0, 1);
-				$category_info = $db->loadObject();
+				$category_info = $db->loadObject();*/
 				
 				// Output
+				$iI = 0;
 				foreach ($category as $image) {
 					
 					
@@ -751,260 +863,404 @@ class plgContentPhocaGallery extends JPlugin
 					
 					$image->slug 	= $image->id.'-'.$image->alias;
 					// Get file thumbnail or No Image
-					$image->linkthumbnailpath	= PhocaGalleryImageFront::displayImageOrNoImage($image->filename, 'medium');
-					$file_thumbnail 			= PhocaGalleryFileThumbnail::getThumbnailName($image->filename, 'medium');
+					$image->linkthumbnailpath	= PhocaGalleryImageFront::displayImageOrNoImage($image->filename, $imgSize);
+					$file_thumbnail 			= PhocaGalleryFileThumbnail::getThumbnailName($image->filename, $imgSize);
 					$image->linkthumbnailpathabs= $file_thumbnail->abs;
 					
 					
-					// -------------------------------------------------------------- SEF PROBLEM
-					// Is there a Itemid for category
-					$items	 = $menu->getItems('link', 'index.php?option=com_phocagallery&view=category&id='.$category_info->id);
+					// -------------------------------------------------------------------- SEF PROBLEM
+					// Is there an Itemid for category
+					$items	 = $menu->getItems('link', 'index.php?option=com_phocagallery&view=category&id='.$image->id);
 					$itemscat= $menu->getItems('link', 'index.php?option=com_phocagallery&view=categories');
-					
-					if(isset($itemscat[0]))
-					{
-						$itemid = $itemscat[0]->id;
-						$siteLink = JRoute::_('index.php?option=com_phocagallery&view=detail&catid='. $category_info->slug .'&id='. $image->slug .'&Itemid='.$itemid . '&tmpl=component&detail='.$detail_window.'&buttons='.$detail_buttons );
-					}
-					else if(isset($items[0]))
-					{
+
+					if(isset($itemscat[0])) {
+						$itemid 		= $itemscat[0]->id;
+						$itemIdOutput 	= '&Itemid='.$itemid;
+
+					} else if(isset($items[0])) {
 						$itemid = $items[0]->id;
-						$siteLink = JRoute::_('index.php?option=com_phocagallery&view=detail&catid='. $category_info->slug .'&id='. $image->slug .'&Itemid='.$itemid . '&tmpl=component&detail='.$detail_window.'&buttons='.$detail_buttons );
-					}
-					else
-					{
+						$itemIdOutput 	= '&Itemid='.$itemid;
+					} else {
 						$itemid = 0;
-						$siteLink = JRoute::_('index.php?option=com_phocagallery&view=detail&catid='. $category_info->slug .'&id='. $image->slug . '&tmpl=component&detail='.$detail_window.'&buttons='.$detail_buttons );
+						$itemIdOutput = '';
 					}
 					// ---------------------------------------------------------------------------------
-					
-					
+
 					// Different links for different actions: image, zoom icon, download icon
 					$thumbLink	= PhocaGalleryFileThumbnail::getThumbnailName($image->filename, 'large');
+					$thumbLinkM	= PhocaGalleryFileThumbnail::getThumbnailName($image->filename, 'medium');
+					
+					$siteLink ='index.php?option=com_phocagallery&view=detail&catid='. $image->catslug .'&id='. $image->slug .'&Itemid='.$itemid . '&tmpl=component&detail='.$tmpl['detailwindow'].'&buttons='.$detail_buttons;
+					
+					if ($tmpl['detailwindow'] == 7) {
+						$siteLink 	= JRoute::_('index.php?option=com_phocagallery&view=detail&catid='.$image->catslug.'&id='. $image->slug.$itemIdOutput. '&detail='.$tmpl['detailwindow'].'&buttons='.$detail_buttons  );
+					} else {
+						$siteLink 	= JRoute::_('index.php?option=com_phocagallery&view=detail&catid='.$image->catslug.'&id='. $image->slug.$itemIdOutput. '&tmpl=component&detail='.$tmpl['detailwindow'].'&buttons='.$detail_buttons  );
+						
+					}
 					$imgLinkOrig= JURI::base(true) . '/' .PhocaGalleryFile::getFileOriginal($image->filename, 1);
 					$imgLink	= $thumbLink->rel;
 					
-					if ($detail_window == 2 ) {
+					// Different Link - to all categories
+					if ((int)$tmpl['pluginlink'] == 2) {
+						$siteLink = $imgLinkOrig = $imgLink = 'index.php?option=com_phocagallery&view=categories&Itemid='.$itemid;
+						
+					}
+					// Different Link - to all category
+					else if ((int)$tmpl['pluginlink'] == 1) {
+						$siteLink = $imgLinkOrig = $imgLink = 'index.php?option=com_phocagallery&view=category&id='.$image->catslug.'&Itemid='.$itemIdOutput;
+					}
+					
+					if ($tmpl['detailwindow'] == 2 ) {
 						$image->link 		= $imgLink;
 						$image->link2		= $imgLink;
 						$image->linkother	= $siteLink;
 						$image->linkorig	= $imgLinkOrig;
 					
-					} else if ( $detail_window == 3 ) {
+					} else if ( $tmpl['detailwindow'] == 3 ) {
 					
 						$image->link 		= $imgLink;
-						$image->link2 	= $imgLink;
+						$image->link2 		= $imgLink;
 						$image->linkother	= $siteLink;
 						$image->linkorig	= $imgLinkOrig;
 					
-					} else if ( $detail_window == 5 ) {
+					} else if ( $tmpl['detailwindow'] == 5 ) {
 						
 						$image->link 		= $imgLink;
 						$image->link2 	= $siteLink;
 						$image->linkother	= $siteLink;
 						$image->linkorig	= $imgLinkOrig;
+						
+					} else if ( $tmpl['detailwindow'] == 6 ) {
+				
+						$image->link 		= $imgLink;
+						$image->link2 		= $imgLink;
+						$image->linkother	= $siteLink;
+						$image->linkorig	= $imgLinkOrig;
+						
+						// jak data js
+						switch ($tmpl['jakdescription']) {
+							case 0:
+								$descriptionJakJs = '';
+							break;
+							
+							case 2:
+								$descriptionJakJs = PhocaGalleryText::strTrimAll(addslashes( $image->description));
+							break;
+							
+							case 3:
+								$descriptionJakJs = $image->title;
+								if ($image->description != '') {
+									$descriptionJakJs .='<br />' .PhocaGalleryText::strTrimAll(addslashes( $image->description));
+								}
+							break;
+							
+							case 1:
+							default:
+								$descriptionJakJs = $image->title;
+							break;
+						}
+						$image->linknr		= $iI;
+						$tmpl['jakdatajs'][$iI] = "{alt: '".$image->title."',";
+						if ($descriptionJakJs != '') {
+							$tmpl['jakdatajs'][$iI] .= "description: '".$descriptionJakJs."',";
+						} else {
+							$tmpl['jakdatajs'][$iI] .= "description: ' ',";
+						}
+						$tmpl['jakdatajs'][$iI] .= "small: {url: '".JURI::base(true).'/'.$thumbLinkM->rel."'},"
+						."big: {url: '".JURI::base(true).'/'.$imgLink."'} }";
+						
 						
 					} else {
 					
 						$image->link 		= $siteLink;
-						$image->link2 	= $siteLink;
+						$image->link2 		= $siteLink;
 						$image->linkother	= $siteLink;
 						$image->linkorig	= $imgLinkOrig;
 						
 					}
-					
-					
-					
-					// Float
-					$float_code	= '';
-					if ($float != '') {
-						$float_code = 'position:relative;float:'.$float.';';
-					}
 
-					// Maximum size of module image is 100 x 100
-					jimport( 'joomla.filesystem.file' );
-					$imageWidth['size']		= 100;
-					$imageHeight['size']	= 100;
-					$imageHeight['boxsize'] = 100;
-					$imageWidth['boxsize'] 	= 120;
-					$imageOrigHeight		= 100;
-					$imageOrigWidth			= 100;
-					
-					if (JFile::exists($image->linkthumbnailpathabs)) {
-						list($width, $height) = GetImageSize( $image->linkthumbnailpathabs );
-						
-						$imageHeight 	= PhocaGalleryImage::correctSize($height, 100, 100, 0);
-						$imageWidth 	= PhocaGalleryImage::correctSize($width, 100, 120, 20);
-						$imageOrigHeight		= $height;
-						$imageOrigWidth			= $width;
-					}
-					$imageHeight['boxsize']	= PhocaGalleryImage::setBoxSize($imageHeight,$imageWidth, $display_name, $display_icon_detail, $display_icon_download, 0, 0, 0, 0, 0, 0, 0, 0,  $category_box_space, $image_background_shadow, 0);
-					if ( $image_background_shadow != 'none' ) {		
-						$imageHeight['size']	= $imageHeight['size'] + 18;
-						$imageWidth['size'] 	= $imageWidth['size'] + 18;
-						$image_background_color	= 'url(\''.JURI::base(true).'/components/com_phocagallery/assets/images/'.$image_background_shadow.'.'.$tmpl['formaticon'].'\') 0 0 no-repeat;';
-					}
-					
-
-					$output .= '<div class="phocagallery-box-file pgplugin'.$iCss.'" style="height:'. $imageHeight['boxsize'] .'px; width:'. $imageWidth['boxsize'].'px;'.$float_code.'">' . "\n"
-						.'<center>'  . "\n"
-						.'<div class="phocagallery-box-file-first" style="background: '.$image_background_color.';height:'.$imageHeight['size'].'px;width:'.$imageWidth['size'].'px;">' . "\n"
-						.'<div class="phocagallery-box-file-second">' . "\n"
-						.'<div class="phocagallery-box-file-third">' . "\n"
-						.'<center>' . "\n"
-						.'<a class="'.$button->methodname.'" title="'.$image->title.'" href="'. JRoute::_($image->link).'"'; 
 					
 					
-					// DETAIL WINDOW
-					if ($detail_window == 1) {
-						$output .= ' onclick="'. $button->options.'"';
-					} else if ($detail_window == 4 || $detail_window == 5) {
-						$highSlideOnClick	= str_replace('[phocahsfullimg]',$image->linkorig, $tmpl['highslideonclick']);
-						$output .= ' onclick="'. $highSlideOnClick.'"';
-					} else {
-						$output .= ' rel="'.$button->options.'"';
-					}
-					
-					// Enable the switch image
-					if ($enable_switch == 1) {
-						$output .=' onmouseover="PhocaGallerySwitchImage(\'PhocaGalleryobjectPicture\', \''. str_replace('phoca_thumb_m_','phoca_thumb_l_', JURI::root() . $image->linkthumbnailpath).'\');" onmouseout="PhocaGallerySwitchImage(\'PhocaGalleryobjectPicture\', \''. str_replace('phoca_thumb_m_','phoca_thumb_l_', JURI::root() . $image->linkthumbnailpath).'\');"';
-						
-					} else {
-						// Overlib
-						
-						if (!empty($image->description)) {
-							$divPadding = 'padding:5px;';
-						} else {
-							$divPadding = 'padding:0px;margin:0px;';
-						}
-						
-						$document->addScript(JURI::base(true).'/includes/js/overlib_mini.js');
-						$opacityPer = $opacityPer = (float)$tmpl['overliboverlayopacity'] * 100;
-						
-						if ( $libraries['pg-overlib-group']->value == 0 ) {
-					
-							$document->addCustomTag( "<style type=\"text/css\">\n"
-				
-							. ".bgPhocaClass{
-								background:".$tmpl['olbgcolor'].";
-								filter:alpha(opacity=".$opacityPer.");
-								opacity: ".$tmpl['overliboverlayopacity'].";
-								-moz-opacity:".$tmpl['overliboverlayopacity'].";
-								z-index:1000;
-								}
-								.fgPhocaClass{
-								background:".$tmpl['olfgcolor'].";
-								filter:alpha(opacity=100);
-								opacity: 1;
-								-moz-opacity:1;
-								z-index:1000;
-								}
-								.fontPhocaClass{
-								color:".$tmpl['oltfcolor'].";
-								z-index:1001;
-								}
-								.capfontPhocaClass, .capfontclosePhocaClass{
-								color:".$tmpl['olcfcolor'].";
-								font-weight:bold;
-								z-index:1001;
-								}"
-							." </style>\n");
+					// Different types
+					switch($plugin_type) {
+						case 1:
+						case 2:
+							if (JFile::exists($image->linkthumbnailpathabs)) {
+								list($width, $height) = GetImageSize( $image->linkthumbnailpathabs );
+								$imageOrigHeight		= $height;
+								$imageOrigWidth			= $width;
+							}
 							
+							$output .= '<div style="float:left;padding:'.(int)$padding_mosaic.'px;">' . "\n";
+							$output .= '<a class="'.$button->methodname.'" title="'.$image->title.'" href="'. JRoute::_($image->link).'"'; 
 							
-							$library->setLibrary('pg-overlib-group', 1);
-						}
-						
-						
-						
-						if ($enable_overlib == 1) { 
-							$output .=  " onmouseover=\"return overlib('".htmlspecialchars( addslashes('<center>' . JHTML::_( 'image.site', str_replace ('phoca_thumb_m_','phoca_thumb_l_',$image->linkthumbnailpath), '', '', '', $image->title ) . "</center>"))."', CAPTION, '". $image->title."', BELOW, RIGHT, BGCLASS,'bgPhocaClass', FGCOLOR, '".$tmpl['olfgcolor']."', BGCOLOR, '".$tmpl['olbgcolor']."', TEXTCOLOR, '".$tmpl['oltfcolor']."', CAPCOLOR, '".$tmpl['olcfcolor']."');\""
-							. " onmouseout=\"return nd();\" ";
-						} else if ($enable_overlib == 2){ 
-							$image->description		= str_replace("\n", '<br />', $image->description);
-							$output .=  " onmouseover=\"return overlib('".htmlspecialchars( addslashes('<div style="'.$divPadding.'">'.$image->description.'</div>'))."', CAPTION, '". $image->title."', BELOW, RIGHT, CSSCLASS, TEXTFONTCLASS, 'fontPhocaClass', FGCLASS, 'fgPhocaClass', BGCLASS, 'bgPhocaClass', CAPTIONFONTCLASS,'capfontPhocaClass', CLOSEFONTCLASS, 'capfontclosePhocaClass');\""
-							. " onmouseout=\"return nd();\" ";				
-						} else if ($enable_overlib == 3){ 
-							$image->description		= str_replace("\n", '<br />', $image->description);
-							$output .=  " onmouseover=\"return overlib('".PhocaGalleryText::strTrimAll(htmlspecialchars( addslashes( '<div style="text-align:center"><center>' . JHTML::_( 'image.site', str_replace ('phoca_thumb_m_','phoca_thumb_l_', $image->linkthumbnailpath), '', '', '', $image->title ) . '</center></div><div style="'.$divPadding.'">' . $image->description . '</div>')))."', CAPTION, '". $image->title."', BELOW, RIGHT, BGCLASS,'bgPhocaClass', FGCLASS,'fgPhocaClass', FGCOLOR, '".$tmpl['olfgcolor']."', BGCOLOR, '".$tmpl['olbgcolor']."', TEXTCOLOR, '".$tmpl['oltfcolor']."', CAPCOLOR, '".$tmpl['olcfcolor']."');\""
-							. " onmouseout=\"return nd();\" ";				
-						} 
-					}
-					// End Overlib
-					
-					$output .= ' >' . "\n";
-					$output .= '<img src="'.$image->linkthumbnailpath.'" alt="'.$image->title.'" />';
-					
-					if ((int)$enable_piclens > 0) {
-						$output .= '<span class="mbf-item">#phocagallerypiclens '.$image->catid .'-phocagallerypiclenscode-'. $image->filename.'</span>';
-					}
-					
-					$output .='</a>'
-						.'</center>' . "\n"
-						.'</div>' . "\n"
-						.'</div>' . "\n"
-						.'</div>' . "\n"
-						.'</center>' . "\n";
-
-					if ($display_name == 1) {
-						$output .= '<div class="name" style="color: '.$font_color.' ;font-size:'.$namefontsize.'px;margin-top:5px;text-align:center;">'.PhocaGalleryText::wordDelete($image->title, $namenumchar, '...').'</div>';
-					}
-		
-					if ($display_icon_detail == 1 || $display_icon_download == 1 || $enable_piclens == 2) {
-						
-						$output .= '<div class="detail" style="text-align:right">';
-						
-						if ($enable_piclens == 2) {							
-							$output .=' <a href="javascript:PicLensLite.start();" title="PicLens" ><img src="http://lite.piclens.com/images/PicLensButton.png" alt="PicLens" width="16" height="12" border="0" style="margin-bottom:2px" /></a>';
-		  
-						}
-						
-						
-						if ($display_icon_detail == 1) {
-							$output .= ' <a class="'.$button->methodname.'" title="'. JText::_('Image Detail').'" href="'.JRoute::_($image->link2).'"';
-							// Detail Window
-							if ($detail_window == 1) {
+							if ($tmpl['detailwindow'] == 1) {
 								$output .= ' onclick="'. $button->options.'"';
-							} else if ($detail_window == 2) {
-								$output .= ' rel="'. $button->options.'"';
-							} else if ($detail_window == 4 ) {
-								$output .= ' onclick="'. $tmpl['highslideonclick'].'"';
-							} else if ($detail_window == 5 ) {
-								$output .= ' onclick="'. $tmpl['highslideonclick2'].'"';
+							} else if ($tmpl['detailwindow'] == 4 || $tmpl['detailwindow'] == 5) {
+								$highSlideOnClick = str_replace('[phocahsfullimg]',$image->linkorig, $tmpl['highslideonclick']);
+								$output .= ' onclick="'. $highSlideOnClick.'"';
+							} else if ($tmpl['detailwindow'] == 6 ) {
+								$output .= ' onclick="gjaksMod'.$randName.'.show('.$image->linknr.'); return false;"';
+							} else if ($tmpl['detailwindow'] == 7 ) {
+								$output .= '';
 							} else {
-								$output .= ' rel="'. $button2->options.'"';
+								$output .= ' rel="'.$button->options.'"';
 							}
 							
 							
-							$output .= ' >';
-							$output .= '<img src="components/com_phocagallery/assets/images/icon-view.'.$tmpl['formaticon'].'" alt="'.$image->title.'" />';
+							$output .= ' >' . "\n";
+							$output .= '<img src="'.JURI::base(true).'/'.$image->linkthumbnailpath.'" alt="'.$image->title.'" width="'.$imageOrigWidth.'" height="'.$imageOrigHeight.'" />';
 							$output .= '</a>';
-						}
-						
-						if ($display_icon_download == 1) {
-							$output .= ' <a class="'. $button->methodname.'" title="'. JText::_('Image Download').'" href="'. JRoute::_($image->linkother . '&amp;phocadownload=1').'"';
-							// Detail Window
-							if ($detail_window == 1) {
-								$output .= ' onclick="'. $buttonOther->options.'"';
-							} else if ($detail_window == 4 ) {
-								$output .= ' onclick="'. $tmpl['highslideonclick'].'"';
-							} else if ($detail_window == 5 ) {
-								$output .= ' onclick="'. $tmpl['highslideonclick2'].'"';
+							if ( $tmpl['detailwindow'] == 5) {
+								if ($tmpl['highslidedescription'] == 1 || $tmpl['highslidedescription'] == 3) {
+									$output	.='<div class="highslide-heading">';
+									$output	.=$image->title;
+									$output	.='</div>';
+								}
+								if  ($tmpl['highslidedescription'] == 2 || $tmpl['highslidedescription'] == 3) {
+									$output	.='<div class="highslide-caption">';
+									$output	.= $image->description;
+									$output	.= '</div>';
+								}
+							}
+							//$output .= '</div>';
+							
+						break;
+					
+						case 0:
+						default:
+					
+							// Float
+							$float_code	= '';
+							if ($float != '') {
+								$float_code = 'position:relative;float:'.$float.';';
+							}
+
+							// Maximum size of module image is 100 x 100
+							jimport( 'joomla.filesystem.file' );
+							$imageWidth['size']		= (int)$medium_image_width; //100;
+							$imageHeight['size']	= (int)$medium_image_height;
+							$imageHeight['boxsize'] = (int)$medium_image_height;
+							$imageWidth['boxsize'] 	= (int)$medium_image_width + 20;//120;
+							$imageOrigHeight		= (int)$medium_image_height;
+							$imageOrigWidth			= (int)$medium_image_width;//100;
+							
+							if (JFile::exists($image->linkthumbnailpathabs)) {
+								list($width, $height) = GetImageSize( $image->linkthumbnailpathabs );
+								
+								$imageHeight 	= PhocaGalleryImage::correctSize($height, $imageHeight['size'], $imageHeight['boxsize'], 0);
+								$imageWidth 	= PhocaGalleryImage::correctSize($width, $imageWidth['size'], $imageWidth['boxsize'], 20);
+								$imageOrigHeight		= $height;
+								$imageOrigWidth			= $width;
+							}
+							$imageHeight['boxsize']	= PhocaGalleryImage::setBoxSize($imageHeight,$imageWidth, $display_name, $display_icon_detail, $display_icon_download, 0, 0, 0, 0, 0, 0, 0, 0,  $category_box_space, $image_background_shadow, 0);
+							if ( $image_background_shadow != 'none' ) {		
+								$imageHeight['size']	= $imageHeight['size'] + 18;
+								$imageWidth['size'] 	= $imageWidth['size'] + 18;
+								$image_background_color	= 'url(\''.JURI::base(true).'/components/com_phocagallery/assets/images/'.$image_background_shadow.'.'.$tmpl['formaticon'].'\') 0 0 no-repeat;';
+							}
+							
+
+							$output .= '<div class="phocagallery-box-file pgplugin'.$iCss.'" style="height:'. $imageHeight['boxsize'] .'px; width:'. $imageWidth['boxsize'].'px;'.$float_code.'">' . "\n"
+								.'<center>'  . "\n"
+								.'<div class="phocagallery-box-file-first" style="background: '.$image_background_color.';height:'.$imageHeight['size'].'px;width:'.$imageWidth['size'].'px;">' . "\n"
+								.'<div class="phocagallery-box-file-second">' . "\n"
+								.'<div class="phocagallery-box-file-third">' . "\n"
+								.'<center>' . "\n"
+								.'<a class="'.$button->methodname.'"';
+
+							if ($enable_overlib == 0) {
+									$output .= ' title="'.$image->title.'"';
+							}
+							
+							$output .=  'href="'. JRoute::_($image->link).'"'; 
+							
+							
+							// DETAIL WINDOW
+							
+							if ($tmpl['detailwindow'] == 1) {
+								$output .= ' onclick="'. $button->options.'"';
+							} else if ($tmpl['detailwindow'] == 4 || $tmpl['detailwindow'] == 5) {
+								$highSlideOnClick = str_replace('[phocahsfullimg]',$image->linkorig, $tmpl['highslideonclick']);
+								$output .= ' onclick="'. $highSlideOnClick.'"';
+							} else if ($tmpl['detailwindow'] == 6 ) {
+								$output .= ' onclick="gjaksPl'.$randName.'.show('.$image->linknr.'); return false;"';
+							} else if ($tmpl['detailwindow'] == 7 ) {
+								$output .= '';
 							} else {
-								$output .= ' rel="'. $buttonOther->options.'"';
+								$output .= ' rel="'.$button->options.'"';
+							}
+							
+							// Enable the switch image
+							if ($enable_switch == 1) {
+								$output .=' onmouseover="PhocaGallerySwitchImage(\'PhocaGalleryobjectPicture\', \''. str_replace('phoca_thumb_m_','phoca_thumb_l_', JURI::root() . $image->linkthumbnailpath).'\');" onmouseout="PhocaGallerySwitchImage(\'PhocaGalleryobjectPicture\', \''. str_replace('phoca_thumb_m_','phoca_thumb_l_', JURI::root() . $image->linkthumbnailpath).'\');"';
+								
+							} else {
+								// Overlib
+								
+								if (!empty($image->description)) {
+									$divPadding = 'padding:5px;';
+								} else {
+									$divPadding = 'padding:0px;margin:0px;';
+								}
+								
+								$document->addScript(JURI::base(true).'/includes/js/overlib_mini.js');
+								$opacityPer = $opacityPer = (float)$tmpl['overliboverlayopacity'] * 100;
+								
+								if ( $libraries['pg-overlib-group']->value == 0 ) {
+							
+									$document->addCustomTag( "<style type=\"text/css\">\n"
+						
+									. ".bgPhocaClass{
+										background:".$tmpl['olbgcolor'].";
+										filter:alpha(opacity=".$opacityPer.");
+										opacity: ".$tmpl['overliboverlayopacity'].";
+										-moz-opacity:".$tmpl['overliboverlayopacity'].";
+										z-index:1000;
+										}
+										.fgPhocaClass{
+										background:".$tmpl['olfgcolor'].";
+										filter:alpha(opacity=100);
+										opacity: 1;
+										-moz-opacity:1;
+										z-index:1000;
+										}
+										.fontPhocaClass{
+										color:".$tmpl['oltfcolor'].";
+										z-index:1001;
+										}
+										.capfontPhocaClass, .capfontclosePhocaClass{
+										color:".$tmpl['olcfcolor'].";
+										font-weight:bold;
+										z-index:1001;
+										}"
+									." </style>\n");
+									
+									
+									$library->setLibrary('pg-overlib-group', 1);
+								}
+								
+								
+								
+								if ($enable_overlib == 1) { 
+									$output .=  " onmouseover=\"return overlib('".htmlspecialchars( addslashes('<center>' . JHTML::_( 'image.site', str_replace ('phoca_thumb_m_','phoca_thumb_l_',$image->linkthumbnailpath), '', '', '', $image->title ) . "</center>"))."', CAPTION, '". $image->title."', BELOW, RIGHT, BGCLASS,'bgPhocaClass', FGCOLOR, '".$tmpl['olfgcolor']."', BGCOLOR, '".$tmpl['olbgcolor']."', TEXTCOLOR, '".$tmpl['oltfcolor']."', CAPCOLOR, '".$tmpl['olcfcolor']."');\""
+									. " onmouseout=\"return nd();\" ";
+								} else if ($enable_overlib == 2){ 
+									$image->description		= str_replace("\n", '<br />', $image->description);
+									$output .=  " onmouseover=\"return overlib('".htmlspecialchars( addslashes('<div style="'.$divPadding.'">'.$image->description.'</div>'))."', CAPTION, '". $image->title."', BELOW, RIGHT, CSSCLASS, TEXTFONTCLASS, 'fontPhocaClass', FGCLASS, 'fgPhocaClass', BGCLASS, 'bgPhocaClass', CAPTIONFONTCLASS,'capfontPhocaClass', CLOSEFONTCLASS, 'capfontclosePhocaClass');\""
+									. " onmouseout=\"return nd();\" ";				
+								} else if ($enable_overlib == 3){ 
+									$image->description		= str_replace("\n", '<br />', $image->description);
+									$output .=  " onmouseover=\"return overlib('".PhocaGalleryText::strTrimAll(htmlspecialchars( addslashes( '<div style="text-align:center"><center>' . JHTML::_( 'image.site', str_replace ('phoca_thumb_m_','phoca_thumb_l_', $image->linkthumbnailpath), '', '', '', $image->title ) . '</center></div><div style="'.$divPadding.'">' . $image->description . '</div>')))."', CAPTION, '". $image->title."', BELOW, RIGHT, BGCLASS,'bgPhocaClass', FGCLASS,'fgPhocaClass', FGCOLOR, '".$tmpl['olfgcolor']."', BGCOLOR, '".$tmpl['olbgcolor']."', TEXTCOLOR, '".$tmpl['oltfcolor']."', CAPCOLOR, '".$tmpl['olcfcolor']."');\""
+									. " onmouseout=\"return nd();\" ";				
+								} 
+							}
+							// End Overlib
+							
+							$output .= ' >' . "\n";
+							$output .= '<img src="'.JURI::base(true).'/'.$image->linkthumbnailpath.'" alt="'.$image->title.'" />';
+							
+							if ((int)$enable_piclens > 0) {
+								$output .= '<span class="mbf-item">#phocagallerypiclens '.$image->catid .'-phocagallerypiclenscode-'. $image->filename.'</span>';
+							}
+							
+							$output .='</a>';
+							
+							if ( $tmpl['detailwindow'] == 5) {
+								if ($tmpl['highslidedescription'] == 1 || $tmpl['highslidedescription'] == 3) {
+									$output	.='<div class="highslide-heading">';
+									$output	.=$image->title;
+									$output	.='</div>';
+								}
+								if  ($tmpl['highslidedescription'] == 2 || $tmpl['highslidedescription'] == 3) {
+									$output	.='<div class="highslide-caption">';
+									$output	.= $image->description;
+									$output	.= '</div>';
+								}
+							}
+							
+							$output .=	'</center>' . "\n"
+								.'</div>' . "\n"
+								.'</div>' . "\n"
+								.'</div>' . "\n"
+								.'</center>' . "\n";
+
+							if ($display_name == 1) {
+								$output .= '<div class="name" style="color: '.$font_color.' ;font-size:'.$namefontsize.'px;margin-top:5px;text-align:center;">'.PhocaGalleryText::wordDelete($image->title, $namenumchar, '...').'</div>';
 							}
 				
-							$output .= ' >';
-							$output .= '<img src="components/com_phocagallery/assets/images/icon-download.'.$tmpl['formaticon'].'" alt="'.$image->title.'" />';
-							$output .= '</a>';
+							if ($display_icon_detail == 1 || $display_icon_download > 0 || $enable_piclens == 2) {
+								
+								$output .= '<div class="detail" style="text-align:right">';
+								
+								if ($enable_piclens == 2) {							
+									$output .=' <a href="javascript:PicLensLite.start();" title="PicLens" ><img src="http://lite.piclens.com/images/PicLensButton.png" alt="PicLens" width="16" height="12" border="0" style="margin-bottom:2px" /></a>';
+				  
+								}
+								
+								
+								if ($display_icon_detail == 1) {
+									$output .= ' <a class="'.$button->methodname.'" title="'. JText::_('Image Detail').'" href="'.JRoute::_($image->link2).'"';
+									// Detail Window
+									if ($tmpl['detailwindow'] == 1) {
+										$output .= ' onclick="'. $button2->options.'"';
+									} else if ($tmpl['detailwindow'] == 2) {
+										$output .= ' rel="'. $button2->options.'"';
+									} else if ($tmpl['detailwindow'] == 4 ) {
+										$output .= ' onclick="'. $tmpl['highslideonclick'].'"';
+									} else if ($tmpl['detailwindow'] == 5 ) {
+										$output .= ' onclick="'. $tmpl['highslideonclick2'].'"';
+									} else if ($tmpl['detailwindow'] == 6) {
+										$output .=  ' onclick="gjaksPl'.$randName.'.show('.$image->linknr.'); return false;"';
+									} else if ($tmpl['detailwindow'] == 7 ) {
+										$output .= '';
+									} else {
+										$output .= ' rel="'. $button2->options.'"';
+									}
+									
+									
+									$output .= ' >';
+									$output .= '<img src="'.JURI::base(true).'/components/com_phocagallery/assets/images/icon-view.'.$tmpl['formaticon'].'" alt="'.$image->title.'" />';
+									$output .= '</a>';
+								}
+								
+								if ($display_icon_download > 0) {
+									
+									// Direct download set in component
+									if ((int)$display_icon_download == 2) {
+										$output .= ' <a title="'. JText::_('Image Download').'" href="'. JRoute::_($image->linkother . '&amp;phocadownload='.(int)$display_icon_download).'"';
+									} else {
+										$output .= ' <a class="'. $button->methodname.'" title="'. JText::_('Image Download').'" href="'. JRoute::_($image->linkother . '&amp;phocadownload='.(int)$display_icon_download).'"';
+									
+										if ($tmpl['detailwindow'] == 1) {
+											$output .= ' onclick="'. $buttonOther->options.'"';
+										} else if ($tmpl['detailwindow'] == 4 ) {
+											$output .= ' onclick="'. $tmpl['highslideonclick'].'"';
+										} else if ($tmpl['detailwindow'] == 5 ) {
+											$output .= ' onclick="'. $tmpl['highslideonclick2'].'"';
+										} else if ($tmpl['detailwindow'] == 7 ) {
+											$output .= '';
+										} else {
+											$output .= ' rel="'. $buttonOther->options.'"';
+										}
+									}
 						
-						}
-						
-						$output .= '</div>';
-						if ($float == '') {
-							$output .= '<div style="clear:both"> </div>';
-						}
+									$output .= ' >';
+									$output .= '<img src="'.JURI::base(true).'/components/com_phocagallery/assets/images/icon-download.'.$tmpl['formaticon'].'" alt="'.$image->title.'" />';
+									$output .= '</a>';
+								
+								}
+								
+								$output .= '</div>';
+								if ($float == '') {
+									$output .= '<div style="clear:both"> </div>';
+								}
+							}
+						break;
 					}
 					$output .= '</div>';
+					$iI++;
 				}
 			}
 			
@@ -1070,9 +1326,28 @@ class plgContentPhocaGallery extends JPlugin
 				$output .= '<div style="clear:both"> </div>';
 			}
 			
+			if ($tmpl['detailwindow'] == 6) {
+				$output .= '<script type="text/javascript">'
+				.'var gjaksPl'.$randName.' = new SZN.LightBox(dataJakJsPl'.$randName.', optgjaksPl'.$randName.');'
+				.'</script>';
+			}
+			
 			$article->text = preg_replace($regex_all, $output, $article->text, 1);
 			
+			// ADD JAK DATA CSS style
+
+			if ( $tmpl['detailwindow'] == 6 ) {
+				$document->addCustomTag('<script type="text/javascript">'
+				. 'var dataJakJsPl'.$randName.' = ['
+				. implode($tmpl['jakdatajs'], ',')
+				. ']'
+				. '</script>');
+			}
+			
 		}
+		
+		
+		
 		
 		// CUSTOM CSS - For all items it will be the same
 		if ( $libraries['pg-css-sbox-plugin']->value == 0 ) {
@@ -1089,6 +1364,10 @@ class plgContentPhocaGallery extends JPlugin
 			$document->addCustomTag("<!--[if lt IE 8]>\n<link rel=\"stylesheet\" href=\"".JURI::base(true)."/components/com_phocagallery/assets/phocagalleryieall.css\" type=\"text/css\" />\n<![endif]-->");
 			$library->setLibrary('pg-css-ie', 1);
 		}
+		
+		
+		
+
 		
 	  } // end if count_matches
 		return true;

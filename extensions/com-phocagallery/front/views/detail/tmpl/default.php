@@ -1,5 +1,8 @@
 <?php defined('_JEXEC') or die('Restricted access');
 
+if ($this->tmpl['backbutton'] != '') {
+	echo $this->tmpl['backbutton'];
+}
 $largeHeight = (int)$this->tmpl['largeheight'] + 6 ;
 
 ?><center style="padding-top:10px">
@@ -45,12 +48,12 @@ $largeHeight = (int)$this->tmpl['largeheight'] + 6 ;
 		?>
 		<tr>
 			<td align="left" width="30%" style="padding-left:48px"><?php echo $this->item->prevbutton ;?></td>
-			<td><?php echo $this->item->slideshowbutton ;?></td>
-			<td><?php echo str_replace("%onclickreload%", $this->tmpl['detailwindowreload'], $this->item->reloadbutton);?></td>
+			<td align="center"><?php echo $this->item->slideshowbutton ;?></td>
+			<td align="center"><?php echo str_replace("%onclickreload%", $this->tmpl['detailwindowreload'], $this->item->reloadbutton);?></td>
 			<?php
-			if ($this->tmpl['detailwindow'] == 4 || $this->tmpl['detailwindow'] == 5) {
+			if ($this->tmpl['detailwindow'] == 4 || $this->tmpl['detailwindow'] == 5 || $this->tmpl['detailwindow'] == 7) {
 			} else {	
-				echo '<td>' . str_replace("%onclickclose%", $this->tmpl['detailwindowclose'], $this->item->closebutton). '</td>';
+				echo '<td align="center">' . str_replace("%onclickclose%", $this->tmpl['detailwindowclose'], $this->item->closebutton). '</td>';
 			}
 			?>
 			
@@ -62,5 +65,7 @@ $largeHeight = (int)$this->tmpl['largeheight'] + 6 ;
 		?>	
 </table>
 </center>
-<?php echo $this->loadTemplate('rating');?>
-<!-- <a href="http://www.phoca.cz/">http://www.phoca.cz/</a> -->
+<?php echo $this->loadTemplate('rating');
+if ($this->tmpl['detailwindow'] == 7) {
+	echo $this->tmpl['fontb'];
+}

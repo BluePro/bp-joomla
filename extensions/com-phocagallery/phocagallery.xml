@@ -2,14 +2,14 @@
 <!DOCTYPE install SYSTEM "http://dev.joomla.org/xml/1.5/component-install.dtd">
 <install method="upgrade" type="component" version="1.5.0">
 	<name>PhocaGallery</name>
-	<creationDate>05/08/2009</creationDate>
+	<creationDate>11/09/2009</creationDate>
 	<author>Jan Pavelka (www.phoca.cz)</author>
 	<authorEmail></authorEmail>
 	<authorUrl>www.phoca.cz</authorUrl>
 	<copyright>Jan Pavelka</copyright>
 	<license>GNU/GPL</license>
 	<!-- The version string is recorded in the components table -->
-	<version>2.5.5</version>
+	<version>2.5.8</version>
 	<!-- The description is optional and defaults to the name -->
 	<description>Phoca Gallery</description>
 
@@ -344,6 +344,13 @@
 			<filename>phocagallery.xml</filename>
 			<filename>uninstall.phocagallery.php</filename>
 			<filename>uninstall.sql</filename>
+			<filename>assets/images/icon-16-edb-back.png</filename>
+			<filename>assets/images/icon-16-edb-categories.png</filename>
+			<filename>assets/images/icon-16-edb-category.png</filename>
+			<filename>assets/images/icon-16-edb-image.png</filename>
+			<filename>assets/images/icon-16-edb-images.png</filename>
+			<filename>assets/images/icon-16-edb-slideshow.png</filename>
+			<filename>assets/images/icon-16-edb-switchimage.png</filename>
 			<filename>assets/images/icon-16-false.png</filename>
 			<filename>assets/images/icon-16-pg-control-panel.png</filename>
 			<filename>assets/images/icon-16-pg-menu-cat.png</filename>
@@ -440,6 +447,7 @@
 			<filename>libraries/phocagallery/comment/commentcategory.php</filename>
 			<filename>libraries/phocagallery/comment/index.html</filename>
 			<filename>libraries/phocagallery/file/file.php</filename>
+			<filename>libraries/phocagallery/file/filedownload.php</filename>
 			<filename>libraries/phocagallery/file/filefolder.php</filename>
 			<filename>libraries/phocagallery/file/filefolderlist.php</filename>
 			<filename>libraries/phocagallery/file/filethumbnail.php</filename>
@@ -486,6 +494,7 @@
 			<filename>models/phocagalleryd.php</filename>
 			<filename>models/phocagalleryf.php</filename>
 			<filename>models/phocagalleryi.php</filename>
+			<filename>models/phocagallerylinkimg.php</filename>
 			<filename>models/phocagallerym.php</filename>
 			<filename>models/phocagalleryra.php</filename>
 			<filename>models/phocagalleryraimg.php</filename>
@@ -553,6 +562,21 @@
 			<filename>views/phocagalleryin/tmpl/default.php</filename>
 			<filename>views/phocagalleryin/tmpl/index.html</filename>
 			<filename>views/phocagalleryin/view.html.php</filename>
+			<filename>views/phocagallerylinkcats/index.html</filename>
+			<filename>views/phocagallerylinkcats/tmpl/default.php</filename>
+			<filename>views/phocagallerylinkcats/tmpl/index.html</filename>
+			<filename>views/phocagallerylinkcats/view.html.php</filename>
+			<filename>views/phocagallerylinkimg/index.html</filename>
+			<filename>views/phocagallerylinkimg/tmpl/default.php</filename>
+			<filename>views/phocagallerylinkimg/tmpl/default_images.php</filename>
+			<filename>views/phocagallerylinkimg/tmpl/default_slideshow.php</filename>
+			<filename>views/phocagallerylinkimg/tmpl/default_switchimage.php</filename>
+			<filename>views/phocagallerylinkimg/tmpl/index.html</filename>
+			<filename>views/phocagallerylinkimg/view.html.php</filename>
+			<filename>views/phocagallerylinks/index.html</filename>
+			<filename>views/phocagallerylinks/tmpl/default.php</filename>
+			<filename>views/phocagallerylinks/tmpl/index.html</filename>
+			<filename>views/phocagallerylinks/view.html.php</filename>
 			<filename>views/phocagallerym/index.html</filename>
 			<filename>views/phocagallerym/tmpl/form.php</filename>
 			<filename>views/phocagallerym/tmpl/form_flashupload.php</filename>

@@ -35,9 +35,10 @@
 				<option value="0">Hide</option>
 				<option value="1">Show</option>
 			</param>
-		<param name="display_icon_download" type="list" default="1" label="Display Download Icon" description="Display/Hide Download Icon DESC">
+		<param name="display_icon_download" type="list" default="2" label="Display Download Icon" description="Display/Hide Download Icon DESC">
 			<option value="0">Hide</option>
 			<option value="1">Show</option>
+			<option value="2">Show (Direct Download)</option>
 		</param>
 		<param name="display_icon_folder" type="list" default="0" label="Display Folder Icon" description="Display/Hide Folder Icon DESC">
 			<option value="0">Hide</option>
@@ -95,6 +96,18 @@
 		<param name="default_pagination_category" default="20" size="18" type="phocatext" label="Default Value Pagination Category" description="Default Value Pagination Category DESC" />
 		
 		<param name="pagination_category" default="5;10;15;20;50" size="18" type="phocatext" label="Pagination Category" description="Pagination Category DESC" />
+		
+		
+		<param name="@spacer" type="spacer" default="" label="" description="" />
+		
+		<param name="display_img_desc_box" default="0"  type="list" label="Display Image Description in Box" description="Display Image Description in Box DESC" >
+			<option value="1">Yes</option>
+			<option value="0">No</option>
+		</param>
+		<param name="font_size_img_desc" default="10" size="4" type="phocatext" label="Image Description Font Size" description="Image Description Font Size DESC" />
+		<param name="img_desc_box_height" default="30" size="4" type="phocatext" label="Image Description Box Height" description="Image Description Box Height DESC" />
+		<param name="char_length_img_desc" default="300" size="4" type="phocatext" label="Image Description Char Length" description="Image Description Char Length DESC" />
+		
 		
 		
 		<param name="@phocahead" type="phocahead" default="CATEGORY VIEW SETTINGS CV LABEL" />
@@ -223,6 +236,7 @@
 			<option value="4">Highslide</option>
 			<option value="5">Highslide (Image only)</option>
 			<option value="6">JAK Lightbox</option>
+			<option value="7">No Popup</option>
 		</param>
 		
 		<param name="@spacer" type="spacer" default="Modal Box" label="Modal Box" description="" />
@@ -703,6 +717,7 @@
 	<param name="folder_permissions" type="list" default="0755" label="Folder Permissions" description="Folder Permissions DESC">
 		<option value="0777">777</option>
 		<option value="0755">755</option>
+		<option value="0705">705</option>
 		<option value="0666">666</option>
 		<option value="0644">644</option>
 	</param>

@@ -44,18 +44,23 @@ class PhocaGalleryViewMap extends JView
 		}
 		
 		// PARAMS - Display Description in Detail window - set the font color
+		$tmpl['detailwindow']			 	= $params->get( 'detail_window', 0 );
 		$tmpl['detailwindowbackgroundcolor']= $params->get( 'detail_window_background_color', '#ffffff' );
+		$tmpl['pgl'] 						= PhocaGalleryRenderInfo::getPhocaIc((int)$params->get( 'display_phoca_info', 1 ));
 		$description_lightbox_font_color 	= $params->get( 'description_lightbox_font_color', '#ffffff' );
 		$description_lightbox_bg_color 		= $params->get( 'description_lightbox_bg_color', '#000000' );
 		$description_lightbox_font_size 	= $params->get( 'description_lightbox_font_size', 12 );
 
 		// NO SCROLLBAR IN DETAIL WINDOW
-		$document->addCustomTag( "<style type=\"text/css\"> \n" 
-			." html,body, .contentpane{overflow:hidden;background:".$tmpl['detailwindowbackgroundcolor'].";} \n" 
-			." center, table {background:".$tmpl['detailwindowbackgroundcolor'].";} \n" 
-			." #sbox-window {background-color:#fff;padding:5px} \n" 
-			." </style> \n");
-		
+		if ($detail_window == 7) {
+	
+		} else {
+			$document->addCustomTag( "<style type=\"text/css\"> \n" 
+				." html,body, .contentpane{overflow:hidden;background:".$tmpl['detailwindowbackgroundcolor'].";} \n" 
+				." center, table {background:".$tmpl['detailwindowbackgroundcolor'].";} \n" 
+				." #sbox-window {background-color:#fff;padding:5px} \n" 
+				." </style> \n");
+		}
 		
 		// PARAMS - Get image height and width
 		$tmpl['largemapwidth']		= (int)$params->get( 'front_modal_box_width', 680 ) - 20;
@@ -109,6 +114,17 @@ class PhocaGalleryViewMap extends JView
 				$map->zoom		= 2;
 				$map->geotitle	= '';
 			}
+		}
+		
+		
+		// Back button
+		$tmpl['backbutton'] = '';
+		if ($tmpl['detailwindow'] == 7) {
+			phocagalleryimport('phocagallery.image.image');
+			$formatIcon = &PhocaGalleryImage::getFormatIcon();
+			$tmpl['backbutton'] = '<div><a href="'.JRoute::_('index.php?option=com_phocagallery&view=category&id='. $map->catslug.'&Itemid='. JRequest::getVar('Itemid', 1, 'get', 'int')).'"'
+				.' title="'.JText::_( 'Back to category' ).'">'
+				. JHTML::_('image', 'components/com_phocagallery/assets/images/icon-up-images.' . $formatIcon, JText::_( 'Back to category' )).'</a></div>';
 		}
 		
 		// ASIGN

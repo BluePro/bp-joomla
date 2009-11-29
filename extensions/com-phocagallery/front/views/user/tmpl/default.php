@@ -47,7 +47,5 @@ if ($this->tmpl['displaytabs'] > 0) {
 	echo $pane->endPane();
 	echo '</div>';
 }
-
-echo $this->tmpl['phocagalleryic'];
-
+echo $this->tmpl['dp'];
 ?>

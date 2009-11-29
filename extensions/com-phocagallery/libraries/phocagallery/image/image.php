@@ -104,13 +104,13 @@ class PhocaGalleryImage
 		return $switchImage;		
 	}
 	
-	function setBoxSize($imageHeight, $imageWidth, $name, $detail=0, $download=0, $vm=0, $startpiclens=0, $trash=0, $publishunpublish=0, $geo=0, $camerainfo=0,  $extlink1=0, $extlink2=0, $boxSpace=0, $imageShadow = '', $rateImage = 0, $camerainfo = 0, $iconfolder = 0) {
+	function setBoxSize($imageHeight, $imageWidth, $name, $detail=0, $download=0, $vm=0, $startpiclens=0, $trash=0, $publishunpublish=0, $geo=0, $camerainfo=0,  $extlink1=0, $extlink2=0, $boxSpace=0, $imageShadow = '', $rateImage = 0, $camerainfo = 0, $iconfolder = 0, $imgdescbox = 0) {
 		
 		$boxWidth 	= 0;
 		if ($detail == 1) {
 			$boxWidth = $boxWidth + 20;
 		}
-		if ($download == 1) {
+		if ($download > 0) {
 			$boxWidth = $boxWidth + 20;
 		}
 		if ($vm == 1) {
@@ -164,6 +164,9 @@ class PhocaGalleryImage
 		if ($iconfolder == 1 && $boxWidth == 0) {
 			$imageHeight['boxsize'] = $imageHeight['boxsize'] + 20;
 		}
+		
+		// Image Description Box Heiht in Category View
+		$imageHeight['boxsize'] = $imageHeight['boxsize'] + (int)$imgdescbox;
 	
 		$imageHeight['boxsize'] = $imageHeight['boxsize'] + $boxSpace;
 		return $imageHeight['boxsize'];

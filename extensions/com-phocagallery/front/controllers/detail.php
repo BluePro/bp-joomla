@@ -23,6 +23,8 @@ class PhocaGalleryControllerDetail extends PhocaGalleryController
 
 	function rate() {
 		global $mainframe;
+		$params			= &$mainframe->getParams();
+		$detailWindow	= $params->get( 'detail_window', 0 );
 		
 		$user 		=& JFactory::getUser();
 		$view 		= JRequest::getVar( 'view', '', 'get', '', JREQUEST_NOTRIM  );
@@ -32,6 +34,11 @@ class PhocaGalleryControllerDetail extends PhocaGalleryController
 		$rating		= JRequest::getVar( 'rating', '', 'get', 'string', JREQUEST_NOTRIM  );
 		$Itemid		= JRequest::getVar( 'Itemid', 0, '', 'int');
 	
+		if ($detailWindow == 7) {
+			$tmplCom = '';
+		} else {
+			$tmplCom = '&tmpl=component';
+		}
 		
 		$post['imgid'] 		= (int)$imgid;
 		$post['userid']		= $user->id;
@@ -70,7 +77,7 @@ class PhocaGalleryControllerDetail extends PhocaGalleryController
 		// we send infor about already rated via get and this get will be worked in view (detail - default.php) - vote=1
 		$msg = '';
 		
-		$this->setRedirect( JRoute::_('index.php?option=com_phocagallery&view=detail&catid='.$catIdAlias.'&id='.$imgIdAlias.'&tmpl=component&vote=1&Itemid='. $Itemid, false), $msg );
+		$this->setRedirect( JRoute::_('index.php?option=com_phocagallery&view=detail&catid='.$catIdAlias.'&id='.$imgIdAlias.$tmplCom.'&vote=1&Itemid='. $Itemid, false), $msg );
 	}
 }
 ?>

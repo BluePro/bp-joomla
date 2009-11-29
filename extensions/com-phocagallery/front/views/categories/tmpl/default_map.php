@@ -117,5 +117,6 @@ if (GBrowserIsCompatible()) {
 //]]></script>		
 
 <?php
+	echo '<div>' . $this->tmpl['mtb'].'</div>';
 }
 ?>

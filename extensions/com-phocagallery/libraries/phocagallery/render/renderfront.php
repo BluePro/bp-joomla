@@ -354,9 +354,9 @@ class PhocaGalleryRenderFront
 		return $js;
 	}
 	
-	function renderJakJs($slideshowDelay = 5, $orientation = 'none') {
+	function renderJakJs($slideshowDelay = 5, $orientation = 'none', $name = 'optgjaks') {
 		$js  = "\t". '<script language="javascript" type="text/javascript">'."\n"
-		.'var optgjaks = {'
+		.'var '.$name.' = {'
 		.'galleryClassName: \'lightBox\','
 		.'zIndex: 10,'
 		.'useShadow: true,'

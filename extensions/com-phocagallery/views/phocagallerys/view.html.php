@@ -47,7 +47,7 @@ class PhocaGalleryCpViewPhocaGalleryS extends JView
 		$button->set('options', "{handler: 'iframe', size: {x: ".$admin_modal_box_width.", y: ".$admin_modal_box_height."}}");
 
 		//Filter
-		$context			= 'com_phocagallery.phocagallery.list.';
+		//$context			= 'com_phocagallery.phocagallery.list.';
 		
 		$filter_state		= $mainframe->getUserStateFromRequest( $this->_context.'.filter_state',	'filter_state', '',	'word' );
 		$filter_catid		= $mainframe->getUserStateFromRequest( $this->_context.'.filter_catid',	'filter_catid',	0, 'int' );

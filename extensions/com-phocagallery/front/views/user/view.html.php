@@ -53,8 +53,7 @@ class PhocaGalleryViewUser extends JView
 		$tmpl['displaydescupload'] 	= $params->get( 'display_description_upload', 0 );
 		$tmpl['maxuploadchar']		= $params->get( 'max_upload_char', 1000 );
 		$tmpl['maxcreatecatchar']	= $params->get( 'max_create_cat_char', 1000 );
-		$tmpl['phocagalleryic']		= $params->get( 'display_phoca_info', 1 );
-		$tmpl['phocagalleryic'] 	= PhocaGalleryRenderInfo::getPhocaIc((int)$tmpl['phocagalleryic']);
+		$tmpl['dp'] 				= PhocaGalleryRenderInfo::getPhocaIc((int)$params->get( 'display_phoca_info', 1 ));
 		$tmpl['showpagetitle'] 		= $params->get( 'show_page_title', 1 );
 		$tmpl['enablejava']			= $params->get( 'enable_java', 0 );
 		$tmpl['javaresizewidth'] 	= $params->get( 'java_resize_width', -1 );

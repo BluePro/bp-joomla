@@ -300,6 +300,7 @@ class PhocaGalleryFileThumbnail
 		$paramsC = JComponentHelper::getParams('com_phocagallery');
 		$enable_thumb_creation = $paramsC->get( 'enable_thumb_creation', 1 );
 		$folder_permissions = $paramsC->get( 'folder_permissions', 0755 );
+		//$folder_permissions = octdec((int)$folder_permissions);
 		
 		// disable or enable the thumbnail creation
 		if ($enable_thumb_creation == 1) {
@@ -308,7 +309,25 @@ class PhocaGalleryFileThumbnail
 				if (strlen($folderThumbnail) > 0) {
 					$folderThumbnail = JPath::clean($folderThumbnail);				
 					if (!JFolder::exists($folderThumbnail) && !JFile::exists($folderThumbnail)) {
-						@JFolder::create($folderThumbnail, $folder_permissions );
+						switch((int)$folder_permissions) {
+							case 777:
+								@JFolder::create($folderThumbnail, 0777 );
+							break;
+							case 705:
+								@JFolder::create($folderThumbnail, 0705 );
+							break;
+							case 666:
+								@JFolder::create($folderThumbnail, 0666 );
+							break;
+							case 644:
+								@JFolder::create($folderThumbnail, 0644 );
+							break;				
+							case 755:
+							default:
+								@JFolder::create($folderThumbnail, 0755 );
+							break;
+						}
+						//@JFolder::create($folderThumbnail, $folder_permissions );
 						@JFile::write($folderThumbnail.DS."index.html", "<html>\n<body bgcolor=\"#FFFFFF\">\n</body>\n</html>");
 						// folder was not created
 						if (!JFolder::exists($folderThumbnail)) {

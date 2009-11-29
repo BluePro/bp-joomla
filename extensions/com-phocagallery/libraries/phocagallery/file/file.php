@@ -13,7 +13,6 @@ jimport( 'joomla.filesystem.folder' );
 jimport( 'joomla.filesystem.file' );
 phocagalleryimport('phocagallery.image.image');
 phocagalleryimport('phocagallery.path.path');
-phocagalleryimport('phocagallery.file.file');
 
 class PhocaGalleryFile
 {
@@ -40,6 +39,26 @@ class PhocaGalleryFile
 	
 	function removeExtension($filename) {
 		return substr($filename, 0, strrpos( $filename, '.' ));
+	}
+	
+	function getMimeType($filename) {
+		$ext = JFile::getExt($filename);	
+		switch($ext) {
+			case 'png':
+				$mime = 'image/png';
+			break;
+			case 'jpg':
+			case 'jpeg':
+				$mime = 'image/jpeg';
+			break;
+			case 'gif':
+				$mime = 'image/gif';
+			break;
+			default:
+				$mime = '';
+			break;
+		}
+		return $mime;
 	}
 	
 	function getFileSize($filename, $readable = 1) {
@@ -91,6 +110,7 @@ class PhocaGalleryFile
 			return false;
 		}
 	}
+	
 	
 	function deleteFile ($filename) {			
 		$fileOriginal = PhocaGalleryFile::getFileOriginal($filename);
