@@ -1,0 +1,29 @@
+Acajoom Services.  Acajoom Installation instruction
+
+How to install Acajoom?
+
+Acajoom is a Joomla component so you will first need Joomla CMS (www.joomla.org).
+Acajoom install like any standard component through the Joomla installer.
+In the Joomla installer select the Acajoom zip file
+Click install
+You will get a report weather the install went well or not.
+If so simply click continue and go to Acajoom menu.
+Once in Acajoom a set up wizard help you set up your first newsletter.
+
+How to upgrade Acajoom.
+There are two ways to upgrade Acajoom:
+Manual upgrade:  simply uninstall previous version and install new one.
+
+IMPORTANT!  Acajoom does not uninstall any database information.  So you are safe to install or uninstall as many time as you want your data will always stay in integrity.
+
+How to upgrade to the professional version?
+
+Upgrade path from Acajoom News to one of the commercial version is a breeze:
+
+    * Get Acajoom Plus or PRO
+    * Uninstall Acajoom News from through the Joomla uninstaller
+    * Install Acajoom Plus
+    * Enter your license number in the configuration panel
+    * You are set to roll!
+
+For any further assitance please check our forum and main webiste at :   http://www.ijoobi.com
