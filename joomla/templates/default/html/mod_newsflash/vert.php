@@ -8,4 +8,3 @@ for ($i = 0, $n = count($list); $i < $n; $i ++) {
 		echo sprintf('<div class="article_separator%s">&nbsp;</div>', $params->get('moduleclass_sfx'));
 }
 echo '</div>';
-?>
