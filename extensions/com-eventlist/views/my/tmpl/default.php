@@ -40,8 +40,4 @@ defined( '_JEXEC' ) or die( 'Restricted access' );
 <?php echo $this->loadTemplate('attending'); ?>
 <!--footer-->
 
-<p class="copyright">
-  <?php echo ELOutput::footer( ); ?>
-</p>
-
 </div>

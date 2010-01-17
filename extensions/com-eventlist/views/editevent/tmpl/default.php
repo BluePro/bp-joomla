@@ -424,11 +424,7 @@ defined('_JEXEC') or die('Restricted access');
     	</p>
     </form>
 
-    <p class="copyright">
-    	<?php echo ELOutput::footer( ); ?>
-    </p>
-
-</div>
+ </div>
 
 <?php
 //keep session alive while editing

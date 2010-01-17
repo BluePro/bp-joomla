@@ -75,9 +75,4 @@ defined( '_JEXEC' ) or die( 'Restricted access' );
 	<?php echo $this->pageNav->getPagesCounter(); ?>
 </p>
 
-<!--copyright-->
-
-<p class="copyright">
-	<?php echo ELOutput::footer( ); ?>
-</p>
 </div>
