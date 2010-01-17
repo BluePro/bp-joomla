@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<install type="language" version="1.5" client="both" method="upgrade">
+	<name>EventList Czech</name>
+	<tag>cs-CZ</tag>
+	<creationDate>2010-01-17</creationDate>
+	<author>Ondøej Hlaváè (BluePro)</author>
+	<authorEmail>ondrej@hlavacovi.net</authorEmail>
+	<authorUrl>http://ondrej.hlavacovi.net</authorUrl>
+	<copyright>Ondøej Hlaváè 2009</copyright>
+	<license>GPL</license>
+	<version>1.0</version>
+	<description>Czech language pack for EventList</description>
+
+	<administration>
+		<files folder="admin">
+			<filename>cs-CZ.com_eventlist.ini</filename>
+		</files>
+	</administration>
+  
+	<site>
+		<files folder="site">
+			<filename>cs-CZ.com_eventlist.ini</filename>
+  		</files>
+	</site>
+</install>
