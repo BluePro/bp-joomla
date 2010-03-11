@@ -4,7 +4,7 @@ defined('_JEXEC') or die('Restricted access');
 $cparams = JComponentHelper::getParams('com_media');
 
 if ($this->params->get('show_page_title', 1)) {
-	echo sprintf('<h1 class="special%s">%s</h1>', $this->params->get('pageclass_sfx'), $this->escape($this->params->get('page_title')));
+	echo sprintf('<h1>%s</h1>', $this->escape($this->params->get('page_title')));
 }
 
 if ($this->params->def('show_description', 1) || $this->params->def('show_description_image', 1)) {

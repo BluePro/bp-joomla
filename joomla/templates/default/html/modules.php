@@ -8,4 +8,3 @@ function modChrome_header($module, &$params, &$attribs) {
 		echo $module->content;
 	}
 }
-?>

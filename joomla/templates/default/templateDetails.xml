@@ -33,6 +33,7 @@
 		<filename>html/mod_breadcrumbs/default.php</filename>
 		<filename>html/mod_footer/default.php</filename>
 		<filename>html/mod_newsflash/_item.php</filename>
+		<filename>html/mod_newsflash/default.php</filename>
 		<filename>html/mod_newsflash/vert.php</filename>
 		<filename>html/mod_random_image/default.php</filename>
 		<filename>html/mod_search/default.php</filename>

@@ -15,13 +15,10 @@ if (!$this->item->params->get('show_intro'))
 
 if ($edit || $this->item->params->get('show_pdf_icon') || $this->item->params->get('show_print_icon') || $this->item->params->get('show_email_icon')) {
 	$icons = array();
-	if (!$this->print) {
-		if ($this->item->params->get('show_email_icon')) $icons[] = JHTML::_('icon.email', $this->item, $this->item->params, $this->access);
-		if ($this->item->params->get('show_print_icon')) $icons[] = JHTML::_('icon.print_popup', $this->item, $this->item->params, $this->access);
-		if ($this->item->params->get('show_pdf_icon')) $icons[] = JHTML::_('icon.pdf', $this->item, $this->item->params, $this->access);
-		if ($edit) $icons[] =  JHTML::_('icon.edit', $this->item, $this->item->params, $this->access);
-	} else
-		$icons[] = JHTML::_('icon.print_screen',  $this->item, $this->item->params, $this->access);
+	if ($this->item->params->get('show_email_icon')) $icons[] = JHTML::_('icon.email', $this->item, $this->item->params, $this->access);
+	if ($this->item->params->get('show_print_icon')) $icons[] = JHTML::_('icon.print_popup', $this->item, $this->item->params, $this->access);
+	if ($this->item->params->get('show_pdf_icon')) $icons[] = JHTML::_('icon.pdf', $this->item, $this->item->params, $this->access);
+	if ($edit) $icons[] =  JHTML::_('icon.edit', $this->item, $this->item->params, $this->access);
 
 	echo sprintf('<div class="box_icon%s">%s</div>', $this->params->get('pageclass_sfx'), implode(' | ', $icons));
 }
@@ -68,4 +65,3 @@ if ($this->item->params->get('show_readmore') && $this->item->readmore)
 		$this->item->params->get('pageclass_sfx'), $this->item->readmore_link, $this->item->title, $this->item->readmore_register ? JText::_('Register to read more...') : JText::_('Read more...'));
 	
 echo $this->item->event->afterDisplayContent;
-?>
