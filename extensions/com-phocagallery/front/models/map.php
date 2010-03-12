@@ -32,9 +32,9 @@ class PhocaGalleryModelMap extends JModel
 	
 	function setCatid($catid) {
 		if ($catid == 0) { //SEF
-			$query = 'SELECT c.catid' .
-				' FROM #__phocagallery AS c' .
-				' WHERE c.id = '. (int) $this->_id;
+			$query = 'SELECT c.catid,'
+				.' FROM #__phocagallery AS c'
+				.' WHERE c.id = '. (int) $this->_id;
 			$this->_db->setQuery($query, 0, 1);
 			$catid 			= $this->_db->loadObject();
 			$this->_catid	= $catid->catid;
@@ -91,7 +91,8 @@ class PhocaGalleryModelMap extends JModel
 	}
 	
 	function _loadDataCategory() {
-		$query = 'SELECT c.title, c.description, c.latitude, c.longitude, c.zoom, c.geotitle'
+		$query = 'SELECT c.title, c.description, c.latitude, c.longitude, c.zoom, c.geotitle,'
+				.' CASE WHEN CHAR_LENGTH(c.alias) THEN CONCAT_WS(\':\', c.id, c.alias) ELSE c.id END as catslug'
 				.' FROM #__phocagallery_categories AS c'
 				.' WHERE c.id = '. (int) $this->_catid;
 		$this->_db->setQuery($query, 0, 1);

@@ -14,6 +14,7 @@ phocagalleryimport('phocagallery.access.access');
 phocagalleryimport('phocagallery.path.path');
 phocagalleryimport('phocagallery.file.file');
 phocagalleryimport('phocagallery.render.renderinfo');
+phocagalleryimport('phocagallery.picasa.picasa');
 
 class PhocaGalleryViewCategories extends JView
 {
@@ -46,6 +47,33 @@ class PhocaGalleryViewCategories extends JView
 		$display_access_category 		= $params->get( 'display_access_category', 1 );
 		$display_empty_categories		= $params->get( 'display_empty_categories', 0 );
 		$hideCatArray					= explode( ';', trim( $params->get( 'hide_categories', '' ) ) );
+		$tmpl['equalpercentagewidth']	= $params->get( 'equal_percentage_width');
+		$tmpl['categoriesdisplayavatar']= $params->get( 'categories_display_avatar');
+		$tmpl['categoriesboxwidth']		= $params->get( 'categories_box_width');
+		$tmpl['gallerymetakey'] 		= $params->get( 'gallery_metakey', '' );
+		$tmpl['gallerymetadesc'] 		= $params->get( 'gallery_metadesc', '' );
+		
+		
+		
+
+		
+		// Correct Picasa Images - get Info
+		switch($image_categories_size) {
+			// medium
+			case 1:
+			case 5:
+				$tmpl['picasa_correct_width']	= (int)$params->get( 'medium_image_width', 100 );	
+				$tmpl['picasa_correct_height']	= (int)$params->get( 'medium_image_height', 100 );
+			break;
+			
+			case 0:
+			case 4:
+			default:
+				$tmpl['picasa_correct_width']	= (int)$params->get( 'small_image_width', 50 );	
+				$tmpl['picasa_correct_height']	= (int)$params->get( 'small_image_height', 50 );
+			break;
+		}
+		
 		// - - - - - - - - - - - - - - - 
 	
 		// Get background for the image
@@ -67,10 +95,11 @@ class PhocaGalleryViewCategories extends JView
 		$model		= &$this->getModel();
 		$items		= $this->get('data');
 		
+		
 		// Add link and unset the categories which user cannot see (if it is enabled in params)
 		// If it will be unset while access view, we must sort the keys from category array - ACCESS
 		$unSet = 0;
-		//krumo($items);
+		
 		foreach ($items as $key => $item) {
 
 			// Unset empty categories if it is set
@@ -100,7 +129,7 @@ class PhocaGalleryViewCategories extends JView
 		
 			
 			// Link
-			$items[$key]->link	= JRoute::_('index.php?option=com_phocagallery&view=category&id='. $item->slug.'&Itemid='. JRequest::getVar('Itemid', 1, 'get', 'int') ); 
+			$items[$key]->link	= JRoute::_('index.php?option=com_phocagallery&view=category&id='. $item->slug.'&Itemid='. JRequest::getVar('Itemid', 0, '', 'int') ); 
 			
 			// USER RIGHT - ACCESS - - - - -
 			// First Check - check if we can display category
@@ -121,12 +150,39 @@ class PhocaGalleryViewCategories extends JView
 					$rightDisplayKey = PhocaGalleryAccess::getUserRight('accessuserid', $items[$key]->accessuserid, $items[$key]->access, $user->get('aid', 0), $user->get('id', 0), 0); // 0 - simulation
 				}
 			}
+			
+			// DISPLAY AVATAR, IMAGE(ordered), IMAGE(not ordered, not recursive) OR FOLDER ICON
+			$displayAvatar = 0;
+			if($tmpl['categoriesdisplayavatar'] == 1 && isset($items[$key]->avatar) && $items[$key]->avatar !='' && $items[$key]->avatarapproved == 1 && $items[$key]->avatarpublished == 1) {
+				$sizeString = PhocaGalleryImageFront::getSizeString($image_categories_size);
+				$pathAvatarAbs	= $path->avatar_abs  .'thumbs'.DS.'phoca_thumb_'.$sizeString.'_'. $items[$key]->avatar;
+				$pathAvatarRel	= $path->avatar_rel . 'thumbs/phoca_thumb_'.$sizeString.'_'. $items[$key]->avatar;
+				if (JFile::exists($pathAvatarAbs)){
+					$items[$key]->linkthumbnailpath	=  $pathAvatarRel;
+					$displayAvatar = 1;
+				}
+			}
+			if ($displayAvatar == 0) {	
+				if (isset($items[$key]->extid) && $items[$key]->extid != '') {
+					if ($tmpl['categoriesimageordering'] != 10) {
+						$imagePic		= PhocaGalleryImageFront::getRandomImageRecursive($items[$key]->id, $categoriesImageOrdering, 1);
+						$fileThumbnail	= PhocaGalleryImageFront::displayCategoriesExtImgOrFolder($imagePic->exts,$imagePic->extm, $imagePic->extw,$imagePic->exth, $image_categories_size, $rightDisplayKey);
+					} else {	
+						$fileThumbnail		= PhocaGalleryImageFront::displayCategoriesExtImgOrFolder($items[$key]->exts,$items[$key]->extm, $items[$key]->extw, $items[$key]->exth, $image_categories_size, $rightDisplayKey);
+					}
 
-			
-			
-			$items[$key]->filename			= $model->getRandomImageRecursive($items[$key]->id, $categoriesImageOrdering);
-			$fileThumbnail	= PhocaGalleryImageFront::displayCategoriesImageOrFolder($items[$key]->filename, $image_categories_size, $rightDisplayKey); 
-			$items[$key]->linkthumbnailpath	= $fileThumbnail->rel;
+					$items[$key]->linkthumbnailpath	= $fileThumbnail->rel;
+					$items[$key]->extw				= $fileThumbnail->extw;
+					$items[$key]->exth				= $fileThumbnail->exth;
+					$items[$key]->extpic			= $fileThumbnail->extpic;
+				} else {
+					if ($tmpl['categoriesimageordering'] != 10) {
+						$items[$key]->filename	= PhocaGalleryImageFront::getRandomImageRecursive($items[$key]->id, $categoriesImageOrdering);
+					}
+					$fileThumbnail	= PhocaGalleryImageFront::displayCategoriesImageOrFolder($items[$key]->filename, $image_categories_size, $rightDisplayKey);
+					$items[$key]->linkthumbnailpath	= $fileThumbnail->rel;
+				}
+			}
 		
 			if ($rightDisplay == 0) {
 				unset($items[$key]);
@@ -135,7 +191,9 @@ class PhocaGalleryViewCategories extends JView
 			// - - - - - - - - - - - - - - - 	
 			
 		}
+		
 		$tmpl['mtb'] = PhocaGalleryRenderInfo::getPhocaIc((int)$params->get( 'display_phoca_info', 1 ));
+		
 		// ACCESS - - - - - - 
 		// In case we unset some category from the list, we must sort the array new
 		if ($unSet == 1) {
@@ -149,7 +207,7 @@ class PhocaGalleryViewCategories extends JView
 		$tmpl['pagination']	= &$this->get('pagination');
 		$items 				= array_slice($items,(int)$tmpl['pagination']->limitstart, (int)$tmpl['pagination']->limit);
 		// - - - - - - - - - - - - - - - -
-//krumo($items);
+
 		
 		// Display Image of Categories Description
 		if ($params->get('image') != -1) {
@@ -158,7 +216,7 @@ class PhocaGalleryViewCategories extends JView
 			// Use the static HTML library to build the image tag
 			$tmpl['image'] 		= JHTML::_('image', 'images/stories/'.$params->get('image'), JText::_('Phoca Gallery'), $attribs);
 		}
-		
+		$tmpl['ab'] = base64_decode('PGRpdiBzdHlsZT0idGV4dC1hbGlnbjogY2VudGVyOyBjb2xvcjogcmdiKDIxMSwgMjExLCAyMTEpOyI+UG93ZXJlZCBieSA8YSBocmVmPSJodHRwOi8vd3d3LnBob2NhLmN6IiBzdHlsZT0idGV4dC1kZWNvcmF0aW9uOiBub25lOyIgdGFyZ2V0PSJfYmxhbmsiIHRpdGxlPSJQaG9jYS5jeiI+UGhvY2E8L2E+IDxhIGhyZWY9Imh0dHA6Ly93d3cucGhvY2EuY3ovcGhvY2FnYWxsZXJ5IiBzdHlsZT0idGV4dC1kZWNvcmF0aW9uOiBub25lOyIgdGFyZ2V0PSJfYmxhbmsiIHRpdGxlPSJQaG9jYSBHYWxsZXJ5Ij5HYWxsZXJ5PC9hPjwvZGl2Pg0K');
 		// ACTION
 		$tmpl['action']	= $uri->toString();
 		
@@ -166,6 +224,14 @@ class PhocaGalleryViewCategories extends JView
 		$this->assignRef('tmpl',		$tmpl);
 		$this->assignRef('params',		$params);
 		$this->assignRef('categories',	$items);
+		
+		// Meta data
+		if ($tmpl['gallerymetakey'] != '') {
+			$mainframe->addMetaTag('keywords', $tmpl['gallerymetakey']);
+		}
+		if ($tmpl['gallerymetadesc'] != '') {
+			$mainframe->addMetaTag('description', $tmpl['gallerymetadesc']);
+		}
 		
 		
 		if ($display_categories_geotagging == 1) {
@@ -175,7 +241,7 @@ class PhocaGalleryViewCategories extends JView
 			$tmplGeo['categorieslat'] 		= $params->get( 'categories_lat', '' );
 			$tmplGeo['categorieszoom'] 		= $params->get( 'categories_zoom', 2 );
 			$tmplGeo['googlemapsapikey'] 	= $params->get( 'google_maps_api_key', '' );
-			$tmplGeo['categoriesmapwidth'] 	= $params->get( 'categories_map_width', 500 );
+			$tmplGeo['categoriesmapwidth'] 	= $params->get( 'categories_map_width', '' );
 			$tmplGeo['categoriesmapheight'] = $params->get( 'categorires_map_height', 500 );
 			// - - - - - - - - - - - - - - -
 			

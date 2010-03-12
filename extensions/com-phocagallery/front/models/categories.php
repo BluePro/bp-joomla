@@ -110,15 +110,16 @@ class PhocagalleryModelCategories extends JModel
 		phocagalleryimport('phocagallery.ordering.ordering');
 		$categoryOrdering = PhocaGalleryOrdering::getOrderingString($category_ordering);
 				
-		$query = 'SELECT cc.*, a.catid, COUNT(a.id) AS numlinks, u.username AS username, r.count AS ratingcount, r.average AS ratingaverage,'
+		$query = 'SELECT cc.*, a.catid, COUNT(a.id) AS numlinks, u.username AS username, r.count AS ratingcount, r.average AS ratingaverage, uc.avatar AS avatar, uc.approved AS avatarapproved, uc.published AS avatarpublished, a.filename, a.exts, a.extm, a.extw, a.exth,'
 		. ' CASE WHEN CHAR_LENGTH(cc.alias) THEN CONCAT_WS(\':\', cc.id, cc.alias) ELSE cc.id END as slug'
 		. ' FROM #__phocagallery_categories AS cc'
 		//. ' LEFT JOIN #__phocagallery AS a ON a.catid = cc.id'
 		. ' LEFT JOIN #__phocagallery AS a ON a.catid = cc.id and a.published = 1'
-		. ' LEFT JOIN #__phocagallery_user_category AS uc ON uc.catid = cc.id'
-		. ' LEFT JOIN #__users AS u ON u.id = uc.userid'
+		. ' LEFT JOIN #__phocagallery_user AS uc ON uc.userid = cc.owner_id'
+		. ' LEFT JOIN #__users AS u ON u.id = cc.owner_id'
 		. ' LEFT JOIN #__phocagallery_votes_statistics AS r ON r.catid = cc.id'
 		. ' WHERE cc.published = 1'
+		. ' AND cc.approved = 1'
 		//. ' AND (a.published = 1 OR a.id is null)'
 		//. $emptyCat - need to be set in tree
 		. $hideSubCatSql
@@ -173,8 +174,19 @@ class PhocagalleryModelCategories extends JModel
 				$tree[$iCT]->longitude			= $key->longitude;
 				$tree[$iCT]->zoom				= $key->zoom;
 				$tree[$iCT]->geotitle			= $key->geotitle;
+				$tree[$iCT]->avatar				= $key->avatar;
+				$tree[$iCT]->avatarapproved		= $key->avatarapproved;
+				$tree[$iCT]->avatarpublished	= $key->avatarpublished;
 				$tree[$iCT]->link				= '';
 				$tree[$iCT]->filename			= '';// Will be added in View (after items will be reduced)
+				$tree[$iCT]->extid				= $key->extid;// Picasa Album
+				// info about one image (not using recursive function)
+				$tree[$iCT]->filename			= $key->filename;
+				$tree[$iCT]->extm				= $key->extm;
+				$tree[$iCT]->exts				= $key->exts;
+				$tree[$iCT]->extw				= $key->extw;
+				$tree[$iCT]->exth				= $key->exth;
+				
 				$tree[$iCT]->linkthumbnailpath	= '';
 				$iCT++;
 				
@@ -183,52 +195,5 @@ class PhocagalleryModelCategories extends JModel
 		}
 		return($tree);
 	}
-	
-	function getRandomImageRecursive($categoryid, $categoryImageOrdering = '') {
-		$image = '';
-		// We need to get a list of all subcategories in the given category
-		
-		if ($categoryImageOrdering == '') {
-			$ordering = ' ORDER BY RAND()'; 
-		} else {
-			$ordering = ' ORDER BY a.'.$categoryImageOrdering;
-		}
-		
-        $query = 'SELECT a.id, a.filename' .
-            ' FROM #__phocagallery AS a' .
-            ' WHERE a.catid = '.(int) $categoryid.
-            ' AND a.published = 1'.
-            $ordering;     
-        $images = $this->_getList($query, 0, 1);
-        if (count($images) == 0) {
-            $image->filename = '';
-            $subCategories = $this->_getRandomCategory($categoryid);
-            foreach ($subCategories as $subCategory) {
-                $image = $this->getRandomImageRecursive($subCategory->id);
-				
-                if (isset($image->filename) && $image->filename != '') {
-                    break;
-                }
-            }
-        } else {
-            $image = $images[0] ;
-        }
-		if(isset($image->filename)) {
-			return $image->filename;
-		} else {
-			return $image;
-		}
-    }
-	
-	function _getRandomCategory($parentid) {
-        
-		$query = 'SELECT c.id' .
-            ' FROM #__phocagallery_categories AS c' .
-            ' WHERE c.parent_id = '.(int) $parentid.
-            ' AND c.published = 1' .
-            ' ORDER BY RAND()';
-
-        return $this->_getList($query);
-    }
 }
 ?>

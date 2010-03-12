@@ -42,17 +42,20 @@ echo '</div>';
       value="http://apps.cooliris.com/embed/cooliris.swf" />
     <param name="allowFullScreen" value="true" />
     <param name="allowScriptAccess" value="always" />
+	<param name="wmode" value="transparent" />
     <param name="flashvars" 
       value="feed=<? echo JURI::root() . $this->tmpl['path']->image_rel . (int)$this->category->id;?>.rss" />
-    <embed type="application/x-shockwave-flash"
-      src="http://apps.cooliris.com/embed/cooliris.swf"
-      flashvars="feed=<? echo JURI::root() . $this->tmpl['path']->image_rel . (int)$this->category->id;?>.rss"
+    <embed type="application/x-shockwave-flash" 
+      src="http://apps.cooliris.com/embed/cooliris.swf" 
+	  flashvars="feed=<? echo JURI::root() . $this->tmpl['path']->image_rel . (int)$this->category->id;?>.rss"
       width="<?php echo $this->tmpl['cooliris3d_wall_width'];?>" 
-      height="<?php echo $this->tmpl['cooliris3d_wall_height'];?>" 
-      allowFullScreen="true"
-      allowScriptAccess="always">
-      </embed>
+      height="<?php echo $this->tmpl['cooliris3d_wall_height'];?>" 	  
+      allowFullScreen="true" 
+      allowScriptAccess="always" 
+	  wmode="transparent" >   
+	  </embed>
 </object>
 <?php
 }
-echo $this->tmpl['pmt'];?>
+echo '<div>&nbsp;</div>';
+echo $this->tmpl['fs'];?>

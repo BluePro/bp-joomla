@@ -14,7 +14,11 @@ if (JFile::exists( $this->_tmp_img->linkthumbnailpathabs )) {
 				<div class="phocagallery-box-file-third">
 					<center>
 					<a href="#" onclick="window.top.document.forms.adminForm.elements.filename.value = '<?php echo $this->_tmp_img->nameno; ?>';window.parent.document.getElementById('sbox-window').close();">
-	<?php echo JHTML::_( 'image', $this->_tmp_img->linkthumbnailpath, '', null, '', null, array('width' => $image['width'], 'height' => $image['height'])); ?></a>
+	<?php
+	
+	$imageRes	= PhocaGalleryImage::getRealImageSize($this->_tmp_img->nameno, 'medium');
+	$correctImageRes = PhocaGalleryImage::correctSizeWithRate($imageRes['w'], $imageRes['h'], 100, 100);
+	echo JHTML::_( 'image', $this->_tmp_img->linkthumbnailpath, null, array('width' => $image['width'], 'height' => $image['height']), '', null); ?></a>
 					</center>
 				</div>
 			</div>

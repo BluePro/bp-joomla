@@ -136,11 +136,12 @@ class PhocaGalleryCpModelPhocaGalleryS extends JModel
 		$where		= $this->_buildContentWhere();
 		$orderby	= $this->_buildContentOrderBy();
 
-		$query = ' SELECT a.*, cc.title AS category, u.name AS editor, v.average AS ratingavg'
+		$query = ' SELECT a.*, cc.title AS category, cc.owner_id AS ownerid, u.name AS editor, v.average AS ratingavg, ua.username AS usercatname'
 			. ' FROM #__phocagallery AS a '
 			. ' LEFT JOIN #__phocagallery_categories AS cc ON cc.id = a.catid '
 			. ' LEFT JOIN #__phocagallery_img_votes_statistics AS v ON v.imgid = a.id'
 			. ' LEFT JOIN #__users AS u ON u.id = a.checked_out '
+			. ' LEFT JOIN #__users AS ua ON ua.id = cc.owner_id'
 			. $where
 			. $orderby;
 		return $query;
@@ -191,6 +192,16 @@ class PhocaGalleryCpModelPhocaGalleryS extends JModel
 		}
 		$where 		= ( count( $where ) ? ' WHERE '. implode( ' AND ', $where ) : '' );
 		return $where;
+	}
+	
+	function getNotApprovedImage() {
+		
+		$query = 'SELECT COUNT(a.id) AS count'
+			.' FROM #__phocagallery AS a'
+			.' WHERE approved = 0';
+		$this->_db->setQuery($query, 0, 1);
+		$countNotApproved = $this->_db->loadObject();
+		return $countNotApproved;
 	}
 }
 ?>

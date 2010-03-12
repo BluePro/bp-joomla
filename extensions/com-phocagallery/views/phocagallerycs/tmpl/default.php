@@ -1,6 +1,10 @@
 <?php
 defined('_JEXEC') or die('Restricted access');
 JHTML::_('behavior.tooltip');
+
+if (isset($this->tmpl['notapproved']->count) && (int)$this->tmpl['notapproved']->count > 0 ) {
+	echo '<div class="notapproved">'.JText::_('PHOCAGALLERY_NOT_APPROVED_CATEGORY_IN_GALLERY').': '.(int)$this->tmpl['notapproved']->count.'</div>';
+}
 ?>
 
 <form action="<?php echo $this->request_url; ?>" method="post" name="adminForm">
@@ -29,7 +33,9 @@ JHTML::_('behavior.tooltip');
 					<th class="title" width="80%"><?php echo JHTML::_('grid.sort',  'Title', 'a.title', $this->lists['order_Dir'], $this->lists['order'] ); ?>
 					</th>
 					
-					<th width="5%" nowrap="nowrap"><?php echo JHTML::_('grid.sort',  'Published', 'a.published', $this->lists['order_Dir'], $this->lists['order'] ); ?>
+					<th width="5%" nowrap="nowrap"><?php echo JHTML::_('grid.sort',  JText::_('PHOCAGALLERY_PUBLISHED'), 'a.published', $this->lists['order_Dir'], $this->lists['order'] ); ?>
+					</th>
+					<th width="5%" nowrap="nowrap"><?php echo JHTML::_('grid.sort',  JText::_('PHOCAGALLERY_APPROVED'), 'a.approved', $this->lists['order_Dir'], $this->lists['order'] ); ?>
 					</th>
 					<th width="13%" nowrap="nowrap">
 						<?php echo JHTML::_('grid.sort',  'Order', 'a.ordering', $this->lists['order_Dir'], $this->lists['order'] ); ?>
@@ -44,7 +50,7 @@ JHTML::_('behavior.tooltip');
 					<th width="15%"  class="title">
 						<?php echo JHTML::_('grid.sort',  'Parent Category', 'category', $this->lists['order_Dir'], $this->lists['order'] ); ?></th>
 				
-					<th width="5%"><?php echo JText::_('Author'); ?></th>
+					<th width="5%"><?php echo JHTML::_('grid.sort',  'PHOCAGALLERY_OWNER', 'a.owner_id', $this->lists['order_Dir'], $this->lists['order'] ); ?></th>
 					
 					<th width="5%"><?php echo JHTML::_('grid.sort',  'Rating', 'v.average', $this->lists['order_Dir'], $this->lists['order'] ); ?>
 					</th>
@@ -70,7 +76,7 @@ JHTML::_('behavior.tooltip');
 						$checked 	= JHTML::_('grid.checkedout', $row, $i );
 						$published 	= JHTML::_('grid.published', $row, $i );
 						$access 	= JHTML::_('grid.access',   $row, $i );
-						
+						$approved 	= PhocaGalleryRenderAdmin::approved( $row, $i );
 						$row->cat_link 	= JRoute::_( 'index.php?option=com_phocagallery&controller=phocagalleryc&task=edit&cid[]='. $row->parent_id );
 					?>
 					<tr class="<?php echo "row$k"; ?>">
@@ -91,9 +97,10 @@ JHTML::_('behavior.tooltip');
 						</td>
 						
 						<td align="center"><?php echo $published;?></td>
+						<td align="center"><?php echo $approved;?></td>
 						<td class="order">
-							<span><?php echo $this->tmpl['pagination']->orderUpIcon( $i, $row->parent_id == 0 || $row->parent_id == @$rows[$i-1]->parent_id, 'orderup', 'Move Up', $this->tmpl['ordering']); ?></span>
-					<span><?php echo $this->tmpl['pagination']->orderDownIcon( $i, $n, $row->parent_id == 0 || $row->parent_id == @$rows[$i+1]->parent_id, 'orderdown', 'Move Down', $this->tmpl['ordering'] ); ?></span>
+							<span><?php echo $this->tmpl['pagination']->orderUpIcon( $i, $row->orderup == 1, 'orderup', 'Move Up', $this->tmpl['ordering']); ?></span>
+					<span><?php echo $this->tmpl['pagination']->orderDownIcon( $i, $n, $row->orderdown == 1, 'orderdown', 'Move Down', $this->tmpl['ordering'] ); ?></span>
 						<?php $disabled = $this->tmpl['ordering'] ?  '' : 'disabled="disabled"'; ?>
 							<input type="text" name="order[]" size="5" value="<?php echo $row->ordering;?>" <?php echo $disabled ?> class="text_area" style="text-align: center" />
 						</td>
@@ -133,7 +140,7 @@ JHTML::_('behavior.tooltip');
 			
 			<tfoot>
 				<tr>
-					<td colspan="11"><?php echo $this->tmpl['pagination']->getListFooter(); ?></td>
+					<td colspan="12"><?php echo $this->tmpl['pagination']->getListFooter(); ?></td>
 				</tr>
 			</tfoot>
 		</table>

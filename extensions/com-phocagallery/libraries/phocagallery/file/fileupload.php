@@ -11,7 +11,7 @@
 defined( '_JEXEC' ) or die( 'Restricted access' );
 jimport( 'joomla.filesystem.folder' ); 
 jimport( 'joomla.filesystem.file' );
-
+phocagalleryimport( 'phocagallery.image.image');
 class PhocaGalleryFileUpload
 {
 	function canUpload( $file, &$errUploadMsg ) {
@@ -44,10 +44,18 @@ class PhocaGalleryFileUpload
 			$errUploadMsg = 'WARNFILETYPE';
 			return false;
 		}
-
 		
+		// Max Resolution
+		$imgSize		= PhocaGalleryImage::getImageSize($file['tmp_name']);
+		$maxResWidth 	= $params->get( 'upload_maxres_width', 3072 );
+		$maxResHeight 	= $params->get( 'upload_maxres_height', 2304 );
+		if (((int)$maxResWidth > 0 && (int)$maxResHeight > 0) 
+		&& ((int)$imgSize[0] > (int)$maxResWidth || (int)$imgSize[1] > (int)$maxResHeight)) {
+			$errUploadMsg = 'PHOCAGALLERY_WARNFILETOOLARGERESOLUTION';
+			return false;
+		}
 		// Max size of image
-		$maxSize = $params->get( 'upload_maxsize', 3000000 );
+		$maxSize = $params->get( 'upload_maxsize', 3145728 );
 		if ((int)$maxSize > 0 && (int)$file['size'] > (int)$maxSize) {
 			$errUploadMsg = 'WARNFILETOOLARGE';
 			return false;
@@ -56,6 +64,7 @@ class PhocaGalleryFileUpload
 		$user = JFactory::getUser();
 		$imginfo = null;
 		
+		
 		// Image check
 		$images = explode( ',', $paramsL['image_extensions']);
 		if(in_array($format, $images)) { // if its an image run it through getimagesize
@@ -63,7 +72,7 @@ class PhocaGalleryFileUpload
 				$errUploadMsg = 'WARNINVALIDIMG';
 				return false;
 			}
-		} else if(!in_array($format, $ignored)) {
+		} else if(!in_array($format, $images)) {
 			// if its not an image...and we're not ignoring it
 			$allowed_mime = explode(',', $paramsL['upload_mime']);
 			$illegal_mime = explode(',', $paramsL['upload_mime_illegal']);

@@ -27,20 +27,20 @@ if ($this->tmpl['displayimagecategoriescv'] == 1) {
 		
 		// Change the thumbnail for Category View
 		// We are in Category View but need Categories View Settings
-	
-		switch((int)$this->tmpl['imagetypecv']) {
-			case 0:
-			case 2:
-			case 4:
-			case 6:
-				$imageThumbnail = str_replace('medium', 'small-main', $this->itemscv[$i]->linkthumbnailpath);
-				$imageThumbnail = str_replace('phoca_thumb_m_', 'phoca_thumb_s_', $imageThumbnail);
-			break;
-			default:
-				$imageThumbnail = str_replace('small-main', 'medium', $this->itemscv[$i]->linkthumbnailpath);
-				$imageThumbnail = str_replace('phoca_thumb_s_', 'phoca_thumb_m_', $imageThumbnail);
-			break;
-		 } 
+		if (isset($this->itemscv[$i]->extpic) && $this->itemscv[$i]->extpic) {
+			
+			$categoryCVSize = PhocaGalleryImageFront::getSizeString($this->tmpl['imagetypecv']);
+			if ($categoryCVSize == 'm') {
+				$picCorW = $this->tmpl['picasa_correct_width_m'];
+				$picCorH = $this->tmpl['picasa_correct_height_m'];
+			} else {
+				$picCorW = $this->tmpl['picasa_correct_width_s'];
+				$picCorH = $this->tmpl['picasa_correct_height_s'];
+			}
+			$imageThumbnail = PhocaGalleryImageFront::displayCategoriesCVExtImgOrFolder($this->itemscv[$i]->extm, $this->itemscv[$i]->exts, $this->itemscv[$i]->linkthumbnailpath, (int)$this->tmpl['imagetypecv']);
+		} else {
+			$imageThumbnail = PhocaGalleryImageFront::displayCategoriesCVImageOrFolder($this->itemscv[$i]->linkthumbnailpath, (int)$this->tmpl['imagetypecv']);
+		}
 		// - - - - - - - - - - - - - - -
 	
 		if ( $columns == 1 ) {
@@ -59,7 +59,16 @@ if ($this->tmpl['displayimagecategoriescv'] == 1) {
 		}
 
 		echo '<tr>';		
-		echo '<td align="center" valign="middle" style="'.$this->tmpl['imagebgcv'].';text-align:center;"><a href="'.$this->itemscv[$i]->link.'">'.JHTML::_( 'image.site',$imageThumbnail, '', '', '', $this->itemscv[$i]->title, 'style="border:0"' ).'</a></td>';
+		echo '<td align="center" valign="middle" style="'.$this->tmpl['imagebgcv'].';text-align:center;"><a href="'.$this->itemscv[$i]->link.'">';
+		if (isset($this->itemscv[$i]->extpic) && $this->itemscv[$i]->extpic) {
+			
+			$correctImageRes = PhocaGalleryPicasa::correctSizeWithRate($this->itemscv[$i]->extw, $this->itemscv[$i]->exth,$picCorW, $picCorH );
+			
+			echo JHTML::_( 'image',$imageThumbnail,  '', array('width' => $correctImageRes['width'], 'height' => $correctImageRes['height']), '',  $this->itemscv[$i]->title, 'style="border:0"' );
+		} else {
+			echo JHTML::_( 'image.site',$imageThumbnail, '', '', '', $this->itemscv[$i]->title, 'style="border:0"' );
+		}
+		echo '</a></td>';
 		echo '<td><a href="'.$this->itemscv[$i]->link.'" class="category'.$this->params->get( 'pageclass_sfx' ).'">'.$this->itemscv[$i]->title.'</a>&nbsp;';
 		
 		if ($this->itemscv[$i]->numlinks > 0) {echo '<span class="small">('.$this->itemscv[$i]->numlinks.')</span>';}
@@ -91,25 +100,7 @@ if ($this->tmpl['displayimagecategoriescv'] == 1) {
 // UL LAYOUT
 // -------------------
 else {
-	for ($i = 0; $i < $countCategories; $i++)
-	{
-		// Change the thumbnail for Category View
-		// We are in Category View but need Categories View Settings
-	
-		switch((int)$this->tmpl['imagetypecv']) {
-			case 0:
-			case 2:
-			case 4:
-			case 6:
-				$imageThumbnail = str_replace('medium', 'small-main', $this->itemscv[$i]->linkthumbnailpath);
-				$imageThumbnail = str_replace('phoca_thumb_m_', 'phoca_thumb_s_', $imageThumbnail);
-			break;
-			default:
-				$imageThumbnail = str_replace('small-main', 'medium', $this->itemscv[$i]->linkthumbnailpath);
-				$imageThumbnail = str_replace('phoca_thumb_s_', 'phoca_thumb_m_', $imageThumbnail);
-			break;
-		 } 
-		// - - - - - - - - - - - - - - -
+	for ($i = 0; $i < $countCategories; $i++) {
 		
 		if ( $columns == 1 ) {
 			echo '<ul>';

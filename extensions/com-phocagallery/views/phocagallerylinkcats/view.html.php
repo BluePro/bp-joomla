@@ -28,7 +28,8 @@ class phocaGalleryCpViewphocaGalleryLinkCats extends JView
 		$db = &JFactory::getDBO();
 		$query = 'SELECT a.title AS text, a.id AS value, a.parent_id as parentid'
 		. ' FROM #__phocagallery_categories AS a'
-	//	. ' WHERE a.published = 1'
+	//	. ' WHERE a.published = 1' You can hide not published and not authorized categories too
+	//	. ' AND a.approved = 1'
 		. ' ORDER BY a.ordering';
 		$db->setQuery( $query );
 		$categories = $db->loadObjectList();

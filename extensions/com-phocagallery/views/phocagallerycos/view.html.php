@@ -75,12 +75,12 @@ class PhocaGalleryCpViewPhocaGalleryCos extends JView
 	}
 	
 	function _setToolbar() {
-		JToolBarHelper::title(   JText::_( 'Phoca Gallery Comments' ), 'comment' );
+		JToolBarHelper::title(   JText::_( 'PHOCAGALLERY_PG_IMAGE_COMMENTS' ), 'comment' );
 		JToolBarHelper::publishList();
 		JToolBarHelper::unpublishList();
 		JToolBarHelper::deleteList(  JText::_( 'WARNWANTDELLISTEDITEMS' ), 'remove', 'delete');
 		JToolBarHelper::editListX();
-		JToolBarHelper::addNewX();
+		//JToolBarHelper::addNewX();
 		JToolBarHelper::help( 'screen.phocagallery', true );
 	}
 }

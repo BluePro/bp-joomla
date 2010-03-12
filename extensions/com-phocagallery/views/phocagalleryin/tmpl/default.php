@@ -76,13 +76,14 @@
 <p><?php echo $this->tmpl['version'] ;?></p>
 
 <h3><?php echo JText::_('Copyright');?></h3>
-<p>© 2007-2008 Jan Pavelka</p>
+<p>© 2007 - <?php echo date("Y"); ?> Jan Pavelka<br />
+<a href="http://www.phoca.cz/" target="_blank">www.phoca.cz</a></p>
 
 <h3><?php echo JText::_('License');?></h3>
 <p><a href="http://www.gnu.org/licenses/gpl-2.0.html" target="_blank">GPLv2</a></p>
 
 
-<input type="hidden" name="controller" value="phocagallery" />
+
 <input type="hidden" name="task" value="" />
 <input type="hidden" name="option" value="com_phocagallery" />
 <input type="hidden" name="controller" value="phocagalleryin" />

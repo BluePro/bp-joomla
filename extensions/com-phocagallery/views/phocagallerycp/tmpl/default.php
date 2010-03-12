@@ -22,7 +22,12 @@
 	echo PhocaGalleryRenderAdmin::quickIconButton( $link, 'icon-48-pg-vote-img.png', JText::_( 'Image Rating' ) );
 	
 	$link = 'index.php?option=com_phocagallery&view=phocagallerycos';
-	echo PhocaGalleryRenderAdmin::quickIconButton( $link, 'icon-48-pg-comment.png', JText::_( 'Comments' ) );
+	echo PhocaGalleryRenderAdmin::quickIconButton( $link, 'icon-48-pg-comment.png', JText::_( 'PHOCAGALLERY_CATEGORY_COMMENTS' ) );
+	$link = 'index.php?option=com_phocagallery&view=phocagallerycoimgs';
+	echo PhocaGalleryRenderAdmin::quickIconButton( $link, 'icon-48-pg-comment-img.png', JText::_( 'PHOCAGALLERY_IMAGE_COMMENTS' ) );
+	
+	$link = 'index.php?option=com_phocagallery&view=phocagalleryusers';
+	echo PhocaGalleryRenderAdmin::quickIconButton( $link, 'icon-48-pg-users.png', JText::_( 'PHOCAGALLERY_USERS' ) );
 	
 	//$link = 'index.php?option=com_phocagallery&view=phocagalleryucs';
 	//echo PhocaGalleryRenderAdmin::quickIconButton( $link, 'icon-48-pg-users-cat.png', JText::_( 'Users Categories' ) );
@@ -46,9 +51,7 @@
 		<td width="45%" valign="top">
 			<div style="border:1px solid #ccc;background:#fff;margin:15px;padding:15px">
 			<div style="float:right;margin:10px;">
-				<?php
-					echo JHTML::_('image.site',  'logo-phoca.png', '/components/com_phocagallery/assets/images/', NULL, NULL, 'Phoca.cz' )
-				?>
+				<?php echo JHTML::_('image.site',  'logo-phoca.png', '/components/com_phocagallery/assets/images/', NULL, NULL, 'Phoca.cz' );?>
 			</div>
 			
 			<h3><?php echo JText::_('Version');?></h3>
@@ -74,6 +77,7 @@
 			<p><a href="http://highslide.com/" target="_blank">Highslide JS</a> by <a target="_blank" href="http://highslide.com/">Torstein Hønsi</a><br />
 			<a target="_blank" href="http://creativecommons.org/licenses/by-nc/2.5/">Creative Commons Attribution-NonCommercial 2.5  License</a></p>
 			
+			<p>Google™, Google Maps™, Google Picasa™ and YouTube Broadcast Yourself™ are registered trademarks of Google Inc.</p>
 			
 			<div id="pg-update"><a href="http://www.phoca.cz/version/index.php?phocagallery=<?php echo $this->version ;?>" target="_blank"><?php echo JText::_('Check for update'); ?></a></div>
 			

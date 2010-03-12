@@ -60,7 +60,8 @@ class phocaGalleryCpViewphocaGalleryLinkImg extends JView
 		
 		$query = 'SELECT a.title AS text, a.id AS value, a.parent_id as parentid'
 		. ' FROM #__phocagallery_categories AS a'
-	//	. ' WHERE a.published = 1'
+		. ' WHERE a.published = 1'
+		. ' AND a.approved = 1'
 		. ' ORDER BY a.ordering';
 		$db->setQuery( $query );
 		$phocagallerys = $db->loadObjectList();
@@ -104,7 +105,10 @@ class phocaGalleryCpViewphocaGalleryLinkImg extends JView
 				}
 				
 				// Don't display it if no category is selected
-				
+				if($i > 0) {
+					$itemsCount[$i]->value 	= (int)$key + 1;
+					$itemsCount[$i]->text	= (int)$key + 1;
+				}
 				$categoryId		= JRequest::getVar( 'filter_catid', 0, '', 'int' );
 				$categoryIdList	= $mainframe->getUserStateFromRequest( $this->_context.'.filter_catid',	'filter_catid',	0, 'int' );
 				

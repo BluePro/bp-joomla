@@ -13,6 +13,7 @@ jimport( 'joomla.filesystem.folder' );
 jimport( 'joomla.filesystem.file' );
 phocagalleryimport('phocagallery.render.renderprocess');
 phocagalleryimport('phocagallery.file.file');
+phocagalleryimport('phocagallery.image.image');
 
 class PhocaGalleryImageMagic
 {
@@ -38,15 +39,8 @@ class PhocaGalleryImageMagic
 
 		$params 		= JComponentHelper::getParams('com_phocagallery') ;
 		$jfile_thumbs	=	$params->get( 'jfile_thumbs', 1 );
-		// JPG Quality - - - - -
-		$jpeg_quality	=	$params->get( 'jpeg_quality', 85 );
-		if ((int)$jpeg_quality < 0) {
-			$jpeg_quality = 0;
-		}
-		if ((int)$jpeg_quality > 100) {
-			$jpeg_quality = 100;
-		}
-		// - - - - - - - - - - - -
+		$jpeg_quality	= $params->get( 'jpeg_quality', 85 );
+		$jpeg_quality	= PhocaGalleryImage::getJpegQuality($jpeg_quality);
 
 		$fileWatermark = '';
 		

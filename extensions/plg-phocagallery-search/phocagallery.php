@@ -75,6 +75,8 @@ function plgSearchPhocagallery( $text, $phrase = '', $ordering = '', $areas = nu
 		. ' WHERE ( a.title LIKE '.$text
 		. ' OR a.name LIKE '.$text
 		. ' OR a.description LIKE '.$text.' )'
+		. ' AND a.published = 1'
+		. ' AND a.approved = 1'
 		. ' AND a.access <= '.(int) $user->get( 'aid' )
 		. ' GROUP BY a.id'
 		. ' ORDER BY '. $orderingCode;
@@ -153,6 +155,8 @@ function plgSearchPhocagallery( $text, $phrase = '', $ordering = '', $areas = nu
 		. ' OR a.description LIKE '.$text.' )'
 		. ' AND a.published = 1'
 		. ' AND b.published = 1'
+		. ' AND a.approved = 1'
+		. ' AND b.approved = 1'
 		. ' AND b.access <= '.(int) $user->get( 'aid' )
 		. ' ORDER BY '. $orderingCode;
 

@@ -328,7 +328,9 @@ class PhocaGalleryFileThumbnail
 							break;
 						}
 						//@JFolder::create($folderThumbnail, $folder_permissions );
-						@JFile::write($folderThumbnail.DS."index.html", "<html>\n<body bgcolor=\"#FFFFFF\">\n</body>\n</html>");
+						if (isset($folderThumbnail)) {
+							@JFile::write($folderThumbnail.DS."index.html", "<html>\n<body bgcolor=\"#FFFFFF\">\n</body>\n</html>");
+						}
 						// folder was not created
 						if (!JFolder::exists($folderThumbnail)) {
 							$errorMsg = 'ErrorCreatingFolder';

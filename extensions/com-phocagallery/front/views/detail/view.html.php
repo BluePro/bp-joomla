@@ -14,6 +14,7 @@ phocagalleryimport( 'phocagallery.image.image');
 phocagalleryimport( 'phocagallery.image.imagefront');
 phocagalleryimport( 'phocagallery.file.filethumbnail');
 phocagalleryimport( 'phocagallery.rate.rateimage');
+phocagalleryimport( 'phocagallery.picasa.picasa');
 
 class PhocaGalleryViewDetail extends JView
 {
@@ -23,46 +24,48 @@ class PhocaGalleryViewDetail extends JView
 		$document			= &JFactory::getDocument();		
 		$params				= &$mainframe->getParams();
 		$user				= &JFactory::getUser();
-		$slideshow 			= JRequest::getVar('phocaslideshow', 0, '', 'int');
-		$download 			= JRequest::getVar('phocadownload', 0, '', 'int');
+		$var['slideshow']	= JRequest::getVar('phocaslideshow', 0, '', 'int');
+		$var['download'] 	= JRequest::getVar('phocadownload', 0, '', 'int');
 		$uri 				= &JFactory::getURI();
-		// PLUGIN WINDOW - we get information from plugin
-		$get				= '';
+		$tmpl['action']		= $uri->toString();
+		
+		// Information from the plugin - window is displayed after plugin action
+		$get				= array();
 		$get['detail']		= JRequest::getVar( 'detail', '', 'get', 'string');
 		$get['buttons']		= JRequest::getVar( 'buttons', '', 'get', 'string' );
 		$get['ratingimg']	= JRequest::getVar( 'ratingimg', '', 'get', 'string' );
 		
-		$tmpl['action']	= $uri->toString();
+		$tmpl['picasa_correct_width_l']		= (int)$params->get( 'large_image_width', 640 );	
+		$tmpl['picasa_correct_height_l']	= (int)$params->get( 'large_image_height', 480 );
 		
-		// START CSS
 		$document->addStyleSheet(JURI::base(true).'/components/com_phocagallery/assets/phocagallery.css');
 		
-		// PARAMS - Open window parameters - modal popup box or standard popup window
-		$detail_window 			= $params->get( 'detail_window', 0 );
-		
 		// Plugin information
+		$tmpl['detailwindow']	= $params->get( 'detail_window', 0 );
 		if (isset($get['detail']) && $get['detail'] != '') {
-			$detail_window 		= $get['detail'];
+			$tmpl['detailwindow'] 		= $get['detail'];
 		}
 		
-		$tmpl['detailbuttons']	= $params->get( 'detail_buttons', 1 );
-		
 		// Plugin information
+		$tmpl['detailbuttons']	= $params->get( 'detail_buttons', 1 );
 		if (isset($get['buttons']) && $get['buttons'] != '') {
 			$tmpl['detailbuttons'] = $get['buttons'];
 		}
 		
 		// Standard popup window
-		if ($detail_window == 1) {
+		if ($tmpl['detailwindow'] == 1) {
 			$tmpl['detailwindowclose']	= 'window.close();';
 			$tmpl['detailwindowreload']	= 'window.location.reload(true);';
-		} else if ($detail_window == 4 || $detail_window == 5) {// highslide
+		// Highslide
+		} else if ($tmpl['detailwindow'] == 4 || $tmpl['detailwindow'] == 5) {
 			$tmpl['detailwindowclose']	= 'return false;';
 			$tmpl['detailwindowreload']	= 'window.location.reload(true);';
-		} else if ($detail_window == 7) {
+		// No Popup
+		} else if ($tmpl['detailwindow'] == 7) {
 			$tmpl['detailwindowclose']	= '';
 			$tmpl['detailwindowreload']	= '';
-		} else {//modal popup window
+		// Modal Box
+		} else {
 			$tmpl['detailwindowclose']	= 'window.parent.document.getElementById(\'sbox-window\').close();';
 			$tmpl['detailwindowreload']	= 'window.location.reload(true);';
 		} 
@@ -79,10 +82,20 @@ class PhocaGalleryViewDetail extends JView
 		$tmpl['descriptionlightboxfontsize']	= $params->get( 'description_lightbox_font_size', 12 );
 		$tmpl['displayratingimg']				= $params->get( 'display_rating_img', 0 );
 		$tmpl['displayicondownload'] 			= $params->get( 'display_icon_download', 0 );
-		$tmpl['detailwindow']					= $params->get( 'detail_window', 0 );
+		$tmpl['externalcommentsystem'] 			= $params->get( 'external_comment_system', 0 );
+		$tmpl['emt'] 							= PhocaGalleryRenderFront::getString();
+		$tmpl['largewidth'] 					= $params->get( 'large_image_width', 640 );
+		$tmpl['largeheight'] 					= $params->get( 'large_image_height', 480 );
+		$tmpl['boxlargewidth'] 					= $params->get( 'front_modal_box_width', 680 );
+		$tmpl['boxlargeheight'] 				= $params->get( 'front_modal_box_height', 560 );
+		$tmpl['slideshowdelay'] 				= $params->get( 'slideshow_delay', 3000 );
+		$tmpl['slideshowpause'] 				= $params->get( 'slideshow_pause', 0 );
+		$tmpl['slideshowrandom'] 				= $params->get( 'slideshow_random', 0 );
+		$tmpl['gallerymetakey'] 				= $params->get( 'gallery_metakey', '' );
+		$tmpl['gallerymetadesc'] 				= $params->get( 'gallery_metadesc', '' );
 		
 		// Download from the detail view which is not in the popupbox
-		if ($download == 2 ){
+		if ($var['download'] == 2 ){
 			$tmpl['displayicondownload'] = 2;
 		}
 
@@ -91,8 +104,8 @@ class PhocaGalleryViewDetail extends JView
 			$tmpl['displayratingimg'] = $get['ratingimg'];
 		}
 		
-		// NO SCROLLBAR IN DETAIL WINDOW
-		if ($detail_window == 7) {
+		// No Scrollbar in Detail View
+		if ($tmpl['detailwindow'] == 7) {
 	
 		} else {
 			$document->addCustomTag( "<style type=\"text/css\"> \n" 
@@ -101,32 +114,9 @@ class PhocaGalleryViewDetail extends JView
 				." #sbox-window {background-color:#fff;padding:5px} \n" 
 				." </style> \n");
 		}
+
 		
-		
-		// PARAMS - Get image height and width
-		$tmpl['largewidth'] 		= $params->get( 'large_image_width', 640 );
-		$tmpl['largeheight'] 		= $params->get( 'large_image_height', 480 );
-		$tmpl['boxlargewidth'] 		= $params->get( 'front_modal_box_width', 680 );
-		$tmpl['boxlargeheight'] 	= $params->get( 'front_modal_box_height', 560 );
-		$front_popup_window_width 	= $tmpl['boxlargewidth'];//since version 2.2
-		$front_popup_window_height 	= $tmpl['boxlargeheight'];//since version 2.2
-		
-		// YOUTUBE
-		// Standard popup window
-		if ($detail_window == 1) {
-			$tmpl['windowwidth']	= $front_popup_window_width;
-			$tmpl['windowheight']	= $front_popup_window_height;
-		} else {//modal popup window
-			$tmpl['windowwidth']	= $tmpl['boxlargewidth'];
-			$tmpl['windowheight']	= $tmpl['boxlargeheight'];
-		}
-		
-		// PARAMS - Slideshow
-		$tmpl['slideshowdelay'] 	= $params->get( 'slideshow_delay', 3000 );
-		$tmpl['slideshowpause'] 	= $params->get( 'slideshow_pause', 0 );
-		$tmpl['slideshowrandom'] 	= $params->get( 'slideshow_random', 0 );
-		
-		// MODEL
+		// Model
 		$model	= &$this->getModel();
 		$item	= $model->getData();
 
@@ -143,42 +133,54 @@ class PhocaGalleryViewDetail extends JView
 		}
 		// - - - - - - - - - - - - - - - - - - - - 
 
-	
 		phocagalleryimport('phocagallery.image.image');
-		//Javascript Slideshow buttons
-		phocagalleryimport('phocagallery.render.renderdetailbutton');
+		phocagalleryimport('phocagallery.render.renderdetailbutton'); // Javascript Slideshow buttons
 		$detailButton 			= new PhocaGalleryRenderDetailButton();
 		$item->reloadbutton		= $detailButton->getReload($item->catslug, $item->slug);
 		$item->closebutton		= $detailButton->getClose($item->catslug, $item->slug);
 		$item->closetext		= $detailButton->getCloseText($item->catslug, $item->slug);
 		$item->nextbutton		= $detailButton->getNext((int)$item->catid, (int)$item->id, (int)$item->ordering);
 		$item->prevbutton		= $detailButton->getPrevious((int)$item->catid, (int)$item->id, (int)$item->ordering);
-		$slideshowData			= $detailButton->getJsSlideshow((int)$item->catid, (int)$item->id, (int)$slideshow, $item->catslug, $item->slug);
+		$slideshowData			= $detailButton->getJsSlideshow((int)$item->catid, (int)$item->id, (int)$var['slideshow'], $item->catslug, $item->slug);
 		$item->slideshowbutton	= $slideshowData['icons'];
 		$item->slideshowfiles	= $slideshowData['files'];
-		$item->slideshow		= $slideshow;
-		// Download
-		$item->download			= $download;
+		$item->slideshow		= $var['slideshow'];
+		$item->download			= $var['download'];
 			
 		// Get file thumbnail or No Image
-	
 		$item->filenameno		= $item->filename;
 		$item->filename			= PhocaGalleryFile::getTitleFromFile($item->filename, 1);
-		$item->imagesize		= PhocaGalleryImage::getImageSize($item->filenameno, 1);
 		$item->filesize			= PhocaGalleryFile::getFileSize($item->filenameno);
-		$item->linkthumbnailpath= PhocaGalleryImageFront::displayImageOrNoImage($item->filenameno, 'large');
-	
 		$realImageSize	= '';
-		$realImageSize 	= PhocaGalleryImage::getRealImageSize ($item->filenameno);
-		if (isset($realImageSize['w']) && isset($realImageSize['h'])) {
-			$item->realimagewidth		= $realImageSize['w'];
-			$item->realimageheight		= $realImageSize['h'];
+		if (isset($item->extid) && $item->extid != '') {
+			$item->extl			=	$item->extl;
+			$item->exto			=	$item->exto;
+			$realImageSize 		= PhocaGalleryImage::getRealImageSize($item->extl, '', 1);
+			$item->imagesize 	= PhocaGalleryImage::getImageSize($item->exto, 1, 1);
+			if ($item->extw != '') {
+				$extw 		= explode(',',$item->extw);
+				$item->extw	= $extw[0];
+			}
+			$correctImageRes 		= PhocaGalleryPicasa::correctSizeWithRate($item->extw, $item->exth, $tmpl['picasa_correct_width_l'], $tmpl['picasa_correct_height_l']);
+			$item->linkimage		= JHTML::_( 'image', $item->extl, '', array('width' => $correctImageRes['width'], 'height' => $correctImageRes['height']));
+			$item->realimagewidth 	= $correctImageRes['width'];
+			$item->realimageheight	= $correctImageRes['height'];
+			
 		} else {
-			$item->realimagewidth	 	= $tmpl['largewidth'];
-			$item->realimageheight		= $tmpl['largeheight'];
+			$item->linkthumbnailpath	= PhocaGalleryImageFront::displayCategoryImageOrNoImage($item->filenameno, 'large');
+			$item->linkimage			= JHTML::_( 'image.site', $item->linkthumbnailpath, '');
+			$realImageSize 				= PhocaGalleryImage::getRealImageSize ($item->filenameno);
+			$item->imagesize			= PhocaGalleryImage::getImageSize($item->filenameno, 1);
+			if (isset($realImageSize['w']) && isset($realImageSize['h'])) {
+				$item->realimagewidth		= $realImageSize['w'];
+				$item->realimageheight		= $realImageSize['h'];
+			} else {
+				$item->realimagewidth	 	= $tmpl['largewidth'];
+				$item->realimageheight		= $tmpl['largeheight'];
+			}
 		}
 		
-		// ADD STATISTICS
+		// Add Statistics
 		$model->hit(JRequest::getVar( 'id', '', '', 'int' ));
 		
 		// R A T I N G
@@ -223,9 +225,22 @@ class PhocaGalleryViewDetail extends JView
 		if ($tmpl['detailwindow'] == 7) {
 			phocagalleryimport('phocagallery.image.image');
 			$formatIcon = &PhocaGalleryImage::getFormatIcon();
-			$tmpl['backbutton'] = '<div><a href="'.JRoute::_('index.php?option=com_phocagallery&view=category&id='. $item->catslug.'&Itemid='. JRequest::getVar('Itemid', 1, 'get', 'int')).'"'
+			$tmpl['backbutton'] = '<div><a href="'.JRoute::_('index.php?option=com_phocagallery&view=category&id='. $item->catslug.'&Itemid='. JRequest::getVar('Itemid', 0, '', 'int')).'"'
 				.' title="'.JText::_( 'Back to category' ).'">'
 				. JHTML::_('image', 'components/com_phocagallery/assets/images/icon-up-images.' . $formatIcon, JText::_( 'Back to category' )).'</a></div>';
+				
+		}
+		
+		// Meta data
+		if ($item->metakey != '') {
+			$mainframe->addMetaTag('keywords', $item->metakey);
+		} else if ($tmpl['gallerymetakey'] != '') {
+			$mainframe->addMetaTag('keywords', $tmpl['gallerymetakey']);
+		}
+		if ($item->metadesc != '') {
+			$mainframe->addMetaTag('description', $item->metadesc);
+		} else if ($tmpl['gallerymetadesc'] != '') {
+			$mainframe->addMetaTag('description', $tmpl['gallerymetadesc']);
 		}
 		
 		// ASIGN
@@ -241,9 +256,13 @@ class PhocaGalleryViewDetail extends JView
 			} else if ($item->download > 0) {
 				
 				if ($tmpl['displayicondownload'] == 2) {
-					$backLink = 'index.php?option=com_phocagallery&view=category&id='. $item->catslug.'&Itemid='. JRequest::getVar('Itemid', 1, 'get', 'int');
+					$backLink = 'index.php?option=com_phocagallery&view=category&id='. $item->catslug.'&Itemid='. JRequest::getVar('Itemid', 0, '', 'int');
 					phocagalleryimport('phocagallery.file.filedownload');
-					PhocaGalleryFileDownload::download($item, $backLink);
+					if (isset($item->exto) && $item->exto != '') {
+						PhocaGalleryFileDownload::download($item, $backLink, 1);
+					} else {
+						PhocaGalleryFileDownload::download($item, $backLink);
+					}
 					exit;
 				} else {
 					parent::display('download');

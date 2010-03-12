@@ -65,7 +65,7 @@ class PhocaGalleryRenderAdmin
 		foreach ($data as $key) {	
 			$show_text =  $text . $key->text;
 			
-			if ($key->parentid == $id && $currentId != $id && $currentId != $key->value) {	
+			if ($key->parentid == $id && $currentId != $id && $currentId != $key->value) {
 				$tree[$key->value] 			= new JObject();
 				$tree[$key->value]->text 	= $show_text;
 				$tree[$key->value]->value 	= $key->value;
@@ -73,6 +73,21 @@ class PhocaGalleryRenderAdmin
 			}	
 		}
 		return($tree);
+	}
+	
+	function approved( &$row, $i, $imgY = 'tick.png', $imgX = 'publish_x.png', $prefix='' )
+	{
+		$img 	= $row->approved ? $imgY : $imgX;
+		$task 	= $row->approved ? 'disapprove' : 'approve';
+		$alt 	= $row->approved ? JText::_( 'Approved' ) : JText::_( 'Not Approved' );
+		$action = $row->approved ? JText::_( 'Disapprove Item' ) : JText::_( 'Approve item' );
+
+		$href = '
+		<a href="javascript:void(0);" onclick="return listItemTask(\'cb'. $i .'\',\''. $prefix.$task .'\')" title="'. $action .'">
+		<img src="images/'. $img .'" border="0" alt="'. $alt .'" /></a>'
+		;
+
+		return $href;
 	}
 }
 ?>

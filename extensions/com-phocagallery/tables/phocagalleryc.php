@@ -14,6 +14,7 @@ class TablePhocaGalleryc extends JTable {
 
 	var $id 				= null;
 	var $parent_id 			= null;
+	var $owner_id 			= null;
 	var $title 				= null;
 	var $name 				= null;
 	var $alias 				= null;
@@ -23,6 +24,7 @@ class TablePhocaGalleryc extends JTable {
 	var $description		= null;
 	var $date				= null;
 	var $published			= null;
+	var $approved			= 0;
 	var $checked_out 		= 0;
 	var $checked_out_time 	= 0;
 	var $editor				= null;
@@ -39,6 +41,11 @@ class TablePhocaGalleryc extends JTable {
 	var $zoom				= null;
 	var $geotitle			= null;
 	var $params 			= null;
+	var $metakey 			= null;
+	var $metadesc 			= null;
+	var $extid				= null;
+	var $exta				= null;
+	var $extu				= null;
 
 	function __construct(& $db) {
 		parent::__construct('#__phocagallery_categories', 'id', $db);

@@ -26,32 +26,22 @@ if ($this->tmpl['displaymostviewedcatstat']) {
 	if (!empty($this->tmpl['mostviewedimg'])) {
 		foreach($this->tmpl['mostviewedimg'] as $key => $value) {
 			
-			$imageHeight 	= PhocaGalleryImage::correctSize($this->tmpl['imageheight'], 100, 100, 0);
-			$imageWidth 	= PhocaGalleryImage::correctSize($this->tmpl['imagewidth'], 100, 120, 20);
-
-
-			if ($this->tmpl['displayname'] == 1 || $this->tmpl['displayname'] == 2) {
-				$imageHeight['boxsize'] = $imageHeight['boxsize'] + 20;
-			}
-			
-			if ($this->tmpl['displayicondetail'] == 1 || $this->tmpl['displayicondownload'] == 1 || $this->tmpl['displayiconfolder == 1'] || $this->tmpl['displayiconvm'] == 1 || $this->tmpl['startpiclens'] == 1 || $this->tmpl['trash'] == 1 || $this->tmpl['publishunpublish'] == 1 || $this->tmpl['displayicongeo']) {
-				$imageHeight['boxsize'] = $imageHeight['boxsize'] + 20;
-			}
-			
+			$imageHeightMV 			= PhocaGalleryImage::correctSize($this->tmpl['imageheight'], 100, 100, 0);
+			$imageWidthMV 			= PhocaGalleryImage::correctSize($this->tmpl['imagewidth'], 100, 120, 20);
+			$imageHeightMV['boxsize']	= PhocaGalleryImage::setBoxSize($imageHeightMV,$imageWidthMV, $this->tmpl['displayname'], 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, $this->tmpl['displayimageshadow'], 1, 0, 0, 0, 0);
 			if ( $this->tmpl['displayimageshadow'] != 'none' ) {		
-				$imageHeight['boxsize'] = $imageHeight['boxsize'] + 18;
-				$imageHeight['size']	= $imageHeight['size'] + 18;
-				$imageWidth['size'] 	= $imageWidth['size'] + 18;
+				$imageHeightMV['size']	= $imageHeightMV['size'] + 18;
+				$imageWidthMV['size'] 	= $imageWidthMV['size'] + 18;
 			}
 			
-			if ( $this->tmpl['categoryboxspace'] > 0 ) {		
-				$imageHeight['boxsize'] = $imageHeight['boxsize'] + $this->tmpl['categoryboxspace'];
+			if (isset($value->extid) && $value->extid != '') {
+				$correctImageRes = PhocaGalleryPicasa::correctSizeWithRate($value->extw, $value->exth, $this->tmpl['picasa_correct_width_m'], $this->tmpl['picasa_correct_height_m']);
 			}
 				
 			?>
-			<div class="phocagallery-box-file" style="height:<?php echo $imageHeight['boxsize']; ?>px; width:<?php echo $imageWidth['boxsize']; ?>px">
+			<div class="phocagallery-box-file" style="height:<?php echo $imageHeightMV['boxsize']; ?>px; width:<?php echo $imageWidthMV['boxsize']; ?>px">
 				<center>
-					<div class="phocagallery-box-file-first" style="height:<?php echo $imageHeight['size']; ?>px;width:<?php echo $imageWidth['size']; ?>px;">
+					<div class="phocagallery-box-file-first" style="height:<?php echo $imageHeightMV['size']; ?>px;width:<?php echo $imageWidthMV['size']; ?>px;">
 						<div class="phocagallery-box-file-second">
 							<div class="phocagallery-box-file-third">
 								<center>
@@ -70,8 +60,12 @@ if ($this->tmpl['displaymostviewedcatstat']) {
 								}  else {
 									echo ' rel="'. $value->buttonother->options.'"';
 								}
-								
-								?> ><?php echo JHTML::_( 'image.site', $value->linkthumbnailpath, '', '', '', $value->title );
+								echo ' >';
+								if (isset($value->extid) && $value->extid != '') {
+									echo JHTML::_( 'image', $value->linkthumbnailpath, '', array('width' => $correctImageRes['width'], 'height' => $correctImageRes['height']), '', $value->title);
+								} else {
+									echo JHTML::_( 'image.site', $value->linkthumbnailpath, '', '', '', $value->title );
+								}
 
 								?></a>
 								</center>
@@ -128,44 +122,21 @@ if ($this->tmpl['displaylastaddedcatstat']) {
 		
 		foreach($this->tmpl['lastaddedimg'] as $key => $value) {
 			
-			$imageHeight['size'] 	= $this->tmpl['imageheight'];
-			if ($imageHeight['size'] < 100 ) {
-				$imageHeight['size']	= 100;
-				$imageHeight['boxsize'] = 100;
-			} else {
-				$imageHeight['boxsize'] = $imageHeight['size'];
-			}
-			
-			$imageWidth['size']		= $this->tmpl['imagewidth'];
-			if ($imageWidth['size'] < 100 ) {
-				$imageWidth['size']    = 100;
-				$imageWidth['boxsize'] = 120;
-			} else {
-				$imageWidth['boxsize'] = $imageWidth['size'] + 20;
-			}
-
-			if ($this->tmpl['displayname'] == 1 || $this->tmpl['displayname'] == 2) {
-				$imageHeight['boxsize'] = $imageHeight['boxsize'] + 20;
-			}
-			
-			if ($this->tmpl['displayicondetail'] == 1 || $this->tmpl['displayicondownload'] == 1 || $this->tmpl['displayiconfolder == 1'] || $this->tmpl['displayiconvm'] == 1 || $this->tmpl['startpiclens'] == 1 || $this->tmpl['trash'] == 1 || $this->tmpl['publishunpublish'] == 1 || $this->tmpl['displayicongeo']) {
-				$imageHeight['boxsize'] = $imageHeight['boxsize'] + 20;
-			}
-			
+			$imageHeightLA 			= PhocaGalleryImage::correctSize($this->tmpl['imageheight'], 100, 100, 0);
+			$imageWidthLA 			= PhocaGalleryImage::correctSize($this->tmpl['imagewidth'], 100, 120, 20);
+			$imageHeightLA['boxsize']	= PhocaGalleryImage::setBoxSize($imageHeightLA,$imageWidthLA, $this->tmpl['displayname'], 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, $this->tmpl['displayimageshadow'], 1, 0, 0, 0, 0);
 			if ( $this->tmpl['displayimageshadow'] != 'none' ) {		
-				$imageHeight['boxsize'] = $imageHeight['boxsize'] + 18;
-				$imageHeight['size']	= $imageHeight['size'] + 18;
-				$imageWidth['size'] 	= $imageWidth['size'] + 18;
+				$imageHeightLA['size']	= $imageHeightLA['size'] + 18;
+				$imageWidthLA['size'] 	= $imageWidthLA['size'] + 18;
 			}
-			
-			if ( $this->tmpl['categoryboxspace'] > 0 ) {		
-				$imageHeight['boxsize'] = $imageHeight['boxsize'] + $this->tmpl['categoryboxspace'];
+			if (isset($value->extid) && $value->extid != '') {
+				$correctImageRes = PhocaGalleryPicasa::correctSizeWithRate($value->extw, $value->exth, $this->tmpl['picasa_correct_width_m'], $this->tmpl['picasa_correct_height_m']);
 			}
 				
 			?>
-			<div class="phocagallery-box-file" style="height:<?php echo $imageHeight['boxsize']; ?>px; width:<?php echo $imageWidth['boxsize']; ?>px">
+			<div class="phocagallery-box-file" style="height:<?php echo $imageHeightLA['boxsize']; ?>px; width:<?php echo $imageWidthLA['boxsize']; ?>px">
 				<center>
-					<div class="phocagallery-box-file-first" style="height:<?php echo $imageHeight['size']; ?>px;width:<?php echo $imageWidth['size']; ?>px;">
+					<div class="phocagallery-box-file-first" style="height:<?php echo $imageHeightLA['size']; ?>px;width:<?php echo $imageWidthLA['size']; ?>px;">
 						<div class="phocagallery-box-file-second">
 							<div class="phocagallery-box-file-third">
 								<center>
@@ -185,8 +156,12 @@ if ($this->tmpl['displaylastaddedcatstat']) {
 									echo ' rel="'. $value->buttonother->options.'"';
 								}
 								
-								?> ><?php echo JHTML::_( 'image.site', $value->linkthumbnailpath, '', '', '', $value->title );
-
+								echo ' >';
+								if (isset($value->extid) && $value->extid != '') {
+									echo JHTML::_( 'image', $value->linkthumbnailpath, '', array('width' => $correctImageRes['width'], 'height' => $correctImageRes['height']), '', $value->title);
+								} else {
+									echo JHTML::_( 'image.site', $value->linkthumbnailpath, '', '', '', $value->title );
+								}
 								?></a>
 								</center>
 							</div>

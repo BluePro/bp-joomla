@@ -1,5 +1,4 @@
-<?php
-defined('_JEXEC') or die('Restricted access'); 
+<?php defined('_JEXEC') or die('Restricted access'); 
 
 $heading = '';
 if ($this->params->get( 'page_title' ) != '') {
@@ -33,19 +32,27 @@ if ($this->tmpl['displaytabs'] > 0) {
 	echo $pane->startPane( 'pane' );
 
 
-	echo $pane->startPanel( JHTML::_( 'image.site', 'components/com_phocagallery/assets/images/icon-folder-small.'.$this->tmpl['formaticon'],'', '', '', '', '') . '&nbsp;'.$this->tmpl['createoredithead'], 'votes' );
+	echo $pane->startPanel( JHTML::_( 'image.site', $this->tmpl['pi'].'icon-user.'.$this->tmpl['fi'],'', '', '', '', '') . '&nbsp;'.JText::_('PHOCAGALLERY_USER'), 'user' );
+	echo $this->loadTemplate('user');
+	echo $pane->endPanel();
+	
+	
+	echo $pane->startPanel( JHTML::_( 'image.site', $this->tmpl['pi'].'icon-folder-small.'.$this->tmpl['fi'],'', '', '', '', '') . '&nbsp;'.$this->tmpl['categorycreateoredithead'], 'category' );
 	echo $this->loadTemplate('category');
 	echo $pane->endPanel();
 
+	echo $pane->startPanel( JHTML::_( 'image.site', $this->tmpl['pi'].'icon-subcategories.'.$this->tmpl['fi'],'', '', '', '', '') . '&nbsp;'.JText::_('PHOCAGALLERY_SUBCATEGORIES'), 'subcategories' );
+	echo $this->loadTemplate('subcategories');
+	echo $pane->endPanel();
 
-
-	echo $pane->startPanel( JHTML::_( 'image.site', 'components/com_phocagallery/assets/images/icon-upload.'.$this->tmpl['formaticon'],'', '', '', '', '') . '&nbsp;'.JText::_('Upload'), 'upload' );
-	echo $this->loadTemplate('upload');
+	echo $pane->startPanel( JHTML::_( 'image.site', $this->tmpl['pi'].'icon-images.'.$this->tmpl['fi'],'', '', '', '', '') . '&nbsp;'.JText::_('PHOCAGALLERY_IMAGES'), 'images' );
+	echo $this->loadTemplate('images');
 	echo $pane->endPanel();
 
 
 	echo $pane->endPane();
 	echo '</div>';
 }
-echo $this->tmpl['dp'];
+echo '<div>&nbsp;</div>';
+echo $this->tmpl['om'];
 ?>

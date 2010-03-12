@@ -193,7 +193,10 @@ class PhocaGalleryRenderDetailButton
 		$jsSlideshowData['files'] = '';
 		
 		//Get filename of all photos
-		$query = "SELECT filename as filename FROM #__phocagallery WHERE catid=".(int) $catid." AND published=1 ORDER BY ".$imageOrdering;
+		$query = 'SELECT filename, extl' 
+		.' FROM #__phocagallery WHERE catid='.(int) $catid
+		.' AND published = 1 AND approved = 1'
+		.' ORDER BY '.$imageOrdering;
 		$db->setQuery($query);
 		$filenameAll = $db->loadObjectList();
 		$countImg = 0;
@@ -201,14 +204,20 @@ class PhocaGalleryRenderDetailButton
 			
 			foreach ($filenameAll as $key => $value) {
 				
-				$fileThumbnail = PhocaGalleryFileThumbnail::getThumbnailName($value->filename, 'large');
-				
-				if (JFile::exists($fileThumbnail->abs)) {
-					$jsSlideshowData['files'] .= 'fadeimages['.$countImg.']=["'. JURI::base(true) . '/' . $fileThumbnail->rel.'", "", ""];'; 
+				if (isset($value->extl) && $value->extl != '') {
+					$jsSlideshowData['files'] .= 'fadeimages['.$countImg.']=["'. $value->extl .'", "", ""];'; 
 				} else {
-					$fileThumbnail = JURI::base(true).'/' . "components/com_phocagallery/assets/images/phoca_thumb_l_no_image." . $this->_formaticon;
-					$jsSlideshowData['files'] .= 'fadeimages['.$countImg.']=["'.$fileThumbnail.'", "", ""];';
+					$fileThumbnail 	= PhocaGalleryFileThumbnail::getThumbnailName($value->filename, 'large');
+					$imgLink		= JURI::base(true) . '/' . $fileThumbnail->rel;
+					if (JFile::exists($fileThumbnail->abs)) {
+						$jsSlideshowData['files'] .= 'fadeimages['.$countImg.']=["'. $imgLink .'", "", ""];'; 
+					} else {
+						$fileThumbnail = JURI::base(true).'/' . "components/com_phocagallery/assets/images/phoca_thumb_l_no_image." . $this->_formaticon;
+						$jsSlideshowData['files'] .= 'fadeimages['.$countImg.']=["'.$fileThumbnail.'", "", ""];';
+					}
 				}
+				
+				
 				$countImg++;
 			}
 		}

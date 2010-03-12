@@ -43,7 +43,7 @@ class PhocaGalleryModelInfo extends JModel
 		// Lets load the content if it doesn't already exist
 		if (empty($this->_data)) {
 			// First try to get image data
-			$query = 'SELECT a.title, a.filename, a.description,'
+			$query = 'SELECT a.title, a.filename, a.description, a.exto, a.extid,'
 				.' CASE WHEN CHAR_LENGTH(c.alias) THEN CONCAT_WS(\':\', c.id, c.alias) ELSE c.id END as catslug,'
 				.' CASE WHEN CHAR_LENGTH(a.alias) THEN CONCAT_WS(\':\', a.id, a.alias) ELSE a.id END as slug'
 				.' FROM #__phocagallery AS a'

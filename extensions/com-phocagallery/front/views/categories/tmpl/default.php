@@ -48,6 +48,18 @@ $end[$j-1]		= $countCategories - 1;// last
 $endFloat		= $countCategories - 1;
 
 
+if($this->tmpl['equalpercentagewidth'] == 1) {
+	$fixedWidth			= 100 / (int)$columns;
+	$fixedWidhtStyle1	= 'width:'.$fixedWidth.'%;';
+	$fixedWidhtStyle2	= 'width:'.$fixedWidth.'%;';
+} else {
+	$fixedWidhtStyle1	= 'margin: 10px;';
+	$fixedWidhtStyle2	= 'margin: 0px;';
+}
+
+
+
+
 // -------------------
 // TABLE LAYOUT
 // -------------------
@@ -63,12 +75,23 @@ if ($this->tmpl['displayimagecategories'] == 1) {
 				}
 			}
 			if ($float == 1) {		
-				echo '<div style="position:relative;float:left;margin:10px;"><table>';
+				echo '<div style="position:relative;float:left;'.$fixedWidhtStyle1.'"><table>';
 			}
 		}
 
 		echo '<tr>';		
-		echo '<td align="center" valign="middle" style="'.$this->tmpl['imagebg'].';text-align:center;"><a href="'.$this->categories[$i]->link.'">'.JHTML::_( 'image.site', $this->categories[$i]->linkthumbnailpath, '', '', '', $this->categories[$i]->title, 'style="border:0"' ).'</a></td>';
+		echo '<td align="center" valign="middle" style="'.$this->tmpl['imagebg'].';text-align:center;"><a href="'.$this->categories[$i]->link.'">';
+
+		if (isset($this->categories[$i]->extpic) && $this->categories[$i]->extpic) {
+		
+			$correctImageRes = PhocaGalleryPicasa::correctSizeWithRate($this->categories[$i]->extw, $this->categories[$i]->exth, $this->tmpl['picasa_correct_width'], $this->tmpl['picasa_correct_height']);
+			echo JHTML::_( 'image', $this->categories[$i]->linkthumbnailpath, '', array('width' => $correctImageRes['width'], 'height' => $correctImageRes['height']), '', str_replace('&raquo;', '-',$this->categories[$i]->title), 'style="border:0"');
+			
+		} else {
+		
+			echo JHTML::_( 'image.site', $this->categories[$i]->linkthumbnailpath, '', '', '', str_replace('&raquo;', '-',$this->categories[$i]->title), 'style="border:0"' );
+		}
+		echo '</a></td>';
 		echo '<td><a href="'.$this->categories[$i]->link.'" class="category'.$this->params->get( 'pageclass_sfx' ).'">'.$this->categories[$i]->title.'</a>&nbsp;';
 		
 		if ($this->categories[$i]->numlinks > 0) {echo '<span class="small">('.$this->categories[$i]->numlinks.')</span>';}
@@ -98,7 +121,7 @@ if ($this->tmpl['displayimagecategories'] == 1) {
 }
  
 // -------------------
-// DETAIL LAYOUT
+// DETAIL LAYOUT 2 (with columns)
 // -------------------
 
 else if ($this->tmpl['displayimagecategories'] == 2){
@@ -118,7 +141,7 @@ else if ($this->tmpl['displayimagecategories'] == 2){
 				}
 			}
 			if ($float == 1) {		
-				echo '<div style="position:relative;float:left;margin:0px">';
+				echo '<div style="position:relative;float:left;'.$fixedWidhtStyle2.'">';
 			}
 		}
 		// - - - - -
@@ -137,7 +160,19 @@ else if ($this->tmpl['displayimagecategories'] == 2){
 		    .'<div style="position:relative;float:left;margin:0;padding:0">'
 		    .' <table border="0" cellpadding="0" cellspacing="0">'
 			.'  <tr>'
-		    .'   <td style="'.$this->tmpl['imagebg'].';text-align:center;"><a href="'.$this->categories[$i]->link.'">'.JHTML::_( 'image.site', $this->categories[$i]->linkthumbnailpath, '', '', '', $this->categories[$i]->title, 'style="border:0"' ).'</a></td>'
+			.'   <td style="'.$this->tmpl['imagebg'].';text-align:center;"><a href="'.$this->categories[$i]->link.'">';
+		
+		if (isset($this->categories[$i]->extpic) && $this->categories[$i]->extpic) {
+		
+			$correctImageRes = PhocaGalleryPicasa::correctSizeWithRate($this->categories[$i]->extw, $this->categories[$i]->exth, $this->tmpl['picasa_correct_width'], $this->tmpl['picasa_correct_height']);
+			echo JHTML::_( 'image', $this->categories[$i]->linkthumbnailpath, '', array('width' => $correctImageRes['width'], 'height' => $correctImageRes['height']), '', str_replace('&raquo;', '-',$this->categories[$i]->title), 'style="border:0"');
+			
+		} else {
+		
+			echo JHTML::_( 'image.site', $this->categories[$i]->linkthumbnailpath, '', '', '', str_replace('&raquo;', '-',$this->categories[$i]->title), 'style="border:0"' );
+		}
+
+		echo '</a></td>'
 			.'  </tr>'
 			.' </table>'
 			.'</div>';
@@ -223,6 +258,116 @@ else if ($this->tmpl['displayimagecategories'] == 2){
 
 }
 
+
+// -------------------
+// DETAIL LAYOUT 3 - FLOAT - Every categoy will float
+// -------------------
+
+else if ($this->tmpl['displayimagecategories'] == 3){
+	
+	echo '<div id="phocagallery-categories-detail">';
+	
+	for ($i = 0; $i < $countCategories; $i++) {
+		
+		echo '<div style="position:relative;float:left;width:'.$this->tmpl['categoriesboxwidth'].';">';
+	
+		echo '<fieldset>'
+			.' <legend>'
+			.'  <a href="'.$this->categories[$i]->link.'" class="category'.$this->params->get( 'pageclass_sfx' ).'">'.$this->categories[$i]->title_self.'</a> ';
+			
+		if ($this->categories[$i]->numlinks > 0) {
+			echo '<span class="small">('.$this->categories[$i]->numlinks.')</span>';
+		}	
+			
+		echo ' </legend>';
+		
+		echo '<div style="padding:0;margin:0;margin-top:10px;margin-bottom:5px">'
+		    .'<div style="position:relative;float:left;margin:0;padding:0">'
+		    .' <table border="0" cellpadding="0" cellspacing="0">'
+			.'  <tr>'
+			.'   <td style="'.$this->tmpl['imagebg'].';text-align:center;"><a href="'.$this->categories[$i]->link.'">';
+		
+		if (isset($this->categories[$i]->extpic) && $this->categories[$i]->extpic) {
+		
+			$correctImageRes = PhocaGalleryPicasa::correctSizeWithRate($this->categories[$i]->extw, $this->categories[$i]->exth, $this->tmpl['picasa_correct_width'], $this->tmpl['picasa_correct_height']);
+			echo JHTML::_( 'image', $this->categories[$i]->linkthumbnailpath, '', array('width' => $correctImageRes['width'], 'height' => $correctImageRes['height']), '', str_replace('&raquo;', '-',$this->categories[$i]->title), 'style="border:0"');
+			
+		} else {
+		
+			echo JHTML::_( 'image.site', $this->categories[$i]->linkthumbnailpath, '', '', '', str_replace('&raquo;', '-',$this->categories[$i]->title), 'style="border:0"' );
+		}
+
+		echo '</a></td>'
+			.'  </tr>'
+			.' </table>'
+			.'</div>';
+		
+		
+		echo '<div style="margin-right:5px;margin-left:'.$this->tmpl['imagewidth'].'px;">';
+		if ($this->categories[$i]->description != '') {
+		   echo '<div>'.$this->categories[$i]->description.'</div><p>&nbsp;</p>';
+		}
+		echo '<table border="0" cellpadding="0" cellspacing="0" >';
+		if ( $this->categories[$i]->username != '') {
+			echo '<tr><td>'.JText::_('Author') .': </td>'
+			    .'<td>'.$this->categories[$i]->username.'</td></tr>';
+		}
+		
+		echo '<tr><td>'.JText::_('Number of images in category') .': </td>'
+		.'<td>'.$this->categories[$i]->numlinks.'</td></tr>'
+		.'<tr><td>'.JText::_('Category viewed') .': </td>'
+		.'<td>'.$this->categories[$i]->hits.' x</td></tr>';
+
+		// Rating
+		if ($this->tmpl['displayrating'] == 1) {
+			$votesCount = $votesAverage = $votesWidth = 0;
+			if (!empty($this->categories[$i]->ratingcount)) {
+				$votesCount = $this->categories[$i]->ratingcount;
+			}
+			if (!empty($this->categories[$i]->ratingaverage)) {
+				$votesAverage = $this->categories[$i]->ratingaverage;
+				if ($votesAverage > 0) {
+					$votesAverage 	= round(((float)$votesAverage / 0.5)) * 0.5;
+					$votesWidth		= 22 * $votesAverage;
+				}
+				
+			}
+			if ((int)$votesCount > 1) {
+				$votesText = 'votes';
+			} else {
+				$votesText = 'vote';
+			}
+			
+			echo '<tr><td>' . JText::_('Rating'). ': </td>'
+				.'<td>' . $votesAverage .' / '.$votesCount . ' ' . JText::_($votesText). '</td></tr>'
+				.'<tr><td>&nbsp;</td>'
+				.'<td>'
+				.' <ul class="star-rating">'
+				.'  <li class="current-rating" style="width:'.$votesWidth.'px"></li>'
+				.'   <li><span class="star1"></span></li>';
+			for ($r = 2;$r < 6;$r++) {
+				echo '<li><span class="stars'.$r.'"></span></li>';
+			}
+			echo '</ul>'
+				 .'</td>'
+				 .'</tr>';
+		}
+		
+		echo '</table>'
+			 .'</div>'
+		     //.'<div style="clear:both;"></div>'
+			 .'</div>'
+		     .'</fieldset>';
+	
+		
+		echo '</div>';
+		
+	}
+	echo '<div style="clear:both"></div>';
+	echo '</div>';
+
+}
+
 // -------------------
 // UL LAYOUT
 // -------------------
@@ -238,7 +383,7 @@ else {
 				}
 			}
 			if ($float == 1) {		
-				echo '<div style="position:relative;float:left;margin:10px"><ul>';
+				echo '<div style="position:relative;float:left;'.$fixedWidhtStyle1.'"><ul>';
 			}
 		}
 		
@@ -292,4 +437,4 @@ if (count($this->categories)) {
 	}
 	echo '</center></div>';
 }
-echo '</form><div>&nbsp;</div>' . $this->tmpl['mtb'].'</div>';
+echo '</form><div>&nbsp;</div>' . $this->tmpl['ab'].'</div>';

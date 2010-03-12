@@ -33,7 +33,10 @@ class PhocaGalleryCpViewPhocaGalleryC extends JView
 		$uri 	=& JFactory::getURI();
 		$user 	=& JFactory::getUser();
 		$model	=& $this->getModel();
-		$editor =& JFactory::getEditor();	
+		$editor =& JFactory::getEditor();
+
+		$paramsC = JComponentHelper::getParams('com_phocagallery');
+		$tmpl['enablepicasaloading'] = $paramsC->get( 'enable_picasa_loading', 1 );		
 		
 		JHTML::_('behavior.calendar');
 		JHTML::stylesheet( 'phocagallery.css', 'administrator/components/com_phocagallery/assets/' );
@@ -66,6 +69,7 @@ class PhocaGalleryCpViewPhocaGalleryC extends JView
 			$model->checkout( $user->get('id') );
 		} else {
 			// initialise new record
+			$items->approved 		= 1;
 			$items->published 		= 1;
 			$items->order 			= 0;
 			$items->access			= 0;
@@ -78,6 +82,7 @@ class PhocaGalleryCpViewPhocaGalleryC extends JView
 		$lists['ordering'] 			= JHTML::_('list.specificordering',  $items, $items->id, $query, false );
 		// build the html select list
 		$lists['published'] 		= JHTML::_('select.booleanlist',  'published', 'class="inputbox"', $items->published );
+		$lists['approved'] 			= JHTML::_('select.booleanlist',  'approved', 'class="inputbox"', $items->approved );
 		
 		$active =  ( $items->image_position ? $items->image_position : 'left' );
 		$lists['image_position'] 	= JHTML::_('list.positions',  'image_position', $active, NULL, 0, 0 );
@@ -92,7 +97,7 @@ class PhocaGalleryCpViewPhocaGalleryC extends JView
 		$lists['accessusers'] 	= PhocaGalleryAccess::usersList('accessuserid[]',$items->accessuserid,1, NULL,'name',0 );
 		$lists['uploadusers'] 	= PhocaGalleryAccess::usersList('uploaduserid[]',$items->uploaduserid,1, NULL,'name',0 );
 		$lists['deleteusers'] 	= PhocaGalleryAccess::usersList('deleteuserid[]',$items->deleteuserid,1, NULL,'name',0 );
-		$lists['author'] 		= PhocaGalleryAccess::usersListAuthor('authorid',$items->userid,1, NULL,'name',0 );
+		$lists['owner'] 		= PhocaGalleryAccess::usersListOwner('ownerid',$items->owner_id,1, NULL,'name',0 );
 		
 		// - - - - - - - - - - - - - - - 
 		// Build the list of categories
@@ -160,15 +165,21 @@ class PhocaGalleryCpViewPhocaGalleryC extends JView
 		$this->assignRef('request_url',	$uri->toString());
 
 		parent::display($tpl);
-		$this->_setToolbar($isNew);
+		$this->_setToolbar($isNew, $paramsC);
 	}
 	
-	function _setToolbar($isNew) {
+	function _setToolbar($isNew, $params) {
 		
 		$text = $isNew ? JText::_( 'New' ) : JText::_( 'Edit' );
 		JToolBarHelper::title(   JText::_( 'Phoca Gallery Category' ).': <small><small>[ ' . $text.' ]</small></small>' , 'category');
 		JToolBarHelper::save();
 		JToolBarHelper::apply();
+		
+		$enable_picasa_loading = $params->get( 'enable_picasa_loading', 1 );	
+		if($enable_picasa_loading == 1){
+			JToolBarHelper::customX('loadextimg', 'loadext.png', '', JText::_( 'PHOCAGALLERY_LOAD_EXT_IMAGES' ), false);
+		}
+
 		if ($isNew)  {
 			JToolBarHelper::cancel();
 		} else {

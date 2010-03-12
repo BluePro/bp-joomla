@@ -106,7 +106,7 @@ $editor =& JFactory::getEditor();
 	</fieldset>
 	
 	<fieldset class="adminform">
-				<legend><?php echo JText::_( 'Comment' ); ?></legend>
+				<legend><?php echo JText::_( 'PHOCAGALLERY_COMMENT' ); ?></legend>
 
 				<table class="admintable">
 					

@@ -33,13 +33,24 @@ class TablePhocaGallery extends JTable
 	var $geotitle			= null;
 	var $videocode			= null;
 	var $vmproductid		= null;
+	var $imgorigsize		= null;
 	var $published 			= null;
+	var $approved 			= 0;
 	var $checked_out 		= 0;
 	var $checked_out_time 	= 0;
 	var $ordering 			= null;
 	var $params 			= null;
+	var $metakey 			= null;
+	var $metadesc 			= null;
 	var $extlink1	 		= null;
 	var $extlink2			= null;
+	var $extid				= null;
+	var $extl				= null;
+	var $extm				= null;
+	var $exts				= null;
+	var $exto				= null;
+	var $extw				= null;
+	var $exth				= null;
 
 	function __construct(& $db) {
 		parent::__construct('#__phocagallery', 'id', $db);

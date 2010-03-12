@@ -46,13 +46,24 @@ class PhocaGalleryCpControllerPhocaGalleryinstall extends PhocaGalleryCpControll
 		$query.=' '.$db->nameQuote('geotitle').' varchar(255) NOT NULL default \'\','."\n";
 		$query.=' '.$db->nameQuote('videocode').' text,'."\n";
 		$query.=' '.$db->nameQuote('vmproductid').' int(11) NOT NULL default \'0\','."\n";
+		$query.=' '.$db->nameQuote('imgorigsize').' int(11) NOT NULL default \'0\','."\n";
 		$query.=' '.$db->nameQuote('published').' tinyint(1) NOT NULL default \'0\','."\n";
+		$query.=' '.$db->nameQuote('approved').' tinyint(1) NOT NULL default \'0\','."\n";
 		$query.=' '.$db->nameQuote('checked_out').' int(11) NOT NULL default \'0\','."\n";
 		$query.=' '.$db->nameQuote('checked_out_time').' datetime NOT NULL default \'0000-00-00 00:00:00\','."\n";
 		$query.=' '.$db->nameQuote('ordering').' int(11) NOT NULL default \'0\','."\n";
 		$query.=' '.$db->nameQuote('params').' text,'."\n";
+		$query.=' '.$db->nameQuote('metakey').' text,'."\n";
+		$query.=' '.$db->nameQuote('metadesc').' text,'."\n";
 		$query.=' '.$db->nameQuote('extlink1').' text,'."\n";
 		$query.=' '.$db->nameQuote('extlink2').' text,'."\n";
+		$query.=' '.$db->nameQuote('extid').' varchar(255) NOT NULL default \'\','."\n";
+		$query.=' '.$db->nameQuote('extl').' varchar(255) NOT NULL default \'\','."\n";
+		$query.=' '.$db->nameQuote('extm').' varchar(255) NOT NULL default \'\','."\n";
+		$query.=' '.$db->nameQuote('exts').' varchar(255) NOT NULL default \'\','."\n";
+		$query.=' '.$db->nameQuote('exto').' varchar(255) NOT NULL default \'\','."\n";
+		$query.=' '.$db->nameQuote('extw').' varchar(255) NOT NULL default \'\','."\n";
+		$query.=' '.$db->nameQuote('exth').' varchar(255) NOT NULL default \'\','."\n";
 		$query.=' PRIMARY KEY  ('.$db->nameQuote('id').'),'."\n";
 		$query.=' KEY '.$db->nameQuote('catid').' ('.$db->nameQuote('catid').','.$db->nameQuote('published').')'."\n";
 		$query.=') TYPE=MyISAM CHARACTER SET '.$db->nameQuote('utf8').';'."\n";
@@ -72,6 +83,7 @@ class PhocaGalleryCpControllerPhocaGalleryinstall extends PhocaGalleryCpControll
 		$query=' CREATE TABLE '.$db->nameQuote('#__phocagallery_categories').' ('."\n";
 		$query.=' '.$db->nameQuote('id').' int(11) NOT NULL auto_increment,'."\n";
 		$query.=' '.$db->nameQuote('parent_id').' int(11) NOT NULL default 0,'."\n";
+		$query.=' '.$db->nameQuote('owner_id').' int(11) NOT NULL default 0,'."\n";
 		$query.=' '.$db->nameQuote('title').' varchar(255) NOT NULL default \'\','."\n";
 		$query.=' '.$db->nameQuote('name').' varchar(255) NOT NULL default \'\','."\n";
 		$query.=' '.$db->nameQuote('alias').' varchar(255) NOT NULL default \'\','."\n";
@@ -81,6 +93,7 @@ class PhocaGalleryCpControllerPhocaGalleryinstall extends PhocaGalleryCpControll
 		$query.=' '.$db->nameQuote('description').' text,'."\n";
 		$query.=' '.$db->nameQuote('date').' datetime NOT NULL default \'0000-00-00 00:00:00\','."\n";
 		$query.=' '.$db->nameQuote('published').' tinyint(1) NOT NULL default \'0\','."\n";
+		$query.=' '.$db->nameQuote('approved').' tinyint(1) NOT NULL default \'0\','."\n";
 		$query.=' '.$db->nameQuote('checked_out').' int(11) unsigned NOT NULL default \'0\','."\n";
 		$query.=' '.$db->nameQuote('checked_out_time').' datetime NOT NULL default \'0000-00-00 00:00:00\','."\n";
 		$query.=' '.$db->nameQuote('editor').' varchar(50) default NULL,'."\n";
@@ -96,7 +109,12 @@ class PhocaGalleryCpControllerPhocaGalleryinstall extends PhocaGalleryCpControll
 		$query.=' '.$db->nameQuote('longitude').' varchar(20) NOT NULL default \'\','."\n";
 		$query.=' '.$db->nameQuote('zoom').' int(3) NOT NULL default \'0\','."\n";
 		$query.=' '.$db->nameQuote('geotitle').' varchar(255) NOT NULL default \'\','."\n";
+		$query.=' '.$db->nameQuote('extid').' varchar(255) NOT NULL default \'\','."\n";
+		$query.=' '.$db->nameQuote('exta').' varchar(255) NOT NULL default \'\','."\n";
+		$query.=' '.$db->nameQuote('extu').' varchar(255) NOT NULL default \'\','."\n";
 		$query.=' '.$db->nameQuote('params').' text,'."\n";
+		$query.=' '.$db->nameQuote('metakey').' text,'."\n";
+		$query.=' '.$db->nameQuote('metadesc').' text,'."\n";
 		$query.=' PRIMARY KEY  ('.$db->nameQuote('id').'),'."\n";
 		$query.=' KEY '.$db->nameQuote('cat_idx').' ('.$db->nameQuote('section').','.$db->nameQuote('published').','.$db->nameQuote('access').'),'."\n";
 		$query.=' KEY '.$db->nameQuote('idx_access').' ('.$db->nameQuote('access').'),'."\n";
@@ -179,7 +197,8 @@ class PhocaGalleryCpControllerPhocaGalleryinstall extends PhocaGalleryCpControll
 		// ------------------------------------------
 		// PHOCAGALLERY USER CATEGORY
 		// ------------------------------------------
-		$query ='DROP TABLE IF EXISTS '.$db->nameQuote('#__phocagallery_user_category').';'."\n";
+		// Removed in 2.6.0
+	/*	$query ='DROP TABLE IF EXISTS '.$db->nameQuote('#__phocagallery_user_category').';'."\n";
 		
 		$db->setQuery( $query );
 		if (!$result = $db->query()){$msgSQL .= $db->stderr() . '<br />';}
@@ -194,7 +213,7 @@ class PhocaGalleryCpControllerPhocaGalleryinstall extends PhocaGalleryCpControll
 		
 		$db->setQuery( $query );
 		if (!$result = $db->query()){$msgSQL .= $db->stderr() . '<br />';}
-		
+	*/	
 		// ------------------------------------------
 		// PHOCAGALLERY IMAGE VOTES (2.5.0)
 		// ------------------------------------------
@@ -239,6 +258,60 @@ class PhocaGalleryCpControllerPhocaGalleryinstall extends PhocaGalleryCpControll
 		$db->setQuery( $query );
 		if (!$result = $db->query()){$msgSQL .= $db->stderr() . '<br />';}
 		
+	
+	
+		// ------------------------------------------
+		// PHOCAGALLERY USER (2.6.0)
+		// ------------------------------------------
+		$query ='DROP TABLE IF EXISTS '.$db->nameQuote('#__phocagallery_user').';'."\n";
+		
+		$db->setQuery( $query );
+		if (!$result = $db->query()){$msgSQL .= $db->stderr() . '<br />';}
+	
+		$query =' CREATE TABLE '.$db->nameQuote('#__phocagallery_user').' ('."\n";
+		$query.=' '.$db->nameQuote('id').' int(11) NOT NULL auto_increment,'."\n";
+		$query.=' '.$db->nameQuote('userid').' int(11) NOT NULL default 0,'."\n";
+		$query.=' '.$db->nameQuote('avatar').' varchar(40) NOT NULL default \'\','."\n";
+		$query.=' '.$db->nameQuote('published').' tinyint(1) NOT NULL default \'0\','."\n";
+		$query.=' '.$db->nameQuote('approved').' tinyint(1) NOT NULL default \'0\','."\n";
+		$query.=' '.$db->nameQuote('checked_out').' int(11) NOT NULL default \'0\','."\n";
+		$query.=' '.$db->nameQuote('checked_out_time').' datetime NOT NULL default \'0000-00-00 00:00:00\','."\n";
+		$query.=' '.$db->nameQuote('ordering').' int(11) NOT NULL default \'0\','."\n";
+		$query.=' '.$db->nameQuote('params').' text,'."\n";
+		$query.=' PRIMARY KEY  ('.$db->nameQuote('id').'),'."\n";
+		$query.=' KEY '.$db->nameQuote('userid').' ('.$db->nameQuote('userid').')'."\n";
+		$query.=') TYPE=MyISAM CHARACTER SET '.$db->nameQuote('utf8').';'."\n";
+		
+		$db->setQuery( $query );
+		if (!$result = $db->query()){$msgSQL .= $db->stderr() . '<br />';}
+		
+		
+		// ------------------------------------------
+		// PHOCAGALLERY IMAGES COMMENTS 2.6.0
+		// ------------------------------------------
+		$query ='DROP TABLE IF EXISTS '.$db->nameQuote('#__phocagallery_img_comments').';'."\n";
+		
+		$db->setQuery( $query );
+		if (!$result = $db->query()){$msgSQL .= $db->stderr() . '<br />';}
+		
+		$query =' CREATE TABLE '.$db->nameQuote('#__phocagallery_img_comments').' ('."\n";
+		$query.=' '.$db->nameQuote('id').' int(11) NOT NULL auto_increment,'."\n";
+		$query.=' '.$db->nameQuote('imgid').' int(11) NOT NULL default 0,'."\n";
+		$query.=' '.$db->nameQuote('userid').' int(11) NOT NULL default 0,'."\n";
+		$query.=' '.$db->nameQuote('date').' datetime NOT NULL default \'0000-00-00 00:00:00\','."\n";
+		$query.=' '.$db->nameQuote('title').' varchar(255) NOT NULL default \'\','."\n";
+		$query.=' '.$db->nameQuote('comment').' text,'."\n";
+		$query.=' '.$db->nameQuote('published').' tinyint(1) NOT NULL default \'0\','."\n";
+		$query.=' '.$db->nameQuote('checked_out').' int(11) unsigned NOT NULL default \'0\','."\n";
+		$query.=' '.$db->nameQuote('checked_out_time').' datetime NOT NULL default \'0000-00-00 00:00:00\','."\n";
+		$query.=' '.$db->nameQuote('ordering').' int(11) NOT NULL default \'0\','."\n";
+		$query.=' '.$db->nameQuote('params').' text,'."\n";
+		$query.=' PRIMARY KEY  ('.$db->nameQuote('id').')'."\n";
+		$query.=') TYPE=MyISAM CHARACTER SET '.$db->nameQuote('utf8').';'."\n";
+		
+		$db->setQuery( $query );
+		if (!$result = $db->query()){$msgSQL .= $db->stderr() . '<br />';}
+	
 		
 		// Error
 		if ($msgSQL !='') {
@@ -258,6 +331,22 @@ class PhocaGalleryCpControllerPhocaGalleryinstall extends PhocaGalleryCpControll
 		$link = 'index.php?option=com_phocagallery';
 		$this->setRedirect($link, $msg);
 	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	function upgrade() {
 		
@@ -334,7 +423,8 @@ class PhocaGalleryCpControllerPhocaGalleryinstall extends PhocaGalleryCpControll
 		// ------------------------------------------
 		// PHOCAGALLERY USER CATEGORY
 		// ------------------------------------------
-		$query =' CREATE TABLE IF NOT EXISTS '.$db->nameQuote('#__phocagallery_user_category').' ('."\n";
+		// Removed in 2.6.0
+	/*	$query =' CREATE TABLE IF NOT EXISTS '.$db->nameQuote('#__phocagallery_user_category').' ('."\n";
 		$query.=' '.$db->nameQuote('id').' int(11) NOT NULL auto_increment,'."\n";
 		$query.=' '.$db->nameQuote('catid').' int(11) NOT NULL default 0,'."\n";
 		$query.=' '.$db->nameQuote('userid').' int(11) NOT NULL default 0,'."\n";
@@ -344,7 +434,7 @@ class PhocaGalleryCpControllerPhocaGalleryinstall extends PhocaGalleryCpControll
 		
 		$db->setQuery( $query );
 		if (!$result = $db->query()){$msgSQL .= $db->stderr() . '<br />';}
-		
+	*/	
 		// UPGRADE PHOCA GALLERY 2.2 VERSION
 		// ------------------------------------------
 		// PHOCAGALLERY
@@ -550,6 +640,8 @@ class PhocaGalleryCpControllerPhocaGalleryinstall extends PhocaGalleryCpControll
 			}
 		}
 		
+		
+		
 		// END UPGRADE DATA SCRIPT NEEDS TO BE RUN - - - 
 		
 		// ------------------------------------------
@@ -585,6 +677,218 @@ class PhocaGalleryCpControllerPhocaGalleryinstall extends PhocaGalleryCpControll
 		
 		$db->setQuery( $query );
 		if (!$result = $db->query()){$msgSQL .= $db->stderr() . '<br />';}
+		
+		
+		
+		// UPGRADE PHOCA GALLERY 2.6 VERSION		
+		// ------------------------------------------
+		// PHOCAGALLERY USER (2.6.0)
+		// ------------------------------------------
+		$query =' CREATE TABLE IF NOT EXISTS '.$db->nameQuote('#__phocagallery_user').' ('."\n";
+		$query.=' '.$db->nameQuote('id').' int(11) NOT NULL auto_increment,'."\n";
+		$query.=' '.$db->nameQuote('userid').' int(11) NOT NULL default 0,'."\n";
+		$query.=' '.$db->nameQuote('avatar').' varchar(40) NOT NULL default \'\','."\n";
+		$query.=' '.$db->nameQuote('published').' tinyint(1) NOT NULL default \'0\','."\n";
+		$query.=' '.$db->nameQuote('approved').' tinyint(1) NOT NULL default \'0\','."\n";
+		$query.=' '.$db->nameQuote('checked_out').' int(11) NOT NULL default \'0\','."\n";
+		$query.=' '.$db->nameQuote('checked_out_time').' datetime NOT NULL default \'0000-00-00 00:00:00\','."\n";
+		$query.=' '.$db->nameQuote('ordering').' int(11) NOT NULL default \'0\','."\n";
+		$query.=' '.$db->nameQuote('params').' text,'."\n";
+		$query.=' PRIMARY KEY  ('.$db->nameQuote('id').'),'."\n";
+		$query.=' KEY '.$db->nameQuote('userid').' ('.$db->nameQuote('userid').')'."\n";
+		$query.=') TYPE=MyISAM CHARACTER SET '.$db->nameQuote('utf8').';'."\n";
+		
+		$db->setQuery( $query );
+		if (!$result = $db->query()){$msgSQL .= $db->stderr() . '<br />';}
+	
+		// UPGRADE DATA SCRIPT NEEDS TO BE RUN
+		$updateIOS = false;
+		$errorMsg	= '';
+		$updateIOS = $this->AddColumnIfNotExists( $errorMsg, "#__phocagallery", "imgorigsize", "int(11) NOT NULL default '0'", "hits" );
+		if (!$updateIOS) {
+			$msgSQL .= 'Error while updating Image Original Size column';
+		}
+		
+		$updateOID = false;
+		$errorMsg	= '';
+		$updateOID = $this->AddColumnIfNotExists( $errorMsg, "#__phocagallery_categories", "owner_id", "int(11) NOT NULL default '0'", "parent_id" );
+		if (!$updateOID) {
+			$msgSQL .= 'Error while updating Owner ID column';
+		}
+		
+		$updateIA = false;
+		$errorMsg	= '';
+		$updateIA = $this->AddColumnIfNotExists( $errorMsg, "#__phocagallery", "approved", "tinyint(1) NOT NULL default '0'", "published" );
+		if (!$updateIA) {
+			$msgSQL .= 'Error while updating Approved(Categories) column';
+		}
+		
+		$updateCA = false;
+		$errorMsg	= '';
+		$updateCA = $this->AddColumnIfNotExists( $errorMsg, "#__phocagallery_categories", "approved", "tinyint(1) NOT NULL default '0'", "published" );
+		if (!$updateCA) {
+			$msgSQL .= 'Error while updating Approved(Images) column';
+		}
+		
+		
+		$updateextID = false;
+		$errorMsg	= '';
+		$updateextID = $this->AddColumnIfNotExists( $errorMsg, "#__phocagallery", "extid", "varchar(255) NOT NULL default ''", "hits" );
+		if (!$updateextID) {
+			$msgSQL .= 'Error while updating External Image Id column';
+		}
+		$updateextL = false;
+		$errorMsg	= '';
+		$updateextL = $this->AddColumnIfNotExists( $errorMsg, "#__phocagallery", "extl", "varchar(255) NOT NULL default ''", "hits" );
+		if (!$updateextL) {
+			$msgSQL .= 'Error while updating External Large Image column';
+		}
+		$updateextM = false;
+		$errorMsg	= '';
+		$updateextM = $this->AddColumnIfNotExists( $errorMsg, "#__phocagallery", "extm", "varchar(255) NOT NULL default ''", "hits" );
+		if (!$updateextM) {
+			$msgSQL .= 'Error while updating External Medium Image column';
+		}
+		$updateextS = false;
+		$errorMsg	= '';
+		$updateextS = $this->AddColumnIfNotExists( $errorMsg, "#__phocagallery", "exts", "varchar(255) NOT NULL default ''", "hits" );
+		if (!$updateextS) {
+			$msgSQL .= 'Error while updating External Small Image column';
+		}
+		$updateextW = false;
+		$errorMsg	= '';
+		$updateextW = $this->AddColumnIfNotExists( $errorMsg, "#__phocagallery", "extw", "varchar(255) NOT NULL default ''", "hits" );
+		if (!$updateextW) {
+			$msgSQL .= 'Error while updating External Image Width column';
+		}
+		$updateextH = false;
+		$errorMsg	= '';
+		$updateextH = $this->AddColumnIfNotExists( $errorMsg, "#__phocagallery", "exth", "varchar(255) NOT NULL default ''", "hits" );
+		if (!$updateextH) {
+			$msgSQL .= 'Error while updating External Image Height column';
+		}
+		
+		$updateextO = false;
+		$errorMsg	= '';
+		$updateextO = $this->AddColumnIfNotExists( $errorMsg, "#__phocagallery", "exto", "varchar(255) NOT NULL default ''", "hits" );
+		if (!$updateextO) {
+			$msgSQL .= 'Error while updating External Image Original column';
+		}
+		
+		$updateextIDC = false;
+		$errorMsg	= '';
+		$updateextIDC = $this->AddColumnIfNotExists( $errorMsg, "#__phocagallery_categories", "extid", "varchar(255) NOT NULL default ''", "hits" );
+		if (!$updateextIDC) {
+			$msgSQL .= 'Error while updating External Id (Category) column';
+		}
+		
+		$updateextA = false;
+		$errorMsg	= '';
+		$updateextA = $this->AddColumnIfNotExists( $errorMsg, "#__phocagallery_categories", "exta", "varchar(255) NOT NULL default ''", "hits" );
+		if (!$updateextA) {
+			$msgSQL .= 'Error while updating External Image Album column';
+		}
+		$updateextU = false;
+		$errorMsg	= '';
+		$updateextU = $this->AddColumnIfNotExists( $errorMsg, "#__phocagallery_categories", "extu", "varchar(255) NOT NULL default ''", "hits" );
+		if (!$updateextU) {
+			$msgSQL .= 'Error while updating External Image User column';
+		}
+		
+		
+		// Upgrade 2.6.2
+		$updateMK = false;
+		$errorMsg	= '';
+		$updateMK = $this->AddColumnIfNotExists( $errorMsg, "#__phocagallery", "metakey", "text", "params" );
+		if (!$updateMK) {
+			$msgSQL .= 'Error while updating Metakey column';
+		}
+		$updateMKC = false;
+		$errorMsg	= '';
+		$updateMKC = $this->AddColumnIfNotExists( $errorMsg, "#__phocagallery_categories", "metakey", "text", "params" );
+		if (!$updateMKC) {
+			$msgSQL .= 'Error while updating Metakey column';
+		}
+		$updateMD = false;
+		$errorMsg	= '';
+		$updateMD = $this->AddColumnIfNotExists( $errorMsg, "#__phocagallery", "metadesc", "text", "params" );
+		if (!$updateMD) {
+			$msgSQL .= 'Error while updating Metakey column';
+		}
+		$updateMDC = false;
+		$errorMsg	= '';
+		$updateMDC = $this->AddColumnIfNotExists( $errorMsg, "#__phocagallery_categories", "metadesc", "text", "params" );
+		if (!$updateMDC) {
+			$msgSQL .= 'Error while updating Metakey column';
+		}
+		
+		
+		
+		
+		// Check if there is obsolete table and try to move the author ids to owner ids
+		$query=' SELECT * FROM '.$db->nameQuote('#__phocagallery_user_category').' LIMIT 1;'."\n";
+		$db->setQuery( $query );
+		$result = $db->loadResult();
+		
+		if ($db->getErrorNum()) {
+			//$msgSQL .= $db->getErrorMsg(). '<br />';
+		} else {
+			$query=' SELECT catid, userid FROM '.$db->nameQuote('#__phocagallery_user_category').';'."\n";
+			$db->setQuery( $query );
+			$userIdInCatid = $db->loadObjectList();
+			if (isset($userIdInCatid) && count($userIdInCatid) > 0) {
+				foreach($userIdInCatid as $keyIIC => $valueIIC){
+				
+					if (isset($valueIIC->catid)) {
+						$query=' UPDATE '.$db->nameQuote('#__phocagallery_categories')
+						. ' SET '.$db->nameQuote('owner_id').' = '.(int)$valueIIC->userid
+						. ' WHERE id = '.(int)$valueIIC->catid . ';'."\n";
+						$db->setQuery( $query );
+						
+						
+						if (!$db->query()) {
+							$msgSQL .= $db->getErrorMsg(). '<br />';
+						}
+					}
+				}
+			}
+			
+		
+			// Rename this table to obsolete, so in the next upgrade this converting (userids to ownerids) will be not used anymore
+			$query=' RENAME TABLE '.$db->nameQuote('#__phocagallery_user_category').' TO '.$db->nameQuote('#__phocagallery_user_category_tmp').';'."\n";
+			$db->setQuery( $query );
+			if (!$db->query()) {
+				$msgSQL .= $db->getErrorMsg(). '<br />';
+			}
+		}
+		
+		// - - -
+		
+		// ------------------------------------------
+		// PHOCAGALLERY IMAGE COMMENTS
+		// ------------------------------------------
+		$query =' CREATE TABLE IF NOT EXISTS '.$db->nameQuote('#__phocagallery_img_comments').' ('."\n";
+		$query.=' '.$db->nameQuote('id').' int(11) NOT NULL auto_increment,'."\n";
+		$query.=' '.$db->nameQuote('imgid').' int(11) NOT NULL default 0,'."\n";
+		$query.=' '.$db->nameQuote('userid').' int(11) NOT NULL default 0,'."\n";
+		$query.=' '.$db->nameQuote('date').' datetime NOT NULL default \'0000-00-00 00:00:00\','."\n";
+		$query.=' '.$db->nameQuote('title').' varchar(255) NOT NULL default \'\','."\n";
+		$query.=' '.$db->nameQuote('comment').' text,'."\n";
+		$query.=' '.$db->nameQuote('published').' tinyint(1) NOT NULL default \'0\','."\n";
+		$query.=' '.$db->nameQuote('checked_out').' int(11) unsigned NOT NULL default \'0\','."\n";
+		$query.=' '.$db->nameQuote('checked_out_time').' datetime NOT NULL default \'0000-00-00 00:00:00\','."\n";
+		$query.=' '.$db->nameQuote('ordering').' int(11) NOT NULL default \'0\','."\n";
+		$query.=' '.$db->nameQuote('params').' text,'."\n";
+		$query.=' PRIMARY KEY  ('.$db->nameQuote('id').')'."\n";
+		$query.=') TYPE=MyISAM CHARACTER SET '.$db->nameQuote('utf8').';'."\n";
+		
+		$db->setQuery( $query );
+		if (!$result = $db->query()){$msgSQL .= $db->stderr() . '<br />';}
+		
+
+		
+		// END 2.6
+		
 		
 		// CHECK TABLES
 		$query =' SELECT * FROM '.$db->nameQuote('#__phocagallery').' LIMIT 1;';
@@ -622,13 +926,13 @@ class PhocaGalleryCpControllerPhocaGalleryinstall extends PhocaGalleryCpControll
 			$msgSQL .= $db->getErrorMsg(). '<br />';
 		}
 		
-		$query=' SELECT * FROM '.$db->nameQuote('#__phocagallery_user_category').' LIMIT 1;'."\n";
+	/*	$query=' SELECT * FROM '.$db->nameQuote('#__phocagallery_user_category').' LIMIT 1;'."\n";
 		$db->setQuery( $query );
 		$result = $db->loadResult();
 		if ($db->getErrorNum()) {
 			$msgSQL .= $db->getErrorMsg(). '<br />';
 		}
-		
+	*/	
 		$query=' SELECT * FROM '.$db->nameQuote('#__phocagallery_img_votes').' LIMIT 1;'."\n";
 		$db->setQuery( $query );
 		$result = $db->loadResult();
@@ -643,6 +947,20 @@ class PhocaGalleryCpControllerPhocaGalleryinstall extends PhocaGalleryCpControll
 			$msgSQL .= $db->getErrorMsg(). '<br />';
 		}
 
+		$query=' SELECT * FROM '.$db->nameQuote('#__phocagallery_img_comments').' LIMIT 1;'."\n";
+		$db->setQuery( $query );
+		$result = $db->loadResult();
+		if ($db->getErrorNum()) {
+			$msgSQL .= $db->getErrorMsg(). '<br />';
+		}
+		
+		$query=' SELECT * FROM '.$db->nameQuote('#__phocagallery_user').' LIMIT 1;'."\n";
+		$db->setQuery( $query );
+		$result = $db->loadResult();
+		if ($db->getErrorNum()) {
+			$msgSQL .= $db->getErrorMsg(). '<br />';
+		}
+		
 		// Error
 		if ($msgSQL !='') {
 			$msgError .= '<br />' . $msgSQL;

@@ -102,7 +102,7 @@ class PhocaGalleryCpViewPhocaGalleryCo extends JView
 	
 	function _setToolbar($isNew) {
 		$text = $isNew ? JText::_( 'New' ) : JText::_( 'Edit' );
-		JToolBarHelper::title(   JText::_( 'Phoca Gallery Comment' ).': <small><small>[ ' . $text.' ]</small></small>', 'gallery' );
+		JToolBarHelper::title(   JText::_( 'PHOCAGALLERY_PG_CATEGORY_COMMENT' ).': <small><small>[ ' . $text.' ]</small></small>', 'comment' );
 		JToolBarHelper::save();
 		if ($isNew)  {
 			JToolBarHelper::cancel();

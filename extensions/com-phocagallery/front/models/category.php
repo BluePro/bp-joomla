@@ -83,17 +83,26 @@ class PhocagalleryModelCategory extends JModel
 		$image_ordering		= $params->get( 'image_ordering', 1 );
 		$imageOrdering 		= PhocaGalleryOrdering::getOrderingString($image_ordering);
 		
+		// Link from comment system
+		$wherecimgid	= '';
+		$cimgid			= JRequest::getVar( 'cimgid', 0, '', 'int');
+		if ($cimgid > 0) {
+			$wherecimgid	= ' AND a.id = '.(int)$cimgid;
+		}
+		
 		if ($rightDisplayDelete == 0 ) {
 			$published  = ' AND published = 1';
+			$published  .= ' AND approved = 1';
 		} else {
 			$published  = '';
 		}
 		
-		$query = 'SELECT a.*' .
-			' FROM #__phocagallery AS a' .
-			' WHERE a.catid = '.(int) $this->_id.
-			$published .
-			' ORDER BY a.'.$imageOrdering;
+		$query = 'SELECT a.*'
+			.' FROM #__phocagallery AS a'
+			.' WHERE a.catid = '.(int) $this->_id
+			.$wherecimgid
+			.$published
+			.' ORDER BY a.'.$imageOrdering;
 		return $query;
 	}
 
@@ -107,8 +116,12 @@ class PhocagalleryModelCategory extends JModel
 			
 			$user = &JFactory::getUser();
 			if (!$this->_category->published) {
-				JError::raiseError(404, JText::_("Resource Not Found"));
-				return false;
+				$mainframe->redirect(JRoute::_('index.php', false), JText::_("PHOCAGALLERY_CATEGORY_IS_UNPUBLISHED"));
+				exit;
+			}
+			if (!$this->_category->approved) {
+				$mainframe->redirect(JRoute::_('index.php', false), JText::_("PHOCAGALLERY_CATEGORY_IS_UNAUTHORIZED"));
+				exit;
 			}
 			
 			// USER RIGHT - ACCESS - - - - - -
@@ -133,6 +146,7 @@ class PhocagalleryModelCategory extends JModel
 				' CASE WHEN CHAR_LENGTH(c.alias) THEN CONCAT_WS(\':\', c.id, c.alias) ELSE c.id END as slug '.
 				' FROM #__phocagallery_categories AS c' .
 				' WHERE c.id = '. (int) $this->_id;
+				' AND c.approved = 1';
 			$this->_db->setQuery($query, 0, 1);
 			$this->_category = $this->_db->loadObject();
 		}
@@ -154,6 +168,7 @@ class PhocagalleryModelCategory extends JModel
 			' FROM #__phocagallery_categories' .
 			' WHERE id = '.(int) $this->_category->parent_id.
 			' AND published = 1' .
+			' AND approved = 1' .
 			' AND id <> '.(int) $this->_category->id.
 			' ORDER BY '.$categoryOrdering;
 		$this->_db->setQuery($query, 0, 1);
@@ -174,11 +189,12 @@ class PhocagalleryModelCategory extends JModel
 		
 		
 		//$query = 'SELECT c.*, COUNT(a.id) countimage' ... Cannot be used because get error if there is no image
-		$query = 'SELECT c.*'
+		$query = 'SELECT c.*, a.filename, a.extm, a.exts, a.extw, a.exth'
 			.' FROM #__phocagallery_categories AS c'
-		//	.' LEFT JOIN #__phocagallery AS a ON c.id = a.catid'
+			.' LEFT JOIN #__phocagallery AS a ON c.id = a.catid'
 			.' WHERE c.parent_id = '.(int) $this->_id
 			.' AND c.published = 1'
+			.' AND c.approved = 1'
 			.' AND c.id <> '.(int) $this->_id
 		//	.' AND a.published = 1'
 		//	.' AND countimage > 0'
@@ -186,7 +202,7 @@ class PhocagalleryModelCategory extends JModel
 		//	.' FROM #__phocagallery as a'
         //	.' WHERE a.catid = c.id' 
         //	.' AND a.published = 1) > 0'
-		//	' GROUP BY c.id'.
+			.' GROUP BY c.id'
 			.' ORDER BY c.'.$categoryOrdering;
 			
 		$this->_db->setQuery($query);
@@ -194,59 +210,12 @@ class PhocagalleryModelCategory extends JModel
 		return $subCategory;
 	}
 	
-	function getRandomImageRecursive($categoryid, $categoryImageOrdering = '') {
-		$image = '';
-		// We need to get a list of all subcategories in the given category
-		
-		if ($categoryImageOrdering == '') {
-			$ordering = ' ORDER BY RAND()'; 
-		} else {
-			$ordering = ' ORDER BY a.'.$categoryImageOrdering;
-		}
-		
-        $query = 'SELECT a.id, a.filename' .
-            ' FROM #__phocagallery AS a' .
-            ' WHERE a.catid = '.(int) $categoryid.
-            ' AND a.published = 1'.
-            $ordering;     
-        $images = $this->_getList($query, 0, 1);
-        if (count($images) == 0) {
-            $image->filename = '';
-            $subCategories = $this->_getRandomCategory($categoryid);
-            foreach ($subCategories as $subCategory) {
-                $image = $this->getRandomImageRecursive($subCategory->id);
-				
-                if (isset($image->filename) && $image->filename != '') {
-                    break;
-                }
-            }
-        } else {
-            $image = $images[0] ;
-        }
-		if(isset($image->filename)) {
-			return $image->filename;
-		} else {
-			return $image;
-		}
-    }
-	
-	function _getRandomCategory($parentid) {
-        
-		$query = 'SELECT c.id' .
-            ' FROM #__phocagallery_categories AS c' .
-            ' WHERE c.parent_id = '.(int) $parentid.
-            ' AND c.published = 1' .
-            ' ORDER BY RAND()';
-
-        return $this->_getList($query);
-    }
-	
 	// Called from SubCategories
 	// Called from Category Controller
 	function getCountItem($catid = 0, $rightDisplayDelete = 0) {
 	
 		if ($rightDisplayDelete == 0 ) {
-			$published  = ' WHERE a.published = 1 AND a.catid = '.$catid;
+			$published  = ' WHERE a.published = 1 AND a.approved = 1 AND a.catid = '.$catid;
 		} else {
 			$published  = ' WHERE a.catid = '.$catid;
 		}
@@ -347,6 +316,8 @@ class PhocagalleryModelCategory extends JModel
 			$this->setError('File not exists');
 			return false;
 		}
+		
+		$data['imgorigsize'] 	= PhocaGalleryFile::getFileSize($data['filename'], 0);
 		
 		//If there is no title and no alias, use filename as title and alias
 		if (!isset($data['title']) || (isset($data['title']) && $data['title'] == '')) {
@@ -482,7 +453,8 @@ class PhocagalleryModelCategory extends JModel
 		$query = 'SELECT COUNT(i.id) AS countimg'
 			.' FROM #__phocagallery AS i'
 			.' WHERE i.catid = '. (int) $catId
-			.' AND i.published ='.(int)$published;
+			.' AND i.published ='.(int)$published
+			.' AND i.approved = 1';
 		$this->_db->setQuery($query, 0, 1);
 		$countPublished = $this->_db->loadObject();
 		
@@ -507,6 +479,7 @@ class PhocagalleryModelCategory extends JModel
 			.' FROM #__phocagallery AS i'
 			.' WHERE i.catid = '.(int) $catId
 			.' AND i.published = 1'
+			.' AND i.approved = 1'
 			.' ORDER BY '.$order.' '.$order2;
 			
 		$this->_db->setQuery($query, 0, $limit);
@@ -520,8 +493,11 @@ class PhocagalleryModelCategory extends JModel
 				$item[$i] 						=& $statisticsData[$count];
 				$item[$i]->slug 				= $item[$i]->id.':'.$item[$i]->alias;
 				$item[$i]->item_type 			= "image";
-				$item[$i]->linkthumbnailpath  = PhocaGalleryImageFront::displayImageOrNoImage($item[$i]->filename, 'medium');
-			
+				if (isset($item[$i]->extid) && $item[$i]->extid != '') {
+					$item[$i]->linkthumbnailpath = $item[$i]->extm;
+				} else {
+					$item[$i]->linkthumbnailpath  = PhocaGalleryImageFront::displayCategoryImageOrNoImage($item[$i]->filename, 'medium');
+				}
 				$count++;
 			}
 		return $item;

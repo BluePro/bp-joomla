@@ -34,6 +34,7 @@ class PhocaGalleryCpViewPhocaGalleryCs extends JView
 		// Get data from the model
 		$model		= &$this->getModel();
 		$items		= & $this->get( 'Data');
+		$tmpl['notapproved'] 	= & $this->get( 'NotApprovedCategory' );
 		$tmpl['total'] = count($items);
 		$model->setTotal($tmpl['total']);
 		$tmpl['pagination'] = &$this->get( 'Pagination' );
@@ -68,6 +69,8 @@ class PhocaGalleryCpViewPhocaGalleryCs extends JView
 		JToolBarHelper::title( JText::_( 'Phoca Gallery Categories' ), 'category' );
 		JToolBarHelper::publishList();
 		JToolBarHelper::unpublishList();
+		JToolBarHelper::customX('approve', 'approve.png', '', JText::_( 'PHOCAGALLERY_APPROVE' ), true);
+		JToolBarHelper::customX('disapprove', 'disapprove.png', '', JText::_( 'PHOCAGALLERY_NOT_APPROVE' ), true);
 		JToolBarHelper::deleteList( JText::_( 'WARNWANTDELLISTEDITEMS' ), 'remove', 'delete');
 		JToolBarHelper::editListX();
 		JToolBarHelper::addNewX();

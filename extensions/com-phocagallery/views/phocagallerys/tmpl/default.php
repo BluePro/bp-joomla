@@ -6,6 +6,10 @@ $user 	=& JFactory::getUser();
 $ordering = ($this->lists['order'] == 'a.ordering');
 
 JHTML::_('behavior.tooltip');
+
+if (isset($this->tmpl['notapproved']->count) && (int)$this->tmpl['notapproved']->count > 0 ) {
+	echo '<div class="notapproved">'.JText::_('PHOCAGALLERY_NOT_APPROVED_IMAGE_IN_GALLERY').': '.(int)$this->tmpl['notapproved']->count.'</div>';
+}
 ?>
 
 <form action="<?php echo $this->request_url; ?>" method="post" name="adminForm">
@@ -39,13 +43,18 @@ JHTML::_('behavior.tooltip');
 					</th>
 					<th width="10%" nowrap="nowrap"><?php echo JText::_('Functions'); ?>
 					</th>
-					<th width="5%" nowrap="nowrap"><?php echo JHTML::_('grid.sort',  'Published', 'a.published', $this->lists['order_Dir'], $this->lists['order'] ); ?>
+					<th width="5%" nowrap="nowrap"><?php echo JHTML::_('grid.sort',  JText::_('PHOCAGALLERY_PUBLISHED'), 'a.published', $this->lists['order_Dir'], $this->lists['order'] ); ?>
+					</th>
+					<th width="5%" nowrap="nowrap"><?php echo JHTML::_('grid.sort',   JText::_('PHOCAGALLERY_APPROVED'), 'a.approved', $this->lists['order_Dir'], $this->lists['order'] ); ?>
 					</th>
 					<th width="14%" nowrap="nowrap">
 						<?php echo JHTML::_('grid.sort',  'Order', 'a.ordering', $this->lists['order_Dir'], $this->lists['order'] ); ?>
 						<?php echo JHTML::_('grid.order',  $this->items ); ?></th>
 					<th width="15%"  class="title">
 						<?php echo JHTML::_('grid.sort',  'Category', 'category', $this->lists['order_Dir'], $this->lists['order'] ); ?></th>
+					
+					<th width="5%"><?php echo JHTML::_('grid.sort',  'PHOCAGALLERY_OWNER', 'ownerid', $this->lists['order_Dir'], $this->lists['order'] ); ?></th>
+					
 					<th width="5%"><?php echo JHTML::_('grid.sort',  'Rating', 'v.average', $this->lists['order_Dir'], $this->lists['order'] ); ?>
 					</th>
 					
@@ -69,6 +78,7 @@ JHTML::_('behavior.tooltip');
 					$linkDeleteThumbs= JRoute::_( 'index.php?option=com_phocagallery&controller=phocagallery&task=deletethumbs&cid[]='. $row->id );
 					$checked 	= JHTML::_('grid.checkedout', $row, $i );
 					$published 	= JHTML::_('grid.published', $row, $i );
+					$approved 	= PhocaGalleryRenderAdmin::approved( $row, $i );
 					$row->cat_link 	= JRoute::_( 'index.php?option=com_phocagallery&controller=phocagalleryc&task=edit&cid[]='. $row->catid );
 				?>
 				<tr class="<?php echo "row$k"; ?>">
@@ -81,11 +91,27 @@ JHTML::_('behavior.tooltip');
 									<div class="phocagallery-box-file-second">
 										<div class="phocagallery-box-file-third">
 											<center>
-											<?php if (isset ($row->fileoriginalexist) && $row->fileoriginalexist == 1)
-											{
-											?>
-												<a class="<?php echo $this->button->modalname; ?>" title="<?php echo $this->button->text; ?>" href="<?php echo $this->button->link . '&amp;cid[]='.$row->id; ?>" rel="<?php echo $this->button->options; ?>" ><?php echo JHTML::_( 'image', $row->linkthumbnailpath.'?imagesid='.md5(uniqid(time())), ''); ?></a>
-											<?php
+											<?php 
+											// PICASA
+											if (isset($row->extid) && $row->extid !='') {
+											
+												$resW	= explode(',', $row->extw);
+												$resH	= explode(',', $row->exth);
+									
+												$correctImageRes = PhocaGalleryImage::correctSizeWithRate($resW[2], $resH[2], 50, 50);
+												?>
+												<a class="<?php echo $this->button->modalname; ?>" title="<?php echo $this->button->text; ?>" href="<?php echo $this->button->link . '&amp;cid[]='.$row->id; ?>" rel="<?php echo $this->button->options; ?>" ><?php echo JHTML::_( 'image', $row->exts.'?imagesid='.md5(uniqid(time())), '', array('width' => $correctImageRes['width'], 'height' => $correctImageRes['height'])); ?></a>
+												<?php
+											
+											
+											
+											} else if (isset ($row->fileoriginalexist) && $row->fileoriginalexist == 1) {
+
+												$imageRes	= PhocaGalleryImage::getRealImageSize($row->filename, 'small');
+												$correctImageRes = PhocaGalleryImage::correctSizeWithRate($imageRes['w'], $imageRes['h'], 50, 50);
+												?>
+												<a class="<?php echo $this->button->modalname; ?>" title="<?php echo $this->button->text; ?>" href="<?php echo $this->button->link . '&amp;cid[]='.$row->id; ?>" rel="<?php echo $this->button->options; ?>" ><?php echo JHTML::_( 'image', $row->linkthumbnailpath.'?imagesid='.md5(uniqid(time())), '', array('width' => $correctImageRes['width'], 'height' => $correctImageRes['height'])); ?></a>
+												<?php
 											}
 											else
 											{
@@ -111,18 +137,31 @@ JHTML::_('behavior.tooltip');
 						}
 						?>
 					</td>
-					<td><?php echo $row->filename;?></td>
-					<td align="center">
-					<a href="<?php echo $linkRotate90; ?>" title="<?php echo JText::_( 'Rotate Left' ); ?>"><?php echo JHTML::_( 'image.administrator', 'icon-rotate-left.gif', 'components/com_phocagallery/assets/images/','','', JText::_( 'Rotate Left' ));?></a> 
 					
-					<a href="<?php echo $linkRotate270; ?>" title="<?php echo JText::_( 'Rotate Right' ); ?>"><?php echo JHTML::_( 'image.administrator', 'icon-rotate-right.gif', 'components/com_phocagallery/assets/images/','','', JText::_( 'Rotate Right' ));?></a> 
 					
-					<a href="<?php echo $linkDeleteThumbs; ?>" title="<?php echo JText::_( 'Delete and Recreate Thumbnail' ); ?>"><?php echo JHTML::_( 'image.administrator', 'icon-remove-create.gif', 'components/com_phocagallery/assets/images/','','', JText::_( 'Delete and Recreate Thumbnail' ));?></a>
+					<?php
+
+					if (isset($row->extid) && $row->extid !='') {
+						echo '<td align="center">'.JText::_('PHOCAGALLERY_PICASA_STORED_FILE').'</td>';
+						echo '<td></td>';
+					} else {
 					
-					<a href="#" onclick="window.location.reload(true);" title="<?php echo JText::_( 'Reload Site' ); ?>"><?php echo JHTML::_( 'image.administrator', 'icon-reload.gif', 'components/com_phocagallery/assets/images/','','', JText::_( 'Reload Site' ));?></a> 
-					
-					</td>
+						?>
+						<td><?php echo $row->filename;?></td>
+						<td align="center">
+						<a href="<?php echo $linkRotate90; ?>" title="<?php echo JText::_( 'Rotate Left' ); ?>"><?php echo JHTML::_( 'image.administrator', 'icon-rotate-left.gif', 'components/com_phocagallery/assets/images/','','', JText::_( 'Rotate Left' ));?></a> 
+						
+						<a href="<?php echo $linkRotate270; ?>" title="<?php echo JText::_( 'Rotate Right' ); ?>"><?php echo JHTML::_( 'image.administrator', 'icon-rotate-right.gif', 'components/com_phocagallery/assets/images/','','', JText::_( 'Rotate Right' ));?></a> 
+						
+						<a href="<?php echo $linkDeleteThumbs; ?>" title="<?php echo JText::_( 'PHOCAGALLERY_RECREATE_THUMBS' ); ?>"><?php echo JHTML::_( 'image.administrator', 'icon-remove-create.gif', 'components/com_phocagallery/assets/images/','','', JText::_( 'Delete and Recreate Thumbnail' ));?></a>
+						
+						<a href="#" onclick="window.location.reload(true);" title="<?php echo JText::_( 'Reload Site' ); ?>"><?php echo JHTML::_( 'image.administrator', 'icon-reload.gif', 'components/com_phocagallery/assets/images/','','', JText::_( 'Reload Site' ));?></a> 
+						
+						</td><?php
+					}
+					?>
 					<td align="center"><?php echo $published;?></td>
+					<td align="center"><?php echo $approved;?></td>
 					<td class="order">
 						<span><?php echo $this->tmpl['pagination']->orderUpIcon( $i, ($row->catid == @$this->items[$i-1]->catid),'orderup', 'Move Up', $ordering ); ?></span>
 						<span><?php echo $this->tmpl['pagination']->orderDownIcon( $i, $n, ($row->catid == @$this->items[$i+1]->catid), 'orderdown', 'Move Down', $ordering ); ?></span>
@@ -131,6 +170,8 @@ JHTML::_('behavior.tooltip');
 					</td>
 					<td><a href="<?php echo $row->cat_link; ?>" title="<?php echo JText::_( 'Edit Category' ); ?>"><?php echo $row->category; ?></a>
 					</td>
+					
+					<td align="center"><?php echo $row->usercatname; ?></td>
 					
 					<td align="center"><?php
 							$voteAvg 		= round(((float)$row->ratingavg / 0.5)) * 0.5;
@@ -158,7 +199,7 @@ JHTML::_('behavior.tooltip');
 			
 			<tfoot>
 				<tr>
-					<td colspan="12"><?php echo $this->tmpl['pagination']->getListFooter(); ?></td>
+					<td colspan="14"><?php echo $this->tmpl['pagination']->getListFooter(); ?></td>
 				</tr>
 			</tfoot>
 		</table>

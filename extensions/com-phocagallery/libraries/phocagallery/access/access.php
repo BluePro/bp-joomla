@@ -15,7 +15,6 @@ class PhocaGalleryAccess
 	/*
 	 * Get info about access in only one category
 	 */
-	
 	function getCategoryAccess($id) {
 		
 		$output = array();
@@ -113,6 +112,11 @@ class PhocaGalleryAccess
 	
 	function usersList( $name, $active, $nouser = 0, $javascript = NULL, $order = 'name', $reg = 1 ) {
 		
+		$activeArray = $active;
+		if ($active != '') {
+			$activeArray = explode(',',$active);
+		}
+		
 		$db		= &JFactory::getDBO();
 		$and	= '';
 		if ( $reg ) {
@@ -155,13 +159,15 @@ class PhocaGalleryAccess
 			$users = $db->loadObjectList();
 		}
 
-		$users = JHTML::_('select.genericlist',   $users, $name, 'class="inputbox" size="4" multiple="multiple"'. $javascript, 'value', 'text', $active );
+		$users = JHTML::_('select.genericlist',   $users, $name, 'class="inputbox" size="4" multiple="multiple"'. $javascript, 'value', 'text', $activeArray );
 
 		return $users;
 	}
 	
-	
-	function usersListAuthor( $name, $active, $nouser = 0, $javascript = NULL, $order = 'name', $reg = 1 ) {
+	/*
+	 * Get list of users to select Owner of the category
+	 */
+	function usersListOwner( $name, $active, $nouser = 0, $javascript = NULL, $order = 'name', $reg = 1 ) {
 		
 		$db 	= &JFactory::getDBO();
 		$and 	= '';

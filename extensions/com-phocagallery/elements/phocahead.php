@@ -15,7 +15,12 @@ class JElementPhocaHead extends JElement
 	var	$_name = 'PhocaHead';
 
 	function fetchTooltip($label, $description, &$node, $control_name, $name) {
-		return '&nbsp;';
+		$phocaImage	= ( $node->attributes('phocaimage') ? $node->attributes('phocaimage') : '' );
+		if($phocaImage != ''){
+			return JHTML::_('image.site',  $phocaImage, '/components/com_phocagallery/assets/images/', NULL, NULL, '' );
+		} else {
+			return '&nbsp;';
+		}
 	}
 
 	function fetchElement($name, $value, &$node, $control_name)

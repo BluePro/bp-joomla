@@ -55,6 +55,11 @@ class PhocaGalleryOrdering
 			case 9:
 				$orderingOutput = '';
 			break;
+			
+			// Is not ordered by recursive function needs not to be used
+			case 10:
+				$orderingOutput = '';
+			break;
 		
 			case 1:
 			default:

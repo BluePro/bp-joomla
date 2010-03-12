@@ -120,6 +120,11 @@ class PhocaGalleryCpModelPhocaGalleryLinkImg extends JModel
 
 		$where = array();
 
+		$where[] = 'a.published = 1';
+		$where[] = 'a.approved = 1';
+		$where[] = 'cc.published = 1';
+		$where[] = 'cc.approved = 1';
+		
 		if ($filter_catid > 0) {
 			$where[] = 'a.catid = '.(int) $filter_catid;
 		}

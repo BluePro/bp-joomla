@@ -72,6 +72,7 @@ class PhocaGalleryCpViewPhocaGallery extends JView
 			$model->checkout( $user->get('id') );
 		} else {
 			// initialise new record
+			$items->approved 	= 1;
 			$items->published 	= 1;
 			$items->order 		= 0;
 			$items->catid 		= JRequest::getVar( 'catid', 0, 'post', 'int' );
@@ -104,6 +105,7 @@ class PhocaGalleryCpViewPhocaGallery extends JView
 		
 		// Build the html select list
 		$lists['published'] = JHTML::_('select.booleanlist',  'published', 'class="inputbox"', $items->published );
+		$lists['approved'] = JHTML::_('select.booleanlist',  'approved', 'class="inputbox"', $items->approved );
 
 		// Link To GeoMap - Geo Button - - - - - -
 		$longitudeLink = '14.429919719696045';

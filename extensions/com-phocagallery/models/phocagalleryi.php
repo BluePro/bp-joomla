@@ -25,6 +25,7 @@ class PhocaGalleryCpModelPhocaGalleryI extends JModel
 		if (!$set) {
 			$folder = JRequest::getVar( 'folder', '', '', 'path' );
 			$upload = JRequest::getVar( 'upload', '', '', 'int' );
+			
 
 			$this->setState('folder', $folder);
 
@@ -37,13 +38,15 @@ class PhocaGalleryCpModelPhocaGalleryI extends JModel
 	}
 
 	function getImages() {
-		$refreshUrl = 'index.php?option=com_phocagallery&view=phocagalleryi&tmpl=component';
+		$tab = JRequest::getVar( 'tab', 0, '', 'int' );
+		$refreshUrl = 'index.php?option=com_phocagallery&view=phocagalleryi&tab='.$tab.'&tmpl=component';
 		$list = PhocaGalleryFileFolderList::getList(0,1,0,$refreshUrl);
 		return $list['images'];
 	}
 
 	function getFolders() {
-		$refreshUrl = 'index.php?option=com_phocagallery&view=phocagalleryi&tmpl=component';
+		$tab = JRequest::getVar( 'tab', 0, '', 'int' );
+		$refreshUrl = 'index.php?option=com_phocagallery&view=phocagalleryi&tab='.$tab.'&tmpl=component';
 		$list = PhocaGalleryFileFolderList::getList(0,0,0,$refreshUrl);
 		return $list['folders'];
 	}

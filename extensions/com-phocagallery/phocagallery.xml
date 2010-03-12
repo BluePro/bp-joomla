@@ -2,14 +2,14 @@
 <!DOCTYPE install SYSTEM "http://dev.joomla.org/xml/1.5/component-install.dtd">
 <install method="upgrade" type="component" version="1.5.0">
 	<name>PhocaGallery</name>
-	<creationDate>11/09/2009</creationDate>
+	<creationDate>08/01/2010</creationDate>
 	<author>Jan Pavelka (www.phoca.cz)</author>
 	<authorEmail></authorEmail>
 	<authorUrl>www.phoca.cz</authorUrl>
 	<copyright>Jan Pavelka</copyright>
 	<license>GNU/GPL</license>
 	<!-- The version string is recorded in the components table -->
-	<version>2.5.8</version>
+	<version>2.6.2</version>
 	<!-- The description is optional and defaults to the name -->
 	<description>Phoca Gallery</description>
 
@@ -43,10 +43,17 @@
 		<filename>assets/images/icon-b.png</filename>
 		<filename>assets/images/icon-cart.gif</filename>
 		<filename>assets/images/icon-cart.png</filename>
+		<filename>assets/images/icon-comment-a.gif</filename>
 		<filename>assets/images/icon-comment.gif</filename>
 		<filename>assets/images/icon-comment.png</filename>
+		<filename>assets/images/icon-cooliris.gif</filename>
+		<filename>assets/images/icon-cooliris.png</filename>
 		<filename>assets/images/icon-date.gif</filename>
 		<filename>assets/images/icon-date.png</filename>
+		<filename>assets/images/icon-downarrow.gif</filename>
+		<filename>assets/images/icon-downarrow.png</filename>
+		<filename>assets/images/icon-downarrow0.gif</filename>
+		<filename>assets/images/icon-downarrow0.png</filename>
 		<filename>assets/images/icon-download.gif</filename>
 		<filename>assets/images/icon-download.png</filename>
 		<filename>assets/images/icon-exit.gif</filename>
@@ -55,6 +62,8 @@
 		<filename>assets/images/icon-extlink1.png</filename>
 		<filename>assets/images/icon-extlink2.gif</filename>
 		<filename>assets/images/icon-extlink2.png</filename>
+		<filename>assets/images/icon-filesave.gif</filename>
+		<filename>assets/images/icon-filesave.png</filename>
 		<filename>assets/images/icon-folder-medium-key.gif</filename>
 		<filename>assets/images/icon-folder-medium-key.png</filename>
 		<filename>assets/images/icon-folder-medium.gif</filename>
@@ -69,8 +78,11 @@
 		<filename>assets/images/icon-geo.png</filename>
 		<filename>assets/images/icon-i.gif</filename>
 		<filename>assets/images/icon-i.png</filename>
+		<filename>assets/images/icon-images.gif</filename>
+		<filename>assets/images/icon-images.png</filename>
 		<filename>assets/images/icon-info.gif</filename>
 		<filename>assets/images/icon-info.png</filename>
+		<filename>assets/images/icon-loading.gif</filename>
 		<filename>assets/images/icon-next-grey.gif</filename>
 		<filename>assets/images/icon-next-grey.png</filename>
 		<filename>assets/images/icon-next.gif</filename>
@@ -82,6 +94,7 @@
 		<filename>assets/images/icon-phoca-logo-seal.png</filename>
 		<filename>assets/images/icon-phoca-logo-small.png</filename>
 		<filename>assets/images/icon-phoca-logo.png</filename>
+		<filename>assets/images/icon-phocagallery.png</filename>
 		<filename>assets/images/icon-play-grey.gif</filename>
 		<filename>assets/images/icon-play-grey.png</filename>
 		<filename>assets/images/icon-play.gif</filename>
@@ -110,6 +123,8 @@
 		<filename>assets/images/icon-stop-grey.png</filename>
 		<filename>assets/images/icon-stop.gif</filename>
 		<filename>assets/images/icon-stop.png</filename>
+		<filename>assets/images/icon-subcategories.gif</filename>
+		<filename>assets/images/icon-subcategories.png</filename>
 		<filename>assets/images/icon-switch.gif</filename>
 		<filename>assets/images/icon-trash.gif</filename>
 		<filename>assets/images/icon-trash.png</filename>
@@ -121,6 +136,10 @@
 		<filename>assets/images/icon-up-images-key.png</filename>
 		<filename>assets/images/icon-up-images.gif</filename>
 		<filename>assets/images/icon-up-images.png</filename>
+		<filename>assets/images/icon-uparrow.gif</filename>
+		<filename>assets/images/icon-uparrow.png</filename>
+		<filename>assets/images/icon-uparrow0.gif</filename>
+		<filename>assets/images/icon-uparrow0.png</filename>
 		<filename>assets/images/icon-upload.gif</filename>
 		<filename>assets/images/icon-upload.png</filename>
 		<filename>assets/images/icon-user.gif</filename>
@@ -134,6 +153,10 @@
 		<filename>assets/images/icon-voting-small.gif</filename>
 		<filename>assets/images/icon-voting.gif</filename>
 		<filename>assets/images/index.html</filename>
+		<filename>assets/images/mapicons/index.html</filename>
+		<filename>assets/images/mapicons/yellow/image.png</filename>
+		<filename>assets/images/mapicons/yellow/index.html</filename>
+		<filename>assets/images/mapicons/yellow/shadow.png</filename>
 		<filename>assets/images/phoca_thumb_l_no_image.gif</filename>
 		<filename>assets/images/phoca_thumb_l_no_image.png</filename>
 		<filename>assets/images/phoca_thumb_m_no_image.gif</filename>
@@ -149,6 +172,8 @@
 		<filename>assets/images/shadow3.png</filename>
 		<filename>assets/images/shadow4.gif</filename>
 		<filename>assets/images/shadow4.png</filename>
+		<filename>assets/images/shadow5.gif</filename>
+		<filename>assets/images/shadow5.png</filename>
 		<filename>assets/images/spacer.gif</filename>
 		<filename>assets/images/theme.xml</filename>
 		<filename>assets/index.html</filename>
@@ -223,7 +248,7 @@
 		<filename>assets/js/shadowbox/src/index.html</filename>
 		<filename>assets/js/shadowbox/src/lang/index.html</filename>
 		<filename>assets/js/shadowbox/src/lang/shadowbox-cs.js</filename>
-		<filename>assets/js/shadowbox/src/lang/shadowbox-de-DE.js</filename>
+		<filename>assets/js/shadowbox/src/lang/shadowbox-de.js</filename>
 		<filename>assets/js/shadowbox/src/lang/shadowbox-en.js</filename>
 		<filename>assets/js/shadowbox/src/lang/shadowbox-es.js</filename>
 		<filename>assets/js/shadowbox/src/lang/shadowbox-fr.js</filename>
@@ -245,10 +270,13 @@
 		<filename>assets/phocagallery.css</filename>
 		<filename>assets/phocagalleryieall.css</filename>
 		<filename>controllers/category.php</filename>
+		<filename>controllers/comment.php</filename>
 		<filename>controllers/detail.php</filename>
 		<filename>controllers/index.html</filename>
+		<filename>controllers/user.php</filename>
 		<filename>models/categories.php</filename>
 		<filename>models/category.php</filename>
+		<filename>models/comment.php</filename>
 		<filename>models/cooliris3dwall.php</filename>
 		<filename>models/detail.php</filename>
 		<filename>models/index.html</filename>
@@ -271,10 +299,14 @@
 		<filename>views/category/tmpl/default_geotagging.php</filename>
 		<filename>views/category/tmpl/default_rating.php</filename>
 		<filename>views/category/tmpl/default_statistics.php</filename>
-		<filename>views/category/tmpl/default_subcategory.php</filename>
 		<filename>views/category/tmpl/default_upload.php</filename>
 		<filename>views/category/tmpl/index.html</filename>
 		<filename>views/category/view.html.php</filename>
+		<filename>views/comment/index.html</filename>
+		<filename>views/comment/metadata.xml</filename>
+		<filename>views/comment/tmpl/default.php</filename>
+		<filename>views/comment/tmpl/index.html</filename>
+		<filename>views/comment/view.html.php</filename>
 		<filename>views/cooliris3dwall/index.html</filename>
 		<filename>views/cooliris3dwall/metadata.xml</filename>
 		<filename>views/cooliris3dwall/tmpl/default.php</filename>
@@ -307,7 +339,9 @@
 		<filename>views/user/tmpl/default.php</filename>
 		<filename>views/user/tmpl/default.xml</filename>
 		<filename>views/user/tmpl/default_category.php</filename>
-		<filename>views/user/tmpl/default_upload.php</filename>
+		<filename>views/user/tmpl/default_images.php</filename>
+		<filename>views/user/tmpl/default_subcategories.php</filename>
+		<filename>views/user/tmpl/default_user.php</filename>
 		<filename>views/user/tmpl/index.html</filename>
 		<filename>views/user/view.html.php</filename>
 	</files>
@@ -328,7 +362,9 @@
 			<menu img="components/com_phocagallery/assets/images/icon-16-pg-menu-theme.png" link="option=com_phocagallery&amp;view=phocagalleryt">Themes</menu>
 			<menu img="components/com_phocagallery/assets/images/icon-16-pg-menu-vote.png" link="option=com_phocagallery&amp;view=phocagalleryra">Category Rating</menu>
 			<menu img="components/com_phocagallery/assets/images/icon-16-pg-menu-vote-img.png" link="option=com_phocagallery&amp;view=phocagalleryraimg">Image Rating</menu>
-			<menu img="components/com_phocagallery/assets/images/icon-16-pg-menu-comment.png" link="option=com_phocagallery&amp;view=phocagallerycos">Comments</menu>
+			<menu img="components/com_phocagallery/assets/images/icon-16-pg-menu-comment.png" link="option=com_phocagallery&amp;view=phocagallerycos">Category Comments</menu>
+			<menu img="components/com_phocagallery/assets/images/icon-16-pg-menu-comment-img.png" link="option=com_phocagallery&amp;view=phocagallerycoimgs">Image Comments</menu>
+			<menu img="components/com_phocagallery/assets/images/icon-16-pg-menu-users.png" link="option=com_phocagallery&amp;view=phocagalleryusers">Users</menu>
 			<menu img="components/com_phocagallery/assets/images/icon-16-pg-menu-info.png" link="option=com_phocagallery&amp;view=phocagalleryin">Info</menu>
 		</submenu>
 
@@ -354,10 +390,12 @@
 			<filename>assets/images/icon-16-false.png</filename>
 			<filename>assets/images/icon-16-pg-control-panel.png</filename>
 			<filename>assets/images/icon-16-pg-menu-cat.png</filename>
+			<filename>assets/images/icon-16-pg-menu-comment-img.png</filename>
 			<filename>assets/images/icon-16-pg-menu-comment.png</filename>
 			<filename>assets/images/icon-16-pg-menu-gal.png</filename>
 			<filename>assets/images/icon-16-pg-menu-info.png</filename>
 			<filename>assets/images/icon-16-pg-menu-theme.png</filename>
+			<filename>assets/images/icon-16-pg-menu-users.png</filename>
 			<filename>assets/images/icon-16-pg-menu-vote-img.png</filename>
 			<filename>assets/images/icon-16-pg-menu-vote.png</filename>
 			<filename>assets/images/icon-16-pg-menu.png</filename>
@@ -365,20 +403,32 @@
 			<filename>assets/images/icon-16-upload-flash.png</filename>
 			<filename>assets/images/icon-16-upload-java.png</filename>
 			<filename>assets/images/icon-16-upload.png</filename>
+			<filename>assets/images/icon-32-approve.png</filename>
+			<filename>assets/images/icon-32-authorizeall.png</filename>
+			<filename>assets/images/icon-32-disapprove.png</filename>
+			<filename>assets/images/icon-32-loadext.png</filename>
 			<filename>assets/images/icon-32-multiple.png</filename>
 			<filename>assets/images/icon-32-piclens.png</filename>
+			<filename>assets/images/icon-32-recreate.png</filename>
 			<filename>assets/images/icon-48-pg-cat.png</filename>
+			<filename>assets/images/icon-48-pg-comment-img.png</filename>
 			<filename>assets/images/icon-48-pg-comment.png</filename>
 			<filename>assets/images/icon-48-pg-gal.png</filename>
 			<filename>assets/images/icon-48-pg-info.png</filename>
 			<filename>assets/images/icon-48-pg-phoca.png</filename>
 			<filename>assets/images/icon-48-pg-theme.png</filename>
+			<filename>assets/images/icon-48-pg-users.png</filename>
 			<filename>assets/images/icon-48-pg-vote-img.png</filename>
 			<filename>assets/images/icon-48-pg-vote.png</filename>
 			<filename>assets/images/icon-folder-images.gif</filename>
 			<filename>assets/images/icon-folder-small.gif</filename>
 			<filename>assets/images/icon-image-small.gif</filename>
 			<filename>assets/images/icon-insert.gif</filename>
+			<filename>assets/images/icon-loading.gif</filename>
+			<filename>assets/images/icon-param-cscv.png</filename>
+			<filename>assets/images/icon-param-csv.png</filename>
+			<filename>assets/images/icon-param-cv.png</filename>
+			<filename>assets/images/icon-param-dv.png</filename>
 			<filename>assets/images/icon-phoca-logo-seal.png</filename>
 			<filename>assets/images/icon-phoca-logo.png</filename>
 			<filename>assets/images/icon-reload.gif</filename>
@@ -390,6 +440,7 @@
 			<filename>assets/images/icon-up_m.gif</filename>
 			<filename>assets/images/icon-voting-small.gif</filename>
 			<filename>assets/images/icon-voting.gif</filename>
+			<filename>assets/images/image-bg-image.png</filename>
 			<filename>assets/images/index.html</filename>
 			<filename>assets/images/install.png</filename>
 			<filename>assets/images/logo-phoca.png</filename>
@@ -420,6 +471,7 @@
 			<filename>controllers/phocagallery.php</filename>
 			<filename>controllers/phocagalleryc.php</filename>
 			<filename>controllers/phocagalleryco.php</filename>
+			<filename>controllers/phocagallerycoimg.php</filename>
 			<filename>controllers/phocagalleryin.php</filename>
 			<filename>controllers/phocagalleryinstall.php</filename>
 			<filename>controllers/phocagallerym.php</filename>
@@ -428,6 +480,7 @@
 			<filename>controllers/phocagalleryt.php</filename>
 			<filename>controllers/phocagalleryu.php</filename>
 			<filename>controllers/phocagalleryuninstall.php</filename>
+			<filename>controllers/phocagalleryuser.php</filename>
 			<filename>elements/index.html</filename>
 			<filename>elements/phocacolortext.php</filename>
 			<filename>elements/phocagallery.php</filename>
@@ -445,6 +498,7 @@
 			<filename>libraries/phocagallery/access/index.html</filename>
 			<filename>libraries/phocagallery/comment/comment.php</filename>
 			<filename>libraries/phocagallery/comment/commentcategory.php</filename>
+			<filename>libraries/phocagallery/comment/commentimage.php</filename>
 			<filename>libraries/phocagallery/comment/index.html</filename>
 			<filename>libraries/phocagallery/file/file.php</filename>
 			<filename>libraries/phocagallery/file/filedownload.php</filename>
@@ -456,6 +510,7 @@
 			<filename>libraries/phocagallery/geo/geo.php</filename>
 			<filename>libraries/phocagallery/geo/index.html</filename>
 			<filename>libraries/phocagallery/image/image.php</filename>
+			<filename>libraries/phocagallery/image/imagebgimage.php</filename>
 			<filename>libraries/phocagallery/image/imagefront.php</filename>
 			<filename>libraries/phocagallery/image/imagemagic.php</filename>
 			<filename>libraries/phocagallery/image/imagerotate.php</filename>
@@ -468,8 +523,11 @@
 			<filename>libraries/phocagallery/pagination/index.html</filename>
 			<filename>libraries/phocagallery/pagination/paginationcategories.php</filename>
 			<filename>libraries/phocagallery/pagination/paginationcategory.php</filename>
+			<filename>libraries/phocagallery/pagination/paginationuserimage.php</filename>
+			<filename>libraries/phocagallery/pagination/paginationusersubcat.php</filename>
 			<filename>libraries/phocagallery/path/index.html</filename>
 			<filename>libraries/phocagallery/path/path.php</filename>
+			<filename>libraries/phocagallery/picasa/picasa.php</filename>
 			<filename>libraries/phocagallery/rate/index.html</filename>
 			<filename>libraries/phocagallery/rate/ratecategory.php</filename>
 			<filename>libraries/phocagallery/rate/rateimage.php</filename>
@@ -478,17 +536,22 @@
 			<filename>libraries/phocagallery/render/renderdetailbutton.php</filename>
 			<filename>libraries/phocagallery/render/renderfront.php</filename>
 			<filename>libraries/phocagallery/render/renderinfo.php</filename>
+			<filename>libraries/phocagallery/render/rendermap.php</filename>
 			<filename>libraries/phocagallery/render/renderprocess.php</filename>
 			<filename>libraries/phocagallery/text/index.html</filename>
 			<filename>libraries/phocagallery/text/text.php</filename>
 			<filename>libraries/phocagallery/upload/index.html</filename>
-			<filename>libraries/phocagallery/upload/upload.php</filename>
+			<filename>libraries/phocagallery/upload/uploadfront.php</filename>
+			<filename>libraries/phocagallery/utils/index.html</filename>
+			<filename>libraries/phocagallery/utils/utils.php</filename>
 			<filename>libraries/virtuemart/index.html</filename>
 			<filename>libraries/virtuemart/virtuemart.php</filename>
 			<filename>models/index.html</filename>
 			<filename>models/phocagallery.php</filename>
 			<filename>models/phocagalleryc.php</filename>
 			<filename>models/phocagalleryco.php</filename>
+			<filename>models/phocagallerycoimg.php</filename>
+			<filename>models/phocagallerycoimgs.php</filename>
 			<filename>models/phocagallerycos.php</filename>
 			<filename>models/phocagallerycs.php</filename>
 			<filename>models/phocagalleryd.php</filename>
@@ -500,13 +563,16 @@
 			<filename>models/phocagalleryraimg.php</filename>
 			<filename>models/phocagallerys.php</filename>
 			<filename>models/phocagalleryt.php</filename>
+			<filename>models/phocagalleryuser.php</filename>
+			<filename>models/phocagalleryusers.php</filename>
 			<filename>tables/index.html</filename>
 			<filename>tables/phocagallery.php</filename>
 			<filename>tables/phocagalleryc.php</filename>
+			<filename>tables/phocagallerycommentimgs.php</filename>
 			<filename>tables/phocagallerycomments.php</filename>
 			<filename>tables/phocagalleryimgvotes.php</filename>
 			<filename>tables/phocagalleryimgvotesstatistics.php</filename>
-			<filename>tables/phocagalleryusercategory.php</filename>
+			<filename>tables/phocagalleryuser.php</filename>
 			<filename>tables/phocagalleryvotes.php</filename>
 			<filename>tables/phocagalleryvotesstatistics.php</filename>
 			<filename>views/index.html</filename>
@@ -522,6 +588,14 @@
 			<filename>views/phocagalleryco/tmpl/form.php</filename>
 			<filename>views/phocagalleryco/tmpl/index.html</filename>
 			<filename>views/phocagalleryco/view.html.php</filename>
+			<filename>views/phocagallerycoimg/index.html</filename>
+			<filename>views/phocagallerycoimg/tmpl/form.php</filename>
+			<filename>views/phocagallerycoimg/tmpl/index.html</filename>
+			<filename>views/phocagallerycoimg/view.html.php</filename>
+			<filename>views/phocagallerycoimgs/index.html</filename>
+			<filename>views/phocagallerycoimgs/tmpl/default.php</filename>
+			<filename>views/phocagallerycoimgs/tmpl/index.html</filename>
+			<filename>views/phocagallerycoimgs/view.html.php</filename>
 			<filename>views/phocagallerycos/index.html</filename>
 			<filename>views/phocagallerycos/tmpl/default.php</filename>
 			<filename>views/phocagallerycos/tmpl/index.html</filename>
@@ -598,6 +672,7 @@
 			<filename>views/phocagallerys/view.html.php</filename>
 			<filename>views/phocagalleryt/index.html</filename>
 			<filename>views/phocagalleryt/tmpl/default.php</filename>
+			<filename>views/phocagalleryt/tmpl/default_background_image.php</filename>
 			<filename>views/phocagalleryt/tmpl/default_ftp.php</filename>
 			<filename>views/phocagalleryt/tmpl/index.html</filename>
 			<filename>views/phocagalleryt/view.html.php</filename>
@@ -605,290 +680,10 @@
 			<filename>views/phocagalleryupgrade/tmpl/default.php</filename>
 			<filename>views/phocagalleryupgrade/tmpl/index.html</filename>
 			<filename>views/phocagalleryupgrade/view.html.php</filename>
-		</files>
-
-		<!-- Only Development - copy ./front, ./language, ./other to admin area -->
-		<files>
-			<filename>front/assets/images/icon-b.gif</filename>
-			<filename>front/assets/images/icon-b.png</filename>
-			<filename>front/assets/images/icon-cart.gif</filename>
-			<filename>front/assets/images/icon-cart.png</filename>
-			<filename>front/assets/images/icon-comment.gif</filename>
-			<filename>front/assets/images/icon-comment.png</filename>
-			<filename>front/assets/images/icon-date.gif</filename>
-			<filename>front/assets/images/icon-date.png</filename>
-			<filename>front/assets/images/icon-download.gif</filename>
-			<filename>front/assets/images/icon-download.png</filename>
-			<filename>front/assets/images/icon-exit.gif</filename>
-			<filename>front/assets/images/icon-exit.png</filename>
-			<filename>front/assets/images/icon-extlink1.gif</filename>
-			<filename>front/assets/images/icon-extlink1.png</filename>
-			<filename>front/assets/images/icon-extlink2.gif</filename>
-			<filename>front/assets/images/icon-extlink2.png</filename>
-			<filename>front/assets/images/icon-folder-medium-key.gif</filename>
-			<filename>front/assets/images/icon-folder-medium-key.png</filename>
-			<filename>front/assets/images/icon-folder-medium.gif</filename>
-			<filename>front/assets/images/icon-folder-medium.png</filename>
-			<filename>front/assets/images/icon-folder-small-main-key.gif</filename>
-			<filename>front/assets/images/icon-folder-small-main-key.png</filename>
-			<filename>front/assets/images/icon-folder-small-main.gif</filename>
-			<filename>front/assets/images/icon-folder-small-main.png</filename>
-			<filename>front/assets/images/icon-folder-small.gif</filename>
-			<filename>front/assets/images/icon-folder-small.png</filename>
-			<filename>front/assets/images/icon-geo.gif</filename>
-			<filename>front/assets/images/icon-geo.png</filename>
-			<filename>front/assets/images/icon-i.gif</filename>
-			<filename>front/assets/images/icon-i.png</filename>
-			<filename>front/assets/images/icon-info.gif</filename>
-			<filename>front/assets/images/icon-info.png</filename>
-			<filename>front/assets/images/icon-next-grey.gif</filename>
-			<filename>front/assets/images/icon-next-grey.png</filename>
-			<filename>front/assets/images/icon-next.gif</filename>
-			<filename>front/assets/images/icon-next.png</filename>
-			<filename>front/assets/images/icon-pause-grey.gif</filename>
-			<filename>front/assets/images/icon-pause-grey.png</filename>
-			<filename>front/assets/images/icon-pause.gif</filename>
-			<filename>front/assets/images/icon-pause.png</filename>
-			<filename>front/assets/images/icon-phoca-logo-seal.png</filename>
-			<filename>front/assets/images/icon-phoca-logo-small.png</filename>
-			<filename>front/assets/images/icon-phoca-logo.png</filename>
-			<filename>front/assets/images/icon-play-grey.gif</filename>
-			<filename>front/assets/images/icon-play-grey.png</filename>
-			<filename>front/assets/images/icon-play.gif</filename>
-			<filename>front/assets/images/icon-play.png</filename>
-			<filename>front/assets/images/icon-prev-grey.gif</filename>
-			<filename>front/assets/images/icon-prev-grey.png</filename>
-			<filename>front/assets/images/icon-prev.gif</filename>
-			<filename>front/assets/images/icon-prev.png</filename>
-			<filename>front/assets/images/icon-publish.gif</filename>
-			<filename>front/assets/images/icon-publish.png</filename>
-			<filename>front/assets/images/icon-reload.gif</filename>
-			<filename>front/assets/images/icon-reload.png</filename>
-			<filename>front/assets/images/icon-s-confused.gif</filename>
-			<filename>front/assets/images/icon-s-confused.png</filename>
-			<filename>front/assets/images/icon-s-lol.gif</filename>
-			<filename>front/assets/images/icon-s-lol.png</filename>
-			<filename>front/assets/images/icon-s-sad.gif</filename>
-			<filename>front/assets/images/icon-s-sad.png</filename>
-			<filename>front/assets/images/icon-s-smile.gif</filename>
-			<filename>front/assets/images/icon-s-smile.png</filename>
-			<filename>front/assets/images/icon-s-wink.gif</filename>
-			<filename>front/assets/images/icon-s-wink.png</filename>
-			<filename>front/assets/images/icon-statistics.gif</filename>
-			<filename>front/assets/images/icon-statistics.png</filename>
-			<filename>front/assets/images/icon-stop-grey.gif</filename>
-			<filename>front/assets/images/icon-stop-grey.png</filename>
-			<filename>front/assets/images/icon-stop.gif</filename>
-			<filename>front/assets/images/icon-stop.png</filename>
-			<filename>front/assets/images/icon-switch.gif</filename>
-			<filename>front/assets/images/icon-trash.gif</filename>
-			<filename>front/assets/images/icon-trash.png</filename>
-			<filename>front/assets/images/icon-u.gif</filename>
-			<filename>front/assets/images/icon-u.png</filename>
-			<filename>front/assets/images/icon-unpublish.gif</filename>
-			<filename>front/assets/images/icon-unpublish.png</filename>
-			<filename>front/assets/images/icon-up-images-key.gif</filename>
-			<filename>front/assets/images/icon-up-images-key.png</filename>
-			<filename>front/assets/images/icon-up-images.gif</filename>
-			<filename>front/assets/images/icon-up-images.png</filename>
-			<filename>front/assets/images/icon-upload.gif</filename>
-			<filename>front/assets/images/icon-upload.png</filename>
-			<filename>front/assets/images/icon-user.gif</filename>
-			<filename>front/assets/images/icon-user.png</filename>
-			<filename>front/assets/images/icon-view.gif</filename>
-			<filename>front/assets/images/icon-view.png</filename>
-			<filename>front/assets/images/icon-viewed.gif</filename>
-			<filename>front/assets/images/icon-viewed.png</filename>
-			<filename>front/assets/images/icon-vote.gif</filename>
-			<filename>front/assets/images/icon-vote.png</filename>
-			<filename>front/assets/images/icon-voting-small.gif</filename>
-			<filename>front/assets/images/icon-voting.gif</filename>
-			<filename>front/assets/images/index.html</filename>
-			<filename>front/assets/images/phoca_thumb_l_no_image.gif</filename>
-			<filename>front/assets/images/phoca_thumb_l_no_image.png</filename>
-			<filename>front/assets/images/phoca_thumb_m_no_image.gif</filename>
-			<filename>front/assets/images/phoca_thumb_m_no_image.png</filename>
-			<filename>front/assets/images/phoca_thumb_s_no_image.gif</filename>
-			<filename>front/assets/images/phoca_thumb_s_no_image.png</filename>
-			<filename>front/assets/images/prev-grey.png</filename>
-			<filename>front/assets/images/shadow1.gif</filename>
-			<filename>front/assets/images/shadow1.png</filename>
-			<filename>front/assets/images/shadow2.gif</filename>
-			<filename>front/assets/images/shadow2.png</filename>
-			<filename>front/assets/images/shadow3.gif</filename>
-			<filename>front/assets/images/shadow3.png</filename>
-			<filename>front/assets/images/shadow4.gif</filename>
-			<filename>front/assets/images/shadow4.png</filename>
-			<filename>front/assets/images/spacer.gif</filename>
-			<filename>front/assets/images/theme.xml</filename>
-			<filename>front/assets/index.html</filename>
-			<filename>front/assets/java/index.html</filename>
-			<filename>front/assets/java/jupload/index.html</filename>
-			<filename>front/assets/java/jupload/wjhk.jupload.jar</filename>
-			<filename>front/assets/js/comments.js</filename>
-			<filename>front/assets/js/highslide/graphics/close.png</filename>
-			<filename>front/assets/js/highslide/graphics/closeX.png</filename>
-			<filename>front/assets/js/highslide/graphics/controlbar-black-border.gif</filename>
-			<filename>front/assets/js/highslide/graphics/controlbar-text-buttons.png</filename>
-			<filename>front/assets/js/highslide/graphics/controlbar-white-small.gif</filename>
-			<filename>front/assets/js/highslide/graphics/controlbar-white.gif</filename>
-			<filename>front/assets/js/highslide/graphics/controlbar2.gif</filename>
-			<filename>front/assets/js/highslide/graphics/controlbar3.gif</filename>
-			<filename>front/assets/js/highslide/graphics/controlbar4-hover.gif</filename>
-			<filename>front/assets/js/highslide/graphics/controlbar4.gif</filename>
-			<filename>front/assets/js/highslide/graphics/fullexpand.gif</filename>
-			<filename>front/assets/js/highslide/graphics/geckodimmer.png</filename>
-			<filename>front/assets/js/highslide/graphics/icon.gif</filename>
-			<filename>front/assets/js/highslide/graphics/index.html</filename>
-			<filename>front/assets/js/highslide/graphics/loader.gif</filename>
-			<filename>front/assets/js/highslide/graphics/loader.white.gif</filename>
-			<filename>front/assets/js/highslide/graphics/outlines/beveled.png</filename>
-			<filename>front/assets/js/highslide/graphics/outlines/drop-shadow.png</filename>
-			<filename>front/assets/js/highslide/graphics/outlines/glossy-dark.png</filename>
-			<filename>front/assets/js/highslide/graphics/outlines/index.html</filename>
-			<filename>front/assets/js/highslide/graphics/outlines/outer-glow.png</filename>
-			<filename>front/assets/js/highslide/graphics/outlines/rounded-black.png</filename>
-			<filename>front/assets/js/highslide/graphics/outlines/rounded-white.png</filename>
-			<filename>front/assets/js/highslide/graphics/resize.gif</filename>
-			<filename>front/assets/js/highslide/graphics/scrollarrows.png</filename>
-			<filename>front/assets/js/highslide/graphics/zoomin.cur</filename>
-			<filename>front/assets/js/highslide/graphics/zoomout.cur</filename>
-			<filename>front/assets/js/highslide/highslide-full.js</filename>
-			<filename>front/assets/js/highslide/highslide-ie6.css</filename>
-			<filename>front/assets/js/highslide/highslide.css</filename>
-			<filename>front/assets/js/highslide/highslideimage.css</filename>
-			<filename>front/assets/js/highslide/index.html</filename>
-			<filename>front/assets/js/index.html</filename>
-			<filename>front/assets/js/jak/img/bg.png</filename>
-			<filename>front/assets/js/jak/img/lb-close-active.png</filename>
-			<filename>front/assets/js/jak/img/lb-close-hover.png</filename>
-			<filename>front/assets/js/jak/img/lb-next-active.png</filename>
-			<filename>front/assets/js/jak/img/lb-next-hover.png</filename>
-			<filename>front/assets/js/jak/img/lb-next-inactive.png</filename>
-			<filename>front/assets/js/jak/img/lb-previous-active.png</filename>
-			<filename>front/assets/js/jak/img/lb-previous-hover.png</filename>
-			<filename>front/assets/js/jak/img/lb-previous-inactive.png</filename>
-			<filename>front/assets/js/jak/img/lb-slideshow-active.png</filename>
-			<filename>front/assets/js/jak/img/lb-slideshow-hover.png</filename>
-			<filename>front/assets/js/jak/img/lb-slideshow-pause.png</filename>
-			<filename>front/assets/js/jak/img/shadow-b.png</filename>
-			<filename>front/assets/js/jak/img/shadow-l.png</filename>
-			<filename>front/assets/js/jak/img/shadow-lb.png</filename>
-			<filename>front/assets/js/jak/img/shadow-lt.png</filename>
-			<filename>front/assets/js/jak/img/shadow-r.png</filename>
-			<filename>front/assets/js/jak/img/shadow-rb.png</filename>
-			<filename>front/assets/js/jak/img/shadow-rt.png</filename>
-			<filename>front/assets/js/jak/img/shadow-t.png</filename>
-			<filename>front/assets/js/jak/index.html</filename>
-			<filename>front/assets/js/jak/interpolator_compressed.js</filename>
-			<filename>front/assets/js/jak/jak_compressed.js</filename>
-			<filename>front/assets/js/jak/jak_slideshow.js</filename>
-			<filename>front/assets/js/jak/lightbox-horizontal.css</filename>
-			<filename>front/assets/js/jak/lightbox-slideshow.css</filename>
-			<filename>front/assets/js/jak/lightbox-vertical.css</filename>
-			<filename>front/assets/js/jak/lightbox_compressed.js</filename>
-			<filename>front/assets/js/jak/window_compressed.js</filename>
-			<filename>front/assets/js/shadowbox/index.html</filename>
-			<filename>front/assets/js/shadowbox/shadowbox.js</filename>
-			<filename>front/assets/js/shadowbox/src/index.html</filename>
-			<filename>front/assets/js/shadowbox/src/lang/index.html</filename>
-			<filename>front/assets/js/shadowbox/src/lang/shadowbox-cs.js</filename>
-			<filename>front/assets/js/shadowbox/src/lang/shadowbox-de-DE.js</filename>
-			<filename>front/assets/js/shadowbox/src/lang/shadowbox-en.js</filename>
-			<filename>front/assets/js/shadowbox/src/lang/shadowbox-es.js</filename>
-			<filename>front/assets/js/shadowbox/src/lang/shadowbox-fr.js</filename>
-			<filename>front/assets/js/shadowbox/src/lang/shadowbox-it.js</filename>
-			<filename>front/assets/js/shadowbox/src/lang/shadowbox-nl.js</filename>
-			<filename>front/assets/js/shadowbox/src/player/index.html</filename>
-			<filename>front/assets/js/shadowbox/src/player/shadowbox-img.js</filename>
-			<filename>front/assets/js/shadowbox/src/skin/classic/icons/close.png</filename>
-			<filename>front/assets/js/shadowbox/src/skin/classic/icons/index.html</filename>
-			<filename>front/assets/js/shadowbox/src/skin/classic/icons/next.png</filename>
-			<filename>front/assets/js/shadowbox/src/skin/classic/icons/pause.png</filename>
-			<filename>front/assets/js/shadowbox/src/skin/classic/icons/play.png</filename>
-			<filename>front/assets/js/shadowbox/src/skin/classic/icons/previous.png</filename>
-			<filename>front/assets/js/shadowbox/src/skin/classic/index.html</filename>
-			<filename>front/assets/js/shadowbox/src/skin/classic/loading.gif</filename>
-			<filename>front/assets/js/shadowbox/src/skin/classic/skin.css</filename>
-			<filename>front/assets/js/shadowbox/src/skin/classic/skin.js</filename>
-			<filename>front/assets/js/shadowbox/src/skin/index.html</filename>
-			<filename>front/assets/phocagallery.css</filename>
-			<filename>front/assets/phocagalleryieall.css</filename>
-			<filename>front/controller.php</filename>
-			<filename>front/controllers/category.php</filename>
-			<filename>front/controllers/detail.php</filename>
-			<filename>front/controllers/index.html</filename>
-			<filename>front/index.html</filename>
-			<filename>front/models/categories.php</filename>
-			<filename>front/models/category.php</filename>
-			<filename>front/models/cooliris3dwall.php</filename>
-			<filename>front/models/detail.php</filename>
-			<filename>front/models/index.html</filename>
-			<filename>front/models/info.php</filename>
-			<filename>front/models/map.php</filename>
-			<filename>front/models/user.php</filename>
-			<filename>front/phocagallery.php</filename>
-			<filename>front/router.php</filename>
-			<filename>front/views/categories/index.html</filename>
-			<filename>front/views/categories/metadata.xml</filename>
-			<filename>front/views/categories/tmpl/default.php</filename>
-			<filename>front/views/categories/tmpl/default.xml</filename>
-			<filename>front/views/categories/tmpl/default_map.php</filename>
-			<filename>front/views/categories/tmpl/index.html</filename>
-			<filename>front/views/categories/view.html.php</filename>
-			<filename>front/views/category/index.html</filename>
-			<filename>front/views/category/metadata.xml</filename>
-			<filename>front/views/category/tmpl/default.php</filename>
-			<filename>front/views/category/tmpl/default.xml</filename>
-			<filename>front/views/category/tmpl/default_categories.php</filename>
-			<filename>front/views/category/tmpl/default_comments.php</filename>
-			<filename>front/views/category/tmpl/default_geotagging.php</filename>
-			<filename>front/views/category/tmpl/default_rating.php</filename>
-			<filename>front/views/category/tmpl/default_statistics.php</filename>
-			<filename>front/views/category/tmpl/default_subcategory.php</filename>
-			<filename>front/views/category/tmpl/default_upload.php</filename>
-			<filename>front/views/category/tmpl/index.html</filename>
-			<filename>front/views/category/view.html.php</filename>
-			<filename>front/views/cooliris3dwall/index.html</filename>
-			<filename>front/views/cooliris3dwall/metadata.xml</filename>
-			<filename>front/views/cooliris3dwall/tmpl/default.php</filename>
-			<filename>front/views/cooliris3dwall/tmpl/default.xml</filename>
-			<filename>front/views/cooliris3dwall/tmpl/index.html</filename>
-			<filename>front/views/cooliris3dwall/view.html.php</filename>
-			<filename>front/views/detail/index.html</filename>
-			<filename>front/views/detail/metadata.xml</filename>
-			<filename>front/views/detail/tmpl/default.php</filename>
-			<filename>front/views/detail/tmpl/default_download.php</filename>
-			<filename>front/views/detail/tmpl/default_rating.php</filename>
-			<filename>front/views/detail/tmpl/default_slideshow.php</filename>
-			<filename>front/views/detail/tmpl/default_slideshowjs.php</filename>
-			<filename>front/views/detail/tmpl/default_video.php</filename>
-			<filename>front/views/detail/tmpl/index.html</filename>
-			<filename>front/views/detail/view.html.php</filename>
-			<filename>front/views/index.html</filename>
-			<filename>front/views/info/index.html</filename>
-			<filename>front/views/info/metadata.xml</filename>
-			<filename>front/views/info/tmpl/default.php</filename>
-			<filename>front/views/info/tmpl/index.html</filename>
-			<filename>front/views/info/view.html.php</filename>
-			<filename>front/views/map/index.html</filename>
-			<filename>front/views/map/metadata.xml</filename>
-			<filename>front/views/map/tmpl/default.php</filename>
-			<filename>front/views/map/tmpl/index.html</filename>
-			<filename>front/views/map/view.html.php</filename>
-			<filename>front/views/user/index.html</filename>
-			<filename>front/views/user/metadata.xml</filename>
-			<filename>front/views/user/tmpl/default.php</filename>
-			<filename>front/views/user/tmpl/default.xml</filename>
-			<filename>front/views/user/tmpl/default_category.php</filename>
-			<filename>front/views/user/tmpl/default_upload.php</filename>
-			<filename>front/views/user/tmpl/index.html</filename>
-			<filename>front/views/user/view.html.php</filename>
-			<filename>language/en-GB/en-GB.com_phocagallery.ini</filename>
-			<filename>language/en-GB/en-GB.com_phocagallery.menu.ini</filename>
-			<filename>other/cooliris/crossdomain.xml</filename>
-			<filename>other/cooliris/index.html</filename>
-			<filename>other/install_xml.php</filename>
+			<filename>views/phocagalleryusers/index.html</filename>
+			<filename>views/phocagalleryusers/tmpl/default.php</filename>
+			<filename>views/phocagalleryusers/tmpl/index.html</filename>
+			<filename>views/phocagalleryusers/view.html.php</filename>
 		</files>
 
 		<!-- Language -->

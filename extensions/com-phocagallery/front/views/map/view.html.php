@@ -50,6 +50,14 @@ class PhocaGalleryViewMap extends JView
 		$description_lightbox_font_color 	= $params->get( 'description_lightbox_font_color', '#ffffff' );
 		$description_lightbox_bg_color 		= $params->get( 'description_lightbox_bg_color', '#000000' );
 		$description_lightbox_font_size 	= $params->get( 'description_lightbox_font_size', 12 );
+		$tmpl['gallerymetakey'] 		= $params->get( 'gallery_metakey', '' );
+		$tmpl['gallerymetadesc'] 		= $params->get( 'gallery_metadesc', '' );
+		if ($tmpl['gallerymetakey'] != '') {
+			$mainframe->addMetaTag('keywords', $tmpl['gallerymetakey']);
+		}
+		if ($tmpl['gallerymetadesc'] != '') {
+			$mainframe->addMetaTag('description', $tmpl['gallerymetadesc']);
+		}
 
 		// NO SCROLLBAR IN DETAIL WINDOW
 		if ($detail_window == 7) {
@@ -66,6 +74,7 @@ class PhocaGalleryViewMap extends JView
 		$tmpl['largemapwidth']		= (int)$params->get( 'front_modal_box_width', 680 ) - 20;
 		$tmpl['largemapheight']		= (int)$params->get( 'front_modal_box_height', 560 ) - 20;
 		$tmpl['googlemapsapikey']	= $params->get( 'google_maps_api_key', '' );
+		$tmpl['kmn'] = PhocaGalleryRenderFront::getString();
 			
 		// MODEL
 		$model	= &$this->getModel();
@@ -74,7 +83,7 @@ class PhocaGalleryViewMap extends JView
 		phocagalleryimport('phocagallery.image.imagefront');
 		if (!empty($map)) {
 			if (isset($map->filename) && $map->filename != '') {
-				$file_thumbnail = PhocaGalleryImageFront::displayImageOrNoImage($map->filename, 'small');
+				$file_thumbnail = PhocaGalleryImageFront::displayCategoryImageOrNoImage($map->filename, 'small');
 				$map->thumbnail = $file_thumbnail;
 			} else {
 				$map->thumbnail = '';
@@ -113,6 +122,7 @@ class PhocaGalleryViewMap extends JView
 				$map->latitude	= '';
 				$map->zoom		= 2;
 				$map->geotitle	= '';
+				$map->catslug	= '';
 			}
 		}
 		
@@ -122,11 +132,11 @@ class PhocaGalleryViewMap extends JView
 		if ($tmpl['detailwindow'] == 7) {
 			phocagalleryimport('phocagallery.image.image');
 			$formatIcon = &PhocaGalleryImage::getFormatIcon();
-			$tmpl['backbutton'] = '<div><a href="'.JRoute::_('index.php?option=com_phocagallery&view=category&id='. $map->catslug.'&Itemid='. JRequest::getVar('Itemid', 1, 'get', 'int')).'"'
+			$tmpl['backbutton'] = '<div><a href="'.JRoute::_('index.php?option=com_phocagallery&view=category&id='. $map->catslug.'&Itemid='. JRequest::getVar('Itemid', 0, '', 'int')).'"'
 				.' title="'.JText::_( 'Back to category' ).'">'
 				. JHTML::_('image', 'components/com_phocagallery/assets/images/icon-up-images.' . $formatIcon, JText::_( 'Back to category' )).'</a></div>';
 		}
-		
+	
 		// ASIGN
 		$this->assignRef( 'tmpl', $tmpl );
 		$this->assignRef( 'map', $map );

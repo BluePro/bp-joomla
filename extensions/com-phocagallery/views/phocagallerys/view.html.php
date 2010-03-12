@@ -60,6 +60,7 @@ class PhocaGalleryCpViewPhocaGalleryS extends JView
 		$items					= & $this->get( 'Data');
 		$total					= & $this->get( 'Total');
 		$tmpl['pagination'] 	= & $this->get( 'Pagination' );
+		$tmpl['notapproved'] 	= & $this->get( 'NotApprovedImage' );
 		
 		// build list of categories
 		$javascript 	= 'class="inputbox" size="1" onchange="submitform( );"';
@@ -103,10 +104,16 @@ class PhocaGalleryCpViewPhocaGalleryS extends JView
 		JToolBarHelper::title(   JText::_( 'Phoca Gallery Images' ), 'gallery' );
 		JToolBarHelper::publishList();
 		JToolBarHelper::unpublishList();
+		JToolBarHelper::customX('approve', 'approve.png', '', JText::_( 'PHOCAGALLERY_APPROVE' ), true);
+		JToolBarHelper::customX('disapprove', 'disapprove.png', '', JText::_( 'PHOCAGALLERY_NOT_APPROVE' ), true);
 		JToolBarHelper::deleteList(  JText::_( 'WARNWANTDELLISTEDITEMS' ), 'remove', 'delete');
 		JToolBarHelper::editListX();
 		JToolBarHelper::addNewX();
 		JToolBarHelper::customX('Multiple', 'multiple.png', '', JText::_( 'Multiple Add' ), false);
+		
+		$bar = & JToolBar::getInstance('toolbar');
+		$bar->appendButton( 'Custom', '<a href="#" onclick="javascript:if(document.adminForm.boxchecked.value==0){alert(\''.JText::_('PHOCAGALLERY_WARNING_RECREATE_MAKE_SELECTION').'\');}else{if(confirm(\''.JText::_('PHOCAGALLERY_WARNING_RECREATE_THUMBNAILS').'\')){submitbutton(\'recreate\');}}" class="toolbar"><span class="icon-32-recreate" title="'.JText::_('PHOCAGALLERY_RECREATE_THUMBS').'" type="Custom"></span>'.JText::_('PHOCAGALLERY_RECREATE').'</a>');	
+		
 		JToolBarHelper::preferences('com_phocagallery', '460');
 		JToolBarHelper::help( 'screen.phocagallery', true );
 	}

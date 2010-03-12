@@ -9,5 +9,5 @@ echo '<div id="phocaexif" >'
 .'</table>'
 .'</div>';
 if ($this->tmpl['detailwindow'] == 7) {
-	echo $this->tmpl['pgl'];
+	echo $this->tmpl['stm'];
 }

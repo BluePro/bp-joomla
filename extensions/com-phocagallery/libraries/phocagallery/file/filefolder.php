@@ -119,7 +119,9 @@ class PhocaGalleryFileFolder
 					break;
 				}
 				//@JFolder::create($folder, $folder_permissions );
-				@JFile::write($folder.DS."index.html", "<html>\n<body bgcolor=\"#FFFFFF\">\n</body>\n</html>");
+				if (isset($folder)) {
+					@JFile::write($folder.DS."index.html", "<html>\n<body bgcolor=\"#FFFFFF\">\n</body>\n</html>");
+				}
 				// folder was not created
 				if (!JFolder::exists($folder)) {
 					$errorMsg = "CreatingFolder";

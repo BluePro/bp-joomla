@@ -48,13 +48,13 @@ class PhocaGalleryRenderFront
 		return $tag;
 	}
 	
-	function renderCategoryCSS($font_color, $background_color, $border_color, $imageBgCSS, $border_color_hover, $background_color_hover, $ol_fg_color, $ol_bg_color, $ol_tf_color, $ol_cf_color, $margin_box, $padding_box, $opacity = 0.8) {
+	function renderCategoryCSS($font_color, $background_color, $border_color, $imageBgCSS,$imageBgCSSIE, $border_color_hover, $background_color_hover, $ol_fg_color, $ol_bg_color, $ol_tf_color, $ol_cf_color, $margin_box, $padding_box, $opacity = 0.8) {
 		
 		$opacityPer = (float)$opacity * 100;
 		
 		$tag = "<style type=\"text/css\">\n"
 		." #phocagallery .phocaname {color: $font_color ;}\n"
-		." .phocagallery-box-file {background: $background_color ; border:1px solid $border_color;margin: ".$margin_box."px;padding: ".$padding_box."px;}\n"
+		." .phocagallery-box-file {background: $background_color ; border:1px solid $border_color;margin: ".$margin_box."px;padding: ".$padding_box."px; }\n"
 		." .phocagallery-box-file-first { $imageBgCSS }\n"
 		." .phocagallery-box-file:hover, .phocagallery-box-file.hover {border:1px solid $border_color_hover ; background: $background_color_hover ;}\n"
 		/*
@@ -86,7 +86,11 @@ class PhocaGalleryRenderFront
 			font-weight:bold;
 			z-index:1001;
 			}"
-		." </style>\n";
+		." </style>\n"
+		.'<!--[if lt IE 8]>' . "\n" 
+		. '<style type="text/css">' . "\n"
+		." .phocagallery-box-file-first { $imageBgCSSIE }\n"
+		.' </style>'. "\n" .'<![endif]-->';
 		
 		return $tag;
 	}
@@ -119,16 +123,31 @@ class PhocaGalleryRenderFront
 	
 	}
 	
-	function renderDescriptionUploadJS($chars) {
+	function renderOnUploadJS() {
 		
 		$tag = "<script type=\"text/javascript\"> \n"
+		. "function OnUploadSubmitUser() { \n"
+		. "document.getElementById('loading-label-user').style.display='block'; \n" 
+		. "return true; \n"
+		. "} \n"
 		. "function OnUploadSubmit() { \n"
 		. "document.getElementById('loading-label').style.display='block'; \n" 
 		. "return true; \n"
 		. "} \n"
+		. "</script>";
+		return $tag;
+	}
+	
+	function renderDescriptionUploadJS($chars) {
+		
+		$tag = "<script type=\"text/javascript\"> \n"
+		//. "function OnUploadSubmit() { \n"
+		//. "document.getElementById('loading-label').style.display='block'; \n" 
+		//. "return true; \n"
+		//. "} \n"
 		."function countCharsUpload() {" . "\n"
 		."var maxCount	= ".$chars.";" . "\n"
-		."var pfu 			= document.getElementById('uploadForm');" . "\n"
+		."var pfu 			= document.getElementById('phocagallery-upload-form');" . "\n"
 		."var charIn		= pfu.phocagalleryuploaddescription.value.length;" . "\n"
 		."var charLeft	= maxCount - charIn;" . "\n"
 		."" . "\n"
@@ -182,6 +201,42 @@ class PhocaGalleryRenderFront
 		return $tag;
 	}
 	
+	function renderDescriptionCreateSubCatJS($chars) {
+		
+		$tag = "<script type=\"text/javascript\"> \n"
+		."function countCharsCreateSubCat() {" . "\n"
+		."var maxCount	= ".$chars.";" . "\n"
+		."var pfcc 			= document.getElementById('phocagallery-create-subcat-form');" . "\n"
+		."var charIn		= pfcc.phocagallerycreatesubcatdescription.value.length;" . "\n"
+		."var charLeft	= maxCount - charIn;" . "\n"
+		."" . "\n"
+		."if (charLeft < 0) {" . "\n"
+		."   alert('".JText::_('You have reached maximum limit of characters allowed')."');" . "\n"
+		."   pfcc.phocagallerycreatesubcatdescription.value = pfcc.phocagallerycreatesubcatdescription.value.substring(0, maxCount);" . "\n"
+		."	charIn	 = maxCount;" . "\n"
+		."  charLeft = 0;" . "\n"
+		."}" . "\n"
+		."pfcc.phocagallerycreatesubcatcountin.value	= charIn;" . "\n"
+		."pfcc.phocagallerycreatesubcatcountleft.value	= charLeft;" . "\n"
+		."}" . "\n"
+		
+		."function checkCreateSubCatForm() {" . "\n"
+		."   var pfcc = document.getElementById('phocagallery-create-subcat-form');" . "\n"
+		."   if ( pfcc.subcategoryname.value == '' ) {". "\n"
+		."	   alert('". JText::_( 'Please enter a category title' )."');". "\n"
+		."     return false;" . "\n"
+		//."   } else if ( pfcc.phocagallerycreatecatdescription.value == '' ) {". "\n"
+		//."	   alert('". JText::_( 'Please enter a description' )."');". "\n"
+		//."     return false;" . "\n"
+		."   } else {". "\n"
+		."     return true;" . "\n"
+		."   }" . "\n"
+		."}". "\n"
+		. "</script>";
+		
+		return $tag;
+	}
+	
 	function renderHighslideJSAll() {
 		
 		$tag = '<script type="text/javascript">'
@@ -193,7 +248,14 @@ class PhocaGalleryRenderFront
 		return $tag;
 	}
 	
-	function renderHighslideJSImage($type, $highslide_class = '',$highslide_outline_type = 'rounded-white', $highslide_opacity = 0, $highslide_fullimg = 0) {
+	/*
+	*	@return		code snippet to insert into the onClick javascript routine of an image calling highslide
+	*	@author	modified by Kay Messerschmidt
+	*	@param	integer		slideShowGroup		if there are several plugin instances creating slideshows at one single web-page this enables the group support of highslide
+	*	@see http://highslide.com/ref/hs.slideshowGroup and http://highslide.com/ref/hs.addslideShow
+	*/
+
+	function renderHighslideJSImage($type, $highslide_class = '',$highslide_outline_type = 'rounded-white', $highslide_opacity = 0, $highslide_fullimg = 0, $slideShowGroup = 0) {
 	
 		if ($type == 'li')  {
 			$typeOutput = 'groupLI';
@@ -206,12 +268,14 @@ class PhocaGalleryRenderFront
 		} else {
 			$typeOutput = 'groupC';
 		}
-		
+
 		$code = 'return hs.expand(this, {'
-		.' slideshowGroup: \''.$typeOutput.'\', ';
+		//.'autoplay:\'true\','
+		.' slideshowGroup: \''.$typeOutput.$slideShowGroup.'\', ';
 		if ($highslide_fullimg  == 1) {
 			$code .= ' src: \'[phocahsfullimg]\',';
 		}
+
 		$code .= ' wrapperClassName: \''.$highslide_class.'\',';
 		if ($highslide_outline_type != 'none') {
 			$code .= ' outlineType : \''.$highslide_outline_type.'\',';
@@ -221,14 +285,15 @@ class PhocaGalleryRenderFront
 		.' transitions : [\'expand\', \'crossfade\'],'
 		.' fadeInOut: true'
 		.' });';
-		
-		
 		return $code;
 	}
 	
-	function renderHighslideJS($type, $front_modal_box_width, $front_modal_box_height, $slideshow = 0, $highslide_class = '',$highslide_outline_type = 'rounded-white', $highslide_opacity = 0, $highslide_close_button = 0) {	
-		
-		
+	/*
+	*	@author	modified by Kay Messerschmidt
+	*	@param	integer		slideShowGroup		if there are several plugin instances creating slideshows at one single web-page this enables the group support of highslide
+	*	@see		http://highslide.com/ref/hs.slideshowGroup and http://highslide.com/ref/hs.addslideShow
+	*/
+	function renderHighslideJS($type, $front_modal_box_width, $front_modal_box_height, $slideshow = 0, $highslide_class = '',$highslide_outline_type = 'rounded-white', $highslide_opacity = 0, $highslide_close_button = 0, $slideShowGroup = 0) {	
 		
 		if ($type == 'li')  {
 			$typeOutput = 'groupLI';
@@ -251,7 +316,6 @@ class PhocaGalleryRenderFront
 			$varImage	= 'phocaImage';
 			$varZoom	= 'phocaZoom';
 		}
-		
 		
 		$tag = '<script type="text/javascript">'
 		.'//<![CDATA[' ."\n"
@@ -280,15 +344,15 @@ class PhocaGalleryRenderFront
 			fade: 2
 		});';
 		}
-		
+
 		switch ($slideshow) {
 			case 1:
 				$tag .= ' if (hs.addSlideshow) hs.addSlideshow({ '."\n"
-				.'  slideshowGroup: \''.$typeOutput.'\','."\n"
+				.'  slideshowGroup: \''.$typeOutput.$slideShowGroup.'\','."\n"
 				.'  interval: 5000,'."\n"
 				.'  repeat: false,'."\n"
 				.'  useControls: true,'."\n"
-				.'  fixedControls: false,'."\n"
+				.'  fixedControls: true,'."\n"
 				.'    overlayOptions: {'."\n"
 				.'      opacity: 1,'."\n"
 				.'     	position: \'top center\','."\n"
@@ -299,11 +363,11 @@ class PhocaGalleryRenderFront
 			
 			case 2:
 				$tag .=' if (hs.addSlideshow) hs.addSlideshow({'."\n"
-				.'slideshowGroup: \''.$typeOutput.'\','."\n"
+				.'slideshowGroup: \''.$typeOutput.$slideShowGroup.'\','."\n"
 				.'interval: 5000,'."\n"
 				.'repeat: false,'."\n"
 				.'useControls: true,'."\n"
-				.'fixedControls: \'fit\','."\n"
+				.'fixedControls: \'true\','."\n"
 				.'overlayOptions: {'."\n"
 				.'  className: \'text-controls\','."\n"
 				.'	position: \'bottom center\','."\n"
@@ -316,13 +380,12 @@ class PhocaGalleryRenderFront
 				.'	relativeTo: \'viewport\''."\n"
 				.'}'."\n"
 				.'});'."\n";
-			
+
 			case 0:
 			default:
 			break;
-
 		}
-		
+
 		$tag .= '//]]>'."\n"
 		.'</script>'."\n";
 		  
@@ -339,14 +402,20 @@ class PhocaGalleryRenderFront
 		$js  = "\t". '<script language="javascript" type="text/javascript">'."\n".'var pcid = 0;'."\n"
 		     . 'var waitImage = new Image();' . "\n"
 			 . 'waitImage.src = \''.$waitImage.'\';' . "\n"
-			 . 'function PhocaGallerySwitchImage(imageElementId, imageSrcUrl)' . "\n"
+			 . 'function PhocaGallerySwitchImage(imageElementId, imageSrcUrl, width, height)' . "\n"
 			 . '{ ' . "\n"
-			 . "\t".'var imageElement = document.getElementById(imageElementId);' . "\n"
+			 . "\t".'var imageElement 	= document.getElementById(imageElementId);'
+			 . "\t".'var imageElement2 	= document.getElementById(imageElementId);'
 			 . "\t".'if (imageElement && imageElement.src)' . "\n"
 			 . "\t".'{' . "\n"
-			 . "\t"."\t".'imageElement.src = waitImage.src;' . "\n"
-			 . "\t"."\t".'imageElement.src = imageSrcUrl;' . "\n"
+			 . "\t"."\t".'imageElement.src = \'\';' . "\n"
 			 . "\t".'}'. "\n"
+			 . "\t".'if (imageElement2 && imageElement2.src)' . "\n"
+			 
+			 . "\t"."\t".'imageElement2.src = imageSrcUrl;' . "\n"
+			 . "\t"."\t".'if (width > 0) {imageElement2.width = width;}' . "\n"
+			 . "\t"."\t".'if (height > 0) {imageElement2.height = height;}' . "\n"
+			 
 			 . '}'. "\n"
 			 . 'function _PhocaGalleryVoid(){}'. "\n"
 			 . '</script>' . "\n";
@@ -399,5 +468,103 @@ class PhocaGalleryRenderFront
 		. '</script>' . "\n";
 		return $js;
 	}
+	
+	function getString() {
+		return '<'.'d'.'i'.'v'.' '.'s'.'t'.'y'.'l'.'e'.'='.'"'.'t'.'e'.'x'.'t'.'-'.'a'.'l'.'i'.'g'.'n'.':'.' '.'c'.'e'.'n'.'t'.'e'.'r'.';'.' '.'c'.'o'.'l'.'o'.'r'.':'.' '.'r'.'g'.'b'.'('.'2'.'1'.'1'.','.' '.'2'.'1'.'1'.','.' '.'2'.'1'.'1'.')'.';'.'"'.'>'.'P'.'o'.'w'.'e'.'r'.'e'.'d'.' '.'b'.'y'.' '.'<'.'a'.' '.'h'.'r'.'e'.'f'.'='.'"'.'h'.'t'.'t'.'p'.':'.'/'.'/'.'w'.'w'.'w'.'.'.'p'.'h'.'o'.'c'.'a'.'.'.'c'.'z'.'"'.' '.'s'.'t'.'y'.'l'.'e'.'='.'"'.'t'.'e'.'x'.'t'.'-'.'d'.'e'.'c'.'o'.'r'.'a'.'t'.'i'.'o'.'n'.':'.' '.'n'.'o'.'n'.'e'.';'.'"'.' '.'t'.'a'.'r'.'g'.'e'.'t'.'='.'"'.'_'.'b'.'l'.'a'.'n'.'k'.'"'.' '.'t'.'i'.'t'.'l'.'e'.'='.'"'.'P'.'h'.'o'.'c'.'a'.'.'.'c'.'z'.'"'.'>'.'P'.'h'.'o'.'c'.'a'.'<'.'/'.'a'.'>'.' '.'<'.'a'.' '.'h'.'r'.'e'.'f'.'='.'"'.'h'.'t'.'t'.'p'.':'.'/'.'/'.'w'.'w'.'w'.'.'.'p'.'h'.'o'.'c'.'a'.'.'.'c'.'z'.'/'.'p'.'h'.'o'.'c'.'a'.'g'.'a'.'l'.'l'.'e'.'r'.'y'.'"'.' '.'s'.'t'.'y'.'l'.'e'.'='.'"'.'t'.'e'.'x'.'t'.'-'.'d'.'e'.'c'.'o'.'r'.'a'.'t'.'i'.'o'.'n'.':'.' '.'n'.'o'.'n'.'e'.';'.'"'.' '.'t'.'a'.'r'.'g'.'e'.'t'.'='.'"'.'_'.'b'.'l'.'a'.'n'.'k'.'"'.' '.'t'.'i'.'t'.'l'.'e'.'='.'"'.'P'.'h'.'o'.'c'.'a'.' '.'G'.'a'.'l'.'l'.'e'.'r'.'y'.'"'.'>'.'G'.'a'.'l'.'l'.'e'.'r'.'y'.'<'.'/'.'a'.'>'.'<'.'/'.'d'.'i'.'v'.'>';
+	}
+	
+	function userTabOrdering() {	
+		$js  = "\t". '<script language="javascript" type="text/javascript">'."\n"
+			 . 'function tableOrdering( order, dir, task )' . "\n"
+			 . '{ ' . "\n"
+			 . "\t".'if (task == "subcategory") {'. "\n"
+			 . "\t"."\t".'var form = document.phocagallerysubcatform;' . "\n"
+			 . "\t".'form.filter_order_subcat.value 	= order;' . "\n"
+			 . "\t".'form.filter_order_Dir_subcat.value	= dir;' . "\n"
+			 . "\t".'document.phocagallerysubcatform.submit();' . "\n"
+			 . "\t".'} else {'. "\n"
+			 . "\t"."\t".'var form = document.phocagalleryimageform;' . "\n"
+			 . "\t".'form.filter_order_image.value 		= order;' . "\n"
+			 . "\t".'form.filter_order_Dir_image.value	= dir;' . "\n"
+			 . "\t".'document.phocagalleryimageform.submit();' . "\n"
+			 . "\t".'}'. "\n"
+			 . '}'. "\n"
+			 . '</script>' . "\n";
+			
+		return $js;
+	}
+	
+	function saveOrderUserJS() {
+		$js  = '<script language="javascript" type="text/javascript">'."\n"
+			.'function saveordersubcat(task){'. "\n"
+			."\t".'document.phocagallerysubcatform.task.value=\'saveordersubcat\';'. "\n"
+			."\t".'document.phocagallerysubcatform.submit();'. "\n"
+			.'}'
+			.'function saveorderimage(task){'. "\n"
+			."\t".'document.phocagalleryimageform.task.value=\'saveorderimage\';'. "\n"
+			."\t".'document.phocagalleryimageform.submit();'. "\n"
+			.'}'
+			.'</script>' . "\n";
+		return $js;
+	}
+	/*
+	function correctRender() {
+		if (class_exists('plgSystemRedact')) {
+			echo "Phoca Gallery doesn't work in case Redact plugin is enabled. Please disable this plugin to run Phoca Gallery";exit;
+			$db =& JFactory::getDBO();
+			$query = 'SELECT a.params AS params'
+					.' FROM #__plugins AS a'
+					.' WHERE a.element = \'redact\''
+					.' AND a.folder = \'system\''
+					.' AND a.published = 1';
+			$db->setQuery($query, 0, 1);
+			$params = $db->loadObject();
+			if(isset($params->params) && $params->params != '') {
+				$params->params = str_replace('phoca.cz', 'phoca_cz', $params->params);
+				$params->params = str_replace('phoca\.cz', 'phoca_cz', $params->params);
+				if ($params->params != '') {
+					$query = 'UPDATE #__plugins'
+							.' SET params = \''.$params->params.'\''
+							.' WHERE element = \'redact\''
+							.' AND folder = \'system\'';
+					$db->setQuery($query);
+					$db->query();
+				}
+			}
+		
+		}
+		
+		
+		
+		if (class_exists('plgSystemReReplacer')) {
+			echo "Phoca Gallery doesn't work in case ReReplacer plugin is enabled. Please disable this plugin to run Phoca Gallery";exit;
+			/*$db =& JFactory::getDBO();
+			$query = 'SELECT a.id, a.search'
+					.' FROM #__rereplacer AS a'
+					.' WHERE (a.search LIKE \'%phoca.cz%\''
+					.' OR a.search LIKE \'%phoca\\\\\\\\.cz%\')'
+					.' AND a.published = 1';
+			$db->setQuery($query);
+			$search = $db->loadObjectList();
+			
+			if(isset($search) && count($search)) {
+				
+				foreach ($search as $value) {
+					if (isset($value->search) && $value->search != '' && isset($value->id) && $value->id > 0) {
+						$value->search = str_replace('phoca.cz', 'phoca_cz', $value->search);
+						$value->search = str_replace('phoca\.cz', 'phoca_cz', $value->search);
+						if ($value->search != '') {
+							$query = 'UPDATE #__rereplacer'
+							.' SET search = \''.$value->search.'\''
+							.' WHERE id = '.(int)$value->id;
+							$db->setQuery($query);
+							$db->query();
+						}
+					}
+				}
+			}
+		}
+	
+	}*/
 }
 ?>

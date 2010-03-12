@@ -8,8 +8,6 @@
  * @copyright Copyright (C) Jan Pavelka www.phoca.cz
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
-
-// Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
 jimport('joomla.application.component.model');
 jimport( 'joomla.installer.installer' );
@@ -22,14 +20,11 @@ class PhocaGalleryCpModelPhocaGalleryT extends JModel
 	var $_paths 	= array();
 	var $_manifest 	= null;
 
-	function __construct()
-	{
+	function __construct(){
 		parent::__construct();
-
 	}
 	
-	function install($theme)
-	{
+	function install($theme) {
 		global $mainframe;
 		$package = $this->_getPackageFromUpload();
 	
@@ -570,11 +565,7 @@ class PhocaGalleryCpModelPhocaGalleryT extends JModel
 		return $instance;
 	}
 	
-	function deleteTempFiles ()
-	{
-		
-		
-		
+	function deleteTempFiles () {
 		// Delete Temp files
 		$path = $this->getPath('source');
 		if (is_dir($path)) {

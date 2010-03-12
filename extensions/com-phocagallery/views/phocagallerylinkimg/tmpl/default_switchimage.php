@@ -113,8 +113,21 @@ function insertLink() {
 								<div class="phocagallery-box-file-second">
 									<div class="phocagallery-box-file-third">
 										<center>
-										<?php if (isset ($row->fileoriginalexist) && $row->fileoriginalexist == 1) {
-											echo JHTML::_( 'image', $row->linkthumbnailpath.'?imagesid='.md5(uniqid(time())), '');
+										<?php 
+										// PICASA
+										if (isset($row->extid) && $row->extid !='') {
+										
+											$resW	= explode(',', $row->extw);
+											$resH	= explode(',', $row->exth);
+								
+											$correctImageRes = PhocaGalleryImage::correctSizeWithRate($resW[2], $resH[2], 50, 50);
+											echo JHTML::_( 'image', $row->exts.'?imagesid='.md5(uniqid(time())), '', array('width' => $correctImageRes['width'], 'height' => $correctImageRes['height'])); 
+										
+										} else if (isset ($row->fileoriginalexist) && $row->fileoriginalexist == 1) {
+
+											$imageRes	= PhocaGalleryImage::getRealImageSize($row->filename, 'small');
+											$correctImageRes = PhocaGalleryImage::correctSizeWithRate($imageRes['w'], $imageRes['h'], 50, 50);
+											 echo JHTML::_( 'image', $row->linkthumbnailpath.'?imagesid='.md5(uniqid(time())), '', array('width' => $correctImageRes['width'], 'height' => $correctImageRes['height']));
 										} else {
 											echo JHTML::_( 'image.site', 'phoca_thumb_s_no_image.gif', '../administrator/components/com_phocagallery/assets/images/');
 										}
@@ -126,9 +139,13 @@ function insertLink() {
 						</center>
 					</div>
 				</td>
-						
-				<td><?php echo $row->title; ?></td>
-				<td><?php echo $row->filename;?></td>
+
+				<?php echo '<td>'. $row->title.'</td>';
+				if (isset($row->extid) && $row->extid !='') {
+					echo '<td align="center">'.JText::_('PHOCAGALLERY_PICASA_STORED_FILE').'</td>';
+				} else {
+					echo '<td>' .$row->filename.'</td>';
+				} ?>
 				<td align="center"><?php echo $row->id; ?></td>
 			</tr>
 			<?php

@@ -27,11 +27,15 @@ class PhocaGalleryCpViewPhocagalleryI extends JView
 		
 		$tmpl['large_image_width']	= $params->get( 'large_image_width', 640 );
 		$tmpl['large_image_height']	= $params->get( 'large_image_height', 480 );
-		$tmpl['uploadmaxsize'] 		= $params->get( 'upload_maxsize', 3000000 );
 		$tmpl['javaresizewidth'] 	= $params->get( 'java_resize_width', -1 );
 		$tmpl['javaresizeheight'] 	= $params->get( 'java_resize_height', -1 );
 		$tmpl['tab'] 				= JRequest::getVar('tab', 0, '', 'int');
 		
+		$tmpl['uploadmaxsize'] 		= $params->get( 'upload_maxsize', 3145728 );
+		$tmpl['uploadmaxsizeread'] 	= PhocaGalleryFile::getFileSizeReadable((int)$tmpl['uploadmaxsize']);
+		$tmpl['uploadmaxreswidth'] 	= $params->get( 'upload_maxres_width', 3072 );
+		$tmpl['uploadmaxresheight'] = $params->get( 'upload_maxres_height', 2304 );
+		$tmpl['enablejavaadmin'] 	= $params->get( 'enable_java_admin', 1 );
 		// Do not allow cache
 		JResponse::allowCache(false);
 
@@ -49,14 +53,7 @@ class PhocaGalleryCpViewPhocagalleryI extends JView
 		// Set FTP form
 		$ftp = !JClientHelper::hasCredentials('ftp');
 		
-		// Set flash uploader if ftp password and login exists (will be not problems)
-		$state			= $this->get('state');
-		$refreshSite 	= 'index.php?option=com_phocagallery&view=phocagalleryi&tmpl=component&tab=2&folder='.$state->folder;
-		if (!$ftp) {
-			phocagalleryimport('phocagallery.upload.upload');
-			PhocaGalleryFileUpload::uploader('file-upload', array('onAllComplete' => 'function(){ window.location.href="'.$refreshSite.'"; }'));
-		}
-		// END Upload Form ------------------------------------
+
 		//TABS
 		$tmpl['displaytabs']	= 0;
 		
@@ -65,12 +62,22 @@ class PhocaGalleryCpViewPhocagalleryI extends JView
 		$tmpl['displaytabs']++;
 		
 		// JAVA UPLOAD
-		$tmpl['currenttab']['javaupload'] = $tmpl['displaytabs'];
-		$tmpl['displaytabs']++;	
+		if($tmpl['enablejavaadmin']  == 1) {
+			$tmpl['currenttab']['javaupload'] = $tmpl['displaytabs'];
+			$tmpl['displaytabs']++;	
+		}
 
 		// FLASH UPLOAD
 		$tmpl['currenttab']['flashupload'] = $tmpl['displaytabs'];
-		$tmpl['displaytabs']++;		
+
+		// Set flash uploader if ftp password and login exists (will be not problems)
+		$state			= $this->get('state');
+		$refreshSite 	= 'index.php?option=com_phocagallery&view=phocagalleryi&tmpl=component&tab='.$tmpl['displaytabs'].'&folder='.$state->folder;
+		if (!$ftp) {
+			phocagalleryimport('phocagallery.upload.upload');
+			PhocaGalleryFileUpload::uploader('file-upload', array('onAllComplete' => 'function(){ window.location.href="'.$refreshSite.'"; }'));
+		}
+		$tmpl['displaytabs']++;	
 		
 		$this->assignRef('session', JFactory::getSession());
 		$this->assign('tmpl', $tmpl);

@@ -40,6 +40,7 @@ class PhocaGalleryCpModelPhocaGalleryCs extends JModel
 		if (empty($this->_data)) {
 			$query = $this->_buildQuery();
 			$this->_data = $this->_getList( $query );// We need all data because of tree
+
 			// Order Categories to tree
 			$text = ''; // test is tree name e.g. Category >> Subcategory
 			$tree = array();
@@ -79,24 +80,49 @@ class PhocaGalleryCpModelPhocaGalleryCs extends JModel
 		$where		= $this->_buildContentWhere();
 		$orderby	= $this->_buildContentOrderBy('cc.parent_id');
 		
-		$query = ' SELECT a.*, cc.title AS parentname, u.name AS editor, g.name AS groupname, v.average AS ratingavg, ua.username AS usercatname '
+
+		/*
+		$query = ' SELECT a.*, cc.title AS parentname, u.name AS editor, g.name AS groupname, v.average AS ratingavg, ua.username AS usercatname, '
+			.'(SELECT count(*) AS countid'// used because Order down icon link
+			.' FROM #__phocagallery_categories AS c'
+			.' WHERE a.parent_id = c.parent_id'
+			.' GROUP BY c.parent_id ) AS countid'
 			. ' FROM #__phocagallery_categories AS a '
 			. ' LEFT JOIN #__users AS u ON u.id = a.checked_out '
 			. ' LEFT JOIN #__groups AS g ON g.id = a.access '
 			. ' LEFT JOIN #__phocagallery_categories AS cc ON cc.id = a.parent_id'
 			. ' LEFT JOIN #__phocagallery_votes_statistics AS v ON v.catid = a.id'
-			. ' LEFT JOIN #__phocagallery_user_category AS uc ON uc.catid = a.id'
-			. ' LEFT JOIN #__users AS ua ON ua.id = uc.userid'
+			//. ' LEFT JOIN #__phocagallery_user_category AS uc ON uc.catid = a.id'
+			. ' LEFT JOIN #__users AS ua ON ua.id = a.owner_id'
+			. $where
+			. $orderby;*/
+			
+			
+			$query = ' SELECT a.*, cc.title AS parentname, u.name AS editor, g.name AS groupname, v.average AS ratingavg, ua.username AS usercatname, c.countid AS countid'
+			. ' FROM #__phocagallery_categories AS a '
+			. ' LEFT JOIN #__users AS u ON u.id = a.checked_out '
+			. ' LEFT JOIN #__groups AS g ON g.id = a.access '
+			. ' LEFT JOIN #__phocagallery_categories AS cc ON cc.id = a.parent_id'
+			. ' LEFT JOIN #__phocagallery_votes_statistics AS v ON v.catid = a.id'
+			. ' LEFT JOIN #__users AS ua ON ua.id = a.owner_id'
+			. ' JOIN (SELECT c.parent_id, count(*) AS countid'
+			. ' FROM #__phocagallery_categories AS c'
+			.' GROUP BY c.parent_id ) AS c'
+			.' ON a.parent_id = c.parent_id'
 			. $where
 			. $orderby;
+			
 		return $query;
 	}
+	
 
 	/*
 	 * Create category tree
 	 */
 	function _categoryTree( $data, $tree, $id = 0, $text='', $currentId) {		
 
+		// Ordering
+		$countItemsInCat 	= 0;
 		foreach ($data as $key) {	
 			$show_text =  $text . $key->title;
 			
@@ -104,11 +130,29 @@ class PhocaGalleryCpModelPhocaGalleryCs extends JModel
 	
 			if ($key->parent_id == $id && $currentId != $id && $currentId != $key->id ) {	
 
+				
+				
 				$tree[$iCT] 					= new JObject();
+				
+				// Ordering MUST be solved here
+				if ($countItemsInCat > 0) {
+					$tree[$iCT]->orderup				= 1;
+				} else {
+					$tree[$iCT]->orderup 				= 0;
+				}
+				
+				if ($countItemsInCat < ($key->countid - 1)) {
+					$tree[$iCT]->orderdown 				= 1;
+				} else {
+					$tree[$iCT]->orderdown 				= 0;
+				}
+				
+				
 				$tree[$iCT]->id 				= $key->id;
 				$tree[$iCT]->title 				= $show_text;
 				$tree[$iCT]->title_self 		= $key->title;
 				$tree[$iCT]->parent_id			= $key->parent_id;
+				$tree[$iCT]->owner_id			= $key->owner_id;
 				$tree[$iCT]->name				= $key->name;
 				$tree[$iCT]->alias				= $key->alias;
 				$tree[$iCT]->image				= $key->image;
@@ -135,14 +179,18 @@ class PhocaGalleryCpModelPhocaGalleryCs extends JModel
 				$tree[$iCT]->longitude			= $key->longitude;
 				$tree[$iCT]->zoom				= $key->zoom;
 				$tree[$iCT]->geotitle			= $key->geotitle;
+				$tree[$iCT]->approved			= $key->approved;
 				$tree[$iCT]->link				= '';
 				$tree[$iCT]->filename			= '';// Will be added in View (after items will be reduced)
 				$tree[$iCT]->linkthumbnailpath	= '';
+
 				$iCT++;
 				
-				$tree = $this->_categoryTree($data, $tree, $key->id, $show_text . " &raquo; ", $currentId );	
+				$tree = $this->_categoryTree($data, $tree, $key->id, $show_text . " &raquo; ", $currentId );
+				$countItemsInCat++;
 			}	
 		}
+		
 		return($tree);
 	}
 	
@@ -187,6 +235,16 @@ class PhocaGalleryCpModelPhocaGalleryCs extends JModel
 		}
 		$where 		= ( count( $where ) ? ' WHERE '. implode( ' AND ', $where ) : '' );
 		return $where;
+	}
+	
+	function getNotApprovedCategory() {
+		
+		$query = 'SELECT COUNT(a.id) AS count'
+			.' FROM #__phocagallery_categories AS a'
+			.' WHERE approved = 0';
+		$this->_db->setQuery($query, 0, 1);
+		$countNotApproved = $this->_db->loadObject();
+		return $countNotApproved;
 	}
 }
 ?>

@@ -33,11 +33,12 @@ class PhocaGalleryRenderProcess
 			echo '<head>'. "\n";
 			echo '<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />'. "\n\n";
 			echo '<title>'.JText::_( 'Creating of Thumbnail').'</title>'. "\n";
+			echo '<link rel="stylesheet" href="'.JURI::base(true).'/components/com_phocagallery/assets/phocagallery.css" type="text/css" />';
 			echo '</head>'. "\n";
 			echo '<body>'. "\n";
 			
 		}
-		echo '<center><div style="width:70%;border:1px solid #ccc; margin-top:30px;font-family: sans-serif, Arial;font-weight:normal;color:#666;font-size:14px;padding:10px">';
+		echo '<center><div style="width:70%;border:5px solid #FFE699; margin-top:30px;font-family: sans-serif, Arial;font-weight:normal;color:#666;font-size:14px;padding:10px">';
 		echo '<span>'. JText::_( 'Creating of thumbnail Please Wait' ) . '</span>';
 		
 		if ( $errorMsg == '' ) {
@@ -50,11 +51,12 @@ class PhocaGalleryRenderProcess
 			.' <span style="color:#0066cc;padding:0;margin:0"> '. $filename . '</span>' 
 			.' ... <b style="color:#fc0000">'.JText::_( 'Error' ).'</b><br />'
 			.'(<span style="color:#0066cc;">' . $thumbInfo . '</span>)</p>';
+			
 		}
 	
 		if ($countImg == 0) {
 			// BEGIN ---------------------------------------------------------------------------
-			echo '<p>' . JText::_('Rebuilding Process') . '</p>';
+			echo '<div class="loading">'. JHTML::_('image.site',  'icon-loading.gif', '/components/com_phocagallery/assets/images/', NULL, NULL, JText::_('Loading') ) .'  '. JText::_('Rebuilding Process') . '</div>';
 			// END -----------------------------------------------------------------------------
 		} else {
 			// Creating thumbnails info

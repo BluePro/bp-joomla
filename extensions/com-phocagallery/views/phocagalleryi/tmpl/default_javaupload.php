@@ -13,7 +13,10 @@ $return = 'index.php?option=com_phocagallery&view=phocagalleryi&tmpl=component&f
 $archive = str_replace('administrator/', '', JURI::base()).'components/com_phocagallery/assets/java/jupload/wjhk.jupload.jar';
 ?><div id="phocagallery-javaupload">
 <fieldset>
-<legend><?php echo JText::_( 'Upload File' ); ?> [ <?php echo JText::_( 'Max' ); ?>&nbsp;<?php echo ($this->tmpl['uploadmaxsize'] / 1000000); ?>M ]</legend>
+<legend><?php 
+	echo JText::_( 'Upload File' ).' [ '. JText::_( 'Max Size' ).':&nbsp;'.$this->tmpl['uploadmaxsizeread'].','
+	.' '.JText::_('Max Resolution').':&nbsp;'. $this->tmpl['uploadmaxreswidth'].' x '.$this->tmpl['uploadmaxresheight'].' px ]';
+?></legend>	
 <!--[if !IE]> -->
 <object classid="java:wjhk.jupload2.JUploadApplet" type="application/x-java-applet" archive="<?php echo $archive;?>" height="480" width="640" >
 <param name="archive" value="<?php echo $archive;?>" />

@@ -28,6 +28,11 @@ class PhocaGalleryCpControllerPhocaGallery extends PhocaGalleryCpController
 		$this->registerTask( 'disablethumbs' , 'disablethumbs');
 		$this->registerTask( 'rotate'  , 	'rotate' );
 		$this->registerTask( 'deletethumbs'  , 	'deletethumbs' );
+		$this->registerTask( 'recreate'  , 	'recreate' );
+		$this->registerTask( 'approve', 'approve');
+		$this->registerTask( 'disapprove', 'disapprove');
+		
+		
 	}
 	
 	function deletethumbs()
@@ -118,7 +123,7 @@ class PhocaGalleryCpControllerPhocaGallery extends PhocaGalleryCpController
 		$extlinkname2			= JRequest::getVar( 'extlinkname2', '', 'post', 'string' );
 		$targetlist2			= JRequest::getVar( 'targetlist2', '_self', 'post', 'string' );
 		$displaylist2			= JRequest::getVar( 'displaylist2', 1, 'post', 'int' );
-		
+	
 		if ($extlink1 != '') {
 			$extlink1			= str_replace('http://','', $extlink1);
 			$post['extlink1'] 	= $extlink1 . '|'.$extlinkname1.'|'.$targetlist1.'|'.$displaylist1;
@@ -130,11 +135,6 @@ class PhocaGalleryCpControllerPhocaGallery extends PhocaGalleryCpController
 	
 		$model = $this->getModel( 'phocagallery' );
 		
-		if ($model->store($post)) {
-			$msg = JText::_( 'Phoca gallery Saved' );
-		} else {
-			$msg = JText::_( 'Error Saving Phoca gallery' );
-		}
 		
 		switch ( JRequest::getCmd('task') ) {
 			case 'apply':
@@ -183,6 +183,24 @@ class PhocaGalleryCpControllerPhocaGallery extends PhocaGalleryCpController
 
 		$this->setRedirect( 'index.php?option=com_phocagallery&view=phocagallerys', $msg );
 	}
+	
+	function recreate() {
+		$cid = JRequest::getVar( 'cid', array(), 'post', 'array' );
+		JArrayHelper::toInteger($cid);
+
+		if (count( $cid ) < 1) {
+			JError::raiseError(500, JText::_( 'Select an item to recreate' ) );
+		}
+
+		$model = $this->getModel( 'phocagallery' );
+		if(!$model->recreate($cid)) {
+			$msg = JText::_( 'PHOCAGALLERY_THUMB_RECREATE_ERROR' );
+		} else {
+			$msg = JText::_( 'PHOCAGALLERY_THUMB_RECREATED' );
+		}
+
+		$this->setRedirect( 'index.php?option=com_phocagallery&view=phocagallerys', $msg );
+	}
 
 	function publish() {
 		global $mainframe;
@@ -214,6 +232,42 @@ class PhocaGalleryCpControllerPhocaGallery extends PhocaGalleryCpController
 
 		$model = $this->getModel('phocagallery');
 		if(!$model->publish($cid, 0)) {
+			echo "<script> alert('".$model->getError(true)."'); window.history.go(-1); </script>\n";
+		}
+
+		$this->setRedirect( 'index.php?option=com_phocagallery&view=phocagallerys' );
+	}
+	
+	function approve() {
+		global $mainframe;
+
+		$cid = JRequest::getVar( 'cid', array(), 'post', 'array' );
+		JArrayHelper::toInteger($cid);
+
+		if (count( $cid ) < 1) {
+			JError::raiseError(500, JText::_( 'Select an item to approve' ) );
+		}
+
+		$model = $this->getModel('phocagallery');
+		if(!$model->approve($cid, 1)) {
+			echo "<script> alert('".$model->getError(true)."'); window.history.go(-1); </script>\n";
+		}
+
+		$this->setRedirect( 'index.php?option=com_phocagallery&view=phocagallerys' );
+	}
+
+	function disapprove() {
+		global $mainframe;
+
+		$cid = JRequest::getVar( 'cid', array(), 'post', 'array' );
+		JArrayHelper::toInteger($cid);
+
+		if (count( $cid ) < 1) {
+			JError::raiseError(500, JText::_( 'Select an item to disapprove' ) );
+		}
+
+		$model = $this->getModel('phocagallery');
+		if(!$model->approve($cid, 0)) {
 			echo "<script> alert('".$model->getError(true)."'); window.history.go(-1); </script>\n";
 		}
 

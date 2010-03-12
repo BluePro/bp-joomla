@@ -40,6 +40,7 @@ class PhocaGalleryFile
 	function removeExtension($filename) {
 		return substr($filename, 0, strrpos( $filename, '.' ));
 	}
+
 	
 	function getMimeType($filename) {
 		$ext = JFile::getExt($filename);	

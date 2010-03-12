@@ -60,9 +60,7 @@ if ($this->tmpl['switchimage'] == 1 && $noBaseImg == false) {
 		<center class="main-switch-image">
 			<table border="0" cellspacing="5" cellpadding="5" style="" class="main-switch-image-table">
 				<tr>
-					<td align="center" valign="middle" style="text-align:center;width:<?php echo $switchImage['width'];?>px;height:<?php echo $switchImage['height'];?>px; background: url('<?php echo $this->tmpl['waitimage']; ?>') <?php echo $switchImage['centerw'] ;?>px <?php echo $switchImage['centerh'];?>px no-repeat;margin:0px;padding:0px;">
-					<?php echo JHTML::_( 'image.site', ''.str_replace('phoca_thumb_m_','phoca_thumb_l_',$this->tmpl['basicimage']).'', '', '', '', '', ' id="PhocaGalleryobjectPicture"  border="0"'); ?>
-					</td>
+					<td align="center" valign="middle" style="text-align:center;width:<?php echo $switchImage['width'];?>px;height:<?php echo $switchImage['height'];?>px; background: url('<?php echo $this->tmpl['waitimage']; ?>') <?php echo $switchImage['centerw'] ;?>px <?php echo $switchImage['centerh'];?>px no-repeat;margin:0px;padding:0px;"><?php echo $this->tmpl['basicimage'] ?></td>
 				</tr>
 			</table>
 		</center>
@@ -79,7 +77,7 @@ if ($this->tmpl['displaycategoriescv']) {
 // Height of all boxes
 $imageHeight 			= PhocaGalleryImage::correctSize($this->tmpl['imageheight'], 100, 100, 0);
 $imageWidth 			= PhocaGalleryImage::correctSize($this->tmpl['imagewidth'], 100, 120, 20);
-$imageHeight['boxsize']	= PhocaGalleryImage::setBoxSize($imageHeight,$imageWidth, $this->tmpl['displayname'], $this->tmpl['displayicondetail'], $this->tmpl['displayicondownload'], $this->tmpl['displayiconvmbox'], $this->tmpl['startpiclens'], $this->tmpl['trash'], $this->tmpl['publishunpublish'], $this->tmpl['displayicongeobox'], $this->tmpl['displaycamerainfo'], $this->tmpl['displayiconextlink1box'], $this->tmpl['displayiconextlink2box'], $this->tmpl['categoryboxspace'], $this->tmpl['displayimageshadow'], $this->tmpl['displayratingimg'], $this->tmpl['displaycamerainfo'], $this->tmpl['displayiconfolder'], $this->tmpl['imgdescboxheight']);
+$imageHeight['boxsize']	= PhocaGalleryImage::setBoxSize($imageHeight,$imageWidth, $this->tmpl['displayname'], $this->tmpl['displayicondetail'], $this->tmpl['displayicondownload'], $this->tmpl['displayiconvmbox'], $this->tmpl['startpiclens'], $this->tmpl['trash'], $this->tmpl['publishunpublish'], $this->tmpl['displayicongeobox'], $this->tmpl['displaycamerainfo'], $this->tmpl['displayiconextlink1box'], $this->tmpl['displayiconextlink2box'], $this->tmpl['categoryboxspace'], $this->tmpl['displayimageshadow'], $this->tmpl['displayratingimg'], $this->tmpl['displaycamerainfo'], $this->tmpl['displayiconfolder'], $this->tmpl['imgdescboxheight'], $this->tmpl['approvednotapproved'], $this->tmpl['displayiconcommentimgbox']);
 if ( $this->tmpl['displayimageshadow'] != 'none' ) {		
 	$imageHeight['size']	= $imageHeight['size'] + 18;
 	$imageWidth['size'] 	= $imageWidth['size'] + 18;
@@ -107,7 +105,18 @@ if (!empty($this->items)) {
 
 							echo ' href="'. $value->link.'"';
 							
+							// Correct size for external Image (Picasa) - subcategory
+							if (isset($value->extpic) && $value->extpic != '') {
+								$correctImageRes = PhocaGalleryPicasa::correctSizeWithRate($value->extw, $value->exth, $this->tmpl['picasa_correct_width_m'], $this->tmpl['picasa_correct_height_m']);
+							}
+							
+							// Image
 							if ($value->type == 2) {
+							
+								// Correct size for picasa - image
+								if (isset($value->extid) && $value->extid != '') {
+									$correctImageRes = PhocaGalleryPicasa::correctSizeWithRate($value->extw, $value->exth, $this->tmpl['picasa_correct_width_m'], $this->tmpl['picasa_correct_height_m']);
+								}
 							
 								if ($this->tmpl['detailwindow'] == 1) {
 									echo ' onclick="'. $value->button->options.'"';
@@ -124,28 +133,54 @@ if (!empty($this->items)) {
 							
 								// SWITCH OR OVERLIB
 								if ($this->tmpl['switchimage'] == 1) {
-								?> onmouseover="PhocaGallerySwitchImage('PhocaGalleryobjectPicture', '<?php echo str_replace('phoca_thumb_m_','phoca_thumb_l_', JURI::base(true).'/'. $value->linkthumbnailpath); ?>');" onmouseout="PhocaGallerySwitchImage('PhocaGalleryobjectPicture', '<?php echo str_replace('phoca_thumb_m_','phoca_thumb_l_',JURI::base(true).'/'. $value->linkthumbnailpath); ?>');" <?php
-								
+									if ($value->extl != '') {
+										$correctImageResL = PhocaGalleryPicasa::correctSizeWithRate($value->extwswitch, $value->exthswitch, $this->tmpl['switchwidth'], $this->tmpl['switchheight']);
+
+									echo ' onmouseover="PhocaGallerySwitchImage(\'PhocaGalleryobjectPicture\', \''. $value->extl.'\', '.$correctImageResL['width'].', '.$correctImageResL['height'].');" '; 
+									// onmouseout="PhocaGallerySwitchImage(\'PhocaGalleryobjectPicture\', \''.$value->extl.'\');"
+								 
+									} else {
+										$switchImg = str_replace('phoca_thumb_m_','phoca_thumb_l_',JURI::base(true).'/'. $value->linkthumbnailpath);
+										echo ' onmouseover="PhocaGallerySwitchImage(\'PhocaGalleryobjectPicture\', \''. $switchImg.'\');" '; 
+										// onmouseout="PhocaGallerySwitchImage(\'PhocaGalleryobjectPicture\', \''.$switchImg.'\');" 
+									}
 								} else {
 									echo $value->overlib_value;					
 								}
 								
 								?> ><?php 
 								if ($value->overlib == 0) {
-									echo JHTML::_( 'image.site', $value->linkthumbnailpath, '', '', '', $value->title );
+								
+									if (isset($value->extid) && $value->extid != '') {
+										echo JHTML::_( 'image', $value->extm, '', array('width' => $correctImageRes['width'], 'height' => $correctImageRes['height']), '', $value->title);
+									} else {
+										echo JHTML::_( 'image.site', $value->linkthumbnailpath, '', '', '', $value->title );
+									}
 								} else {
-									echo JHTML::_( 'image.site', $value->linkthumbnailpath, '', '', '', '' );
+									if (isset($value->extid) && $value->extid != '') {
+										echo JHTML::_( 'image', $value->extm, '', array('width' => $correctImageRes['width'], 'height' => $correctImageRes['height']), '', '');
+									} else {
+										echo JHTML::_( 'image.site', $value->linkthumbnailpath, '', '', '', '', array('class' => 'pimo') );
+									}
 								}
 
-								if ($value->enable_piclens == 1) {							
-									?><span class="mbf-item">#phocagallerypiclens <?php echo $value->catid ;?>-phocagallerypiclenscode-<?php echo $value->filename;?></span><?php
+								if ($value->enable_piclens == 1) {
+									if ($value->extid != '') {
+										echo '<span class="mbf-item">#phocagallerypiclens '.$value->catid.'-phocagallerypiclenscode-'.$value->extid.'</span>';
+									} else {
+										echo '<span class="mbf-item">#phocagallerypiclens '.$value->catid.'-phocagallerypiclenscode-'.$value->filename.'</span>';
+									}
 								}
 							} else {
-								?> ><?php 
-								echo JHTML::_( 'image.site', $value->linkthumbnailpath, '', '', '', $value->title );
+								echo ' >'; 
+								if (isset($value->extpic) && $value->extpic != '') {
+									echo JHTML::_( 'image', $value->extm, '', array('width' => $correctImageRes['width'], 'height' => $correctImageRes['height']), '', $value->title);
+								} else {
+									echo JHTML::_( 'image.site', $value->linkthumbnailpath, '', '', '', $value->title );
+								}
 								
 							} // if type 2 else type 0, 1 (image, category, folder)
-								?></a><?php
+								echo '</a>';
 								if ( $this->tmpl['detailwindow'] == 5) {
 									if ($this->tmpl['displaytitleindescription'] == 1) {
 										echo '<div class="highslide-heading">';
@@ -188,7 +223,7 @@ if (!empty($this->items)) {
 		
 		// Rate Image
 		if($value->item_type == 'image' && $this->tmpl['displayratingimg'] == 1) {
-			?> <a class="<?php echo $value->buttonother->methodname; ?>" title="<?php echo JText::_('Rate Image');//$value->title; ?>" href="<?php echo JRoute::_('index.php?option=com_phocagallery&view=detail&catid='.$this->category->slug.'&id='.$value->slug.$tmplCom.'&Itemid='. JRequest::getVar('Itemid', 1, 'get', 'int') ); ?>"<?php
+			?> <a class="<?php echo $value->buttonother->methodname; ?>" title="<?php echo JText::_('Rate Image');//$value->title; ?>" href="<?php echo JRoute::_('index.php?option=com_phocagallery&view=detail&catid='.$this->category->slug.'&id='.$value->slug.$tmplCom.'&Itemid='. JRequest::getVar('Itemid', 0, '', 'int') ); ?>"<?php
 			if ($this->tmpl['detailwindow'] == 1) {
 				echo ' onclick="'. $value->buttonother->optionsrating.'"';
 			} else if ($this->tmpl['detailwindow'] == 4 ) {
@@ -220,7 +255,10 @@ if (!empty($this->items)) {
 			echo '<div class="detail" style="margin-top:2px">';
 			
 			if ($value->startpiclens == 1) {							
-				?><a href="javascript:PicLensLite.start();" title="PicLens" ><img src="http://lite.piclens.com/images/PicLensButton.png" alt="PicLens" width="16" height="12" border="0" style="margin-bottom:2px" /></a><?php
+				?><a href="javascript:PicLensLite.start({feedUrl:'<?php echo JURI::base(true) . '/images/phocagallery/'
+		. $value->catid .'.rss'; ?>'});" title="Cooliris" ><?php
+		echo JHTML::_('image', 'components/com_phocagallery/assets/images/icon-cooliris.'.$this->tmpl['formaticon'], 'Cooliris');
+		?></a><?php
 		  
 			}
 			
@@ -255,11 +293,12 @@ if (!empty($this->items)) {
 			
 			if ($value->displayicondownload > 0) {
 				
-					if ($value->displayicondownload == 2) {
-						?> <a title="<?php echo JText::_('Image Download');//$value->title; ?>" href="<?php echo JRoute::_('index.php?option=com_phocagallery&view=detail&catid='.$this->category->slug.'&id='.$value->slug. $tmplCom.'&phocadownload='.$value->displayicondownload.'&Itemid='. JRequest::getVar('Itemid', 1, 'get', 'int') ); ?>"<?php
+					// Direct Download but not if there is a youtube
+					if ($value->displayicondownload == 2 && $value->videocode == '') {
+						?> <a title="<?php echo JText::_('Image Download');//$value->title; ?>" href="<?php echo JRoute::_('index.php?option=com_phocagallery&view=detail&catid='.$this->category->slug.'&id='.$value->slug. $tmplCom.'&phocadownload='.$value->displayicondownload.'&Itemid='. JRequest::getVar('Itemid', 0, '', 'int') ); ?>"<?php
 					} else { 
 						
-						?> <a class="<?php echo $value->buttonother->methodname; ?>" title="<?php echo JText::_('Image Download');//$value->title; ?>" href="<?php echo JRoute::_('index.php?option=com_phocagallery&view=detail&catid='.$this->category->slug.'&id='.$value->slug. $tmplCom.'&phocadownload='.(int)$value->displayicondownload.'&Itemid='. JRequest::getVar('Itemid', 1, 'get', 'int') ); ?>"<?php
+						?> <a class="<?php echo $value->buttonother->methodname; ?>" title="<?php echo JText::_('Image Download');//$value->title; ?>" href="<?php echo JRoute::_('index.php?option=com_phocagallery&view=detail&catid='.$this->category->slug.'&id='.$value->slug. $tmplCom.'&phocadownload='.(int)$value->displayicondownload.'&Itemid='. JRequest::getVar('Itemid', 0, '', 'int') ); ?>"<?php
 					
 						if ($this->tmpl['detailwindow'] == 1) {
 							echo ' onclick="'. $value->buttonother->options.'"';
@@ -279,7 +318,7 @@ if (!empty($this->items)) {
 			}
 			
 			if ($value->displayicongeo == 1) {
-				?> <a class="<?php echo $value->buttonother->methodname; ?>" title="<?php echo JText::_('Geotagging');//$value->title; ?>" href="<?php echo JRoute::_('index.php?option=com_phocagallery&view=map&catid='.$this->category->slug.'&id='.$value->slug.$tmplCom.'&Itemid='. JRequest::getVar('Itemid', 1, 'get', 'int') ); ?>"<?php
+				?> <a class="<?php echo $value->buttonother->methodname; ?>" title="<?php echo JText::_('Geotagging');//$value->title; ?>" href="<?php echo JRoute::_('index.php?option=com_phocagallery&view=map&catid='.$this->category->slug.'&id='.$value->slug.$tmplCom.'&Itemid='. JRequest::getVar('Itemid', 0, '', 'int') ); ?>"<?php
 					if ($this->tmpl['detailwindow'] == 1) {
 						echo ' onclick="'. $value->buttonother->options.'"';
 					} else if ($this->tmpl['detailwindow'] == 4 ) {
@@ -297,7 +336,7 @@ if (!empty($this->items)) {
 			}
 			
 			if ($value->camerainfo == 1) {
-				?> <a class="<?php echo $value->buttonother->methodname; ?>" title="<?php echo JText::_('Camera Info');//$value->title; ?>" href="<?php echo JRoute::_('index.php?option=com_phocagallery&view=info&catid='.$this->category->slug.'&id='.$value->slug.$tmplCom.'&Itemid='. JRequest::getVar('Itemid', 1, 'get', 'int') ); ?>"<?php
+				?> <a class="<?php echo $value->buttonother->methodname; ?>" title="<?php echo JText::_('Camera Info');//$value->title; ?>" href="<?php echo JRoute::_('index.php?option=com_phocagallery&view=info&catid='.$this->category->slug.'&id='.$value->slug.$tmplCom.'&Itemid='. JRequest::getVar('Itemid', 0, '', 'int') ); ?>"<?php
 					if ($this->tmpl['detailwindow'] == 1) {
 						echo ' onclick="'. $value->buttonother->options.'"';
 					} else if ($this->tmpl['detailwindow'] == 4 ) {
@@ -312,6 +351,29 @@ if (!empty($this->items)) {
 					echo ' >';
 					echo JHTML::_('image', 'components/com_phocagallery/assets/images/icon-info.'.$this->tmpl['formaticon'], JText::_('Camera Info'));
 					echo '</a>';
+			}
+			
+			if ($value->displayiconcommentimg == 1) {
+				?> <a class="<?php echo $value->buttonother->methodname; ?>" title="<?php echo JText::_('PHOCAGALLERY_COMMENT_IMAGE'); ?>" href="<?php echo JRoute::_('index.php?option=com_phocagallery&view=comment&catid='.$this->category->slug.'&id='.$value->slug.$tmplCom.'&Itemid='. JRequest::getVar('Itemid', 0, '', 'int') ); ?>"<?php
+				if ($this->tmpl['detailwindow'] == 1) {
+					echo ' onclick="'. $value->buttonother->options.'"';
+				} else if ($this->tmpl['detailwindow'] == 4 ) {
+					echo ' onclick="'. $this->tmpl['highslideonclick'].'"';
+				} else if ($this->tmpl['detailwindow'] == 5 ) {
+					echo ' onclick="'. $this->tmpl['highslideonclick2'].'"';
+				} else if ($this->tmpl['detailwindow'] == 7 ) {
+					echo '';
+				} else {
+					echo ' rel="'. $value->buttonother->options.'"';
+				}
+				echo ' >';
+				$cimgid = JRequest::getVar( 'cimgid', 0, '', 'int');
+				if($cimgid > 0) {
+					echo JHTML::_('image', 'components/com_phocagallery/assets/images/icon-comment-a.gif', JText::_('PHOCAGALLERY_COMMENT_IMAGE'));
+				} else {
+					echo JHTML::_('image', 'components/com_phocagallery/assets/images/icon-comment.'.$this->tmpl['formaticon'], JText::_('PHOCAGALLERY_COMMENT_IMAGE'));
+				}
+				echo '</a>';	
 			}
 			
 			if ($value->displayiconextlink1 == 1) {
@@ -332,7 +394,7 @@ if (!empty($this->items)) {
 			
 			// Trash for private categories
 			if ($value->trash == 1) {
-				echo ' <a onclick="return confirm(\''.JText::_('WARNWANTDELLISTEDITEMS').'\')" title="'.JText::_('Delete').'" href="'. JRoute::_('index.php?option=com_phocagallery&view=category&catid='.$this->category->slug.'&id='.$value->slug.'&controller=category&task=remove'.'&Itemid='. JRequest::getVar('Itemid', 1, 'get', 'int') ).$this->tmpl['limitstarturl'].'">';
+				echo ' <a onclick="return confirm(\''.JText::_('WARNWANTDELLISTEDITEMS').'\')" title="'.JText::_('Delete').'" href="'. JRoute::_('index.php?option=com_phocagallery&view=category&catid='.$this->category->slug.'&id='.$value->slug.'&controller=category&task=remove'.'&Itemid='. JRequest::getVar('Itemid', 0, '', 'int') ).$this->tmpl['limitstarturl'].'">';
 					echo JHTML::_('image', 'components/com_phocagallery/assets/images/icon-trash.'.$this->tmpl['formaticon'], JText::_('Delete'));
 					echo '</a>';
 			}
@@ -341,18 +403,32 @@ if (!empty($this->items)) {
 			if ($value->publishunpublish == 1) {
 				if ($value->published == 1) {
 				
-					echo ' <a title="'.JText::_('Unpublish').'" href="'. JRoute::_('index.php?option=com_phocagallery&view=category&catid='.$this->category->slug.'&id='.$value->slug.'&&controller=category&task=unpublish'.'&Itemid='. JRequest::getVar('Itemid', 1, 'get', 'int') ).$this->tmpl['limitstarturl'].'">';
+					echo ' <a title="'.JText::_('Unpublish').'" href="'. JRoute::_('index.php?option=com_phocagallery&view=category&catid='.$this->category->slug.'&id='.$value->slug.'&&controller=category&task=unpublish'.'&Itemid='. JRequest::getVar('Itemid', 0, '', 'int') ).$this->tmpl['limitstarturl'].'">';
 					echo JHTML::_('image', 'components/com_phocagallery/assets/images/icon-publish.'.$this->tmpl['formaticon'], JText::_('Unpublish'));
 					echo '</a>';
 				}
 				if ($value->published == 0) {
 				
-					echo ' <a title="'.JText::_('Publish').'" href="'. JRoute::_('index.php?option=com_phocagallery&view=category&catid='.$this->category->slug.'&id='.$value->slug.'&controller=category&task=publish'.'&Itemid='. JRequest::getVar('Itemid', 1, 'get', 'int') ).$this->tmpl['limitstarturl'].'">';
+					echo ' <a title="'.JText::_('Publish').'" href="'. JRoute::_('index.php?option=com_phocagallery&view=category&catid='.$this->category->slug.'&id='.$value->slug.'&controller=category&task=publish'.'&Itemid='. JRequest::getVar('Itemid', 0, '', 'int') ).$this->tmpl['limitstarturl'].'">';
 					echo JHTML::_('image', 'components/com_phocagallery/assets/images/icon-unpublish.'.$this->tmpl['formaticon'], JText::_('Publish'));
 					echo '</a>';
 				
 				}
 			}
+			
+			if ($value->approvednotapproved == 1) {
+				// Display the information about Approving too:
+				if ($value->approved == 1) {
+					echo ' <a href="#" title="'.JText::_('PHOCAGALLERY_IMAGE_APPROVED').'">'.JHTML::_('image', 'components/com_phocagallery/assets/images/icon-publish.'.$this->tmpl['formaticon'], JText::_('PHOCAGALLERY_APPROVED')).'</a>';
+				}
+				if ($value->approved == 0) {
+
+					echo ' <a href="#" title="'.JText::_('PHOCAGALLERY_IMAGE_NOT_APPROVED').'">'.JHTML::_('image', 'components/com_phocagallery/assets/images/icon-unpublish.'.$this->tmpl['formaticon'], JText::_('PHOCAGALLERY_NOT_APPROVED')).'</a>';
+				
+				}
+			}
+		
+			
 
 			echo '</div>';
 			echo '<div style="clear:both"></div>';
@@ -412,31 +488,38 @@ if ($this->tmpl['displaytabs'] > 0) {
 	echo $pane->startPane( 'pane' );
 	
 	if ((int)$this->tmpl['displayrating'] == 1) {
-		echo $pane->startPanel( JHTML::_( 'image.site', 'components/com_phocagallery/assets/images/icon-vote.'.$this->tmpl['formaticon'],'', '', '', '', '') . '&nbsp;'.JText::_('Rating'), 'votes' );
+		echo $pane->startPanel( JHTML::_( 'image.site', 'components/com_phocagallery/assets/images/icon-vote.'.$this->tmpl['formaticon'],'', '', '', '', '') . '&nbsp;'.JText::_('Rating'), 'pgvotes' );
 		echo $this->loadTemplate('rating');
 		echo $pane->endPanel();
 	}
 
 	if ((int)$this->tmpl['displaycomment'] == 1) {
-		echo $pane->startPanel( JHTML::_( 'image.site', 'components/com_phocagallery/assets/images/icon-comment.'.$this->tmpl['formaticon'],'', '', '', '', '') . '&nbsp;'.JText::_('Comments'), 'comments' );
-		echo $this->loadTemplate('comments');
-		echo $pane->endPanel();
+		echo $pane->startPanel( JHTML::_( 'image.site', 'components/com_phocagallery/assets/images/icon-comment.'.$this->tmpl['formaticon'],'', '', '', '', '') . '&nbsp;'.JText::_('Comments'), 'pgcomments' );
+		
+	
+		if (JComponentHelper::isEnabled('com_jcomments', true) && $this->tmpl['externalcommentsystem'] == 1) {
+			include_once(JPATH_BASE.DS.'components'.DS.'com_jcomments'.DS.'jcomments.php');
+			echo JComments::showComments($this->category->id, 'com_phocagallery', JText::_('PHOCAGALLERY_CATEGORY') .' '. $this->category->title);
+		} else {
+			echo $this->loadTemplate('comments');
+		}
+		
 	}
 
 	if ((int)$this->tmpl['displaycategorystatistics'] == 1) {
-		echo $pane->startPanel( JHTML::_( 'image.site', 'components/com_phocagallery/assets/images/icon-statistics.'.$this->tmpl['formaticon'],'', '', '', '', '') . '&nbsp;'.JText::_('Statistics'), 'statistics' );
+		echo $pane->startPanel( JHTML::_( 'image.site', 'components/com_phocagallery/assets/images/icon-statistics.'.$this->tmpl['formaticon'],'', '', '', '', '') . '&nbsp;'.JText::_('Statistics'), 'pgstatistics' );
 		echo $this->loadTemplate('statistics');
 		echo $pane->endPanel();
 	}
 	
 	if ((int)$this->tmpl['displaycategorygeotagging'] == 1) {
-		echo $pane->startPanel( JHTML::_( 'image.site', 'components/com_phocagallery/assets/images/icon-geo.'.$this->tmpl['formaticon'],'', '', '', '', '') . '&nbsp;'.JText::_('Geotagging'), 'geotagging' );
+		echo $pane->startPanel( JHTML::_( 'image.site', 'components/com_phocagallery/assets/images/icon-geo.'.$this->tmpl['formaticon'],'', '', '', '', '') . '&nbsp;'.JText::_('Geotagging'), 'pggeotagging' );
 		echo $this->loadTemplate('geotagging');
 		echo $pane->endPanel();
 	}
 	
 	if ((int)$this->tmpl['displayupload'] == 1) {
-		echo $pane->startPanel( JHTML::_( 'image.site', 'components/com_phocagallery/assets/images/icon-upload.'.$this->tmpl['formaticon'],'', '', '', '', '') . '&nbsp;'.JText::_('Upload'), 'upload' );
+		echo $pane->startPanel( JHTML::_( 'image.site', 'components/com_phocagallery/assets/images/icon-upload.'.$this->tmpl['formaticon'],'', '', '', '', '') . '&nbsp;'.JText::_('Upload'), 'pgupload' );
 		echo $this->loadTemplate('upload');
 		echo $pane->endPanel();
 	}
@@ -450,4 +533,5 @@ if ($this->tmpl['detailwindow'] == 6) {
 	var gjaks = new SZN.LightBox(dataJakJs, optgjaks);
 	</script><?php
 }
+echo '<div>&nbsp;</div>';
 ?>

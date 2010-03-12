@@ -55,7 +55,6 @@
 	</tr>
 	</table>
 
-<div id="pg-update" ><a href="http://www.phoca.cz/themes/" target="_blank"><?php echo JText::_('New Theme Download'); ?></a></div>
 	
 <input type="hidden" name="type" value="" />
 <input type="hidden" name="task" value="themeinstall" />
@@ -64,4 +63,7 @@
 <?php echo JHTML::_( 'form.token' ); ?>
 </form>
 
+<?php  echo $this->loadTemplate('background_image'); ?>
+
+<div id="pg-update" ><a href="http://www.phoca.cz/themes/" target="_blank"><?php echo JText::_('New Theme Download'); ?></a></div>
 

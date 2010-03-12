@@ -86,7 +86,7 @@ fadeshow.prototype.populateslide=function(picobj, picindex){
 var slideHTML=""
 if (this.theimages[picindex][1]!="") /*if associated link exists for image*/
 slideHTML='<a HREF="'+this.theimages[picindex][1]+'" target="'+this.theimages[picindex][2]+'">'
-slideHTML+='<table border="0" style="text-align:center;margin: auto;"><tr><td style="text-align:center;" align="center" valign="middle" height="<?php echo $this->tmpl['largeheight']; ?>"><img style="vertical-align:middle;" SRC="'+this.postimages[picindex].src+'" border="'+this.imageborder+'px"></td></tr></table>'
+slideHTML+='<table border="0" cellpadding="0" cellspacing="0" style="text-align:center;margin: auto;"><tr><td style="text-align:center;" align="center" valign="middle" height="<?php echo $this->tmpl['largeheight']; ?>"><img style="vertical-align:middle;" SRC="'+this.postimages[picindex].src+'" border="'+this.imageborder+'px"></td></tr></table>'
 if (this.theimages[picindex][1]!="") /*if associated link exists for image*/
 slideHTML+='</a>'
 picobj.innerHTML=slideHTML

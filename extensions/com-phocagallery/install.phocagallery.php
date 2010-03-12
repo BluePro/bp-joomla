@@ -18,6 +18,8 @@ function com_install() {
 	
 	$folder[0][0]	=	'images' . DS . 'phocagallery' . DS ;
 	$folder[0][1]	= 	JPATH_ROOT . DS .  $folder[0][0];
+	$folder[1][0]	=	'images' . DS . 'phocagallery' . DS . 'avatars' . DS;
+	$folder[1][1]	= 	JPATH_ROOT . DS .  $folder[1][0];
 	
 	$message = '';
 	$error	 = array();
@@ -48,7 +50,7 @@ function com_install() {
 		}
 	}
 	
-	$message .= '<p>Please select if you want to Install or Upgrade Phoca Gallery component. Click Install for new Phoca Gallery installation. If you click on Install and some previous Phoca Gallery version is installed on your system, all Phoca Gallery data stored in database will be lost. If you click on Uprade, previous Phoca Gallery data stored in database will be not removed.</p>';
+	$message .= '<p>Please select if you want to Install or Upgrade Phoca Gallery component. Click Install for new Phoca Gallery installation. If you click on Install and some previous Phoca Gallery version is installed on your system, all Phoca Gallery data stored in database will be lost. If you click on Uprade, previous Phoca Gallery data stored in database will be not removed. Disable Debug System parameter if enabled before installing or upgrading.</p>';
 	
 
 	?>

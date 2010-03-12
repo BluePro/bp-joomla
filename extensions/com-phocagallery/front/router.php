@@ -53,13 +53,13 @@ function PhocaGalleryBuildRoute(&$query)
 			foreach ($items as $item)
 			{
 				// Check if this menu item links to this view.
-				if (isset($item->query['view']) && ($item->query['view'] == 'detail' || $item->query['view'] == 'map' || $item->query['view'] == 'info' )
+				if (isset($item->query['view']) && ($item->query['view'] == 'detail' || $item->query['view'] == 'map' || $item->query['view'] == 'info' || $item->query['view'] == 'comment' )
 					&& isset($query['view']) && $query['view'] != 'category'
 					&& isset($item->query['id']) && $item->query['id'] == $query['id']) {
 						$itemid	= $item->id;
 				}
 				else if (isset($item->query['view']) && $item->query['view'] == 'category'
-					&& isset($query['view']) && ($query['view'] != 'detail' || $query['view'] != 'map' || $query['view'] != 'info')
+					&& isset($query['view']) && ($query['view'] != 'detail' || $query['view'] != 'map' || $query['view'] != 'info' || $query['view'] != 'comment')
 					&& isset($item->query['catid']) && $item->query['catid'] == $query['catid']) {
 						$itemid	= $item->id;
 				}
@@ -160,8 +160,10 @@ function PhocaGalleryBuildRoute(&$query)
 			}
 
 			// Push the catid onto the stack.
-		//	if(isset($query['view'])) {$segments[]	= $query['view'];}
-			$segments[] = $query['catid'];
+			if(isset($query['view']) && $query['view'] != 'user') {
+		
+				$segments[] = $query['catid'];
+			}
 			
 			if (isset($query['alias'])) {
 				$query['id'] .= ':'.$query['alias'];

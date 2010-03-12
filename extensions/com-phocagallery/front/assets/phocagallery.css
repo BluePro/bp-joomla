@@ -1,29 +1,24 @@
-/*photogallery*/
-body {
-	margin:0;
+/* Phoca Gallery http://www.phoca.cz */
+#phocagallery {
 	padding:0;
+	margin:0;
 }
 
-a img {
-	border:0px;
+#phocagallery a img {
 	padding:0;
 	margin:0;
+	border:0px;
 }
 
 .phocagallery-box-file {
 	position:relative;
 	float:left;
-	width:120px;
-	height:140px;
-	padding:5px;
-	margin:5px;
 	text-align:center;
-	overflow:visible;
+	/*overflow:visible;*/
 }
 
 .phocagallery-box-file-first {
-	width:100px;
-	height:100px;
+	
 	overflow: hidden;
 	display: table;
 	vertical-align:middle;
@@ -131,7 +126,8 @@ a img {
 	border:1px solid #c2c2c2;
 }
 
-#loading-label {
+#loading-label,
+#loading-label-user{
 	text-align:center;
 	display:none;
 }
@@ -167,6 +163,14 @@ a img {
 }
 
 /* Voting - style by http://www.jluvip.com/works/css/starvote/index2-1.html*/
+#phocagallery ul.star-rating li,
+#phocagallery-pane ul.star-rating li,
+#phocagallery ul.star-rating-small li{
+	background: none;
+	list-style-type:none;
+}
+
+
 .star-rating{
 	list-style:none;
 	margin: 0px;
@@ -321,8 +325,15 @@ a img {
 }
 
 
+/* Pane*/
 
-#phocagallery-votes, #phocagallery-comments, #phocagallery-upload {
+#phocagallery-votes,
+#phocagallery-comments,
+#phocagallery-upload,
+#phocagallery-category-creating,
+#phocagallery-subcategory-creating,
+#phocagallery-statistics,
+#phocagallery-user{
 	margin-top:0px;/*IE bug*/
 	margin-bottom:15px;
 }
@@ -331,6 +342,8 @@ a img {
 #phocagallery-comments a img,
 #phocagallery-upload a img,
 #phocagallery-category-creating a img,
+#phocagallery-subcategory-creating a img,
+#phocagallery-user a img,
 #phocagallery-statistics a img{
 	border: 0px;
 }
@@ -339,6 +352,8 @@ a img {
 #phocagallery-comments fieldset,
 #phocagallery-upload fieldset,
 #phocagallery-category-creating fieldset,
+#phocagallery-subcategory-creating fieldset,
+#phocagallery-user fieldset,
 #phocagallery-statistics fieldset {
 	border:1px solid #ccc;
 	padding:10px;
@@ -348,7 +363,9 @@ a img {
 #phocagallery-votes legend,
 #phocagallery-comments legend,
 #phocagallery-upload legend,
-#phocagallery-category-creating legend, 
+#phocagallery-category-creating legend,
+#phocagallery-subcategory-creating legend, 
+#phocagallery-user legend,
 #phocagallery-statistics legend {
 	font-weight:bold;
 	color:#aa0000;
@@ -357,14 +374,19 @@ a img {
 #phocagallery-votes small, 
 #phocagallery-comments small, 
 #phocagallery-upload small ,
-#phocagallery-statistics small {
+#phocagallery-statistics small,
+#phocagallery-category-creating small,
+#phocagallery-subcategory-creating small, 
+#phocagallery-user small {
 	color:#ccc;
 }
 
 #phocagallery-votes form,
 #phocagallery-comments form,
 #phocagallery-upload form,
-#phocagallery-category-creating form {
+#phocagallery-category-creating form,
+#phocagallery-subcategory-creating form,
+#phocagallery-user form {
 	margin:0;
 	padding:0;
 }
@@ -372,13 +394,17 @@ a img {
 
 #phocagallery-comments .comment-input,
 #phocagallery-upload .comment-input,
-#phocagallery-category-creating .comment-input {
+#phocagallery-category-creating .comment-input,
+#phocagallery-subcategory-creating .comment-input,
+#phocagallery-user .comment-input {
 	width: 98%;
 }
 
 #phocagallery-comments .comment-input2,
 #phocagallery-upload .comment-input2,
-#phocagallery-category-creating .comment-input2 {
+#phocagallery-category-creating .comment-input2,
+#phocagallery-subcategory-creating .comment-input2,
+#phocagallery-user .comment-input {
 	width: 40px;
 	border:0px;
 	font-weight:bold;
@@ -493,3 +519,83 @@ div.current dd {
 	margin-left:10px;
 	margin-right:10px;
 }
+
+/** Table styles **/
+
+#phocagallery-subcategory-creating  table.adminlist,
+#phocagallery-upload  table.adminlist {
+	width: 100%;
+	border-spacing: 1px;
+	background-color: #e7e7e7;
+	color: #666;
+}
+
+#phocagallery-subcategory-creating  table.adminlist td,
+#phocagallery-subcategory-creating  table.adminlist th,
+#phocagallery-upload  table.adminlist td,
+#phocagallery-upload  table.adminlist th { 
+	padding: 4px;
+}
+
+#phocagallery-subcategory-creating  table.adminlist thead th,
+#phocagallery-upload  table.adminlist thead th {
+	text-align: center;
+	background: #f0f0f0;
+	color: #666;
+	border-bottom: 1px solid #999;
+	border-left: 1px solid #fff;
+}
+
+#phocagallery-subcategory-creating  table.adminlist thead a:hover,
+#phocagallery-upload  table.adminlist thead a:hover { text-decoration: none; }
+
+#phocagallery-subcategory-creating  table.adminlist thead th img,
+#phocagallery-upload  table.adminlist thead th img { vertical-align: middle; }
+
+#phocagallery-subcategory-creating  table.adminlist tbody th,
+#phocagallery-upload  table.adminlist tbody th { font-weight: bold; }
+
+#phocagallery-subcategory-creating  table.adminlist tbody tr,
+#phocagallery-upload  table.adminlist tbody tr						{ background-color: #fff;  text-align: left; }
+#phocagallery-subcategory-creating  table.adminlist tbody tr.row1,
+#phocagallery-upload  table.adminlist tbody tr.row1 					{ background: #f9f9f9; border-top: 1px solid #fff; }
+
+#phocagallery-subcategory-creating  table.adminlist tbody tr.row0:hover td,
+#phocagallery-subcategory-creating  table.adminlist tbody tr.row1:hover td,
+#phocagallery-upload  table.adminlist tbody tr.row0:hover td,
+#phocagallery-upload  table.adminlist tbody tr.row1:hover td { background-color: #ffd ; }
+
+#phocagallery-subcategory-creating  table.adminlist tbody tr td,
+#phocagallery-upload  table.adminlist tbody tr td 	   { height: 25px; background: #fff; border: 1px solid #fff; }
+
+#phocagallery-subcategory-creating  table.adminlist tbody tr.row1 td,
+#phocagallery-upload  table.adminlist tbody tr.row1 td { background: #f9f9f9; border-top: 1px solid #FFF; }
+
+#phocagallery-subcategory-creating  table.adminlist tfoot tr,
+#phocagallery-upload  table.adminlist tfoot tr { text-align: center;  color: #333; }
+ 
+#phocagallery-subcategory-creating  table.adminlist tfoot td,
+#phocagallery-subcategory-creating  table.adminlist tfoot th,
+#phocagallery-upload  table.adminlist tfoot td,
+#phocagallery-upload  table.adminlist tfoot th { background-color: #f3f3f3; border-top: 1px solid #999; text-align: center; }
+
+#phocagallery-subcategory-creating  table.adminlist td.order,
+#phocagallery-upload  table.adminlist td.order		{ text-align: center; white-space: nowrap; }
+
+#phocagallery-subcategory-creating  table.adminlist td.order span,
+#phocagallery-upload  table.adminlist td.order span { float: left; display: block; width: 20px; text-align: center; }
+
+
+#phocagallery .pgcenter {
+	text-align:center;
+	vertical-align:middle;
+}
+
+.bgPhocaClass {
+	padding:10px;
+	/*border:1px solid #d2d2d2;*/
+}
+
+
+
+

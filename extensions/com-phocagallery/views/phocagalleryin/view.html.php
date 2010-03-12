@@ -29,7 +29,7 @@ class PhocaGalleryCpViewPhocaGalleryIn extends JView
 		
 		//Main Function support
 		
-		echo '<table border="1" cellpadding="5" cellspacing="5" style="border:1px solid #ccc;border-collapse:collapse">';
+	//	echo '<table border="1" cellpadding="5" cellspacing="5" style="border:1px solid #ccc;border-collapse:collapse">';
 		
 		$function = array('getImageSize','imageCreateFromJPEG', 'imageCreateFromPNG', 'imageCreateFromGIF', 'imageRotate', 'imageCreateTruecolor', 'imageCopyResampled', 'imageFill', 'imageColorTransparent', 'imageColorAllocate', 'exif_read_data');
 		$fOutput = '';
@@ -50,7 +50,38 @@ class PhocaGalleryCpViewPhocaGalleryIn extends JView
 			$fOutput .=  '<td align="center">'. JHTML::_('image.site',  'icon-16-'.$icon.'.png', '/components/com_phocagallery/assets/images/', NULL, NULL, JText::_($iconText)).'</td></tr>';
 			
 		}
+		
+		// PICASA
+		$fOutput .= '<tr><td align="left"><b>'. JText::_('PHOCAGALLERY_PICASA_SUPPORT').'</b></td></tr>';
+		
+		if(ini_get('allow_url_fopen')==0){
+			$bgStyle = 'style="background:#ffcccc"';
+			$icon		= 'false';
+			$iconText	= JText::_('Disabled');
+		} else {
+			$bgStyle 	= 'style="background:#ccffcc"';
+			$icon		= 'true';
+			$iconText	= JText::_('Enabled');
+		}
+		
+		$fOutput .= '<tr '.$bgStyle.'><td>'.JText::_('PHOCAGALLERY_PHP_SETTINGS_PARAM') .' allow_url_fopen</td>';
+		$fOutput .=  '<td align="center">'.JHTML::_('image.site',  'icon-16-true.png', '/components/com_phocagallery/assets/images/', NULL, NULL, JText::_('Enabled') ).'</td>';
+		$fOutput .=  '<td align="center">'. JHTML::_('image.site',  'icon-16-'.$icon.'.png', '/components/com_phocagallery/assets/images/', NULL, NULL, JText::_($iconText)).'</td></tr>';
+		
+		if(function_exists("json_decode")){
+			$bgStyle 	= 'style="background:#ccffcc"';
+			$icon		= 'true';
+			$iconText	= JText::_('Enabled');
+		} else {
+			$bgStyle = 'style="background:#ffcccc"';
+			$icon		= 'false';
+			$iconText	= JText::_('Disabled');
+		}
 
+		$fOutput .= '<tr '.$bgStyle.'><td>'.JText::_('Function') .' json_decode</td>';
+		$fOutput .=  '<td align="center">'.JHTML::_('image.site',  'icon-16-true.png', '/components/com_phocagallery/assets/images/', NULL, NULL, JText::_('Enabled') ).'</td>';
+		$fOutput .=  '<td align="center">'. JHTML::_('image.site',  'icon-16-'.$icon.'.png', '/components/com_phocagallery/assets/images/', NULL, NULL, JText::_($iconText)).'</td></tr>';
+		
 
 		$this->assignRef('tmpl',	$tmpl);
 		$this->assignRef('foutput',	$fOutput);

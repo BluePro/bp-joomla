@@ -20,6 +20,8 @@ class PhocaGalleryPath extends JObject
 			$instance = new PhocaGalleryPath();
 			$instance->image_abs 			= JPATH_ROOT . DS . 'images' . DS . 'phocagallery' . DS ;
 			$instance->image_rel			= 'images/phocagallery/';
+			$instance->avatar_abs 			= JPATH_ROOT . DS . 'images' . DS . 'phocagallery' . DS . 'avatars' . DS ;
+			$instance->avatar_rel			= 'images/phocagallery/avatars/';
 			$instance->image_rel_full		= JURI::base(true) . '/' . $instance->image_rel;
 			$instance->image_rel_admin 		= 'administrator/components/com_phocagallery/assets/images/';
 			$instance->image_rel_admin_full = JURI::base(true) . '/' . $instance->image_rel_admin;

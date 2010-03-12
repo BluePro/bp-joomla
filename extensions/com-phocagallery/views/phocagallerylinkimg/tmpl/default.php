@@ -12,7 +12,7 @@ JHTML::_('behavior.tooltip');
 function insertLink() {
 	
 	<?php
-	$items = array('imageshadow', 'fontcolor', 'bgcolor', 'bgcolorhover', 'imagebgcolor', 'bordercolor', 'bordercolorhover', 'detail','displayname', 'displaydetail', 'displaydownload', 'displaybuttons', 'displaydescription', 'descriptionheight' ,'namefontsize', 'namenumchar', 'enableswitch', 'overlib', 'piclens','float', 'boxspace', 'displayimgrating', 'pluginlink', 'type' );
+	$items = array('imageshadow', 'fontcolor', 'bgcolor', 'bgcolorhover', 'imagebgcolor', 'bordercolor', 'bordercolorhover', 'detail','displayname', 'displaydetail', 'displaydownload', 'displaybuttons', 'displaydescription', 'descriptionheight' ,'namefontsize', 'namenumchar', 'enableswitch', 'overlib', 'piclens','float', 'boxspace', 'displayimgrating', 'pluginlink', 'type', 'minboxwidth' );
 	$itemsArrayOutput = '';
 	foreach ($items as $key => $value) {
 		
@@ -94,10 +94,10 @@ function insertLink() {
 	<table class="adminlist">
 		<thead>
 			<tr>
-				<th width="5px"><?php echo JText::_( 'NUM' ); ?></th>
-				<th width="5px"></th>
-				<th class="image" width="60" align="center"><?php echo JText::_( 'Image' ); ?></th>
-				<th class="title" width="40%"><?php echo JHTML::_('grid.sort',  'Title', 'a.title', $this->lists['order_Dir'], $this->lists['order'] ); ?>
+				<th width="1"><?php echo JText::_( 'NUM' ); ?></th>
+				<th width="1"></th>
+				<th class="image" width="2" align="center"><?php echo JText::_( 'Image' ); ?></th>
+				<th class="title" width="50%"><?php echo JHTML::_('grid.sort',  'Title', 'a.title', $this->lists['order_Dir'], $this->lists['order'] ); ?>
 				</th>
 				<th width="20%" nowrap="nowrap"><?php echo JHTML::_('grid.sort',  'Filename', 'a.filename', $this->lists['order_Dir'], $this->lists['order'] ); ?>
 				</th>
@@ -125,8 +125,21 @@ function insertLink() {
 								<div class="phocagallery-box-file-second">
 									<div class="phocagallery-box-file-third">
 										<center>
-										<?php if (isset ($row->fileoriginalexist) && $row->fileoriginalexist == 1) {
-											echo JHTML::_( 'image', $row->linkthumbnailpath.'?imagesid='.md5(uniqid(time())), '');
+										<?php 
+										// PICASA
+										if (isset($row->extid) && $row->extid !='') {
+										
+											$resW	= explode(',', $row->extw);
+											$resH	= explode(',', $row->exth);
+								
+											$correctImageRes = PhocaGalleryImage::correctSizeWithRate($resW[2], $resH[2], 50, 50);
+											echo JHTML::_( 'image', $row->exts.'?imagesid='.md5(uniqid(time())), '', array('width' => $correctImageRes['width'], 'height' => $correctImageRes['height'])); 
+										
+										} else if (isset ($row->fileoriginalexist) && $row->fileoriginalexist == 1) {
+
+											$imageRes	= PhocaGalleryImage::getRealImageSize($row->filename, 'small');
+											$correctImageRes = PhocaGalleryImage::correctSizeWithRate($imageRes['w'], $imageRes['h'], 50, 50);
+											 echo JHTML::_( 'image', $row->linkthumbnailpath.'?imagesid='.md5(uniqid(time())), '', array('width' => $correctImageRes['width'], 'height' => $correctImageRes['height']));
 										} else {
 											echo JHTML::_( 'image.site', 'phoca_thumb_s_no_image.gif', '../administrator/components/com_phocagallery/assets/images/');
 										}
@@ -139,8 +152,12 @@ function insertLink() {
 					</div>
 				</td>
 						
-				<td><?php echo $row->title; ?></td>
-				<td><?php echo $row->filename;?></td>
+				<?php echo '<td>'. $row->title.'</td>';
+				if (isset($row->extid) && $row->extid !='') {
+					echo '<td align="center">'.JText::_('PHOCAGALLERY_PICASA_STORED_FILE').'</td>';
+				} else {
+					echo '<td>' .$row->filename.'</td>';
+				} ?>
 				<td align="center"><?php echo $row->id; ?></td>
 			</tr>
 			<?php
@@ -249,7 +266,7 @@ function insertLink() {
 	
 	
 	// Number
-	$itemsNumber = array ('descriptionheight' => 'Description Detail Height','namefontsize' => 'Font Size Name', 'namenumchar' => 'Char Length Name', 'boxspace' => 'Category Box Space');
+	$itemsNumber = array ('descriptionheight' => 'Description Detail Height','namefontsize' => 'Font Size Name', 'namenumchar' => 'Char Length Name', 'boxspace' => 'Category Box Space','minboxwidth' => 'PHOCAGALLERY_MIN_BOX_WIDTH');
 	foreach ($itemsNumber as $key => $value) {
 		echo '<tr>'
 		.'<td class="key" align="right" width="20%"><label for="'.$key.'">'.JText::_($value).'</label></td>'

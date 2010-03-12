@@ -16,7 +16,10 @@ if ($this->require_ftp) {
 } ?>
 
 	<fieldset>
-		<legend><?php echo JText::_( 'Upload File' ); ?> [ <?php echo JText::_( 'Max' ); ?>&nbsp;<?php echo ($this->tmpl['uploadmaxsize'] / 1000000); ?>M ]</legend>
+		<legend><?php 
+	echo JText::_( 'Upload File' ).' [ '. JText::_( 'Max Size' ).':&nbsp;'.$this->tmpl['uploadmaxsizeread'].','
+	.' '.JText::_('Max Resolution').':&nbsp;'. $this->tmpl['uploadmaxreswidth'].' x '.$this->tmpl['uploadmaxresheight'].' px ]';
+?></legend>	
 		<fieldset class="actions">
 			<input type="file" id="file-upload" name="Filedata" />
 			<input type="submit" id="file-upload-submit" value="<?php echo JText::_('Start Upload'); ?>"/>

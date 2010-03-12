@@ -12,7 +12,7 @@ JHTML::_('behavior.tooltip');
 function insertLink() {
 	
 	<?php
-	$items = array('imageshadow', 'fontcolor', 'bgcolor', 'bgcolorhover', 'imagebgcolor', 'bordercolor', 'bordercolorhover', 'detail','displayname', 'displaydetail', 'displaydownload', 'displaybuttons', 'displaydescription', 'descriptionheight' ,'namefontsize', 'namenumchar', 'enableswitch', 'overlib', 'piclens','float', 'boxspace', 'displayimgrating', 'pluginlink', 'type', 'imageordering' );
+	$items = array('imageshadow', 'fontcolor', 'bgcolor', 'bgcolorhover', 'imagebgcolor', 'bordercolor', 'bordercolorhover', 'detail','displayname', 'displaydetail', 'displaydownload', 'displaybuttons', 'displaydescription', 'descriptionheight' ,'namefontsize', 'namenumchar', 'enableswitch', 'overlib', 'piclens','float', 'boxspace', 'displayimgrating', 'pluginlink', 'type', 'imageordering', 'minboxwidth' );
 	$itemsArrayOutput = '';
 	foreach ($items as $key => $value) {
 		
@@ -213,7 +213,7 @@ function insertLink() {
 	
 	
 	// Number
-	$itemsNumber = array ('descriptionheight' => 'Description Detail Height','namefontsize' => 'Font Size Name', 'namenumchar' => 'Char Length Name', 'boxspace' => 'Category Box Space');
+	$itemsNumber = array ('descriptionheight' => 'Description Detail Height','namefontsize' => 'Font Size Name', 'namenumchar' => 'Char Length Name', 'boxspace' => 'Category Box Space', 'minboxwidth' => 'PHOCAGALLERY_MIN_BOX_WIDTH');
 	foreach ($itemsNumber as $key => $value) {
 		echo '<tr>'
 		.'<td class="key" align="right" width="30%"><label for="'.$key.'">'.JText::_($value).'</label></td>'

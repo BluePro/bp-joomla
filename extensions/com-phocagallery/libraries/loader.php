@@ -69,7 +69,7 @@ class PhocaGalleryLoader extends JLoader
 
 			$paths[$keyPath] = $rs;
 		}
-//krumo($classname);
+
 		return $paths[$keyPath];
 	}
 }

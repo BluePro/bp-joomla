@@ -26,7 +26,7 @@ phocagalleryimport('phocagallery.image.image');
 phocagalleryimport('phocagallery.image.imagefront');
 phocagalleryimport('phocagallery.render.renderinfo');
 phocagalleryimport('phocagallery.render.renderfront');
-
+//PhocaGalleryRenderFront::correctRender();
 
 // Require specific controller if requested
 if($controller = JRequest::getWord('controller')) {

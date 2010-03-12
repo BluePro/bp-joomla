@@ -51,6 +51,15 @@ class PhocaGalleryViewInfo extends JView
 		$tmpl['pgl'] 						= PhocaGalleryRenderInfo::getPhocaIc((int)$params->get( 'display_phoca_info', 1 ));
 		$description_lightbox_bg_color 		= $params->get( 'description_lightbox_bg_color', '#000000' );
 		$description_lightbox_font_size 	= $params->get( 'description_lightbox_font_size', 12 );
+		$tmpl['stm'] = PhocaGalleryRenderFront::getString();
+		$tmpl['gallerymetakey'] 		= $params->get( 'gallery_metakey', '' );
+		$tmpl['gallerymetadesc'] 		= $params->get( 'gallery_metadesc', '' );
+		if ($tmpl['gallerymetakey'] != '') {
+			$mainframe->addMetaTag('keywords', $tmpl['gallerymetakey']);
+		}
+		if ($tmpl['gallerymetadesc'] != '') {
+			$mainframe->addMetaTag('description', $tmpl['gallerymetadesc']);
+		}
 
 		// NO SCROLLBAR IN DETAIL WINDOW
 /*		$document->addCustomTag( "<style type=\"text/css\"> \n" 
@@ -89,19 +98,26 @@ class PhocaGalleryViewInfo extends JView
 		if ($tmpl['detailwindow'] == 7) {
 			phocagalleryimport('phocagallery.image.image');
 			$formatIcon = &PhocaGalleryImage::getFormatIcon();
-			$tmpl['backbutton'] = '<div><a href="'.JRoute::_('index.php?option=com_phocagallery&view=category&id='. $info->catslug.'&Itemid='. JRequest::getVar('Itemid', 1, 'get', 'int')).'"'
+			$tmpl['backbutton'] = '<div><a href="'.JRoute::_('index.php?option=com_phocagallery&view=category&id='. $info->catslug.'&Itemid='. JRequest::getVar('Itemid', 0, '', 'int')).'"'
 				.' title="'.JText::_( 'Back to category' ).'">'
 				. JHTML::_('image', 'components/com_phocagallery/assets/images/icon-up-images.' . $formatIcon, JText::_( 'Back to category' )).'</a></div>';
 		}
 		
 		
 		// EXIF DATA
-		$outputExif = '';
-		if (isset($info->filename) && function_exists('exif_read_data')) {
-			$originalFile = PhocaGalleryFile::getFileOriginal($info->filename);
+		$outputExif 	= '';
+		$originalFile 	= '';
+		if (isset($info->extid) && $info->extid != '' && isset($info->exto) && $info->exto != '') {
+			$originalFile = $info->exto;
+		} else {
+			if (isset($info->filename)) {
+				$originalFile = PhocaGalleryFile::getFileOriginal($info->filename);
+			}
+		}
+		
+		if ($originalFile != '' && function_exists('exif_read_data')) {
 			
 			$exif = @exif_read_data( $originalFile, 'IFD0');
-		//	$exif = @exif_read_data( $originalFile, 'IFD0');
 		
 			if ($exif === false) {
 				$outputExif .= JText::_('No header data found');
@@ -588,6 +604,48 @@ class PhocaGalleryViewInfo extends JView
 										$exifValue = (int)$exif[$section][$name]/100;
 									} else {
 										$exifValue = $exif[$section][$name];
+									}
+								break;
+								
+								case 'FocalLength':
+									if (isset($exif[$section][$name]) && $exif[$section][$name] != '') {
+										$focalLength = explode ('/', $exif[$section][$name]);
+										if (isset($focalLength[0]) && (int)$focalLength[0] > 0
+										&& isset($focalLength[1]) && (int)$focalLength[1] > 0 ) {
+											$exifValue = (int)$focalLength[0] / (int)$focalLength[1];
+											$exifValue = $exifValue . ' mm';
+										}
+									
+									}
+								break;
+								
+								case 'ExposureTime':
+									if (isset($exif[$section][$name]) && $exif[$section][$name] != '') {
+										$exposureTime = explode ('/', $exif[$section][$name]);
+										if (isset($exposureTime[0]) && (int)$exposureTime[0] > 0
+										&& isset($exposureTime[1]) && (int)$exposureTime[1] > 1 ) {
+										
+											if ((int)$exposureTime[1] > (int)$exposureTime[0]) {
+												$exifValue = (int)$exposureTime[1] / (int)$exposureTime[0];
+												$exifValue = '1/'. $exifValue . ' sec';
+											} 
+										}
+									
+									}
+								break;
+								
+								case 'ShutterSpeedValue':
+									if (isset($exif[$section][$name]) && $exif[$section][$name] != '') {
+										$shutterSpeedValue = explode ('/', $exif[$section][$name]);
+										if (isset($shutterSpeedValue[0]) && (int)$shutterSpeedValue[0] > 0
+										&& isset($shutterSpeedValue[1]) && (int)$shutterSpeedValue[1] > 1 ) {
+										
+											if ((int)$shutterSpeedValue[1] > (int)$shutterSpeedValue[0]) {
+												$exifValue = (int)$shutterSpeedValue[1] / (int)$shutterSpeedValue[0];
+												$exifValue = '1/'. $exifValue . ' sec';
+											} 
+										}
+									
 									}
 								break;
 

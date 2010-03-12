@@ -96,7 +96,7 @@
 		<input type="hidden" name="controller" value="category"/>
 		<input type="hidden" name="tab" value="<?php echo $this->tmpl['currenttab']['comment'];?>" />
 		<input type="hidden" name="catid" value="<?php echo $this->category->slug ?>"/>
-		<input type="hidden" name="Itemid" value="<?php echo JRequest::getVar('Itemid', 1, 'get', 'int') ?>"/>
+		<input type="hidden" name="Itemid" value="<?php echo JRequest::getVar('Itemid', 0, '', 'int') ?>"/>
 		<?php echo JHTML::_( 'form.token' ); ?>
 		</form>
 		

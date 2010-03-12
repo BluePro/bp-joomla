@@ -9,12 +9,31 @@ function submitbutton(pressbutton, parent_id) {
 		return;
 	}
 	
-	if ( form.title.value == "" ) {
-		alert("<?php echo JText::_( 'Category must have a title', true ); ?>");
+	if (pressbutton == 'loadextimg') {
+		if ( form.extu.value == "" ) {
+			alert("<?php echo JText::_( 'PHOCAGALLERY_PICASA_SET_USER', true ); ?>");
+			return;
+		} if ( form.exta.value == "" ) {
+			alert("<?php echo JText::_( 'PHOCAGALLERY_PICASA_SET_ALBUM', true ); ?>");
+			return;
+		} if ( form.title.value == "" ) {
+			alert("<?php echo JText::_( 'Category must have a title', true ); ?>");
+			return;
+		} else {
+			document.getElementById('loading-ext-img').style.display='block';
+			<?php
+			echo $this->editor->save( 'description' ) ; ?>
+			submitform(pressbutton);
+		}
 	} else {
-		<?php
-		echo $this->editor->save( 'description' ) ; ?>
-		submitform(pressbutton);
+	
+		if ( form.title.value == "" ) {
+			alert("<?php echo JText::_( 'Category must have a title', true ); ?>");
+		} else {
+			<?php
+			echo $this->editor->save( 'description' ) ; ?>
+			submitform(pressbutton);
+		}
 	}
 }
 </script>
@@ -66,7 +85,14 @@ function submitbutton(pressbutton, parent_id) {
 					<?php echo $this->lists['published']; ?>
 				</td>
 			</tr>
-		
+		<tr>
+			<td valign="top" align="right" class="key">
+				<?php echo JText::_( 'PHOCAGALLERY_APPROVED' ); ?>:
+			</td>
+			<td colspan="2">
+				<?php echo $this->lists['approved']; ?>
+			</td>
+		</tr>
 			<tr>
 				<td class="key">
 					<label for="ordering">
@@ -120,11 +146,21 @@ function submitbutton(pressbutton, parent_id) {
 				</td>
 			</tr>
 			
+			<tr>
+				<td valign="top" class="key">
+					<label for="access">
+						<?php echo JText::_( 'Owner' ); ?>:
+					</label>
+				</td>
+				<td>
+					<?php echo $this->lists['owner']; ?>
+				</td>
+			</tr>
 			
 			<tr>
 				<td valign="middle" align="right" class="key">
 					<label for="userfolder">
-						<?php echo JText::_( 'User Folder' ); ?>:
+						<?php echo JText::_( 'Owner Folder' ); ?>:
 					</label>
 				</td>
 				<td valign="middle">
@@ -191,16 +227,7 @@ function submitbutton(pressbutton, parent_id) {
 				</td>
 			</tr>
 			
-			<tr>
-				<td valign="top" class="key">
-					<label for="access">
-						<?php echo JText::_( 'Author' ); ?>:
-					</label>
-				</td>
-				<td>
-					<?php echo $this->lists['author']; ?>
-				</td>
-			</tr>
+			
 			
 			<tr>
 				<td class="key">
@@ -257,6 +284,30 @@ function submitbutton(pressbutton, parent_id) {
 				</script>
 				</td>
 			</tr>
+		
+			<tr>
+				<td valign="middle" align="right" class="key">
+					<label for="metadesc">
+						<?php echo JText::_( 'PHOCAGALLERY_METADESC' ); ?>:
+					</label>
+				</td>
+				<td colspan="2">
+					<textarea cols="46" rows="4" id="metadesc" name="metadesc"><?php echo $this->items->metadesc; ?></textarea>
+				</td>
+			</tr>
+			
+				<tr>
+				<td valign="middle" align="right" class="key">
+					<label for="metakey">
+						<?php echo JText::_( 'PHOCAGALLERY_METAKEY' ); ?>:
+					</label>
+				</td>
+				<td colspan="2">
+					<textarea cols="46" rows="4" id="metakey" name="metakey"><?php echo $this->items->metakey; ?></textarea>
+				</td>
+			</tr>
+		
+		
 
 		</table>
 	</fieldset>
@@ -275,6 +326,41 @@ function submitbutton(pressbutton, parent_id) {
 			</tr>
 			</table>
 	</fieldset>
+	
+	<?php
+	if ($this->tmpl['enablepicasaloading'] == 1) {
+	
+	?><fieldset class="adminform">
+		<legend><?php echo JText::_( 'PHOCAGALLERY_PICASA_SETTINGS' ); ?></legend>
+
+		<table class="admintable">
+			<tr>
+				<td valign="middle" align="right" class="key">
+					<label for="geotitle">
+						<?php echo JText::_( 'PHOCAGALLERY_PICASA_USER' ); ?>:
+					</label>
+				</td>
+				<td valign="middle">
+					<input class="text_area" type="text" name="extu" id="extu" value="<?php echo $this->items->extu; ?>" size="32" maxlength="250" />
+				</td>
+			</tr>
+			
+			<tr>
+				<td valign="middle" align="right" class="key">
+					<label for="geotitle">
+						<?php echo JText::_( 'PHOCAGALLERY_PICASA_ALBUM_NAME' ); ?>:
+					</label>
+				</td>
+				<td valign="middle">
+					<input class="text_area" type="text" name="exta" id="exta" value="<?php echo $this->items->exta; ?>" size="32" maxlength="250" />
+				</td>
+			</tr>
+			</table>
+			<input type="hidden" name="extid" value="<?php echo $this->items->extid; ?>" />
+	</fieldset><?php
+	}
+	?>
+
 </div>
 <div class="clr"></div>
 
@@ -283,5 +369,8 @@ function submitbutton(pressbutton, parent_id) {
 <input type="hidden" name="task" value="" />
 <input type="hidden" name="controller" value="phocagalleryc" />
 </form>
+
+
+<div id="loading-ext-img"><div class="loading"><center><?php echo JHTML::_('image.site',  'icon-loading.gif', '/components/com_phocagallery/assets/images/', NULL, NULL, JText::_('Loading') ) . '  '. JText::_('PHOCAGALLERY_PICASA_LOADING_DATA'); ?></center></div></div>
 
 	

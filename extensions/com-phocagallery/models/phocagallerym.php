@@ -74,7 +74,7 @@ class PhocaGalleryCpModelPhocaGalleryM extends JModel
 			foreach ($data['foldercid'] as $foldername) {
 				if (strlen($foldername) > 0) {
 					$fullPath = $path->image_abs.$foldername;
-					$result = $this->_createCategoriesRecursive( $origPathServer, $fullPath, $existingCategories, $existingImages, $data['catid'], true );					
+					$result = $this->_createCategoriesRecursive( $origPathServer, $fullPath, $existingCategories, $existingImages, $data['catid'], $data['published'] );					
 				}		
 			}
 		}
@@ -93,12 +93,14 @@ class PhocaGalleryCpModelPhocaGalleryM extends JModel
 						$row =& $this->getTable('phocagallery');
 						
 						$datam = array();
-						$datam['published']	= $data['published'];
-						$datam['catid']		= $data['catid'];
-						$datam['filename']	= $filename;
-						$datam['title']		= PhocaGalleryFile::getTitleFromFile($filename);
-						$datam['alias'] 	= PhocaGalleryFile::getTitleFromFile($filename);
-						$datam['alias'] 	= PhocaGalleryText::getAliasName($datam['alias']);
+						$datam['published']		= $data['published'];
+						$datam['catid']			= $data['catid'];
+						$datam['approved']		= 1;
+						$datam['filename']		= $filename;
+						$datam['title']			= PhocaGalleryFile::getTitleFromFile($filename);
+						$datam['alias'] 		= PhocaGalleryText::getAliasName($datam['title']);
+						$datam['imgorigsize'] 	= PhocaGalleryFile::getFileSize($datam['filename'], 0);
+						
 					
 						// Save
 						// Bind the form fields to the Phoca gallery table
@@ -182,7 +184,7 @@ class PhocaGalleryCpModelPhocaGalleryM extends JModel
 		return $result;
 	}
 	
-	function _addAllImagesFromFolder(&$existingImages, $category_id, $fullPath, $rel_path) {
+	function _addAllImagesFromFolder(&$existingImages, $category_id, $fullPath, $rel_path, $published = 1) {
 		$count = 0;
 		$fileList = JFolder::files( $fullPath );
 		natcasesort($fileList);
@@ -207,11 +209,13 @@ class PhocaGalleryCpModelPhocaGalleryM extends JModel
 						$row =& $this->getTable('phocagallery');
 						
 						$datam = array();
-						$datam['published']	= 1;
-						$datam['catid']		= $category_id;
-						$datam['filename']	= $storedfilename;
-						$datam['title']		= PhocaGalleryFile::getTitleFromFile($filename);
-						$datam['alias'] 	= PhocaGalleryText::getAliasName($datam['title']);
+						$datam['published']		= $published;
+						$datam['catid']			= $category_id;
+						$datam['filename']		= $storedfilename;
+						$datam['approved']		= 1;
+						$datam['title']			= PhocaGalleryFile::getTitleFromFile($filename);
+						$datam['alias'] 		= PhocaGalleryText::getAliasName($datam['title']);
+						$datam['imgorigsize'] 	= PhocaGalleryFile::getFileSize($datam['filename'], 0);
 	
 						// Save
 						// Bind the form fields to the Phoca gallery table
@@ -255,7 +259,7 @@ class PhocaGalleryCpModelPhocaGalleryM extends JModel
 		return $count;
 	}
 	
-	function _createCategoriesRecursive(&$origPathServer, $path, &$existingCategories, &$existingImages, $parentId = 0) {
+	function _createCategoriesRecursive(&$origPathServer, $path, &$existingCategories, &$existingImages, $parentId = 0, $published = 1 ) {
 		$totalresult->image_count 		= 0 ;
 		$totalresult->category_count	= 0 ;
 				
@@ -266,7 +270,8 @@ class PhocaGalleryCpModelPhocaGalleryM extends JModel
 		// Category doesn't exist
 		if ( $id == -1 ) {
 		  $row =& $this->getTable('phocagalleryc');
-		  $row->published 	= 1;
+		  $row->published 	= $published;
+		  $row->approved	= 1;
 		  $row->parent_id 	= $parentId;
 		  $row->title 		= $categoryName;
 		  
@@ -299,7 +304,7 @@ class PhocaGalleryCpModelPhocaGalleryM extends JModel
 		$relativePath 	= str_replace($origPathServer, '', $fullPath);	
 
 		// Add all images from this folder
-		$totalresult->image_count += $this->_addAllImagesFromFolder( $existingImages, $id, $path, $relativePath );
+		$totalresult->image_count += $this->_addAllImagesFromFolder( $existingImages, $id, $path, $relativePath, $published );
 		$this->setImageCount($totalresult->image_count);
 		
 		// Do sub folders
@@ -309,7 +314,7 @@ class PhocaGalleryCpModelPhocaGalleryM extends JModel
 		if ($folderList !== false) {
 			foreach ($folderList as $folder) {
 				//$this->setCategoryCount(1);//This subcategory was added
-				$result = $this->_createCategoriesRecursive( $origPathServer, $folder, $existingCategories, $existingImages, $id );
+				$result = $this->_createCategoriesRecursive( $origPathServer, $folder, $existingCategories, $existingImages, $id , $published);
 				$totalresult->image_count += $result->image_count ;
 				$totalresult->category_count += $result->category_count ;
 			}
@@ -332,25 +337,34 @@ class PhocaGalleryCpModelPhocaGalleryM extends JModel
 	}
 	
 	function _initData() {
-		if (empty($this->_data))
-		{
-			$phocagallery = new stdClass();
-			$phocagallery->id				= 0;
-			$phocagallery->catid			= 0;
-			$phocagallery->sid				= 0;
-			$phocagallery->title			= null;
-			$phocagallery->alias			= null;
-			$phocagallery->filename         = null;
-			$phocagallery->description		= null;
-			$phocagallery->date				= null;
-			$phocagallery->hits				= 0;
-			$phocagallery->published		= 0;
-			$phocagallery->checked_out		= 0;
-			$phocagallery->checked_out_time	= 0;
-			$phocagallery->ordering			= 0;
-			$phocagallery->params			= null;
-			$phocagallery->category			= null;
-			$this->_data					= $phocagallery;
+		if (empty($this->_data)) {
+			$table = new stdClass();
+			$table->id					= 0;
+			$table->catid				= 0;
+			$table->sid					= 0;
+			$table->title				= null;
+			$table->alias				= null;
+			$table->filename         	= null;
+			$table->description			= null;
+			$table->date				= null;
+			$table->hits				= 0;
+			$table->latitude			= null;
+			$table->longitude			= null;
+			$table->zoom				= null;
+			$table->geotitle			= null;
+			$table->videocode			= null;
+			$table->vmproductid			= null;
+			$table->imgorigsize			= null;
+			$table->published			= 0;
+			$table->approved			= 0;
+			$table->checked_out			= 0;
+			$table->checked_out_time	= 0;
+			$table->ordering			= 0;
+			$table->params				= null;
+			$table->extlink1			= null;
+			$table->extlink2			= null;
+			$table->category			= null;
+			$this->_data				= $table;
 			return (boolean) $this->_data;
 		}
 		return true;

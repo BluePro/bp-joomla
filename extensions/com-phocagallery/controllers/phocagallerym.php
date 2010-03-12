@@ -27,6 +27,7 @@ class PhocaGalleryCpControllerPhocaGallerym extends PhocaGalleryCpController
 		$post			= JRequest::get('post');
 		$cid			= JRequest::getVar( 'cid', array(0), 'post', 'array' );
 		$post['id'] 	= (int) $cid[0];
+		
 
 		$model = $this->getModel( 'phocagallerym' );
 

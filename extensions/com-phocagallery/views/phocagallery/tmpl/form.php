@@ -1,5 +1,13 @@
 <?php defined('_JEXEC') or die('Restricted access');
-JHTML::_('behavior.tooltip'); 
+JHTML::_('behavior.tooltip');
+
+
+// External link
+$extlink = 0;
+if (isset($this->items->extid) && $this->items->extid != '') {
+	$extlink = 1;
+}
+ 
 ?>
 <script language="javascript" type="text/javascript">
 function submitbutton(pressbutton) {
@@ -11,9 +19,17 @@ function submitbutton(pressbutton) {
 
 	if (form.catid.value == "0"){
 		alert( "<?php echo JText::_( 'You must select a category', true ); ?>" );
-	} else if (form.filename.value == ""){
+	} 
+	
+	<?php if ($extlink == 0) {
+	?>
+	else if (form.filename.value == ""){
 		alert( "<?php echo JText::_( 'You must select a filename', true ); ?>" );
-	} else {
+	} 
+	<?php
+	}
+	?>
+	else {
 		submitform( pressbutton );
 	}
 }
@@ -58,6 +74,14 @@ table.paramlist td.paramlist_key {
 			</td>
 			<td colspan="2">
 				<?php echo $this->lists['published']; ?>
+			</td>
+		</tr>
+		<tr>
+			<td valign="top" align="right" class="key">
+				<?php echo JText::_( 'PHOCAGALLERY_APPROVED' ); ?>:
+			</td>
+			<td colspan="2">
+				<?php echo $this->lists['approved']; ?>
 			</td>
 		</tr>
 		<tr>
@@ -285,6 +309,28 @@ table.paramlist td.paramlist_key {
 			</td>
 		</tr>
 		
+		<tr>
+			<td valign="middle" align="right" class="key">
+				<label for="metadesc">
+					<?php echo JText::_( 'PHOCAGALLERY_METADESC' ); ?>:
+				</label>
+			</td>
+			<td colspan="2">
+				<textarea cols="46" rows="4" id="metadesc" name="metadesc"><?php echo $this->items->metadesc; ?></textarea>
+			</td>
+		</tr>
+		
+			<tr>
+			<td valign="middle" align="right" class="key">
+				<label for="metakey">
+					<?php echo JText::_( 'PHOCAGALLERY_METAKEY' ); ?>:
+				</label>
+			</td>
+			<td colspan="2">
+				<textarea cols="46" rows="4" id="metakey" name="metakey"><?php echo $this->items->metakey; ?></textarea>
+			</td>
+		</tr>
+		
 	</table>
 	</fieldset>
 	
@@ -314,6 +360,7 @@ table.paramlist td.paramlist_key {
 <div class="clr"></div>
 
 <input type="hidden" name="cid[]" value="<?php echo $this->items->id; ?>" />
+<input type="hidden" name="extlinkimage" value="<?php echo $extlink; ?>" />
 <input type="hidden" name="task" value="" />
 <input type="hidden" name="controller" value="phocagallery" />
 </form>

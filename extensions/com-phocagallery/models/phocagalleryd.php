@@ -33,7 +33,7 @@ class PhocaGalleryCpModelPhocaGalleryD extends JModel
 	
 	function _loadData() {
 		if (empty($this->_data)) {
-			$query = 'SELECT a.filename as filename' .
+			$query = 'SELECT a.*' .
 					' FROM #__phocagallery AS a' .
 					' WHERE a.id = '.(int) $this->_id;
 			$this->_db->setQuery($query);
@@ -52,6 +52,10 @@ class PhocaGalleryCpModelPhocaGalleryD extends JModel
 			} else {
 				$thumbFile = PhocaGalleryFileThumbnail::getThumbnailName ($fileObject->filename, 'large');
 				$file->set('linkthumbnailpath', $thumbFile->rel);
+				$file->set('extid', $fileObject->extid);
+				$file->set('extl', $fileObject->extl);
+				$file->set('extw', $fileObject->extw);
+				$file->set('exth', $fileObject->exth);
 			}
 				
 			$this->_data = $file;

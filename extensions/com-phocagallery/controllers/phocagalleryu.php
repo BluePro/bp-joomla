@@ -94,7 +94,9 @@ class PhocaGalleryCpControllerPhocaGalleryu extends PhocaGalleryCpController
 						@JFolder::create($folder, 0755 );
 					break;
 				}
-				@JFile::write($folderThumbnail.DS."index.html", "<html>\n<body bgcolor=\"#FFFFFF\">\n</body>\n</html>");
+				if (isset($folder)) {
+					@JFile::write($folder.DS."index.html", "<html>\n<body bgcolor=\"#FFFFFF\">\n</body>\n</html>");
+				}
 				
 				$mainframe->redirect($link, JText::_('Folder Created'));
 			} else {
@@ -221,6 +223,11 @@ class PhocaGalleryCpControllerPhocaGalleryu extends PhocaGalleryCpController
 				if ($format == 'json') {					
 					switch ($errUploadMsg) {
 						case 'WARNFILETOOLARGE':
+							header('HTTP/1.0 413 Request Entity Too Large');
+							jexit(JText::_($errUploadMsg));
+						break;
+						
+						case 'PHOCAGALLERY_WARNFILETOOLARGERESOLUTION':
 							header('HTTP/1.0 413 Request Entity Too Large');
 							jexit(JText::_($errUploadMsg));
 						break;
