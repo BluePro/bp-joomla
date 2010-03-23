@@ -36,7 +36,7 @@ class modBPLogoHelper {
 		$width = $params->get('width');
 		$height = $params->get('height');
 		$size = getimagesize($image->path);
-		if (!($width && $height)) {
+		if (!$width && !$height) {
 			$image->width = $size[0];
 			$image->height = $size[1];
 		} else {

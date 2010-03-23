@@ -2,10 +2,10 @@
 <install type="module" version="1.5" method="upgrade">
 	<name>BP Logo</name>
 	<creationDate>2009-07-07</creationDate>
-	<author>Ondøej Hlaváè</author>
+	<author>OndÅ™ej HlavÃ¡Ä</author>
 	<authorEmail>ondrej@hlavacovi.net</authorEmail>
 	<authorUrl>http://ondrej.hlavacovi.net</authorUrl>
-	<copyright>Ondøej Hlaváè 2009</copyright>
+	<copyright>OndÅ™ej HlavÃ¡Ä 2009</copyright>
 	<license>GPL</license>
 	<version>1.1</version>
 	<description>Display menu image</description>
@@ -20,10 +20,10 @@
 	</files>
 	
 	<params>
-		<param name="default_image" type="imagelist" directory="/images/stories" hide_default="1" default="" label="Default image" description="PARAMDEFAULTIMAGE" />
-		<param name="link" type="text" default="" label="Link" description="PARAMLINK" />
-		<param name="width" type="text" default="" label="Width" description="PARAMWIDTHPX" />
-		<param name="height" type="text" default="" label="Height" description="PARAMHEIGHTPX" />
+		<param name="default_image" type="imagelist" directory="/images/stories" hide_default="1" default="" label="Default image" />
+		<param name="link" type="text" default="" label="Link" />
+		<param name="width" type="text" default="" label="Width" />
+		<param name="height" type="text" default="" label="Height" />
 		<param name="@spacer" type="spacer" default="" label="" description="" />
 		<param name="moduleclass_sfx" type="text" default="" label="Module Class Suffix" description="PARAMMODULECLASSSUFFIX" />
 	</params>
