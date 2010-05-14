@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <metafile version="1.5" client="installation">
-    <name>Russian(RU)</name>
-    <version>1.5.9</version>
-    <creationDate>March 2009</creationDate>
+	<name>Russian (CIS)</name>
+	<version>1.5.17</version>
+	<creationDate>2010-04-26</creationDate>
     <author>Joomlaportal.ru</author>
-    <copyright>Copyright (C) 2005 - 2009 Open Source Matters. All rights reserved.</copyright>
+    <copyright>Copyright (C) 2005 - 2010 Open Source Matters. All rights reserved.</copyright>
     <license>http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL</license>
     <description>Русский языковой файл для web инсталлятора Joomla</description>
 		<metadata>

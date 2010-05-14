@@ -26,6 +26,7 @@
 		<filename>html/com_content/frontpage/default.php</filename>
 		<filename>html/com_content/frontpage/default_item.php</filename>
 		<filename>html/com_content/frontpage/default_links.php</filename>
+		<filename>html/com_content/section/default.php</filename>
 		<filename>html/com_search/search/default.php</filename>
 		<filename>html/com_search/search/default_error.php</filename>
 		<filename>html/com_search/search/default_form.php</filename>
