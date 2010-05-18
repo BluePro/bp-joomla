@@ -26,7 +26,7 @@
  * The "GNU General Public License" (GPL) is available at
  * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * -----------------------------------------------------------------------------
- * $Id: CHANGELOG.php 1291 2009-03-31 12:42:27Z akede $
+ * $Id: CHANGELOG.php 1420 2009-10-25 17:02:02Z akede $
  *
 */
 
@@ -62,6 +62,62 @@ Legend:
 ! -> Note
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+==== 24 October 2009 Joom!Fish 2.0.4 Stable release =====
+
+2009-10-24 Alex Kempkens
+ # Secured the reading of XML file against system error messages
+
+2009-10-23 Alex Kempkens
+ # Fixed XSS vulnerability in language switching module
+ # Preparations for 2.0.4 release
+
+2009-10-06 Geraint Edwards
+ # [18198] Fix modified date for translations to take account of server offsets
+
+2009-09-22 Geraint Edwards
+ + adding Taiwan flag
+
+2009-08-10 Geraint Edwards
+ + Add prehandler function to ContentElementTableField.php to support external menu link translation
+ + Add more filters for content elements
+ # Enable translation of SQL queries that don't use the AS sql keyword (affects mysql only no mysqli)
+
+2009-08-01 Alex Kempkens
+ # Fixed: Can't copy HTML text http://www.joomfish.net/forum/viewtopic.php?f=28&t=4758&start=0
+
+2009-07-22 Alex Kempkens
+ # Fixed author information and copyright notice
+
+2009-06-23 Alex Kempkens
+ # Wrong link to statistics help - thx tassu
+
+2009-06-22 Alex Kempkens
+ # [211330] browser-popup-translate-window-also-needed
+
+2009-06-18 Alex Kempkens
+ # changes to implement language translation - thx Selim Alamo (selimoff) for the hint
+ + new content element file for languages
+ # [#162483] Translate DropDown Names
+ # updated CE file copyright information
+ # updated version for pre-release
+
+2009-06-04 Alex Kempkens
+ + [#14371] New onAfterTranslationSave event, thanks for the patch
+ # [#14033] Input field's MaxLength is too short; The maxlength attribute is only used if the field has a specific setting for it!
+ # Fixed language problem with jfalternative usage of text NO TRANSLATION AVAILABLE
+ + added new language file for en-GB.plg_jfalternative.ini
+
+2009-05-21 Geraint Edwards
+ + Add generalised keywords filter framework
+ # Fix bad reference to ContenObject Class file
+
+
+2009-05-13 Geraint Edwards
+ ^ Change translation of content to merge intro and full text in the display but keep separate in the database
+
+2009-04-16 Geraint Edwards
+ # Fix for 3rd level menu language switching problems
+ # Repair language switching when editing/creating translations broken on 14/03/09
 
 ==== 31 March 2009 Joom!Fish 2.0.3 Stable release =====
 

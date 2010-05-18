@@ -1,6 +1,6 @@
 <?php
 /**
- * @version		$Id: install.php 33 2007-12-19 10:26:16Z andrew.eddie $
+ * @version		$Id: install.php 1344 2009-06-18 11:50:09Z akede $
  * @package		joomfish
  * @copyright	2003-2009 Think Network GmbH, Munich
  * @license		GNU General Public License

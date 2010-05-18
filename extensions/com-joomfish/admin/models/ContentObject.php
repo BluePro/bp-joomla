@@ -25,7 +25,7 @@
  * The "GNU General Public License" (GPL) is available at
  * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * -----------------------------------------------------------------------------
- * $Id: ContentObject.php 1284 2009-03-31 08:16:49Z geraint $
+ * $Id: ContentObject.php 1416 2009-10-23 21:33:17Z akede $
  * @package joomfish
  * @subpackage Models
  *
@@ -45,7 +45,7 @@ include_once(dirname(__FILE__).DS."JFContent.php");
  * @subpackage administrator
  * @copyright 2003-2009 Think Network GmbH
  * @license http://www.gnu.org/copyleft/gpl.html GNU General Public License
- * @version $Revision: 1284 $
+ * @version $Revision: 1296 $
  * @author Alex Kempkens <joomfish@thinknetwork.com>
  */
 class ContentObject {
@@ -170,8 +170,6 @@ class ContentObject {
 				}
 
 				$translationValue = $formArray[$prefix ."refField_". $fieldName .$suffix];
-				$originalValue = $formArray[$prefix ."origValue_". $fieldName .$suffix];
-				$originalText = ($storeOriginalText) ? $formArray[$prefix ."origText_". $fieldName .$suffix] : "";
 				$fieldContent = new jfContent($db);
 
 				// code cleaner for xhtml transitional compliance
@@ -197,10 +195,13 @@ class ContentObject {
 				if ($field->posthandler!=""){
 					if (method_exists($this,$field->posthandler)){
 						$handler = $field->posthandler;
-						$this->$handler($translationValue);
+						$this->$handler($translationValue,$elementTable->Fields,$formArray,$prefix,$suffix,$storeOriginalText);
 					}
 				}
 
+				$originalValue = $formArray[$prefix ."origValue_". $fieldName .$suffix];
+				$originalText = ($storeOriginalText) ? $formArray[$prefix ."origText_". $fieldName .$suffix] : "";
+				
 				$fieldContent->id=$formArray[$prefix . "id_" .$fieldName .$suffix];
 				$fieldContent->reference_id = (intval($formArray[$prefix . "reference_id" .$suffix]) > 0) ? intval($formArray[$prefix . "reference_id" .$suffix]) : $this->id;
 				$fieldContent->language_id = $this->language_id;
@@ -210,7 +211,10 @@ class ContentObject {
 				// original value will be already md5 encoded - based on that any encoding isn't needed!
 				$fieldContent->original_value = $originalValue;
 				$fieldContent->original_text = !is_null($originalText)?$originalText:"";
-				$fieldContent->modified = date( "Y-m-d H:i:s" );
+				
+				$datenow =& JFactory::getDate();
+				$fieldContent->modified 		= $datenow->toMySQL();
+				
 				$fieldContent->modified_by = $user->id;
 				$fieldContent->published=$this->published;
 				$field->translationContent = $fieldContent;
@@ -279,6 +283,74 @@ class ContentObject {
 		}
 	}
 
+	/**
+	 * Special pre translation handler for content text to combine intro and full text
+	 *
+	 * @param unknown_type $row
+	 */
+	function fetchArticleText($row){
+		
+		/*
+		 * We need to unify the introtext and fulltext fields and have the
+		 * fields separated by the {readmore} tag, so lets do that now.
+		 */
+		if (JString::strlen($row->fulltext) > 1) {
+			return  $row->introtext . "<hr id=\"system-readmore\" />" . $row->fulltext;
+		} else {
+			return  $row->introtext;
+		}
+
+	}
+	
+
+	/**
+	 * Special pre translation handler for content text to combine intro and full text
+	 *
+	 * @param unknown_type $row
+	 */
+	function fetchArticleTranslation($field, &$translationFields){
+		
+		if (is_null($translationFields)) return;
+		/*
+		 * We need to unify the introtext and fulltext fields and have the
+		 * fields separated by the {readmore} tag, so lets do that now.
+		 */
+		if (array_key_exists("fulltext",$translationFields)){
+			$fulltext = $translationFields["fulltext"]->value;
+			$introtext = $translationFields["introtext"]->value;
+			if (JString::strlen($fulltext) > 1) {
+				$translationFields["introtext"]->value =  $introtext . "<hr id=\"system-readmore\" />" . $fulltext;
+				$translationFields["fulltext"]->value = "";
+			} 
+		}
+
+	}
+	
+	
+	/**
+	 * Special post translation handler for content text to split intro and full text
+	 *
+	 * @param unknown_type $row
+	 */
+	function saveArticleText(&$introtext, $fields,&$formArray,$prefix,$suffix,$storeOriginalText) {		
+		
+		// Search for the {readmore} tag and split the text up accordingly.
+		$pattern = '#<hr\s+id=("|\')system-readmore("|\')\s*\/*>#i';
+		$tagPos	= preg_match($pattern, $introtext);
+
+		if ( $tagPos > 0 ) {
+			list($introtext, $fulltext) = preg_split($pattern, $introtext, 2);
+			JRequest::setVar($prefix ."refField_fulltext" .$suffix,$fulltext,"post");
+			$formArray[$prefix ."refField_fulltext" .$suffix] = $fulltext;		
+		}
+		else {
+			JRequest::setVar($prefix ."refField_fulltext" .$suffix,"","post");
+			$formArray[$prefix ."refField_fulltext" .$suffix] = "";
+		}
+		
+	}
+	
+	
 	/** Reads the information out of an existing mosDBTable object into the contentObject.
 	 *
 	 * @param	object	instance of an mosDBTable object
@@ -325,7 +397,9 @@ class ContentObject {
 				$fieldContent->original_value = md5( $origObject->$fieldName );
 				// ToDo: Add handling of original text!
 
-				$fieldContent->modified = date( "Y-m-d H:i:s" );
+				$datenow =& JFactory::getDate();
+				$fieldContent->modified 		= $datenow->toMySQL();
+
 				$fieldContent->modified_by = $user->id;
 			}
 		}
@@ -355,6 +429,14 @@ class ContentObject {
 			$fieldName = $field->Name;
 			if( isset($row->$fieldName) ) {
 				$field->originalValue = $row->$fieldName;
+				
+				if ($field->prehandleroriginal!=""){
+					if (method_exists($this,$field->prehandleroriginal)){
+						$handler = $field->prehandleroriginal;
+						$field->originalValue = $this->$handler($row);
+					}
+				}
+				
 			}
 		}
 
@@ -396,6 +478,14 @@ class ContentObject {
 		// Check fields and their state
 		for( $i=0; $i<count($elementTable->Fields); $i++ ) {
 			$field =& $elementTable->Fields[$i];
+			
+			if ($field->prehandlertranslation!=""){
+				if (method_exists($this,$field->prehandlertranslation)){
+					$handler = $field->prehandlertranslation;
+					$this->$handler($field, $translationFields);
+				}
+			}
+
 			if( isset($translationFields[$field->Name]) ) {
 				$fieldContent = $translationFields[$field->Name];
 			} else {
@@ -510,7 +600,12 @@ class ContentObject {
 				if( isset($fieldContent->reference_id) ) {
 					if ( isset($fieldContent->value) && $fieldContent->value!='' ) {
 						$fieldContent->store(true);
-					} else {
+					} 
+					// special case to handle readmore in original when there is none in the translation
+					else if (isset($fieldContent->value)  && $fieldContent->reference_table=="content" && $fieldContent->reference_field=="fulltext"){
+						$fieldContent->store(true);
+					}
+					else {
 						$fieldContent->delete();
 					}
 				}

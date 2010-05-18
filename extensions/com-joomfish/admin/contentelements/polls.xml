@@ -13,4 +13,7 @@
   		<field type="checked_out_date" name="checked_out_time" translate="0">Check out date</field>
   	</table>
   </reference>
+  <translationfilters>
+	  <jfkeyword>title|Title</jfkeyword>
+  </translationfilters>	  
 </joomfish>

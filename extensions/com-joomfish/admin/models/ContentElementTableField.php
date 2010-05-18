@@ -25,7 +25,7 @@
  * The "GNU General Public License" (GPL) is available at
  * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * -----------------------------------------------------------------------------
- * $Id: ContentElementTableField.php 1251 2009-01-06 18:33:02Z apostolov $
+ * $Id: ContentElementTableField.php 1391 2009-08-10 12:40:55Z geraint $
  * @package joomfish
  * @subpackage Models
  *
@@ -41,7 +41,7 @@ defined( 'JPATH_BASE' ) or die( 'Direct Access to this location is not allowed.'
  * @subpackage administrator
  * @copyright 2003-2009 Think Network GmbH
  * @license http://www.gnu.org/copyleft/gpl.html GNU General Public License
- * @version $Revision: 1251 $
+ * @version $Revision: 1296 $
  * @author Alex Kempkens <joomfish@thinknetwork.com>
  */
 class ContentElementTablefield {
@@ -55,6 +55,9 @@ class ContentElementTablefield {
 	var $Rows=15;
 	var $Columns=30;
 	var $posthandler="";
+	var $prehandler="";
+	var $prehandleroriginal="";
+	var $prehandlertranslation="";
 	
 	// Can be boolean or array, if boolean defines if the buttons are displayed, if array defines a list of buttons not to show.
 	var $ebuttons=true;
@@ -87,6 +90,9 @@ class ContentElementTablefield {
 		$this->Rows = intval( $tablefieldElement->getAttribute( 'rows' ) );
 		$this->Columns = intval( $tablefieldElement->getAttribute( 'columns' ) );
 		$this->posthandler = trim( $tablefieldElement->getAttribute( 'posthandler' ) );
+		$this->prehandler = trim( $tablefieldElement->getAttribute( 'prehandler' ) );
+		$this->prehandlertranslation = trim( $tablefieldElement->getAttribute( 'prehandlertranslation' ) );
+		$this->prehandleroriginal = trim( $tablefieldElement->getAttribute( 'prehandleroriginal' ) );
 		$this->ignoreifblank = intval( $tablefieldElement->getAttribute( 'ignoreifblank' ) );
 		
 		$this->ebuttons = trim( $tablefieldElement->getAttribute( 'ebuttons' ) );
@@ -105,6 +111,16 @@ class ContentElementTablefield {
 		else if (strlen($this->ebuttons)>0){
 			$this->ebuttons = array($this->ebuttons);
 		}
+	}
+	
+	function preHandle($element){
+		if ($this->prehandler!="" && method_exists($this,$this->prehandler)){
+			$prehandler=$this->prehandler;
+			$this->$prehandler($element);
+		}
+	}
+	function checkUrlType($element){
+		if ($element->IndexedFields["type"]->originalValue=="url") $this->Type="text";
 	}
 }
 

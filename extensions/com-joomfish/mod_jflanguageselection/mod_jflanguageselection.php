@@ -25,7 +25,7 @@
  * The "GNU General Public License" (GPL) is available at
  * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * -----------------------------------------------------------------------------
- * $Id: mod_jflanguageselection.php 1251 2009-01-07 06:29:53Z apostolov $
+ * $Id: mod_jflanguageselection.php 1396 2009-08-20 09:25:19Z geraint $
  * @package joomfish
  * @subpackage mod_jflanguageselection
  *
@@ -36,8 +36,8 @@ defined('_JEXEC') or die('Restricted access');
 
 $db =& JFactory::getDBO();
 if (!is_a($db,"JFDatabase")){
- 	echo JText::_("Joomfish System Plugin not enabled");
-	return; 	
+	echo JText::_("Joomfish System Plugin not enabled");
+	return;
 }
 $db->_profile("langmod",true);
 
@@ -55,13 +55,13 @@ $spacer		= trim( $params->get( 'spacer', '&nbsp;' ) );
 jimport('joomla.filesystem.file');
 
 $jfManager = JoomFishManager::getInstance();
-$langActive = $jfManager->getActiveLanguages();
+$langActive = $jfManager->getActiveLanguages(true);
 
 // setup Joomfish plugins
 $dispatcher	   =& JDispatcher::getInstance();
 JPluginHelper::importPlugin('joomfish');
 $dispatcher->trigger('onAfterModuleActiveLanguages', array (&$langActive));
-	
+
 $outString = '';
 if( !isset( $langActive ) || count($langActive)==0) {
 	// No active languages => nothing to show :-(
@@ -75,6 +75,10 @@ if (!array_key_exists($curLanguage->getTag(),$langActive)){
 	//$currentlang = current($langActive);
 	//global $mainframe;
 	//$mainframe->redirect(JRoute::_("index.php?lang=".$currentlang->iso));
+	$registry =& JFactory::getConfig();
+	$deflang = $registry->getValue("config.defaultlang");
+	global $mainframe;
+	$mainframe->redirect(JRoute::_("index.php?lang=".$deflang));
 	JError::raiseError('0', JText::_('NOT AUTHORISED').' '.$curLanguage->getTag());
 	exit();
 }

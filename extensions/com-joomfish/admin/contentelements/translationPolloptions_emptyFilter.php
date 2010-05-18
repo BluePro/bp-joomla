@@ -44,7 +44,7 @@ class translationPolloptions_emptyFilter extends translationFilter
 	}
 	
 	function _createFilter(){
-		$db =& JFactory::getDBO();
+		$db = JFactory::getDBO();
 		if (!$this->filterField ) return "";
 		// always hide empty poll options
 		$filter = 'c.'.$this->filterField.' !=""';

@@ -25,7 +25,7 @@
  * The "GNU General Public License" (GPL) is available at
  * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * -----------------------------------------------------------------------------
- * $Id: jfalternative.php 1251 2009-01-07 06:29:53Z apostolov $
+ * $Id: jfalternative.php 1344 2009-06-18 11:50:09Z akede $
  * @package joomfish
  * @subpackage jfalternative
  *
@@ -35,6 +35,7 @@
 defined( '_JEXEC' ) or die( 'Restricted access' );
 
 jimport( 'joomla.plugin.plugin' );
+JPlugin::loadLanguage( 'plg_jfalternative', JPATH_ADMINISTRATOR );
 
 $mainframe->registerEvent('onPrepareContent', 'botJoomfishAlternative');
 
@@ -60,7 +61,7 @@ function botJoomfishAlternative(  &$row, &$params, $page=0 ) {
 	}
 
 	$db = JFactory::getDBO();
-	
+
 	$sql = "SELECT DISTINCT jfl.shortcode, jfl.iso, jfl.name, jfl.image FROM #__jf_content AS jfc, #__languages AS jfl "
 	."\n WHERE reference_id=$id AND reference_table='".$table."'"
 	."\n  AND jfc.language_id=jfl.id AND jfc.published=1";

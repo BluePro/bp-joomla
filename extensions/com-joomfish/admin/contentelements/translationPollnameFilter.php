@@ -51,17 +51,20 @@ class translationPollnameFilter extends translationFilter
  * @return unknown
  */
 	function _createfilterHTML(){
-		$db =& JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		if (!$this->filterField) return "";
 		$pollnameOptions=array();
 		$pollnameOptions[] = JHTML::_('select.option', '-1', JText::_('All polls') );
 
 		//	$sql = "SELECT c.id, c.title FROM #__categories as c ORDER BY c.title";
-		$sql = "SELECT DISTINCT p.id, p.title FROM #__polls as p, #__".$this->tableName." as c
-			WHERE c.".$this->filterField."=p.id ORDER BY p.title";
+		$sql = "SELECT DISTINCT p.id, p.title FROM #__polls as p, #__".$this->tableName." as c";
+		if ($this->filterField!=$this->filterNullValue){
+			$sql.= " WHERE c.".$this->filterField."=p.id ORDER BY p.title";
+		}
 		$db->setQuery($sql);
 		$cats = $db->loadObjectList();
+		
 		$catcount=0;
 		foreach($cats as $cat){
 			$pollnameOptions[] = JHTML::_('select.option', $cat->id,$cat->title);

@@ -25,7 +25,7 @@
  * The "GNU General Public License" (GPL) is available at
  * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * -----------------------------------------------------------------------------
- * $Id: jfdatabase_inherit 1251 2009-01-07 11:07:01 apostolov Exp $
+ * $Id: jfdatabase_inherit.php 1344 2009-06-18 11:50:09Z akede $
  * @package joomfish
  * @subpackage jfdatabase
  * @version 2.0
@@ -146,7 +146,7 @@ class JFDatabase extends interceptDB {
 		$dispatcher	   =& JDispatcher::getInstance();
 		JPluginHelper::importPlugin('joomfish');
 
-		// musdt allow fall back for contnent table localisation to work
+		// must allow fall back for contnent table localisation to work
 		$allowfallback = true;
 		$refTablePrimaryKey = "";
 		$reference_table = "";
@@ -156,10 +156,16 @@ class JFDatabase extends interceptDB {
 		$registry =& JFactory::getConfig();
 		$defaultLang = $registry->getValue("config.defaultlang");
 		if ($defaultLang == $language){
+			$rows = array($count);	
+			$dispatcher->trigger('onBeforeTranslation', array (&$rows, $ids, $reference_table, $language, $refTablePrimaryKey, $this->_getRefTables(), $this->_sql, $allowfallback));
+			$count = $rows[0];
 			return $count;
 		}
 
 		$rows = array($count);
+		
+		$dispatcher->trigger('onBeforeTranslation', array (&$rows, $ids, $reference_table, $language, $refTablePrimaryKey, $this->_getRefTables(), $this->_sql, $allowfallback));
+		
 		$dispatcher->trigger('onAfterTranslation', array (&$rows, $ids, $reference_table, $language, $refTablePrimaryKey, $this->_getRefTables(), $this->_sql, $allowfallback));
 		$count = $rows[0];
 		return $count;

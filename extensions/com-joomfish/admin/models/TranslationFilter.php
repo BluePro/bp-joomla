@@ -25,7 +25,7 @@
  * The "GNU General Public License" (GPL) is available at
  * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * -----------------------------------------------------------------------------
- * $Id: TranslationFilter.php 1251 2009-01-06 18:33:02Z apostolov $
+ * $Id: TranslationFilter.php 1391 2009-08-10 12:40:55Z geraint $
  * @package joomfish
  * @subpackage Models
  *
@@ -1035,6 +1035,73 @@ class TranslateParams_content extends TranslateParams_xml
 		}
 		echo $output;
 	}
+
+}
+
+class TranslateParams_components extends TranslateParams_xml
+{
+	var $_menutype;
+	var $_menuViewItem;
+	var $orig_menuModelItem;
+	var $trans_menuModelItem;
+
+	function TranslateParams_components($original, $translation, $fieldname, $fields=null){
+		$lang =& JFactory::getLanguage();
+		$lang->load("com_config", JPATH_ADMINISTRATOR);
+
+		$this->fieldname = $fieldname;
+		global $mainframe;
+		$content = null;
+		foreach ($fields as $field) {
+			if ($field->Name=="option"){
+				$comp = $field->originalValue;
+				break;
+			}
+		}
+		$lang->load($comp, JPATH_ADMINISTRATOR);
+		
+		$path = DS."components".DS.$comp.DS."config.xml";
+		$xmlfile = JApplicationHelper::_checkPath($path);
+		
+		$this->origparams = new JParameter($original, $xmlfile,"component");
+		$this->transparams = new JParameter($translation, $xmlfile,"component");
+		$this->defaultparams = new JParameter("", $xmlfile,"component");
+		$this->fields = $fields;
+
+	}
+
+	function showOriginal(){
+		if ($this->_menutype=="wrapper"){
+			?>
+			<table width="100%" class="paramlist">
+			<tr>
+			<td width="40%" align="right" valign="top"><span class="editlinktip"><!-- Tooltip -->
+			<span onmouseover="return overlib('Link for Wrapper', CAPTION, 'Wrapper Link', BELOW, RIGHT);" onmouseout="return nd();" >Wrapper Link</span></span></td>
+
+			<td align="left" valign="top"><input type="text" name="orig_params[url]" value="<?php echo $this->origparams->get('url','')?>" class="text_area" size="30" /></td>
+			</tr>
+			</table>
+			<?php
+		}
+		parent::showOriginal();
+	}
+
+	function editTranslation(){
+		if ($this->_menutype=="wrapper"){
+			?>
+			<table width="100%" class="paramlist">
+			<tr>
+			<td width="40%" align="right" valign="top"><span class="editlinktip"><!-- Tooltip -->
+			<span onmouseover="return overlib('Link for Wrapper', CAPTION, 'Wrapper Link', BELOW, RIGHT);" onmouseout="return nd();" >Wrapper Link</span></span></td>
+			<td align="left" valign="top"><input type="text" name="refField_params[url]" value="<?php echo $this->transparams->get('url','')?>" class="text_area" size="30" /></td>
+			</tr>
+			</table>
+			<?php
+		}
+		parent::editTranslation();
+	}
+
+
 
 }
 

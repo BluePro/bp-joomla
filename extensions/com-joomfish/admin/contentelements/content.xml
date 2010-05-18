@@ -2,16 +2,17 @@
 <joomfish type="contentelement">
   <name>Contents</name>
   <author>A. Kempkens</author>
-  <version>2.0.3</version>
+  <version>2.0.4</version>
   <description>Definition for the core content component</description>
+  <copyright>2003 - 2009, Think Network GmbH, Munich</copyright>
   <reference type="content">
   	<table name="content">
   		<field type="referenceid" name="id" translate="0">ID</field>
   		<field type="titletext" name="title"  length="50" maxlength="250" translate="1">Title</field>
   		<field type="text" name="title_alias"  length="50" maxlength="250" translate="0">Title Alias</field>
   		<field type="text" name="alias"  length="50" maxlength="250" translate="1" posthandler="filterTitle">Alias</field>
-  		<field type="htmltext" name="introtext" translate="1" ebuttons="readmore">Introtext</field>
-  		<field type="htmltext" name="fulltext" translate="1" ebuttons="readmore">Fulltext</field>
+  		<field type="htmltext" name="introtext" translate="1" prehandleroriginal="fetchArticleText" prehandlertranslation="fetchArticleTranslation" posthandler="saveArticleText" ebuttons="ignore">Article Text</field>
+  		<field type="hiddentext" name="fulltext" translate="1" ebuttons="readmore">Fulltext</field>
   		<field type="textarea" name="images" rows="10" columns="80" translate="1">Images</field>
   		<field type="text" name="metakey" length="50" maxlength="250" translate="1">Metakey</field>
   		<field type="textarea" name="metadesc"  rows="5" columns="80" translate="1">Metadesc</field>

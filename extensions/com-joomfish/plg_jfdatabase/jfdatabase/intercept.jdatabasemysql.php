@@ -25,7 +25,7 @@
  * The "GNU General Public License" (GPL) is available at
  * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * -----------------------------------------------------------------------------
- * $Id: intercept.jdatabasemysql 1251 2009-01-07 11:07:01 apostolov Exp $
+ * $Id: intercept.jdatabasemysql.php 1394 2009-08-10 13:41:11Z geraint $
  * @package joomfish
  * @subpackage jfdatabase
  * @version 2.0
@@ -278,7 +278,8 @@ class interceptDB extends JDatabaseMySQL {
 					//echo "<br>Information for column $i of ".($fields-1)." ".$meta->name." : $tempTable=";
 					$tempArray=array();
 					$prefix = $this->_table_prefix;
-					preg_match_all("/$prefix(\w*)\s+AS\s+`?".$tempTable."`?[,\s]/i",$this->_sql, $tempArray, PREG_PATTERN_ORDER);
+					preg_match_all("/`?$prefix(\w+)`?\s+(?:AS\s)?+`?".$tempTable."`?[,\s]/i",$this->_sql, $tempArray, PREG_PATTERN_ORDER);
+					//preg_match_all("/`?$prefix(\w+)`?\s+AS\s+`?".$tempTable."`?[,\s]/i",$this->_sql, $tempArray, PREG_PATTERN_ORDER);
 					if (count($tempArray)>1 && count($tempArray[1])>0) $value = $tempArray[1][0];
 					else $value = null;
 					if (isset($this->_table_prefix) && strlen($this->_table_prefix)>0 && strpos($tempTable,$this->_table_prefix)===0) $tempTable = substr($tempTable, strlen( $this->_table_prefix));
@@ -294,10 +295,18 @@ class interceptDB extends JDatabaseMySQL {
 					else {
 						$tempName = $meta->name;
 						$tempArray=array();
-						preg_match_all("/`?(\w*)`?\s+AS\s+`?".$tempName."`?[,\s]/i",$this->_sql, $tempArray, PREG_PATTERN_ORDER);
+						// This is a bad match when we have "SELECT id" at the start of the query
+						preg_match_all("/`?(\w+)`?\s+(?:AS\s)?+`?".$tempName."`?[,\s]/i",$this->_sql, $tempArray, PREG_PATTERN_ORDER);
+						//preg_match_all("/`?(\w+)`?\1s+AS\s+`?".$tempName."`?[,\s]/i",$this->_sql, $tempArray, PREG_PATTERN_ORDER);
 						if (count($tempArray)>1 && count($tempArray[1])>0) {
 							//echo "$meta->name is an alias for ".$tempArray[1][0]."<br>";
-							$nameValue = $tempArray[1][0];
+							// must ignore "SELECT id"
+							if (strtolower($tempArray[1][0])=="select"){
+								$nameValue = $meta->name;
+							}
+							else {
+								$nameValue = $tempArray[1][0];
+							}
 						}
 						else $nameValue = $meta->name;
 					}

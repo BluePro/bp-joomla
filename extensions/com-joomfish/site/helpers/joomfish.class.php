@@ -25,7 +25,7 @@
  * The "GNU General Public License" (GPL) is available at
  * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * -----------------------------------------------------------------------------
- * $Id: joomfish.class.php 1276 2009-03-16 17:18:05Z geraint $
+ * $Id: joomfish.class.php 1344 2009-06-18 11:50:09Z akede $
  *
 */
 
@@ -34,7 +34,7 @@
  * @subpackage frontend.includes
  * @copyright 2003-2009 Think Network GmbH
  * @license http://www.gnu.org/copyleft/gpl.html GNU General Public License
- * @version $Revision: 1276 $
+ * @version $Revision: 1298 $
  * @author Alex Kempkens <Alex@JoomFish.net>
 */
 
@@ -110,7 +110,7 @@ class JoomFish {
 	}
 
 	/**
-	 * Translate a list 
+	 * Translate a list
 	 **/
 	function translateList( &$rows, $language , $tableArray) {
 		if (!isset($rows) || !is_array($rows)) return $rows;
@@ -201,12 +201,15 @@ class JoomFish {
 		$dispatcher	   =& JDispatcher::getInstance();
 		JPluginHelper::importPlugin('joomfish');
 
-		if ($reference_table == "languages" || $reference_table == "jf_content" ) {
+		if ($reference_table == "jf_content" ) {
 			return;					// I can't translate myself ;-)
 
 		}
 
 		$results = $dispatcher->trigger('onBeforeTranslation', array (&$rows, &$ids, $reference_table, $language, $refTablePrimaryKey, & $tableArray, $querySQL, $allowfallback));
+
+		// if onBeforeTranslation has cleaned out the list then just return at this point
+		if (strlen($ids)==0) return ;
 
 		// find reference table alias
 		$reftableAlias = $reference_table;
@@ -218,11 +221,11 @@ class JoomFish {
 				break;
 			}
 		}
-		
+
 		// NASTY KLUDGE TO DEAL WITH SQL CONSTRUCTION IN contact.php, weblinks.php where multiple tables to be translated all use "id" which gets dropped! etc.
 		$currentRow = current($rows);
 		// must not check on catid>0 since this would be uncategorised items
-		if ($reference_table=='categories' && count($rows)>0 && isset($currentRow->catid) ) {			
+		if ($reference_table=='categories' && count($rows)>0 && isset($currentRow->catid) ) {
 			$reftableAlias = $tableArray["tableAliases"]["categories"];
 		}
 		if ($reference_table=='sections' && count($rows)>0 && isset($currentRow->sectionid)) {
@@ -286,7 +289,7 @@ class JoomFish {
 							// adjust refField for aliases (make sure the field is from the same table!).
 							// I could reduce the calculation by building an array of translation reference fields against their mapping number
 							// but this refinement can wait!
-							
+
 							$fieldmatch=false; // This is used to confirm the field is from the correct table
 							for ($i=0;$i<$tableArray["fieldCount"];$i++){
 								if (!array_key_exists($i,$tableArray["fieldTableAliasData"])) continue;
@@ -376,7 +379,7 @@ class JoomFish {
 				$registry =& JFactory::getConfig();
 				$lang = $registry->getValue("config.jflang");
 
-				JLoader::import( 'models.ContentObject',JPATH_ADMINISTRATOR.DS."components".DS."com_joomfish");
+				include_once( JPATH_ADMINISTRATOR.DS."components".DS."com_joomfish".'/models/ContentObject.php');
 				$contentObject = new ContentObject( $jfm->getLanguageID($lang), $contentElement );
 				$textFields = $contentObject->getTextFields();
 				$info[$reference_table]["textFields"] = $textFields ;

@@ -25,7 +25,7 @@
  * The "GNU General Public License" (GPL) is available at
  * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * -----------------------------------------------------------------------------
- * $Id: translate.php 1277 2009-03-16 17:27:45Z geraint $
+ * $Id: translate.php 1362 2009-06-22 20:08:29Z akede $
  * @package joomfish
  * @subpackage translate
  *
@@ -120,8 +120,8 @@ class TranslateController extends JController   {
 	function showTranslate() {
 
 		// If direct translation then close the modal window
-		if (intval(JRequest::getVar("direct",0))){
-			$this->modalClose();
+		if ($direct = intval(JRequest::getVar("direct",0))){
+			$this->modalClose($direct);
 			return;
 		}
 
@@ -270,7 +270,7 @@ class TranslateController extends JController   {
 		// Need to load com_config language strings!
 		$lang =& JFactory::getLanguage();
 		$lang->load( 'com_config' );
-		
+
 		// Assign data for view - should really do this as I go along
 		$this->view->assignRef('actContentObject'   , $actContentObject);
 		$this->view->assignRef('tranFilters'   , $tranFilters);
@@ -303,8 +303,15 @@ class TranslateController extends JController   {
 			// get's the config settings on how to store original files
 			$storeOriginalText = ($this->_joomfishManager->getCfg('storageOfOriginal') == 'md5') ? false : true;
 			$actContentObject->bind( $_POST, '', '', true,  $storeOriginalText);
-			$actContentObject->store();
-			$this->view->message = JText::_('Translation saved');
+			if ($actContentObject->store() == null)	{
+				JPluginHelper::importPlugin('joomfish');
+				$dispatcher =& JDispatcher::getInstance();
+				$dispatcher->trigger('onAfterTranslationSave', array($_POST));
+				$this->view->message = JText::_('Translation saved');
+			}
+			else {
+				$this->view->message = JText::_('Error saving translation');
+			}
 
 			// Clear Translation Cache
 			$db =& JFactory::getDBO();
@@ -583,12 +590,27 @@ class TranslateController extends JController   {
 		$this->showOrphanOverview();
 	}
 
-	function modalClose(){
+	function modalClose($linktype){
 
 		@ob_end_clean();
+		switch ($linktype){
+			case 1:
+			default:
 		?>
 		<script language="javascript" type="text/javascript">
 			window.parent.SqueezeBox.close();
+			<?php
+				if ($this->task=="translate.save") {
+					echo "alert('".JText::_('Translation saved')."');";
+				}
+			?>
+			</script>
+		<?php
+				break;
+			case 2:
+		?>
+		<script language="javascript" type="text/javascript">
+			window.close();
 			<?php
 				if ($this->task=="translate.save"){
 					echo "alert('".JText::_('Translation saved')."');";
@@ -596,7 +618,8 @@ class TranslateController extends JController   {
 			?>
 		</script>
 		<?php
+				break;
+		}
 		exit();
-
 	}
 }

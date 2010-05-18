@@ -25,7 +25,7 @@
  * The "GNU General Public License" (GPL) is available at
  * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * -----------------------------------------------------------------------------
- * $Id: edit.php 1277 2009-03-16 17:27:45Z geraint $
+ * $Id: edit.php 1391 2009-08-10 12:40:55Z geraint $
  * @package joomfish
  * @subpackage Views
  *
@@ -134,17 +134,32 @@ else {
 			$k=1;
 			for( $i=0; $i<count($elementTable->Fields); $i++ ) {
 				$field =& $elementTable->Fields[$i];
+				
+				$field->preHandle($elementTable);
 				$originalValue = $field->originalValue;
 
-				// if we supress blank originals 
+				// if we supress blank originals
 				if ($field->ignoreifblank && $field->originalValue==="") continue;
-				
+
 				if( $field->Translate ) {
 					$translationContent = $field->translationContent;
 
 					// This causes problems in Japanese/Russian etc. ??
 					jimport('joomla.filter.output');
 					JFilterOutput::objectHTMLSafe( $translationContent );
+
+
+					if( strtolower($field->Type)=='hiddentext') {
+							?>
+							<tr><td colspan="3" style="display:none"><td>
+							<input type="hidden" name="id_<?php echo $field->Name;?>" value="<?php echo $translationContent->id;?>" />
+							<input type="hidden" name="origValue_<?php echo $field->Name;?>" value='<?php echo md5( $field->originalValue );?>' />
+							<textarea  name="origText_<?php echo $field->Name;?>" style="display:none"><?php echo $field->originalValue;?></textarea>
+							<textarea name="refField_<?php echo $field->Name;?>"  style="display:none"><?php echo $translationContent->value; ?></textarea>
+							</td></tr>
+							<?php
+					}
+					else {
 				?>
 		    <tr class="<?php echo "row$k"; ?>">
 		      <th colspan="3"><?php echo JText::_('DBFIELDLABLE') .': '. $field->Lable;?></th>
@@ -182,9 +197,9 @@ else {
 						<?php
 						if( strtolower($field->Type)=='text' || strtolower($field->Type)=='titletext' ) {
 							$length = ($field->Length>0)?$field->Length:60;
-							$maxLength = ($field->MaxLength>0)?$field->MaxLength:60;
+							$maxLength = ($field->MaxLength>0) ? "maxlength=".$field->MaxLength:"";
 							?>
-							<input class="inputbox" type="text" name="refField_<?php echo $field->Name;?>" size="<?php echo $length;?>" value="<?php echo $translationContent->value; ?>" maxlength="<?php echo $maxLength;?>"/>
+							<input class="inputbox" type="text" name="refField_<?php echo $field->Name;?>" size="<?php echo $length;?>" value="<?php echo $translationContent->value; ?>" "<?php echo $maxLength;?>"/>
 
 							<?php
 						} else if( strtolower($field->Type)=='textarea' ) {
@@ -200,7 +215,7 @@ else {
 							// parameters : areaname, content, hidden field, width, height, rows, cols
 							echo $wysiwygeditor->display( "refField_".$field->Name, $translationContent->value, '100%', '300', '70', '15',$field->ebuttons ) ;
 						}
-						if( strtolower($field->Type)=='readonlytext') {
+						else if( strtolower($field->Type)=='readonlytext') {
 							$length = ($field->Length>0)?$field->Length:60;
 							$maxLength = ($field->MaxLength>0)?$field->MaxLength:60;
 							$value =  strlen($translationContent->value)>0? $translationContent->value:$field->originalValue;
@@ -275,6 +290,7 @@ else {
 		    </tr>
 	      	<?php
 	      	}
+					}
 	      	?>
 				<?php
 				}
@@ -321,7 +337,7 @@ else {
 	<input type="hidden" name="option" value="com_joomfish" />
 	<input type="hidden" name="task" value="translate.edit" />
 	<input type="hidden" name="direct" value="<?php echo intval(JRequest::getVar("direct",0));?>" />
-	
+
 	<?php echo JHTML::_( 'form.token' ); ?>
 </form>
 <script language="javascript" type="text/javascript">

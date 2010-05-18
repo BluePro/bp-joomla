@@ -25,7 +25,7 @@
  * The "GNU General Public License" (GPL) is available at
  * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * -----------------------------------------------------------------------------
- * $Id: view.php 1251 2009-01-07 06:29:53Z apostolov $
+ * $Id: view.php 1363 2009-06-23 06:17:04Z akede $
  * @package joomfish
  * @subpackage Views
  *
@@ -51,11 +51,11 @@ class StatisticsViewStatistics extends JoomfishViewDefault
 
 		$document =& JFactory::getDocument();
 		$document->setTitle(JText::_('JOOMFISH_TITLE') . ' :: ' .JText::_('TITLE_Statistics'));
-		
+
 		// Set toolbar items for the page
 		JToolBarHelper::title(JText::_( 'TITLE_Statistics' ), 'statistics' );
 		JToolBarHelper::custom( 'cpanel.show', 'joomfish', 'joomfish', 'CONTROL PANEL' , false );
-		JToolBarHelper::help( 'screen.manage', true);
+		JToolBarHelper::help( 'screen.statistics', true);
 
 		JSubMenuHelper::addEntry(JText::_('Control Panel'), 'index2.php?option=com_joomfish');
 		JSubMenuHelper::addEntry(JText::_('Translation'), 'index2.php?option=com_joomfish&amp;task=translate.overview');
@@ -65,15 +65,15 @@ class StatisticsViewStatistics extends JoomfishViewDefault
 		JSubMenuHelper::addEntry(JText::_('Language Configuration'), 'index2.php?option=com_joomfish&amp;task=languages.show', false);
 		JSubMenuHelper::addEntry(JText::_('Content elements'), 'index2.php?option=com_joomfish&amp;task=elements.show', false);
 		JSubMenuHelper::addEntry(JText::_('HELP AND HOWTO'), 'index2.php?option=com_joomfish&amp;task=help.show', false);
-				
+
 		$this->panelStates	= &$this->get('PanelStates');
 		$this->contentInfo	= &$this->get('ContentInfo');
 		$this->publishedTabs	= &$this->get('PublishedTabs');
-		
+
 		$this->assignRef('panelStates', $this->panelStates);
 		$this->assignRef('contentInfo', $this->contentInfo);
 		$this->assignRef('publishedTabs', $this->publishedTabs);
-		
+
 		JHTML::_('behavior.tooltip');
 		parent::display($tpl);
 	}

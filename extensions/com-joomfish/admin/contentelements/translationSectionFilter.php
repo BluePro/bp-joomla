@@ -51,7 +51,7 @@ class translationSectionFilter extends translationFilter
  * @return unknown
  */
 	function _createfilterHTML(){
-		$db =& JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		if (!$this->filterField) return "";
 		$sectionOptions=array();

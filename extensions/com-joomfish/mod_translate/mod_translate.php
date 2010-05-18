@@ -25,7 +25,7 @@
  * The "GNU General Public License" (GPL) is available at
  * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * -----------------------------------------------------------------------------
- * $Id: mod_translate.php 1251 2009-01-07 06:29:53Z apostolov $
+ * $Id: mod_translate.php 1361 2009-06-22 20:06:09Z akede $
  * @package joomfish
  * @subpackage mod_translate
  *
@@ -105,30 +105,36 @@ if ($mapping!=null){
 		define( 'JOOMFISH_URL', '/components/com_joomfish');
 	}
 
-	//	require_once( JOOMFISH_LIBPATH .DS. 'joomla' .DS. 'language.php' );
-	//	require_once( JOOMFISH_LIBPATH .DS. 'joomla' .DS. 'registry.php' );
-
 	$lang = JFactory::getLanguage();
 	$lang->load('com_joomfish');
 
-	$langActive = JoomFishManager::getLanguages( true );
+	// load languages via translation model
+	JLoader::register('TranslateModelTranslate', JOOMFISH_ADMINPATH.DS.'models'.DS.'translate.php');
+	$model = new TranslateModelTranslate();
+	$langActive = $model->getLanguages();		// all languages even non active once
+	$defaultLang = $model->getDefaultLanguage();
+	$params = JComponentHelper::getParams('com_joomfish');
+	$showDefaultLanguageAdmin = $params->get("showDefaultLanguageAdmin", true);
 	$langOptions[] = JHTML::_('select.option', -1, JText::_("SELECT LANGUAGE") );
 
 	if ( count($langActive)>0 ) {
 		foreach( $langActive as $language )
 		{
-			$langOptions[] = JHTML::_('select.option', $language->id, $language->name );
+			if($language->code != $defaultLang || $showDefaultLanguageAdmin) {
+				$langOptions[] = JHTML::_('select.option',  $language->id, $language->name );
+			}
 		}
 	}
-	$langlist = JHTML::_('select.genericlist', $langOptions, 'select_language_id', 'id="select_language_id" class="inputbox"  size="1" onChange="translateItem();"', 'value', 'text', -1);//$langActive[0]->id );
+	$langlist = JHTML::_('select.genericlist', $langOptions, 'select_language_id', 'id="select_language_id" class="inputbox"  size="1" onChange="translateItem(\''.$linkType.'\');"', 'value', 'text', -1);//$langActive[0]->id );
 	// I also need to trap component specific actions e.g. pony gallery uses
 ?>
 <span class='modtranslate'>
 <script language="JavaScript" type="text/javascript">
-function translateItem(){
+function translateItem(linktype){
 	var langCode=document.getElementById('select_language_id').value;
 	var option="<?php echo trim($mapping[1]);?>";
 
+	if( linktype == '' ) linktype = 'squeezebox';
 	if( langCode == -1 ) return;
 
 	if (document.adminForm.boxchecked.value==0) {
@@ -136,14 +142,10 @@ function translateItem(){
 		return
 		<?php
 		$setlang="&select_language_id=\"+langCode+\"";
-		global $mosConfig_live_site;
-		$targetURL = JURI::root()."administrator/index2.php?option=com_joomfish&task=translate.edit&direct=1&catid=\"+option+\"".$setlang;
+		$targetURL = JURI::root()."administrator/index2.php?option=com_joomfish&task=translate.edit&catid=\"+option+\"".$setlang;
 		?>
-		SqueezeBox.initialize({});
-		SqueezeBox.setOptions(SqueezeBox.presets,{'handler': 'iframe','size': {'x': 1000, 'y': 600},'closeWithOverlay': 0});
-		SqueezeBox.url = "<?php echo $targetURL;?>";
-		
-		SqueezeBox.setContent('iframe', SqueezeBox.url );
+
+		openTranslationDialog(targetURL, linktype);
 		return;// SqueezeBox.call(SqueezeBox, true);
 	}
 	if (document.adminForm.boxchecked.value!=1) {
@@ -161,22 +163,40 @@ function translateItem(){
 		if (checkboxes[i].checked){
 			//alert("you want to edit item "+(i+1)+" content item id = "+checkboxes[i].value);
 			// second part is language id 1=Cymraeg,5=German etc!
-			<?php
-			global $mosConfig_live_site;
-			$targetURL = JURI::root()."administrator/index2.php?task=translate.edit&boxchecked=1&direct=1&catid=\"+option+\"&cid[]=0|\"+checkboxes[i].value+\"|\"+langCode+\"&option=com_joomfish";
-			?>
-			SqueezeBox.initialize({});
-			SqueezeBox.setOptions(SqueezeBox.presets,{'handler': 'iframe','size': {'x': 1000, 'y': 600},'closeWithOverlay': 0});
-			SqueezeBox.url = "<?php echo $targetURL;?>";
-		
-			SqueezeBox.setContent('iframe', SqueezeBox.url );
+		<?php
+		$targetURL = JURI::root()."administrator/index2.php?task=translate.edit&boxchecked=1&catid=\"+option+\"&cid[]=0|\"+checkboxes[i].value+\"|\"+langCode+\"&option=com_joomfish";
+		?>
+			targetURL = "<?php echo $targetURL;?>";
+			openTranslationDialog(targetURL, linktype);
 			return;// SqueezeBox.call(SqueezeBox, true);
 		}
 	}
 	alert("There was a problem");
 }
+function openTranslationDialog(target, linktype) {
+	switch (linktype) {
+	case 'newwindow':
+		target += '&direct=2';
+		window.open(target,"translation","innerwidth=800,innerheight=500,menubar=yes,status=yes,location=yes,resizable=yes,scrollbars=yes");
+		break;
+
+	case 'samewindow':
+		document.location.replace(target);
+		break;
+
+	case 'squeezebox':
+	default:
+		target += '&direct=1';
+		SqueezeBox.initialize({});
+		SqueezeBox.setOptions(SqueezeBox.presets,{'handler': 'iframe','size': {'x': 1000, 'y': 600},'closeWithOverlay': 0});
+		SqueezeBox.url = target;
+
+		SqueezeBox.setContent('iframe', SqueezeBox.url );
+	}
+	return;// SqueezeBox.call(SqueezeBox, true);
+}
 </script>
-<a href="javascript:translateItem()" title="<?php echo JText::_('translate this item'); ?>"><?php echo JText::_('translate to'); ?></a>:&nbsp;
+<a href="javascript:translateItem('<?php echo $linkType;?>')" title="<?php echo JText::_('translate this item'); ?>"><?php echo JText::_('translate to'); ?></a>:&nbsp;
 <?php echo $langlist; ?>
 </span>
 <?php

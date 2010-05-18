@@ -25,7 +25,7 @@
  * The "GNU General Public License" (GPL) is available at
  * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * -----------------------------------------------------------------------------
- * $Id: jfrouter.php 1251 2009-01-07 11:07:01 apostolov Exp $
+ * $Id: jfrouter.php 1395 2009-08-20 09:21:32Z geraint $
  * @package joomfish
  * @subpackage jfrouter
  * @version 2.0
@@ -310,6 +310,7 @@ class plgSystemJFRouter extends JPlugin{
 			$client_lang = ($jfLang->shortcode!='') ? $jfLang->shortcode : $jfLang->iso;
 		}
 
+		// TODO set the cookie domain so that it works for all subdomains
 		if ($enableCookie){
 			setcookie( "lang", "", time() - 1800, "/" );
 			setcookie( "jfcookie", "", time() - 1800, "/" );
@@ -392,6 +393,8 @@ class plgSystemJFRouter extends JPlugin{
 			$langs = $jfm->getLanguagesIndexedById();
 			foreach ($rawsubdomains as $domain) {
 				list($langid,$domain) = split("::",$domain,2);
+				// if you have inactive languages and are not logged in then skip inactive language
+				if (!array_key_exists($langid, $langs)) continue;
 				$domain = strtolower(str_replace("http://","",$domain));
 				$domain = str_replace("https://","",$domain);
 				$domain = preg_replace("#/$#","",$domain);

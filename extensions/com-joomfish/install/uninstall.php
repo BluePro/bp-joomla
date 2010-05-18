@@ -1,6 +1,6 @@
 <?php
 /**
- * @version		$Id: controller.php 33 2007-12-19 10:26:16Z andrew.eddie $
+ * @version		$Id: uninstall.php 1344 2009-06-18 11:50:09Z akede $
  * @package		jXZine
  * @copyright	2005-2008 New Life in IT Pty Ltd.  All rights reserved.
  * @license		GNU General Public License

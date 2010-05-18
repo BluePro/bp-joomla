@@ -2,12 +2,12 @@
 <install version="1.5" type="plugin" group="system">
 	<name>Joomfish - Abstraction Layer</name>
 	<license>http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL</license>
-	<author>Alex Kempkens, Gerain Edwards</author>
+	<author>Joom!Fish Project</author>
 	<authorEmail>support@joomfish.net</authorEmail>
 	<authorUrl>http://www.joomfish.net</authorUrl>
-	<creationDate>31 March 2009</creationDate>
+	<creationDate>24 October 2009</creationDate>
 	<copyright>Copyright (C) 2003-2009 Think Network GmbH, Munich. All rights reserved.</copyright>
-	<version>2.0.3</version>
+	<version>2.0.4</version>
 	<description>When activated this bot ensures that your system is automatically translating all database queries.</description>
 	<files>
 		<filename plugin="jfdatabase">jfdatabase.php</filename>

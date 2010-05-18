@@ -25,7 +25,7 @@
  * The "GNU General Public License" (GPL) is available at
  * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * -----------------------------------------------------------------------------
- * $Id: cpanel.php 1277 2009-03-16 17:27:45Z geraint $
+ * $Id: cpanel.php 1344 2009-06-18 11:50:09Z akede $
  * @package joomfish
  * @subpackage Models
  *

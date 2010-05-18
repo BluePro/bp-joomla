@@ -25,7 +25,7 @@
  * The "GNU General Public License" (GPL) is available at
  * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * -----------------------------------------------------------------------------
- * $Id: COPYRIGHT.php 1251 2009-01-06 18:33:02Z apostolov $
+ * $Id: COPYRIGHT.php 1386 2009-07-22 08:22:17Z akede $
  */
 
 // no direct access
@@ -35,9 +35,9 @@ defined( 'JPATH_BASE' ) or die( 'Restricted access' );
 Joom!Fish is based on source Think Network develops and provides under an
 Open Source license. For details about the license please the the LICENSE.php file
 included in this distribution.
-The work is copyrighted by any or all of the following, from 2003 through 2008:
+The work is copyrighted by any or all of the following, from 2003 through 2009:
 * Alex Kempkens, Think Network GmbH, Munich
-* Geraint Edwards
+* Geraint Edwards, GWE Systems Ltd., Ruthin
 * Ivo Apostolov
 * Robin Muilwij
 
@@ -46,11 +46,11 @@ the following copyright notices:
 
 UI translations
 ---
-Bulgarian				Copyright:	Ivo Apostolov <ivo@joomfish.net>
-German					Copyright:	Alex Kempkens <alex@joomfish.net>
-Hungarian				Copyright:	Jozsef Tamas Herczeg <info@joomlandia.eu>
-Italian					Copyright:	Marco Bertolini <vanbertol@gmail.com>
-Norwegian				Copyright:	Rune Rasmussen <nospam@vannavalen.no>
+Bulgarian				Copyright:	Ivo Apostolov
+German					Copyright:	Alex Kempkens
+Hungarian				Copyright:	Jozsef Tamas Herczeg
+Italian					Copyright:	Marco Bertolini
+Norwegian				Copyright:	Rune Rasmussen
 Spanish					Copyright:	Victor Brown
 Thai					Coypright:  Akarawuth Tamrareang
 Turkish					Copyright:	Aytug Akar

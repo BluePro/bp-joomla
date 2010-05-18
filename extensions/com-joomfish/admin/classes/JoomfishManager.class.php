@@ -25,7 +25,7 @@
  * The "GNU General Public License" (GPL) is available at
  * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * -----------------------------------------------------------------------------
- * $Id: JoomfishManager.class.php 1251 2009-01-07 06:29:53Z apostolov $
+ * $Id: JoomfishManager.class.php 1420 2009-10-25 17:02:02Z akede $
  * @package joomfish
  * @subpackage classes
  *
@@ -49,10 +49,10 @@ defined( '_JEXEC' ) or die( 'Restricted access' );
  * @author Alex Kempkens <joomfish@thinknetwork.com>
 */
 class JoomFishManager {
-	/** Array of all known content elements and the reference to the XML file */
+	/** @var array of all known content elements and the reference to the XML file */
 	var $_contentElements;
 
-	/** string Content type which can use default values */
+	/** @var string Content type which can use default values */
 	var $DEFAULT_CONTENTTYPE="content";
 
 	/** @var config Configuration of the map */
@@ -60,15 +60,26 @@ class JoomFishManager {
 
 	/** @var Component config */
 	var $componentConfig= null;
-	
+
 	/**	PrimaryKey Data */
 	var $_primaryKeys = null;
 
+	/** @var array for all system known languages */
 	var $allLanguagesCache=array();
+
+	/** @var array for all languages listed by shortcode */
 	var $allLanguagesCacheByShortcode=array();
+
+	/** @var array for all languages listed by ID */
 	var $allLanguagesCacheByID=array();
+
+	/** @var array for all active languages */
 	var $activeLanguagesCache=array();
+
+	/** @var array for all active languages listed by shortcode */
 	var $activeLanguagesCacheByShortcode=array();
+
+	/** @var array for all active languages listed by ID */
 	var $activeLanguagesCacheByID=array();
 
 	/** Standard constructor */
@@ -76,27 +87,15 @@ class JoomFishManager {
 		include_once(JOOMFISH_ADMINPATH .DS. "models".DS."ContentElement.php");
 
 		// now redundant
-		//$this->_loadConfiguration( $adminPath );
-		
-		//$this->_loadContentElements( $adminPath );
 		$this->_loadPrimaryKeyData();
 
 		$this->activeLanguagesCache = array();
+		$this->activeLanguagesCacheByShortcode = array();
 		$this->activeLanguagesCacheByID = array();
 		// get all languages and split out active below
 		$langlist = $this->getLanguages(false);
-		if (count($langlist)>0){
-			foreach ($langlist as $alang){
-				if ($alang->active){
-					$this->activeLanguagesCache[$alang->code] = $alang;
-					$this->activeLanguagesCacheByID[$alang->id] = $alang;
-					$this->activeLanguagesCacheByShortcode[$alang->shortcode] = $alang;
-				}
-				$this->allLanguagesCache[$alang->code] = $alang;
-				$this->allLanguagesCacheByID[$alang->id] = $alang;
-				$this->allLanguagesCacheByShortcode[$alang->shortcode] = $alang;
-			}
-		}
+		$this->_cacheLanguages($langlist);
+
 		// Must get the config here since if I do so dynamically it could be within a translation and really mess things up.
 		$this->componentConfig =& JComponentHelper::getParams( 'com_joomfish' );
 	}
@@ -109,25 +108,29 @@ class JoomFishManager {
 		return $instance;
 	}
 
-	/** Loading of component configuration
-	 * deprecated
-	*/
-	/*	
-	function _loadConfiguration() {
-		$this->_config = new stdClass();
-		$config =& JComponentHelper::getParams( 'com_joomfish' );
-		//$this->_config->componentAdminLang = $config->getValue("componentAdminLang");
-		$this->_config->noTranslation = $config->getValue("noTranslation");
-		$this->_config->defaultText = $config->getValue("defaultText");
-		$this->_config->frontEndPublish = $config->getValue("frontEndPublish");
-		$this->_config->frontEndPreview = $config->getValue("frontEndPreview");
-		$this->_config->storageOfOriginal = $config->getValue("storageOfOriginal");
-		$this->_config->showCPanels = $config->getValue("showCPanels");
-		$this->_config->mbfupgradeDone = $config->getValue("mbfupgradeDone");
-		$this->_config->qacaching = $config->getValue("qacaching");
-		$this->_config->qalogging = $config->getValue("qalogging");
+	/**
+	 * Cache languages in instance
+	 * This method splits the system relevant languages in various caches for faster access
+	 * @param array of languages to be stored
+	 */
+	function _cacheLanguages($langlist) {
+		$this->activeLanguagesCache = array();
+		$this->activeLanguagesCacheByShortcode = array();
+		$this->activeLanguagesCacheByID = array();
+
+		if (count($langlist)>0){
+			foreach ($langlist as $alang){
+				if ($alang->active){
+					$this->activeLanguagesCache[$alang->code] = $alang;
+					$this->activeLanguagesCacheByID[$alang->id] = $alang;
+					$this->activeLanguagesCacheByShortcode[$alang->shortcode] = $alang;
+				}
+				$this->allLanguagesCache[$alang->code] = $alang;
+				$this->allLanguagesCacheByID[$alang->id] = $alang;
+				$this->allLanguagesCacheByShortcode[$alang->shortcode] = $alang;
+			}
+		}
 	}
-	*/
 
 	/**
 	 * Load Primary key data from database
@@ -161,46 +164,6 @@ class JoomFishManager {
 	}
 
 	/**
-	 * Saving of the file based configurations
-	 */
-	/*
-	deprecated
-	function saveConfiguration () {
-		global $option;
-
-		$configfile = "$this->_adminPath/config.joomfish.php";
-		@chmod ($configfile, 0766);
-		$permission = is_writable($configfile);
-		if (!$permission) {
-			$mosmsg = JText::_('CONFIG_WRITE_ERROR');
-			return false;
-		}
-
-		$config = "<?php\n";
-		$config .= '$joomfish_componentAdminLang =   "' .$this->_config->componentAdminLang. '";			// Which language the component admini should have' ."\n";
-		$config .= '$joomfish_noTranslation = ' .$this->_config->noTranslation. ';			// What to show when no translation available' ."\n";
-		$config .= '$joomfish_defaultText = "' .$this->_config->defaultText. '";		// Standard text if no translation - only for certain content elements!' ."\n";
-		$config .= '$joomfish_frontEndPublish = "' .$this->_config->frontEndPublish. '";			// Whether publishers and above can publish from the frontend' ."\n";
-		$config .= '$joomfish_frontEndPreview = "' .$this->_config->frontEndPreview. '";			// Whether managers and above can see inactive languages in the frontend' ."\n";
-		$config .= '$joomfish_storageOfOriginal = "' .$this->_config->storageOfOriginal. '";			// md5 := only md5 values (default); both := md5 and clean text' ."\n";
-		$config .= '$joomfish_showCPanels = "' .$this->_config->showCPanels. '";			// binary encoded information which panles to show' ."\n";
-		$config .= '$joomfish_mbfupgradeDone = "' .$this->_config->mbfupgradeDone. '";			// Flag showing if the upgrade was done already. modify manually if you need to do the upgrade again' ."\n";
-		$config .= '$joomfish_qacaching = "' .$this->_config->qacaching. '";			// Flag showing if experimental query analysis caching is enabled' ."\n";
-		$config .= '$joomfish_qalogging = "' .$this->_config->qalogging. '";			// Flag showing if query analysis logging is enabled' ."\n";
-		$config .= "?>";
-
-		if ($fp = fopen("$configfile", "w")) {
-			fputs($fp, $config, strlen($config));
-			fclose ($fp);
-		}
-		$this->_loadConfiguration( $this->_adminPath );
-
-		return true;
-	}
-	*/
-
-
-	/**
 	 * Loading of related XML files
 	 *
 	 * TODO This is very wasteful of processing time so investigate caching some how
@@ -222,7 +185,7 @@ class JoomFishManager {
 				$xmlDoc->resolveErrors( true );
 				if ($xmlDoc->loadXML(JOOMFISH_ADMINPATH . "/contentelements/" . $file, false, true )) {
 					$element = &$xmlDoc->documentElement;
-					if ($element->getTagName() == 'joomfish') {
+					if (isset($element) && $element->getTagName() == 'joomfish') {
 						if ( $element->getAttribute('type')=='contentelement' ) {
 							$nameElements =& $element->getElementsByTagName('name', 1);
 							$nameElement =& $nameElements->item(0);
@@ -319,7 +282,11 @@ class JoomFishManager {
 	 *
 	 * @return	Array of languages
 	 */
-	function getActiveLanguages() {
+	function getActiveLanguages($cacheReload=false) {
+		if( isset($this) && $cacheReload) {
+			$langList = $this->getLanguages();
+			$this->_cacheLanguages($langList);
+		}
 		/* if signed in as Manager or above include inactive languages too */
 		$user =& JFactory::getUser();
 		if ( isset($this) && $this->getCfg("frontEndPreview") && isset($user) && (strtolower($user->usertype)=="manager" || strtolower($user->usertype)=="administrator" || strtolower($user->usertype)=="super administrator")) {
@@ -348,7 +315,7 @@ class JoomFishManager {
 		$sql .= ' ORDER BY ordering';
 
 		$db->setQuery(  $sql );
-		$rows = $db->loadObjectList('id',false);
+		$rows = $db->loadObjectList('id');
 		// We will need this class defined to popuplate the table
 		include_once(JOOMFISH_ADMINPATH .DS. 'tables'.DS.'JFLanguage.php');
 		if( $rows ) {
@@ -379,7 +346,7 @@ class JoomFishManager {
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Fetches full langauge data for given code from language cache
 	 *
@@ -397,7 +364,7 @@ class JoomFishManager {
 		return false;
 	}
 
-	
+
 	function getLanguagesIndexedByCode($active=false){
 		if ($active){
 			if (isset($this) && isset($this->activeLanguagesCache))
@@ -472,29 +439,29 @@ class JoomFishManager {
 		if (isset($this->_cache[$lang])){
 			return $this->_cache[$lang];
 		}
-		
+
 		jimport('joomla.cache.cache');
 
 		if (version_compare(phpversion(),"5.0.0",">=")){
 			// Use new Joomfish DB Cache Storage Handler but only for php 5
 			$storage = 'jfdb';
-			// Make sure we have loaded the cache stroage handler 
+			// Make sure we have loaded the cache stroage handler
 			JLoader::import('JCacheStorageJFDB', dirname( __FILE__ ));
 		}
 		else {
 			$storage = 'file';
 		}
-		
+
 		$options = array(
 			'defaultgroup' 	=> "joomfish-".$lang,
-			'cachebase' 	=> $conf->getValue('config.cache_path'),		
+			'cachebase' 	=> $conf->getValue('config.cache_path'),
 			'lifetime' 		=> $this->getCfg("cachelife",1440) * 60,	// minutes to seconds
 			'language' 		=> $conf->getValue('config.language'),
 			'storage'		=> $storage
 		);
-		
+
 		$this->_cache[$lang] =& JCache::getInstance( "callback", $options );
-		return $this->_cache[$lang];		
+		return $this->_cache[$lang];
 	}
 
 }

@@ -25,7 +25,7 @@
  * The "GNU General Public License" (GPL) is available at
  * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * -----------------------------------------------------------------------------
- * $Id: JCacheStorageJFDB.php 1251 2009-01-07 06:29:53Z apostolov $
+ * $Id: JCacheStorageJFDB.php 1344 2009-06-18 11:50:09Z akede $
  * @package joomfish
  * @subpackage cache
  *
@@ -49,8 +49,8 @@ JLoader::register('JCacheStorage' , JPATH_LIBRARIES .DS. 'joomla'.DS.'cache' .DS
 class JCacheStorageJfdb extends JCacheStorage
 {
 
-	private $db;
-	private $profile_db;
+	var $db;
+	var $profile_db;
 
 	
 	/* Constructor

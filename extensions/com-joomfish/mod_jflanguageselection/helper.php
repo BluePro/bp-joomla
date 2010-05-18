@@ -25,7 +25,7 @@
  * The "GNU General Public License" (GPL) is available at
  * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * -----------------------------------------------------------------------------
- * $Id: helper.php 1251 2009-01-07 06:29:53Z apostolov $
+ * $Id: helper.php 1416 2009-10-23 21:33:17Z akede $
  * @package joomfish
  * @subpackage mod_jflanguageselection
  *
@@ -112,12 +112,13 @@ if( !defined( 'JFMODULE_CLASS' ) ) {
 
 			// set lang to correct value
 			$vars['lang']=$code;
+			$filter = & JFilterInput::getInstance();
 
 			foreach ($vars as $k=>$v) {
 				if( $hrefVars != "" ) {
 					$hrefVars .= "&";
 				}
-				$hrefVars .= $k.'='.$v;
+				$hrefVars .= $k.'='.$filter->clean($v);
 			}
 
 			// Add the existing variables
@@ -296,6 +297,7 @@ if( !defined( 'JFMODULE_CLASS' ) ) {
 
 		function _setupMenuRoutes(&$menus) {
 			if($menus) {
+				uasort($menus,array("JFModuleHTML","_menusort"));
 				// first pass translate the route
 				foreach($menus as $key => $menu)
 				{
@@ -330,6 +332,12 @@ if( !defined( 'JFMODULE_CLASS' ) ) {
 					parse_str($url, $menus[$key]->query);
 				}
 			}
+		}
+		
+		function _menusort(&$a, $b){
+			if ($a->sublevel==$b->sublevel) return 0;
+			return ($a->sublevel>$b->sublevel)?+1:-1;
+			
 		}
 	}
 }
