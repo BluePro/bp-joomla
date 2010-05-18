@@ -1,0 +1,52 @@
+************ 2009/05 : !joomlacomment 4.0 beta1
++ added support for akismet - thanks to Marcofolio.net
++ added support for gravatar - thanks to Marcofolio.net
+# fixed bug with date display and user time offset #47
+# fixed problems with utf8 characters
+# fixed wrong link to cb profiles
+# fixed bug #46 - unable to include or exlude mmsblog categories
+# fixed bug #45 - no more hardcoded strings in the template
+# missing input website field with the akostyle template - http://www.compojoom.com/forum.html?func=view&catid=10&id=4218
+# fixed small security hole - user were able to post comments even if only registered was set to yes
++ mouse over emoticons show the BB code - thanks to JonusC
++ added new emoticon set - thanks to JonusC for sharing!
+#+ added new function for word wrapping
+# removed the default code that was making calls to openx.org in alpha3
+# advertisement code is now stored in the database
+# added a lot of CSS fixes to the modern template
+# removed all hardcoded whitespaces - using only css now!
+# added title to the ubb img code
+# manage comment screen was showing all the comment instead of the first 200 symbols
+
+$ added kurdish language file - thanks to Welat!
+$ added mongolian language file - thanks to Almas!
+$ added uzbek language file - thanks to Ulugov Anvar!
+$ replaced brazilian_portuguese with the updated version of Ronildo Costa
+$ added latvian language file - thanks to Imants Horsts!
+$ added vietnamese frontend and backend language files - thanks to Khac Vinh Pham!
+$ updated czeck language file - thanks to Jan Vodolan!
+$ added estonian frontend and backend language files - thanks to Bil Blo!
+$ changed chinese_simplified and chinese_traditional to simplified_chinese and traditional_chinese - thanks to baijianpeng!
+$ added chinese simplified and traditional backend files - thanks to baijianpeng!
+$ added swedish language file - thanks to elma!
+$ added ukrainian language file - thanks to lavva!
+$ updated germani and germanf language files - thanks to Stroganoff
+
+************ 2009/04 : !jocomment 4.0 alpha 3
+# fixed a bug with mysqli on some configurations
+# fixed a bug with multiple css inclusion in the head #6
+# fixed several SEF url issues
+# quotes and apostrophes not escaped correctly # 35
+# fixed pagination issue #39
+# fixed error with MTdefault-emotop template #4
+# fixed problems with utf-8 characters #44
+
++ added new template fixing comment indent problems (the schema to be used from
+now on)
++ added mmsblog plugin
+
+************ 2009/02 : !jocomment 4.0 alpha 2
+- compatible with joomla 1.5
+- changed the functions for the length parameter - now UTF-8 aware.
+- several lists fixes for backend
+- added a table class folder

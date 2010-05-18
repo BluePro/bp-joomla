@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+	<install method="upgrade" version="1.5" client="site" type="language">
+	<name>Phoca Gallery Image Module</name>
+	<creationDate>10/01/2010</creationDate>
+	<author>Fenris</author>
+	<authorEmail>fenris@fenris.cz</authorEmail>
+	<authorUrl>www.fenris.cz</authorUrl>
+	<copyright>Copyright by Fenris</copyright>
+	<description>Čeština pro Phoca Gallery Image Module 2.6.2</description>
+	<version>2.6.2</version>
+	<tag>cs-CZ</tag>
+	
+    <files>
+        <filename>cs-CZ.mod_phocagallery_image.ini</filename>
+    </files>
+
+</install>
