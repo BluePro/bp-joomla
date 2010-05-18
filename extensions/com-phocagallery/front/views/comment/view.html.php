@@ -12,6 +12,7 @@ defined('_JEXEC') or die();
 jimport( 'joomla.application.component.view');
 phocagalleryimport('phocagallery.comment.comment');
 phocagalleryimport('phocagallery.comment.commentimage');
+phocagalleryimport( 'phocagallery.picasa.picasa');
 class PhocaGalleryViewComment extends JView
 {
 	function display($tpl = null) {
@@ -21,7 +22,7 @@ class PhocaGalleryViewComment extends JView
 		$document	= & JFactory::getDocument();		
 		$params		= &$mainframe->getParams();
 		$user 		= &JFactory::getUser();
-		$uri 				= &JFactory::getURI();
+		$uri 		= &JFactory::getURI();
 		
 		// PLUGIN WINDOW - we get information from plugin
 		$get				= '';
@@ -37,6 +38,11 @@ class PhocaGalleryViewComment extends JView
 		$tmpl['externalcommentsystem'] 	= $params->get( 'external_comment_system', 0 );
 		$tmpl['gallerymetakey'] 		= $params->get( 'gallery_metakey', '' );
 		$tmpl['gallerymetadesc'] 		= $params->get( 'gallery_metadesc', '' );
+		$tmpl['altvalue']		 		= $params->get( 'alt_value', 1 );
+		$tmpl['largewidth'] 			= $params->get( 'large_image_width', 640 );
+		$tmpl['largeheight'] 			= $params->get( 'large_image_height', 480 );
+		$tmpl['picasa_correct_width_l']	= (int)$params->get( 'large_image_width', 640 );	
+		$tmpl['picasa_correct_height_l']= (int)$params->get( 'large_image_height', 480 );
 		
 		if ($tmpl['gallerymetakey'] != '') {
 			$mainframe->addMetaTag('keywords', $tmpl['gallerymetakey']);
@@ -107,7 +113,8 @@ class PhocaGalleryViewComment extends JView
 			}
 		
 			if ($rightDisplay == 0) {
-				$mainframe->redirect('index.php?option=com_user&view=login', JText::_("ALERTNOTAUTH"));
+				$tmpl['pl']		= 'index.php?option=com_user&view=login&return='.base64_encode($uri->toString());
+				$mainframe->redirect(JRoute::_($tmpl['pl'], false), JText::_("ALERTNOTAUTH"));
 				exit;
 			}
 			// - - - - - - - - - - - - - - - - - - - - 
@@ -116,8 +123,42 @@ class PhocaGalleryViewComment extends JView
 			$tmpl['backbutton'] = '<div><a href="'.JRoute::_('index.php?option=com_phocagallery&view=category&id='. $tmpl['catid'].'&Itemid='. JRequest::getVar('Itemid', 0, '', 'int')).'"'
 				.' title="'.JText::_( 'Back to category' ).'">'
 				. JHTML::_('image', 'components/com_phocagallery/assets/images/icon-up-images.' . $tmpl['formaticon'], JText::_( 'Back to category' )).'</a></div>';
-
-			$item->linkthumbnailpath= PhocaGalleryImageFront::displayCategoryImageOrNoImage($item->filename, 'large');
+				
+			// Get file thumbnail or No Image
+			$item->filenameno		= $item->filename;
+			$item->filename			= PhocaGalleryFile::getTitleFromFile($item->filename, 1);
+			$item->filesize			= PhocaGalleryFile::getFileSize($item->filenameno);
+			$altValue				= PhocaGalleryRenderFront::getAltValue($tmpl['altvalue'], $item->title, $item->description, $item->metadesc);
+			$item->altvalue			= $altValue;
+			$realImageSize			= '';
+			if (isset($item->extid) && $item->extid != '') {
+				$item->extl			=	$item->extl;
+				$item->exto			=	$item->exto;
+				$realImageSize 		= PhocaGalleryImage::getRealImageSize($item->extl, '', 1);
+				$item->imagesize 	= PhocaGalleryImage::getImageSize($item->exto, 1, 1);
+				if ($item->extw != '') {
+					$extw 		= explode(',',$item->extw);
+					$item->extw	= $extw[0];
+				}
+				$correctImageRes 		= PhocaGalleryPicasa::correctSizeWithRate($item->extw, $item->exth, $tmpl['picasa_correct_width_l'], $tmpl['picasa_correct_height_l']);
+				$item->linkimage		= JHTML::_( 'image', $item->extl, $item->altvalue, array('width' => $correctImageRes['width'], 'height' => $correctImageRes['height']));
+				$item->realimagewidth 	= $correctImageRes['width'];
+				$item->realimageheight	= $correctImageRes['height'];
+				
+			} else {
+				$item->linkthumbnailpath	= PhocaGalleryImageFront::displayCategoryImageOrNoImage($item->filenameno, 'large');
+				$item->linkimage			= JHTML::_( 'image.site', $item->linkthumbnailpath, '', '', '', $item->altvalue);
+				$realImageSize 				= PhocaGalleryImage::getRealImageSize ($item->filenameno);
+				$item->imagesize			= PhocaGalleryImage::getImageSize($item->filenameno, 1);
+				if (isset($realImageSize['w']) && isset($realImageSize['h'])) {
+					$item->realimagewidth		= $realImageSize['w'];
+					$item->realimageheight		= $realImageSize['h'];
+				} else {
+					$item->realimagewidth	 	= $tmpl['largewidth'];
+					$item->realimageheight		= $tmpl['largeheight'];
+				}
+			}
+			
 			$this->assignRef( 'item', $item );
 		}
 		

@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<install method="upgrade" client="both" type="language" version="1.5.0">
+	<name>Phoca Gallery</name>
+	<creationDate>10/01/2010</creationDate>
+	<author>Fenris</author>
+	<authorEmail>fenris@fenris.cz</authorEmail>
+	<authorUrl>www.fenris.cz</authorUrl>
+	<copyright>Fenris</copyright>
+	<license>http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL</license>
+	<description>Čeština pro Phoca Gallery 2.6.2</description>
+	<version>2.6.2</version>
+	<tag>cs-CZ</tag>
+
+  <administration>
+    <files>
+        <filename>cs-CZ.com_phocagallery.ini</filename>
+        <filename>cs-CZ.com_phocagallery.menu.ini</filename>
+    </files>
+  </administration>
+  
+  <site>
+    <files>
+        <filename>cs-CZ.com_phocagallery.ini</filename>
+        <filename>cs-CZ.com_phocagallery.menu.ini</filename>
+    </files>
+  </site>
+  
+  
+</install>

@@ -9,30 +9,35 @@
 	margin:0;
 	border:0px;
 }
-
+#phocagallery-pane .phocagallery-box-file,
+#phocagallery .phocagallery-box-file,
 .phocagallery-box-file {
 	position:relative;
 	float:left;
 	text-align:center;
 	/*overflow:visible;*/
 }
-
+#phocagallery-pane .phocagallery-box-file-first,
+#phocagallery .phocagallery-box-file-first,
 .phocagallery-box-file-first {
 	
 	overflow: hidden;
 	display: table;
 	vertical-align:middle;
 }
-
+#phocagallery-pane .phocagallery-box-file-second,
+#phocagallery .phocagallery-box-file-second,
 .phocagallery-box-file-second {
 	display: table-cell;
 	vertical-align: middle;
 }
-
+#phocagallery-pane .phocagallery-box-file-third,
+#phocagallery .phocagallery-box-file-third,
 .phocagallery-box-file-third {
 	text-align:center;
 }
 
+#phocagallery-pane a img,
 #phocagallery a img,
 #phocagallery-statistics a img{
 	border: 0px;
@@ -60,9 +65,14 @@
 	padding:0px;
 }
 
-.phocagallery-box-file:hover, .phocagallery-box-file.hover  {
-	border:1px solid #135cae;
-	background:#f5f5f5;
+#phocagallery .phocagallery-box-file:hover,
+#phocagallery .phocagallery-box-file.hover,
+#phocagallery-pane .phocagallery-box-file:hover,
+#phocagallery-pane .phocagallery-box-file.hover,
+.phocagallery-box-file:hover, 
+.phocagallery-box-file.hover  {
+	/*border:1px solid #135cae;
+	background:#f5f5f5;*/
 	text-decoration:none;
 }
 
@@ -120,10 +130,12 @@
 }
 
 #phocagallery .main-switch-image {
-	margin:0px;padding:7px 5px 7px 5px;margin-bottom:15px;
+	margin:0px;
+	padding:7px 5px 7px 5px;
+	margin-bottom:15px;
 }
 #phocagallery .main-switch-image-table {
-	border:1px solid #c2c2c2;
+	/*border:1px solid #c2c2c2;*/
 }
 
 #loading-label,
@@ -170,7 +182,8 @@
 	list-style-type:none;
 }
 
-
+#phocagallery .star-rating,
+#phocagallery-pane .star-rating,
 .star-rating{
 	list-style:none;
 	margin: 0px;
@@ -182,7 +195,8 @@
 	position: relative;
 	background: url(images/icon-voting.gif) top left repeat-x;
 }
-
+#phocagallery .star-rating li,
+#phocagallery-pane .star-rating li,
 .star-rating li{
 	list-style-type:none;
 	padding:0px;
@@ -191,7 +205,8 @@
 	float: left;
 	/* */
 }
-
+#phocagallery .star-rating li a,
+#phocagallery-pane .star-rating li a,
 .star-rating li a{
 	display:block;
 	width:22px;
@@ -202,41 +217,65 @@
 	position: absolute;
 	padding: 0px;
 }
+#phocagallery .star-rating li a:hover,
+#phocagallery-pane .star-rating li a:hover,
 .star-rating li a:hover{
 	background: url(images/icon-voting.gif) left center;
 	z-index: 2;
 	left: 0px;
 }
+#phocagallery .star-rating a.star1,
+#phocagallery-pane .star-rating a.star1,
 .star-rating a.star1{
 	left: 0px;
 }
+#phocagallery .star-rating a.star1:hover,
+#phocagallery-pane .star-rating a.star1:hover,
 .star-rating a.star1:hover{
 	width:22px;
 }
+#phocagallery .star-rating a.stars2,
+#phocagallery-pane .star-rating a.stars2,
 .star-rating a.stars2{
 	left:22px;
 }
+#phocagallery .star-rating a.stars2:hover,
+#phocagallery-pane .star-rating a.stars2:hover,
 .star-rating a.stars2:hover{
 	width: 44px;
 }
+#phocagallery .star-rating a.stars3,
+#phocagallery-pane .star-rating a.stars3,
 .star-rating a.stars3{
 	left: 44px;
 }
+#phocagallery .star-rating a.stars3:hover,
+#phocagallery-pane .star-rating a.stars3:hover,
 .star-rating a.stars3:hover{
 	width: 66px;
 }
+#phocagallery .star-rating a.stars4,
+#phocagallery-pane .star-rating a.stars4,
 .star-rating a.stars4{
 	left: 66px;
 }
+#phocagallery .star-rating a.stars4:hover,
+#phocagallery-pane .star-rating a.stars4:hover,
 .star-rating a.stars4:hover{
 	width: 88px;
 }
+#phocagallery .star-rating a.stars5,
+#phocagallery-pane .star-rating a.stars5,
 .star-rating a.stars5{
 	left: 88px;
 }
+#phocagallery .star-rating a.stars5:hover,
+#phocagallery-pane .star-rating a.stars5:hover,
 .star-rating a.stars5:hover{
 	width: 110px;
 }
+#phocagallery .star-rating li.current-rating,
+#phocagallery-pane .star-rating li.current-rating,
 .star-rating li.current-rating{
 	background: url(images/icon-voting.gif) left bottom;
 	position: absolute;
@@ -248,6 +287,7 @@
 }
 
 /* Voting small */
+#phocagallery .star-rating-small,
 .star-rating-small{
 	list-style:none;
 	margin: 0px;
@@ -259,7 +299,7 @@
 	position: relative;
 	background: url(images/icon-voting-small.gif) top left repeat-x;
 }
-
+#phocagallery .star-rating-small li,
 .star-rating-small li{
 	list-style-type:none;
 	padding:0px;
@@ -269,6 +309,7 @@
 	/* */
 }
 
+#phocagallery .star-rating-small li a,
 .star-rating-small li a{
 	display:block;
 	width:16px;
@@ -279,41 +320,53 @@
 	position: absolute;
 	padding: 0px;
 }
+#phocagallery .star-rating-small li a:hover,
 .star-rating-small li a:hover{
 	background: url(images/icon-voting-small.gif) left center;
 	z-index: 2;
 	left: 0px;
 }
+#phocagallery .star-rating-small a.star1,
 .star-rating-small a.star1{
 	left: 0px;
 }
+#phocagallery .star-rating-small a.star1:hover,
 .star-rating-small a.star1:hover{
 	width:16px;
 }
+#phocagallery .star-rating-small a.stars2,
 .star-rating-small a.stars2{
 	left:16px;
 }
+#phocagallery .star-rating-small a.stars2:hover,
 .star-rating-small a.stars2:hover{
 	width: 32px;
 }
+#phocagallery .star-rating-small a.stars3,
 .star-rating-small a.stars3{
 	left: 32px;
 }
+#phocagallery .star-rating-small a.stars3:hover,
 .star-rating-small a.stars3:hover{
 	width: 48px;
 }
+#phocagallery .star-rating-small a.stars4,
 .star-rating-small a.stars4{
 	left: 48px;
 }
+#phocagallery .star-rating-small a.stars4:hover,
 .star-rating-small a.stars4:hover{
 	width: 64px;
 }
+#phocagallery  .star-rating-small a.stars5,
 .star-rating-small a.stars5{
 	left: 64px;
-}
+} 
+#phocagallery  .star-rating-small a.stars5:hover,
 .star-rating-small a.stars5:hover{
 	width: 80px;
 }
+#phocagallery .star-rating-small li.current-rating,
 .star-rating-small li.current-rating{
 	background: url(images/icon-voting-small.gif) left bottom;
 	position: absolute;
@@ -586,9 +639,17 @@ div.current dd {
 #phocagallery-upload  table.adminlist td.order span { float: left; display: block; width: 20px; text-align: center; }
 
 
-#phocagallery .pgcenter {
+#phocagallery .pgcenter,
+#phocagallery-upload .pgcenter,
+#phocagallery-subcategory-creating .pgcenter {
 	text-align:center;
 	vertical-align:middle;
+}
+#phocagallery .pginline,
+#phocagallery-upload .pginline,
+#phocagallery-subcategory-creating .pginline {
+	margin:0 10px 0 10px;
+	display:inline;
 }
 
 .bgPhocaClass {

@@ -60,6 +60,7 @@ function PhocaGalleryBuildRoute(&$query)
 				}
 				else if (isset($item->query['view']) && $item->query['view'] == 'category'
 					&& isset($query['view']) && ($query['view'] != 'detail' || $query['view'] != 'map' || $query['view'] != 'info' || $query['view'] != 'comment')
+					/*&& isset($item->query['catid']) && $item->query['catid'] == $query['catid']) {*/
 					&& isset($item->query['catid']) && $item->query['catid'] == $query['catid']) {
 						$itemid	= $item->id;
 				}
@@ -229,7 +230,7 @@ function PhocaGalleryParseRoute($segments) {
 		} else {
 			$vars['view'] = 'category';
 		}
-		$vars['catid']	= $segments[$count - 4];
+		$vars['catid']	= $segments[$count - 2];//-4
 		$vars['id']    	= $segments[$count - 1];
 		
 		

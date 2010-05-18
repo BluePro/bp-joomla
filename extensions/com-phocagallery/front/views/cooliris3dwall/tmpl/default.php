@@ -44,10 +44,10 @@ echo '</div>';
     <param name="allowScriptAccess" value="always" />
 	<param name="wmode" value="transparent" />
     <param name="flashvars" 
-      value="feed=<? echo JURI::root() . $this->tmpl['path']->image_rel . (int)$this->category->id;?>.rss" />
+      value="feed=<?php echo JURI::root() . $this->tmpl['path']->image_rel . (int)$this->category->id;?>.rss" />
     <embed type="application/x-shockwave-flash" 
       src="http://apps.cooliris.com/embed/cooliris.swf" 
-	  flashvars="feed=<? echo JURI::root() . $this->tmpl['path']->image_rel . (int)$this->category->id;?>.rss"
+	  flashvars="feed=<?php echo JURI::root() . $this->tmpl['path']->image_rel . (int)$this->category->id;?>.rss"
       width="<?php echo $this->tmpl['cooliris3d_wall_width'];?>" 
       height="<?php echo $this->tmpl['cooliris3d_wall_height'];?>" 	  
       allowFullScreen="true" 

@@ -135,26 +135,33 @@ class PhocaGalleryCpControllerPhocaGallery extends PhocaGalleryCpController
 	
 		$model = $this->getModel( 'phocagallery' );
 		
-		
+		$errorMsg = '';
 		switch ( JRequest::getCmd('task') ) {
 			case 'apply':
-				$id	= $model->store($post);//you get id and you store the table data
+				$id	= $model->store($post, $errorMsg);//you get id and you store the table data
 				if ($id && $id > 0) {
 					$msg = JText::_( 'Changes to Phoca Gallery Saved' );
 				} else {
 					$msg = JText::_( 'Error Saving Phoca gallery' );
 					$id		= $post['id'];
 				}
+				if ($errorMsg != '') {
+					$msg .= '<br />'. $errorMsg;
+				}
+				
 				$this->setRedirect( 'index.php?option=com_phocagallery&controller=phocagallery&task=edit&cid[]='. $id, $msg );
 				break;
 
 			case 'save':
 			default:
-				$id	= $model->store($post);//you get id and you store the table data
+				$id	= $model->store($post, $errorMsg);//you get id and you store the table data
 				if ($id && $id > 0) {
 					$msg = JText::_( 'Phoca Gallery Saved' );
 				} else {
 					$msg = JText::_( 'Phoca gallery Saved' );
+				}
+				if ($errorMsg != '') {
+					$msg .= '<br />'. $errorMsg;
 				}
 				$this->setRedirect( 'index.php?option=com_phocagallery&view=phocagallerys', $msg );
 				break;

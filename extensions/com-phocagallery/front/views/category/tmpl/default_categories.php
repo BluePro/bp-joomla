@@ -64,7 +64,7 @@ if ($this->tmpl['displayimagecategoriescv'] == 1) {
 			
 			$correctImageRes = PhocaGalleryPicasa::correctSizeWithRate($this->itemscv[$i]->extw, $this->itemscv[$i]->exth,$picCorW, $picCorH );
 			
-			echo JHTML::_( 'image',$imageThumbnail,  '', array('width' => $correctImageRes['width'], 'height' => $correctImageRes['height']), '',  $this->itemscv[$i]->title, 'style="border:0"' );
+			echo JHTML::_( 'image', $imageThumbnail, $this->itemscv[$i]->title, array('width' => $correctImageRes['width'], 'height' => $correctImageRes['height']), '',  '', 'style="border:0"' );
 		} else {
 			echo JHTML::_( 'image.site',$imageThumbnail, '', '', '', $this->itemscv[$i]->title, 'style="border:0"' );
 		}

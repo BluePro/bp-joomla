@@ -149,12 +149,12 @@ if (is_array($rows)) {
 ?></tbody>
 <tfoot>
 	<tr>
-	<td colspan="10" class="footer"><?php 
+	<td colspan="7" class="footer"><?php 
 	
 $this->tmpl['subcategorypagination']->setTab($this->tmpl['currenttab']['createsubcategory']);
 if (count($this->tmpl['subcategoryitems'])) {
-	echo '<div><center>';
-	echo '<div style="margin:0 10px 0 10px;display:inline;">'
+	echo '<div class="pgcenter">';
+	echo '<div class="pginline">'
 		.JText::_('Display Num') .'&nbsp;'
 		.$this->tmpl['subcategorypagination']->getLimitBox()
 		.'</div>';
@@ -164,7 +164,7 @@ if (count($this->tmpl['subcategoryitems'])) {
 		.'<div style="margin:0 10px 0 10px;display:inline;" class="pagecounter">'
 		.$this->tmpl['subcategorypagination']->getPagesCounter()
 		.'</div>';
-	echo '</center></div>';
+	echo '</div>';
 }
 
 ?></td>

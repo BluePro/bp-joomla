@@ -86,11 +86,11 @@ class PhocaGalleryCpModelPhocaGallery extends JModel
 	}
 	
 	
-	function store($data) {
+	function store($data, &$errorMsg) {
 		
-		//Params
-		$params				= &JComponentHelper::getParams( 'com_phocagallery' );
-		$clean_thumbnails 	= $params->get( 'clean_thumbnails', 0 );
+		$params						= &JComponentHelper::getParams( 'com_phocagallery' );
+		$clean_thumbnails 			= $params->get( 'clean_thumbnails', 0 );
+		$fileOriginalNotExist		= 0;
 		
 		if ($data['extlinkimage'] == 1) {
 			$data['imgorigsize'] 	= 0;
@@ -100,11 +100,14 @@ class PhocaGalleryCpModelPhocaGallery extends JModel
 		} else {
 			//If this file doesn't exists don't save it
 			if (!PhocaGalleryFile::existsFileOriginal($data['filename'])) {
-				$this->setError('Original File does not exist');
-				return false;
+				//$this->setError('Original File does not exist');
+				//return false;
+				$fileOriginalNotExist = 1;
+				$errorMsg = JText::_('PHOCAGALLERY_ORIGINAL_IMAGE_NOT_EXIST');
 			}
 		
 			$data['imgorigsize'] 	= PhocaGalleryFile::getFileSize($data['filename'], 0);
+			
 			//If there is no title and no alias, use filename as title and alias
 			if ($data['title'] == '') {
 				$data['title'] = PhocaGalleryFile::getTitleFromFile($data['filename']);
@@ -150,7 +153,8 @@ class PhocaGalleryCpModelPhocaGallery extends JModel
 			return false;
 		}
 		
-		if ($data['extlinkimage'] == 1) {
+		if ($data['extlinkimage'] == 1 || $fileOriginalNotExist == 1) {
+		
 		} else {
 			// - - - - - - - - - - - - - - - - - -
 			//Create thumbnail small, medium, large		

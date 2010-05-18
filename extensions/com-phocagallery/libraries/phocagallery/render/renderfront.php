@@ -126,11 +126,11 @@ class PhocaGalleryRenderFront
 	function renderOnUploadJS() {
 		
 		$tag = "<script type=\"text/javascript\"> \n"
-		. "function OnUploadSubmitUser() { \n"
+		. "function OnUploadSubmitUserPG() { \n"
 		. "document.getElementById('loading-label-user').style.display='block'; \n" 
 		. "return true; \n"
 		. "} \n"
-		. "function OnUploadSubmit() { \n"
+		. "function OnUploadSubmitPG() { \n"
 		. "document.getElementById('loading-label').style.display='block'; \n" 
 		. "return true; \n"
 		. "} \n"
@@ -401,8 +401,15 @@ class PhocaGalleryRenderFront
 	function switchImage($waitImage) {	
 		$js  = "\t". '<script language="javascript" type="text/javascript">'."\n".'var pcid = 0;'."\n"
 		     . 'var waitImage = new Image();' . "\n"
-			 . 'waitImage.src = \''.$waitImage.'\';' . "\n"
-			 . 'function PhocaGallerySwitchImage(imageElementId, imageSrcUrl, width, height)' . "\n"
+			 . 'waitImage.src = \''.$waitImage.'\';' . "\n";
+			/*
+			if ((int)$customWidth > 0) {
+				$js .= 'waitImage.width = '.$customWidth.';' . "\n";
+			}
+			if ((int)$customHeight > 0) {
+				$js .= 'waitImage.height = '.$customHeight.';' . "\n";
+			}*/
+			 $js.= 'function PhocaGallerySwitchImage(imageElementId, imageSrcUrl, width, height)' . "\n"
 			 . '{ ' . "\n"
 			 . "\t".'var imageElement 	= document.getElementById(imageElementId);'
 			 . "\t".'var imageElement2 	= document.getElementById(imageElementId);'
@@ -506,6 +513,78 @@ class PhocaGalleryRenderFront
 			.'}'
 			.'</script>' . "\n";
 		return $js;
+	}
+	
+	function getAltValue($altValue = 0, $title = '', $description = '', $metaDesc = '') {
+		$output = '';
+		switch ($altValue) {
+			case 1:
+				$output = $title;
+			break;
+			case 2:
+				$output = strip_tags($description);
+			break;
+			case 3: 
+				$output = $title;
+				if ($description != '') {
+					$output .= ' - '. strip_tags($description);
+				}
+			break;
+			case 4:
+				$output = strip_tags($metaDesc);
+			break;
+			case 5:
+				if ($title != '') {
+					$output = $title;
+				} else if ($description != '') {
+					$output = strip_tags($description);
+				} else {
+					$output = strip_tags($metaDesc);
+				}
+			break;
+			case 6:
+				if ($description != '') {
+					$output = strip_tags($description);
+				} else if ($title != '') {
+					$output = $title;
+				} else {
+					$output = strip_tags($metaDesc);
+				}
+			break;
+			case 7:
+				if ($description != '') {
+					$output = strip_tags($description);
+				} else if ($metaDesc != '') {
+					$output = strip_tags($metaDesc);
+				} else {
+					$output = $title;
+				}
+			break;
+			case 8:
+				if ($metaDesc != '') {
+					$output = strip_tags($metaDesc);
+				} else if ($title != '') {
+					$output = $title;
+				} else {
+					$output = strip_tags($description);
+				}
+			break;
+			case 9:
+				if ($metaDesc != '') {
+					$output = strip_tags($metaDesc);
+				} else if ($description != '') { 
+					$output = strip_tags($description);
+				} else {
+					$output = $title;
+				}
+			break;
+			
+			case 0:
+			default:
+				$output = '';
+			break;
+		}
+		return $output;
 	}
 	/*
 	function correctRender() {

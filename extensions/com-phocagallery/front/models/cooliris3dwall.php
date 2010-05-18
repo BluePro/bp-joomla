@@ -38,7 +38,9 @@ class PhocagalleryModelCooliris3DWall extends JModel
 			}
 			
 			if ($rightDisplay == 0) {
-				$mainframe->redirect(JRoute::_('index.php?option=com_user&view=login', false), JText::_("ALERTNOTAUTH"));
+				$uri 			= &JFactory::getURI();
+				$tmpl['pl']		= 'index.php?option=com_user&view=login&return='.base64_encode($uri->toString());
+				$mainframe->redirect(JRoute::_($tmpl['pl'], false), JText::_("ALERTNOTAUTH"));
 				exit;
 			}
 			// - - - - - - - - - - - - - - - -

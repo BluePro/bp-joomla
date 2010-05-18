@@ -115,7 +115,27 @@ class PhocaGalleryImage
 		return $switchImage;		
 	}
 	
-	function setBoxSize($imageHeight, $imageWidth, $name, $detail=0, $download=0, $vm=0, $startpiclens=0, $trash=0, $publishunpublish=0, $geo=0, $camerainfo=0,  $extlink1=0, $extlink2=0, $boxSpace=0, $imageShadow = '', $rateImage = 0, $iconfolder = 0, $imgdescbox = 0, $approvednotapproved = 0, $commentImage = 0) {
+	function setBoxSize(
+		$imageHeight,
+		$imageWidth, 
+		$name, 
+		$detail 				= 0, 
+		$download				= 0,
+		$vm						= 0,
+		$startpiclens			= 0,
+		$trash					= 0, 
+		$publishunpublish		= 0,
+		$geo					= 0, 
+		$camerainfo				= 0, 
+		$extlink1				= 0, 
+		$extlink2				= 0, 
+		$boxSpace				= 0,
+		$imageShadow 			= '',
+		$rateImage 				= 0,
+		$iconfolder 			= 0,
+		$imgdescbox 			= 0,
+		$approvednotapproved	= 0, 
+		$commentImage 			= 0) {
 		
 		$w 	= 20;
 		$w2 = 25;

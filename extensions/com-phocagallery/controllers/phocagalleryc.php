@@ -188,20 +188,35 @@ class PhocaGalleryCpControllerPhocaGalleryc extends PhocaGalleryCpController
 				$id	= $model->store($post);//you get id and you store the table data
 				if ($id && $id > 0) {
 					
-					// Set author (owner) of category by Administrator in administration
-				/*	if (isset($post['authorid'])) {
-						$data['userid']	= $post['authorid'];
-						$data['catid']	= $id;
-						// is there some item in phocagallery_user_category about this user
-					//	$data['id']		= $model->getUserCategoryId($data['userid']);
-						$userCategoryId = $model->storeUserCategory($data);
-					
-						if (!$userCategoryId) {
-							$msg = JText::_( 'Error Saving Phoca Gallery Categories' ) . ' - ' . JText('Author');
-							$this->setRedirect( 'index.php?option=com_phocagallery&controller=phocagalleryc&task=edit&cid[]='. $id, $msg );
-						}
-					}*/
+
 					// -----------------------------------------------------------
+					// Set owner of category by Administrator in administration
+					if (isset($post['owner_id'])) {
+						$data['userid']		= $post['owner_id'];
+						//$data['catid']		= $id;
+						$data['avatar']		= '';
+						$data['userid']		= (int)$post['owner_id'];
+						$data['published']	= 1;
+						$data['approved']	= 0;
+						// is there some item in phocagallery_user about this user
+						if (isset($data['userid']) && (int)$data['userid'] > 0) {
+							$dataOwnerCategory	= $model->getOwnerCategoryData($data['userid']);
+							if ($dataOwnerCategory) {
+								// Owner is set in user table
+								$userCategoryId 	= $model->storeOwnerCategory($dataOwnerCategory);
+							} else {
+								// Owner is not set in user table
+								$userCategoryId 	= $model->storeOwnerCategory($data);
+							}
+						
+							if (!$userCategoryId) {
+								$msg = JText::_( 'Error Saving Phoca Gallery Categories' ) . ' - ' . JText('Author');
+								$this->setRedirect( 'index.php?option=com_phocagallery&controller=phocagalleryc&task=edit&cid[]='. $id, $msg );
+							}
+						}
+					}
+					// -----------------------------------------------------------
+					
 					
 					$msg = JText::_( 'Changes to Phoca Gallery Categories Saved' );
 					//$id		= $model->store($post);
@@ -217,19 +232,31 @@ class PhocaGalleryCpControllerPhocaGalleryc extends PhocaGalleryCpController
 				$id	= $model->store($post);//you get id and you store the table data
 				if ($id && $id > 0) {
 					
-					// Set author of category by Administrator in administration
-				/*	if (isset($post['authorid'])) {
-						$data['userid']	= $post['authorid'];
-						$data['catid']	= $id;
-						// is there some item in phocagallery_user_category about this user
-						$data['id']		= $model->getUserCategoryId($data['userid']);
-						$userCategoryId = $model->storeUserCategory($data);
-					
-						if (!$userCategoryId) {
-							$msg = JText::_( 'Error Saving Phoca Gallery Categories' ) . ' - ' . JText('Author');
-							$this->setRedirect( 'index.php?option=com_phocagallery&view=phocagallerycs', $msg );
+					// Set owner of category by Administrator in administration
+					if (isset($post['owner_id'])) {
+						$data['userid']		= $post['owner_id'];
+						//$data['catid']		= $id;
+						$data['avatar']		= '';
+						$data['userid']		= (int)$post['owner_id'];
+						$data['published']	= 1;
+						$data['approved']	= 0;
+						// is there some item in phocagallery_user about this user
+						if (isset($data['userid']) && (int)$data['userid'] > 0) {
+							$dataOwnerCategory	= $model->getOwnerCategoryData($data['userid']);
+							if ($dataOwnerCategory) {
+								// Owner is set in user table
+								$userCategoryId 	= $model->storeOwnerCategory($dataOwnerCategory);
+							} else {
+								// Owner is not set in user table
+								$userCategoryId 	= $model->storeOwnerCategory($data);
+							}
+						
+							if (!$userCategoryId) {
+								$msg = JText::_( 'Error Saving Phoca Gallery Categories' ) . ' - ' . JText('Owner');
+								$this->setRedirect( 'index.php?option=com_phocagallery&view=phocagallerycs', $msg );
+							}	
 						}
-					}*/
+					}
 					// -----------------------------------------------------------
 					
 					$msg = JText::_( 'Phoca Gallery Categories Saved' );

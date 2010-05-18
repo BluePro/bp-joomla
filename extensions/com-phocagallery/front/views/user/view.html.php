@@ -36,7 +36,7 @@ class PhocaGalleryViewUser extends JView
 		$tmpl['fi'] 	= PhocaGalleryImage::getFormatIcon();
 		$tmpl['pi']		= 'components/com_phocagallery/assets/images/';
 		$tmpl['pp']		= 'index.php?option=com_phocagallery&view=user&controller=user';
-		$tmpl['pl']		= 'index.php?option=com_user&view=login';
+		$tmpl['pl']		= 'index.php?option=com_user&view=login&return='.base64_encode($tmpl['pp'].'&Itemid='. JRequest::getVar('Itemid', 0, '', 'int'));
 		// LIBRARY
 		$library 							= &PhocaGalleryLibrary::getLibrary();
 		$libraries['pg-css-ie'] 			= $library->getLibrary('pg-css-ie');
@@ -89,7 +89,7 @@ class PhocaGalleryViewUser extends JView
 		$tmpl['javaboxheight'] 		= $params->get( 'java_box_height', 480 );
 		$tmpl['enableuploadavatar'] = $params->get( 'enable_upload_avatar', 1 );
 		$tmpl['uploadmaxsize'] 		= $params->get( 'upload_maxsize', 3145728 );
-		$tmpl['uploadmaxsizeread'] 	= PhocaGalleryFile::getFileSizeReadable((int)$tmpl['uploadmaxsize']);
+		$tmpl['uploadmaxsizeread'] 	= PhocaGalleryFile::getFileSizeReadable($tmpl['uploadmaxsize']);
 		$tmpl['uploadmaxreswidth'] 	= $params->get( 'upload_maxres_width', 3072 );
 		$tmpl['uploadmaxresheight'] = $params->get( 'upload_maxres_height', 2304 );
 		$tmpl['usersubcatcount']	= $params->get( 'user_subcat_count', 5 );
@@ -153,9 +153,9 @@ class PhocaGalleryViewUser extends JView
 		$tmpl['userimagesspace']		= $model->getSumUserImage($user->id);
 		$tmpl['userimagesspaceleft']	= (int)$tmpl['userimagesmaxspace'] - (int)$tmpl['userimagesspace'];
 		if ((int)$tmpl['userimagesspaceleft'] < 0) {$tmpl['userimagesspaceleft'] = 0;}
-		$tmpl['userimagesspace']		= PhocaGalleryFile::getFileSizeReadable((int)$tmpl['userimagesspace']);
-		$tmpl['userimagesspaceleft']	= PhocaGalleryFile::getFileSizeReadable((int)$tmpl['userimagesspaceleft']);
-		$tmpl['userimagesmaxspace']		= PhocaGalleryFile::getFileSizeReadable((int)$tmpl['userimagesmaxspace']);
+		$tmpl['userimagesspace']		= PhocaGalleryFile::getFileSizeReadable($tmpl['userimagesspace']);
+		$tmpl['userimagesspaceleft']	= PhocaGalleryFile::getFileSizeReadable($tmpl['userimagesspaceleft']);
+		$tmpl['userimagesmaxspace']		= PhocaGalleryFile::getFileSizeReadable($tmpl['userimagesmaxspace']);
 		
 		
 		// - - - - - - - - - - - 
@@ -307,7 +307,8 @@ class PhocaGalleryViewUser extends JView
 				$rightDisplay = PhocaGalleryAccess::getUserRight ('accessuserid', $catAccess->accessuserid, 0, $user->get('aid', 0), $user->get('id', 0), 1);
 			}
 			if ($rightDisplay == 0) {
-				$mainframe->redirect(JRoute::_('index.php?option=com_user&view=login', false), JText::_("ALERTNOTAUTH"));
+				
+				$mainframe->redirect(JRoute::_($tmpl['pl'], false), JText::_("ALERTNOTAUTH"));
 				exit;
 			}		
 			// - - - - - - - - - - - - - - - - - - - - - 

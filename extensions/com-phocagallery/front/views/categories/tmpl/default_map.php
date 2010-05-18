@@ -51,7 +51,7 @@ if ($this->tmplGeo['categorieslng'] == '' || $this->tmplGeo['categorieslat'] == 
 				}
 				if (isset($category->extid) && $category->extid != '') {
 					$correctImageRes = PhocaGalleryPicasa::correctSizeWithRate($category->extw, $category->exth, $this->tmpl['picasa_correct_width'], $this->tmpl['picasa_correct_height']);
-					$imgLink = JHTML::_( 'image', $category->linkthumbnailpath, '', array('width' => $correctImageRes['width'], 'height' => $correctImageRes['height']), '', str_replace('&raquo;', '-',$category->title), 'style="border:0"');
+					$imgLink = JHTML::_( 'image', $category->linkthumbnailpath, str_replace('&raquo;', '-',$category->title), array('width' => $correctImageRes['width'], 'height' => $correctImageRes['height']), '', '', 'style="border:0"');
 				} else {
 					$imgLink = JHTML::_( 'image.site', $category->linkthumbnailpath, '', '', '', $category->geotitle );
 				}

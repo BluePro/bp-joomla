@@ -569,7 +569,16 @@ class PhocaGalleryControllerUser extends PhocaGalleryController
 		
 		$userAvatar = $model->getUserAvatar($post['userid']);
 		if($userAvatar) {
-			$post['id']	= $userAvatar->id;
+			$post['id']				= $userAvatar->id;
+			if (isset($userAvatar->avatar) && $userAvatar->avatar != '' && $fileAvatar == '') {
+				// No new avatar - set the old one
+				$post['avatar']		= $userAvatar->avatar;
+			} else if (isset($userAvatar->avatar) && $userAvatar->avatar != '' && $fileAvatar != '') {
+				// New avatar loaded - try to delete the old one from harddisc (server)
+				$model->removeAvatarFromDisc($userAvatar->avatar);
+			}
+			$post['published']		= $userAvatar->published;
+			$post['approved']		= $userAvatar->approved;
 		}
 		
 		if ($model->storeuser($post)) {

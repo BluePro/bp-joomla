@@ -10,6 +10,8 @@
  */
 defined('_JEXEC') or die();
 jimport('joomla.application.component.model');
+phocagalleryimport('phocagallery.utils.utils');
+phocagalleryimport('phocagallery.picasa.picasa');
 
 class PhocaGalleryCpModelPhocaGalleryC extends JModel
 {
@@ -493,7 +495,8 @@ class PhocaGalleryCpModelPhocaGalleryC extends JModel
 						$item->appendChild( $this->_buildXMLElement( 'link', JURI::root().$thumbFile ) );
 					}
 					
-					$item->appendChild( $this->_buildXMLElement( 'media:description', $vrow->description  ) );
+					//$item->appendChild( $this->_buildXMLElement( 'media:description', $vrow->description  ) );
+					$item->appendChild( $this->_buildXMLElement( 'description', JFilterOutput::cleanText(strip_tags($vrow->description ))));
 					$thumbnail=& $this->_XMLFile->createElement( 'media:thumbnail' );
 					
 					if ($vrow->extid != '') {
@@ -577,21 +580,27 @@ class PhocaGalleryCpModelPhocaGalleryC extends JModel
 			return false;
 		}
 		
-		//Check the file_get_contents and JSON
-		if(ini_get('allow_url_fopen') == 0){
-			$errorMsg = JText::_('PHOCAGALLERY_PICASA_NOT_LOADED_FOPEN');
+		//Check the file_get_contents and JSON and cURL
+		
+		/*if(!function_exists("curl_init")){
+			$errorMsg = JText::_('PHOCAGALLERY_PICASA_NOT_LOADED_CURL');
 			return false;
 		}
+		
+		if(!PhocaGalleryUtils::iniGetBool('allow_url_fopen')){
+			$errorMsg = JText::_('PHOCAGALLERY_PICASA_NOT_LOADED_FOPEN');
+			return false;
+		}*/
+		
 		if(!function_exists("json_decode")){
 			$errorMsg = JText::_('PHOCAGALLERY_PICASA_NOT_LOADED_JSON');
 			return false;
 		}
 		
 		$userAddress 	= 'http://picasaweb.google.com/data/feed/api/user/'.htmlentities($user).'?kind=album&access=public&alt=json';
-		
-		$dataUser 		= @file_get_contents($userAddress);
-		if($dataUser == '') {
-			$errorMsg = JText::_('PHOCAGALLERY_PICASA_NOT_LOADED_USER');
+		$dataUser		= PhocaGalleryPicasa::loadDataByAddress($userAddress, 'user', $errorMsg);
+		if(!$dataUser) {
+			// $errorMsg = JText::_('PHOCAGALLERY_PICASA_NOT_LOADED_USER'); - will be returned from loadDataByAddress
 			return false;
 		}
 		
@@ -648,10 +657,10 @@ class PhocaGalleryCpModelPhocaGalleryC extends JModel
 		
 		// LARGE AND SMALL( AND MEDIUM) - will be the same everywhere so we take them in one
 		$albumAddressLSM	= 'http://picasaweb.google.com/data/feed/api/user/'.htmlentities($user).'/albumid/'.$albumId.'?alt=json&kind=photo'.$size['lsm'].$pagination;
-		$dataAlbumLSM 		= @file_get_contents($albumAddressLSM);
+		$dataAlbumLSM 		= PhocaGalleryPicasa::loadDataByAddress($albumAddressLSM, 'album', $errorMsg);
 	
-		if($dataAlbumLSM == '') {
-			$errorMsg = JText::_('PHOCAGALLERY_PICASA_NOT_LOADED_IMAGE');
+		if(!$dataAlbumLSM) {
+			//$errorMsg = JText::_('PHOCAGALLERY_PICASA_NOT_LOADED_IMAGE');
 			return false;
 		}
 		$dataAlbumLSM 	= json_decode($dataAlbumLSM);
@@ -675,12 +684,28 @@ class PhocaGalleryCpModelPhocaGalleryC extends JModel
 					$dataImg[$i]['extm']		= $value->{$OmediaGroup}->{$OmediaThumbnail}[1]->url;
 				}
 				$dataImg[$i]['date']			= substr(str_replace('T', ' ',$value->updated->{$Ot}), 0, 19);
-				if (isset($value->{$OgeorssWhere}->{$OgmlPoint}->{$OgmlPos}->{$Ot})) {
+				/*if (isset($value->{$OgeorssWhere}->{$OgmlPoint}->{$OgmlPos}->{$Ot})) {
 					$dataImg[$i]['latitude']	= substr($value->{$OgeorssWhere}->{$OgmlPoint}->{$OgmlPos}->{$Ot}, 0, 10);
 					$dataImg[$i]['longitude']	= substr($value->{$OgeorssWhere}->{$OgmlPoint}->{$OgmlPos}->{$Ot}, 11, 10);
 					$dataImg[$i]['zoom']		= 10;
 					//$data['geotitle']	= $data['title'];
-				}
+				}*/
+				
+				if (isset($value->{$OgeorssWhere}->{$OgmlPoint}->{$OgmlPos}->{$Ot})) {
+					//$dataImg[$i]['latitude']    = substr($value->{$OgeorssWhere}->{$OgmlPoint}->{$OgmlPos}->{$Ot}, 0, 10);
+					//$dataImg[$i]['longitude']    = substr($value->{$OgeorssWhere}->{$OgmlPoint}->{$OgmlPos}->{$Ot}, 11, 10);
+					$geoArray = explode (' ', $value->{$OgeorssWhere}->{$OgmlPoint}->{$OgmlPos}->{$Ot});
+					if (isset($geoArray[0])) {
+						$dataImg[$i]['latitude'] = $geoArray[0];
+					}
+					if (isset($geoArray[1])) {
+						$dataImg[$i]['longitude'] = $geoArray[1];
+					}
+					$dataImg[$i]['zoom']        = 10;
+					//$data['geotitle']    = $data['title'];
+				} 
+				
+				
 				// Large
 				$dataImg[$i]['extw'][0]				= $value->{$OmediaGroup}->{$OmediaContent}[0]->width;
 				$dataImg[$i]['exth'][0]				= $value->{$OmediaGroup}->{$OmediaContent}[0]->height;
@@ -712,7 +737,7 @@ class PhocaGalleryCpModelPhocaGalleryC extends JModel
 		// MEDIUM
 		if ($mediumT == 0) {
 			$albumAddressM	= 'http://picasaweb.google.com/data/feed/api/user/'.htmlentities($user).'/albumid/'.$albumId.'?alt=json&kind=photo'.$size['m'].$pagination;
-			$dataAlbumM 	= @file_get_contents($albumAddressM);
+			$dataAlbumM 		= PhocaGalleryPicasa::loadDataByAddress($albumAddressM, 'album', $errorMsg);
 			if($dataAlbumM == '') {
 				$errorMsg = JText::_('PHOCAGALLERY_PICASA_NOT_LOADED_IMAGE');
 				return false;
@@ -833,6 +858,59 @@ class PhocaGalleryCpModelPhocaGalleryC extends JModel
 			return false;
 		}
 	
+	}
+	
+	/*
+	 * Owner
+	 * Store information about Owner (if administrator add a category to some Owner)
+	 */
+	function storeOwnerCategory($data) {
+		
+		$row =& $this->getTable('phocagalleryuser');
+		
+		// Bind the form fields to the table
+		if (!$row->bind($data)) {
+			$this->setError($this->_db->getErrorMsg());
+			return false;
+		}
+
+		// if new item, order last in appropriate group
+		if (!$row->id) {
+		
+			$row->ordering = $row->getNextOrder( );
+		}
+		
+		
+		// Make sure the table is valid
+		if (!$row->check()) {
+			$this->setError($this->_db->getErrorMsg());
+			return false;
+		}
+
+		// Store the table to the database
+		if (!$row->store()) {
+			$this->setError($this->_db->getErrorMsg());
+			return false;
+		}
+		return $row->id;
+	}
+	
+	/*
+	 * Owner
+	 * Get information about author's category
+	 */
+	function getOwnerCategoryData($userId) {
+
+		$query = 'SELECT uc.*'
+			. ' FROM #__phocagallery_user AS uc'
+			. ' WHERE uc.userid = '.(int)$userId;
+		
+		$this->_db->setQuery( $query );
+		$userCategoryData = $this->_db->loadObject();
+		if (isset($userCategoryData->id)) {
+			return $userCategoryData;
+		}
+		return false;
 	}
 }
 ?>

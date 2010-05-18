@@ -67,7 +67,7 @@ JHTML::_('behavior.tooltip');
 				?>
 				<tr class="<?php echo "row$k"; ?>">
 					<td><?php echo $this->tmpl['pagination']->getRowOffset( $i ); ?></td>
-					<td><?php echo $checked; ?></td>
+					<td><?php echo $checked;  echo $this->tmpl['avatarpathabs'].$row->avatar ." ...<br>"; ?></td>
 					<td align="center" valign="middle">
 						<div class="phocagallery-box-file">
 							<center>
@@ -76,6 +76,7 @@ JHTML::_('behavior.tooltip');
 										<div class="phocagallery-box-file-third">
 											<center>
 											<?php
+											
 											if (JFile::exists($this->tmpl['avatarpathabs'].$row->avatar)){
 												echo '<a class="'. $this->button->modalname.'"'
 												.' title="'. $this->button->text.'"'

@@ -85,7 +85,7 @@ if ($this->tmpl['enablejava'] == 1) {
 
 <?php } // end java upload ?>
 	
-<form onsubmit="return OnUploadSubmit();" action="<?php echo $this->tmpl['action'] . $amp ?>task=upload&amp;<?php echo $this->session->getName().'='.$this->session->getId(); ?>&amp;<?php echo JUtility::getToken();?>=1&amp;viewback=category" name="phocagalleryuploadform" id="phocagallery-upload-form" method="post" enctype="multipart/form-data">
+<form onsubmit="return OnUploadSubmitPG();" action="<?php echo $this->tmpl['action'] . $amp ?>task=upload&amp;<?php echo $this->session->getName().'='.$this->session->getId(); ?>&amp;<?php echo JUtility::getToken();?>=1&amp;viewback=category" name="phocagalleryuploadform" id="phocagallery-upload-form" method="post" enctype="multipart/form-data">
 	
 <table>
 	<tr>
@@ -118,7 +118,7 @@ if ($this->tmpl['enablejava'] == 1) {
 <input type="hidden" name="tab" value="<?php echo $this->tmpl['currenttab']['upload'];?>" />
 </form>
 
-<div id="loading-label"><center><?php echo JHTML::_('image', 'components/com_phocagallery/assets/images/icon-switch.gif', '') . '  '.JText::_('Loading'); ?></center></div>
+<div id="loading-label" style="text-align:center"><?php echo JHTML::_('image', 'components/com_phocagallery/assets/images/icon-switch.gif', '') . '  '.JText::_('Loading'); ?></div>
 
 </fieldset>
 </div>

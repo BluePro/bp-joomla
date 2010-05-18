@@ -32,5 +32,35 @@ class PhocaGalleryUtils
 
 		return $color;
 	}
+	
+	/*
+	 * Source: http://php.net/manual/en/function.ini-get.php
+	 */
+	function iniGetBool($a) {
+		$b = ini_get($a);
+		switch (strtolower($b)) {
+			case 'on':
+			case 'yes':
+			case 'true':
+			return 'assert.active' !== $a;
+
+			case 'stdout':
+			case 'stderr':
+			return 'display_errors' === $a;
+
+			default:
+			return (bool) (int) $b;
+		}
+	}
+	
+	function setQuestionmarkOrAmp($url) {
+		$isThereQMR = false;
+		$isThereQMR = preg_match("/\?/i", $url);
+		if ($isThereQMR) {
+			return '&amp;';
+		} else {
+			return '?';
+		}
+	}
 }
 ?>

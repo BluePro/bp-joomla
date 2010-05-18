@@ -33,6 +33,7 @@ class PhocaGalleryImageBgImage
 		
 			$memory 			= 8;
 			$memoryLimitChanged = 0;
+			
 			$memory = (int)ini_get( 'memory_limit' );
 			if ($memory == 0) {
 				$memory = 8;

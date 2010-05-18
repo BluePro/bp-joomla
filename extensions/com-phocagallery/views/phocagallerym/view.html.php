@@ -50,7 +50,7 @@ class PhocaGalleryCpViewPhocaGalleryM extends JView
 		$tmpl['javaboxheight'] 		= $params->get( 'java_box_height', 480 );
 		
 		$tmpl['uploadmaxsize'] 		= $params->get( 'upload_maxsize', 3145728 );
-		$tmpl['uploadmaxsizeread'] 	= PhocaGalleryFile::getFileSizeReadable((int)$tmpl['uploadmaxsize']);
+		$tmpl['uploadmaxsizeread'] 	= PhocaGalleryFile::getFileSizeReadable($tmpl['uploadmaxsize']);
 		$tmpl['uploadmaxreswidth'] 	= $params->get( 'upload_maxres_width', 3072 );
 		$tmpl['uploadmaxresheight'] = $params->get( 'upload_maxres_height', 2304 );
 		$tmpl['enablejavaadmin'] 	= $params->get( 'enable_java_admin', 1 );

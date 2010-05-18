@@ -1,4 +1,4 @@
-<?php
+<?php 
 /*
  * @package Joomla 1.5
  * @copyright Copyright (C) 2005 Open Source Matters. All rights reserved.
@@ -16,6 +16,7 @@ if (! class_exists('PhocaGalleryLoader')) {
 // Require the base controller
 require_once( JPATH_COMPONENT.DS.'controller.php' );
 phocagalleryimport('phocagallery.path.path');
+phocagalleryimport('phocagallery.path.route');
 phocagalleryimport('phocagallery.pagination.paginationcategories');
 phocagalleryimport('phocagallery.pagination.paginationcategory');
 phocagalleryimport('phocagallery.library.library');
@@ -26,6 +27,7 @@ phocagalleryimport('phocagallery.image.image');
 phocagalleryimport('phocagallery.image.imagefront');
 phocagalleryimport('phocagallery.render.renderinfo');
 phocagalleryimport('phocagallery.render.renderfront');
+phocagalleryimport('phocagallery.utils.utils');
 //PhocaGalleryRenderFront::correctRender();
 
 // Require specific controller if requested

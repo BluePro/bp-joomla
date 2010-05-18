@@ -27,7 +27,8 @@ if ($this->tmpl['displaydescriptiondetail'] == 2 && (!empty($this->item->descrip
     .'<div id="description-text" style="background:'.$this->tmpl['descriptionlightboxbgcolor']
 	.';color:'.$this->tmpl['descriptionlightboxfontcolor']
 	.';font-size:'.$this->tmpl['descriptionlightboxfontsize'].'px">'
-	. $titleDesc . $this->item->description.'</div></div>';
+	//. $titleDesc . $this->item->description.'</div></div>';
+	.(JHTML::_('content.prepare', $titleDesc . $this->item->description)).'</div></div>';
 }
 
 echo '</div>'
@@ -41,7 +42,8 @@ if ($this->tmpl['displaydescriptiondetail'] == 1) {
 	.'<div style="font-size:'.$this->tmpl['fontsizedesc'].'px;'
 	.'height:'.$this->tmpl['descriptiondetailheight'].'px;padding:0 20px 0 20px;'
 	.'color:'. $this->tmpl['fontcolordesc'].'">'
-	. $titleDesc . $this->item->description . '</div>'
+	//. $titleDesc . $this->item->description . '</div>'
+	.(JHTML::_('content.prepare', $titleDesc . $this->item->description)). '</div>'
 	.'</td>'
 	.'</tr>';
 }

@@ -15,6 +15,7 @@ if (! class_exists('PhocaGalleryLoader')) {
     require_once( JPATH_ADMINISTRATOR.DS.'components'.DS.'com_phocagallery'.DS.'libraries'.DS.'loader.php');
 }
 phocagalleryimport('phocagallery.path.path');
+phocagalleryimport('phocagallery.path.route');
 phocagalleryimport('phocagallery.library.library');
 phocagalleryimport('phocagallery.text.text');
 phocagalleryimport('phocagallery.access.access');
@@ -518,7 +519,7 @@ if ($images) {
 	}
 	$imageIds = implode(',', $imageArray);
 
-	$query = 'SELECT cc.id, a.id, a.catid, a.title, a.alias, a.filename, a.description, a.extm, a.exts,a.extl, a.exto, a.extw, a.exth, a.extid,'
+	$query = 'SELECT cc.id, cc.alias as catalias, a.id, a.catid, a.title, a.alias, a.filename, a.description, a.extm, a.exts,a.extl, a.exto, a.extw, a.exth, a.extid,'
 	. ' CASE WHEN CHAR_LENGTH(cc.alias) THEN CONCAT_WS(\':\', cc.id, cc.alias) ELSE cc.id END as catslug, '
 	. ' CASE WHEN CHAR_LENGTH(a.alias) THEN CONCAT_WS(\':\', a.id, a.alias) ELSE a.id END as slug'
 	. ' FROM #__phocagallery_categories AS cc'
@@ -565,48 +566,31 @@ if ($images) {
 				$file_thumbnail 					= PhocaGalleryFileThumbnail::getThumbnailName($valueImages->filename, $imgCatSize);
 				$valueImages->linkthumbnailpathabs	= $file_thumbnail->abs;
 			}
-
-		// -------------------------------------------------------------------- SEF PROBLEM
-		// Is there an Itemid for category
-		$items	 = $menu->getItems('link', 'index.php?option=com_phocagallery&view=category&id='.$valueImages->id);
-		$itemscat= $menu->getItems('link', 'index.php?option=com_phocagallery&view=categories');
-
-		if(isset($itemscat[0])) {
-			$itemid 		= $itemscat[0]->id;
-			$itemIdOutput 	= '&Itemid='.$itemid;
-
-		} else if(isset($items[0])) {
-			$itemid = $items[0]->id;
-			$itemIdOutput 	= '&Itemid='.$itemid;
-		} else {
-			$itemid = 0;
-			$itemIdOutput = '';
-		}
-		// ---------------------------------------------------------------------------------
+			
 
 		// Different links for different actions: image, zoom icon, download icon
 		$thumbLink	= PhocaGalleryFileThumbnail::getThumbnailName($valueImages->filename, 'large');
 		$thumbLinkM	= PhocaGalleryFileThumbnail::getThumbnailName($valueImages->filename, 'medium');
 		
-		$siteLink ='index.php?option=com_phocagallery&view=detail&catid='. $valueImages->catslug .'&id='. $valueImages->catslug .'&Itemid='.$itemid . '&tmpl=component&detail='.$tmpl['detailwindow'].'&buttons='.$detail_buttons;
-		
+		// ROUTE
 		if ($tmpl['detailwindow'] == 7) {
-			$siteLink 	= JRoute::_('index.php?option=com_phocagallery&view=detail&catid='.$valueImages->catslug.'&id='. $valueImages->slug.$itemIdOutput. '&detail='.$tmpl['detailwindow'].'&buttons='.$detail_buttons  );
+			$suffix	= 'detail='.$tmpl['detailwindow'].'&buttons='.$detail_buttons;
 		} else {
-			$siteLink 	= JRoute::_('index.php?option=com_phocagallery&view=detail&catid='.$valueImages->catslug.'&id='. $valueImages->slug.$itemIdOutput. '&tmpl=component&detail='.$tmpl['detailwindow'].'&buttons='.$detail_buttons  );
-			
+			$suffix	= 'tmpl=component&detail='.$tmpl['detailwindow'].'&buttons='.$detail_buttons;	
 		}
+		$siteLink 	= JRoute::_(PhocaGalleryRoute::getImageRoute($valueImages->id, $valueImages->catid, $valueImages->alias, $valueImages->catalias, 'detail', $suffix ));
+		
 		$imgLinkOrig= JURI::base(true) . '/' .PhocaGalleryFile::getFileOriginal($valueImages->filename, 1);
 		$imgLink	= $thumbLink->rel;
 		
 		// Different Link - to all categories
 		if ((int)$module_link == 2) {
-			$siteLink = $imgLinkOrig = $imgLink = 'index.php?option=com_phocagallery&view=categories&Itemid='.$itemid;
+			$siteLink = $imgLinkOrig = $imgLink = PhocaGalleryRoute::getCategoriesRoute();
 			
 		}
 		// Different Link - to all category
 		else if ((int)$module_link == 1) {
-			$siteLink = $imgLinkOrig = $imgLink = 'index.php?option=com_phocagallery&view=category&id='.$valueImages->catslug.'&Itemid='.$itemIdOutput;
+			$siteLink = $imgLinkOrig = $imgLink = PhocaGalleryRoute::getCategoryRoute($valueImages->catid, $valueImages->catalias);
 		}
 		
 		if (isset($valueImages->extid) &&  $valueImages->extid != '') {

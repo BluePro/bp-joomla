@@ -43,7 +43,7 @@ class PhocaGalleryFileDownload
 			// Clears file status cache
 			clearstatcache();
 			$fileOriginal	= $fileOriginal;
-			$fileSize 		= filesize($fileOriginal);
+			$fileSize 		= @filesize($fileOriginal);
 			$mimeType 		= PhocaGalleryFile::getMimeType($fileToDownload);
 			$fileName		= $fileNameToDownload;
 			// Clean the output buffer

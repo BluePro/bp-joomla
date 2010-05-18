@@ -11,6 +11,7 @@
 defined('_JEXEC') or die();
 jimport( 'joomla.application.component.view' );
 phocagalleryimport('phocagallery.render.renderinfo');
+phocagalleryimport('phocagallery.utils.utils');
 
 class PhocaGalleryCpViewPhocaGalleryIn extends JView
 {
@@ -54,7 +55,7 @@ class PhocaGalleryCpViewPhocaGalleryIn extends JView
 		// PICASA
 		$fOutput .= '<tr><td align="left"><b>'. JText::_('PHOCAGALLERY_PICASA_SUPPORT').'</b></td></tr>';
 		
-		if(ini_get('allow_url_fopen')==0){
+		if(!PhocaGalleryUtils::iniGetBool('allow_url_fopen')){
 			$bgStyle = 'style="background:#ffcccc"';
 			$icon		= 'false';
 			$iconText	= JText::_('Disabled');
@@ -64,11 +65,12 @@ class PhocaGalleryCpViewPhocaGalleryIn extends JView
 			$iconText	= JText::_('Enabled');
 		}
 		
-		$fOutput .= '<tr '.$bgStyle.'><td>'.JText::_('PHOCAGALLERY_PHP_SETTINGS_PARAM') .' allow_url_fopen</td>';
+		$fOutput .= '<tr '.$bgStyle.'><td>'.JText::_('PHOCAGALLERY_PHP_SETTINGS_PARAM') .' allow_url_fopen ('.JText::_('Needs not to be enabled if cURL functions are enabled') .')</td>';
 		$fOutput .=  '<td align="center">'.JHTML::_('image.site',  'icon-16-true.png', '/components/com_phocagallery/assets/images/', NULL, NULL, JText::_('Enabled') ).'</td>';
 		$fOutput .=  '<td align="center">'. JHTML::_('image.site',  'icon-16-'.$icon.'.png', '/components/com_phocagallery/assets/images/', NULL, NULL, JText::_($iconText)).'</td></tr>';
-		
-		if(function_exists("json_decode")){
+	
+	
+		if(function_exists("curl_init")){
 			$bgStyle 	= 'style="background:#ccffcc"';
 			$icon		= 'true';
 			$iconText	= JText::_('Enabled');
@@ -78,6 +80,10 @@ class PhocaGalleryCpViewPhocaGalleryIn extends JView
 			$iconText	= JText::_('Disabled');
 		}
 
+		$fOutput .= '<tr '.$bgStyle.'><td>'.JText::_('Function') .' cURL ('.JText::_('Needs not to be enabled if allow_url_fopen is enabled') .')</td>';
+		$fOutput .=  '<td align="center">'.JHTML::_('image.site',  'icon-16-true.png', '/components/com_phocagallery/assets/images/', NULL, NULL, JText::_('Enabled') ).'</td>';
+		$fOutput .=  '<td align="center">'. JHTML::_('image.site',  'icon-16-'.$icon.'.png', '/components/com_phocagallery/assets/images/', NULL, NULL, JText::_($iconText)).'</td></tr>';
+		
 		$fOutput .= '<tr '.$bgStyle.'><td>'.JText::_('Function') .' json_decode</td>';
 		$fOutput .=  '<td align="center">'.JHTML::_('image.site',  'icon-16-true.png', '/components/com_phocagallery/assets/images/', NULL, NULL, JText::_('Enabled') ).'</td>';
 		$fOutput .=  '<td align="center">'. JHTML::_('image.site',  'icon-16-'.$icon.'.png', '/components/com_phocagallery/assets/images/', NULL, NULL, JText::_($iconText)).'</td></tr>';

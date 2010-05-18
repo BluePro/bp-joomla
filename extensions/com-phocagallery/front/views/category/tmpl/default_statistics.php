@@ -40,11 +40,11 @@ if ($this->tmpl['displaymostviewedcatstat']) {
 				
 			?>
 			<div class="phocagallery-box-file" style="height:<?php echo $imageHeightMV['boxsize']; ?>px; width:<?php echo $imageWidthMV['boxsize']; ?>px">
-				<center>
+				
 					<div class="phocagallery-box-file-first" style="height:<?php echo $imageHeightMV['size']; ?>px;width:<?php echo $imageWidthMV['size']; ?>px;">
 						<div class="phocagallery-box-file-second">
 							<div class="phocagallery-box-file-third">
-								<center>
+								
 								<a class="<?php echo $value->buttonother->methodname; ?>"<?php
 								
 								echo ' href="'. $value->link.'"';
@@ -62,17 +62,17 @@ if ($this->tmpl['displaymostviewedcatstat']) {
 								}
 								echo ' >';
 								if (isset($value->extid) && $value->extid != '') {
-									echo JHTML::_( 'image', $value->linkthumbnailpath, '', array('width' => $correctImageRes['width'], 'height' => $correctImageRes['height']), '', $value->title);
+									echo JHTML::_( 'image', $value->linkthumbnailpath, $value->altvalue, array('width' => $correctImageRes['width'], 'height' => $correctImageRes['height']));
 								} else {
-									echo JHTML::_( 'image.site', $value->linkthumbnailpath, '', '', '', $value->title );
+									echo JHTML::_( 'image.site', $value->linkthumbnailpath, '', '', '', $value->altvalue );
 								}
 
 								?></a>
-								</center>
+								
 							</div>
 						</div>
 					</div>
-				</center>
+				
 				
 			<?php
 			
@@ -135,11 +135,11 @@ if ($this->tmpl['displaylastaddedcatstat']) {
 				
 			?>
 			<div class="phocagallery-box-file" style="height:<?php echo $imageHeightLA['boxsize']; ?>px; width:<?php echo $imageWidthLA['boxsize']; ?>px">
-				<center>
+				
 					<div class="phocagallery-box-file-first" style="height:<?php echo $imageHeightLA['size']; ?>px;width:<?php echo $imageWidthLA['size']; ?>px;">
 						<div class="phocagallery-box-file-second">
 							<div class="phocagallery-box-file-third">
-								<center>
+								
 								<a class="<?php echo $value->buttonother->methodname; ?>"<?php
 								
 								echo ' href="'. $value->link.'"';
@@ -158,16 +158,16 @@ if ($this->tmpl['displaylastaddedcatstat']) {
 								
 								echo ' >';
 								if (isset($value->extid) && $value->extid != '') {
-									echo JHTML::_( 'image', $value->linkthumbnailpath, '', array('width' => $correctImageRes['width'], 'height' => $correctImageRes['height']), '', $value->title);
+									echo JHTML::_( 'image', $value->linkthumbnailpath, $value->altvalue, array('width' => $correctImageRes['width'], 'height' => $correctImageRes['height']));
 								} else {
-									echo JHTML::_( 'image.site', $value->linkthumbnailpath, '', '', '', $value->title );
+									echo JHTML::_( 'image.site', $value->linkthumbnailpath, '', '', '', $value->altvalue );
 								}
 								?></a>
-								</center>
+								
 							</div>
 						</div>
 					</div>
-				</center>
+				
 				
 			<?php
 			

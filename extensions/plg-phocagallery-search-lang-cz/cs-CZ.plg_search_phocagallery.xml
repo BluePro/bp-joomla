@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+	<install method="upgrade" version="1.5" client="both" type="language">
+	<name>Phoca Gallery Search Plugin</name>
+	<creationDate>27/12/2009</creationDate>
+	<author>Fenris</author>
+	<authorEmail>fenris@fenris.cz</authorEmail>
+	<authorUrl>www.fenris.cz</authorUrl>
+	<copyright>Copyright by Fenris</copyright>
+	<description>Čeština pro Phoca Gallery Search Plugin 2.6.0</description>
+	<version>2.6.0</version>
+	<tag>cs-CZ</tag>
+
+  <administration>
+    <files>
+        <filename>cs-CZ.plg_search_phocagallery.ini</filename>
+    </files>
+  </administration>
+
+  <site>
+    <files>
+        <filename>cs-CZ.plg_search_phocagallery.ini</filename>
+    </files>
+  </site>
+
+
+</install>

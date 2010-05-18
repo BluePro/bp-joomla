@@ -9,6 +9,7 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined( '_JEXEC' ) or die( 'Restricted access' );
+phocagalleryimport('phocagallery.utils.utils');
 
 class PhocaGalleryPicasa
 {
@@ -152,6 +153,60 @@ class PhocaGalleryPicasa
 		echo '<meta http-equiv="refresh" content="1;url='.$refreshUrl.'" />';
 		echo '</body></html>';
 		exit;
+	}
+	
+	function loadDataByAddress($address, $type, &$errorMsg) {
+	
+		$both 	= $curl = $fopen = 1;
+		$data	= '';
+		
+		if(!function_exists("curl_init")){
+			$errorMsg .= JText::_('PHOCAGALLERY_PICASA_NOT_LOADED_CURL');
+			$both = $curl = 0;
+		}
+		
+		if(!PhocaGalleryUtils::iniGetBool('allow_url_fopen')){
+			if ($errorMsg != '') {
+				$errorMsg .= '<br />';
+			}
+			$errorMsg .= JText::_('PHOCAGALLERY_PICASA_NOT_LOADED_FOPEN');
+			$both = $fopen = 0;
+		}
+		
+		if ($both == 0) {
+			return false;
+		}
+		
+		if ($curl == 1) {
+			$init 	= curl_init(); 
+			curl_setopt ($init, CURLOPT_URL, 			$address);
+			curl_setopt ($init, CURLOPT_RETURNTRANSFER,	1); 
+			curl_setopt ($init, CURLOPT_CONNECTTIMEOUT,	10);      
+		    $data 	= curl_exec($init); 
+		    curl_close($init);
+		} else {
+			$data	= @file_get_contents($address);
+		}
+		
+		if ($data == '') {
+			if ($errorMsg != '') {
+				$errorMsg .= '<br />';
+			}
+			switch ($type) {
+				case 'album':
+					$errorMsg = JText::_('PHOCAGALLERY_PICASA_NOT_LOADED_IMAGE');
+				break;
+			
+				case 'user':
+				default:
+					$errorMsg .= JText::_('PHOCAGALLERY_PICASA_NOT_LOADED_USER');
+				break;
+			
+			}
+			return false;
+		}
+		return $data;
+	
 	}
 
 }

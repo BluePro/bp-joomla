@@ -1,5 +1,20 @@
 <?php
 defined('_JEXEC') or die('Restricted access'); 
+// Pagetitle
+if ( $this->params->def( 'show_page_title', 1 ) ) {
+	echo '<div class="componentheading'.$this->params->get( 'pageclass_sfx' ).'">'. $this->params->get('page_title').'</div>';
+}
+// Image, description
+echo '<div class="contentpane'.$this->params->get( 'pageclass_sfx' ).'">';
+if ( ($this->params->def('image', -1) != -1) || $this->params->def('show_comp_description', 1) ) {
+	echo '<div class="contentdescription'.$this->params->get( 'pageclass_sfx' ).'">';
+	if ( isset($this->tmpl['image']) ) {
+		echo $this->tmpl['image'];
+	}
+	echo $this->params->get('comp_description'). '</div>'."\n";
+}
+echo '</div>';
+
 // Phoca Gallery Width
 if ($this->tmpl['phocagallerywidth'] != '') {
 	$centerPage = '';
@@ -11,25 +26,6 @@ if ($this->tmpl['phocagallerywidth'] != '') {
 	echo '<div id="phocagallery">';
 }
 
-if ( $this->params->def( 'show_page_title', 1 ) ) { ?>
-	<div class="componentheading<?php echo $this->params->get( 'pageclass_sfx' ); ?>">
-		<?php echo $this->params->get('page_title'); ?>
-	</div>
-<?php } ?>
-
-
-<div class="contentpane<?php echo $this->params->get( 'pageclass_sfx' ); ?>">
-<?php if ( ($this->params->def('image', -1) != -1) || $this->params->def('show_comp_description', 1) ) : ?>
-	<div class="contentdescription<?php echo $this->params->get( 'pageclass_sfx' ); ?>">
-	<?php
-		if ( isset($this->tmpl['image']) ) :  echo $this->tmpl['image'] . '<div style="clear:both"></div>';  endif;
-		echo $this->params->get('comp_description');
-	?>
-	</div>
-<?php endif;?>
-</div>
-
-<?php
 echo '<form action="'.$this->tmpl['action'].'" method="post" name="adminForm">';
 
 $columns 			= (int)$this->tmpl['categoriescolumns'];
@@ -58,8 +54,6 @@ if($this->tmpl['equalpercentagewidth'] == 1) {
 }
 
 
-
-
 // -------------------
 // TABLE LAYOUT
 // -------------------
@@ -85,7 +79,7 @@ if ($this->tmpl['displayimagecategories'] == 1) {
 		if (isset($this->categories[$i]->extpic) && $this->categories[$i]->extpic) {
 		
 			$correctImageRes = PhocaGalleryPicasa::correctSizeWithRate($this->categories[$i]->extw, $this->categories[$i]->exth, $this->tmpl['picasa_correct_width'], $this->tmpl['picasa_correct_height']);
-			echo JHTML::_( 'image', $this->categories[$i]->linkthumbnailpath, '', array('width' => $correctImageRes['width'], 'height' => $correctImageRes['height']), '', str_replace('&raquo;', '-',$this->categories[$i]->title), 'style="border:0"');
+			echo JHTML::_( 'image', $this->categories[$i]->linkthumbnailpath, str_replace('&raquo;', '-',$this->categories[$i]->title), array('width' => $correctImageRes['width'], 'height' => $correctImageRes['height']), '', '', 'style="border:0"');
 			
 		} else {
 		
@@ -260,7 +254,7 @@ else if ($this->tmpl['displayimagecategories'] == 2){
 
 
 // -------------------
-// DETAIL LAYOUT 3 - FLOAT - Every categoy will float
+// DETAIL LAYOUT 3 - FLOAT - Every categoy will float Categories, images and detail information (Float)
 // -------------------
 
 else if ($this->tmpl['displayimagecategories'] == 3){
@@ -290,7 +284,7 @@ else if ($this->tmpl['displayimagecategories'] == 3){
 		if (isset($this->categories[$i]->extpic) && $this->categories[$i]->extpic) {
 		
 			$correctImageRes = PhocaGalleryPicasa::correctSizeWithRate($this->categories[$i]->extw, $this->categories[$i]->exth, $this->tmpl['picasa_correct_width'], $this->tmpl['picasa_correct_height']);
-			echo JHTML::_( 'image', $this->categories[$i]->linkthumbnailpath, '', array('width' => $correctImageRes['width'], 'height' => $correctImageRes['height']), '', str_replace('&raquo;', '-',$this->categories[$i]->title), 'style="border:0"');
+			echo JHTML::_( 'image', $this->categories[$i]->linkthumbnailpath, str_replace('&raquo;', '-',$this->categories[$i]->title), array('width' => $correctImageRes['width'], 'height' => $correctImageRes['height']), '', '', 'style="border:0"');
 			
 		} else {
 		
@@ -369,6 +363,76 @@ else if ($this->tmpl['displayimagecategories'] == 3){
 }
 
 // -------------------
+// LAYOUT 4 (with columns) (easy categories, images and description)
+// -------------------
+
+else if ($this->tmpl['displayimagecategories'] == 4){
+	
+	echo '<div id="phocagallery-categories-detail">';
+	
+	for ($i = 0; $i < $countCategories; $i++) {
+		
+		echo '<div style="position:relative;float:left;width:'.$this->tmpl['categoriesboxwidth'].';">';
+	
+		/*echo '<fieldset>'
+			.' <legend>'
+			.'  <a href="'.$this->categories[$i]->link.'" class="category'.$this->params->get( 'pageclass_sfx' ).'">'.$this->categories[$i]->title_self.'</a> ';
+			
+		if ($this->categories[$i]->numlinks > 0) {
+			echo '<span class="small">('.$this->categories[$i]->numlinks.')</span>';
+		}	
+			
+		echo ' </legend>';*/
+		
+		echo '<div style="padding:0;margin:0;margin-top:10px;margin-bottom:5px">'
+		    .'<div style="position:relative;float:left;margin:0;padding:0">'
+		    .' <table border="0" cellpadding="0" cellspacing="0">'
+			.'  <tr>'
+			.'   <td style="'.$this->tmpl['imagebg'].';text-align:center;"><a href="'.$this->categories[$i]->link.'">';
+		
+		if (isset($this->categories[$i]->extpic) && $this->categories[$i]->extpic) {
+		
+			$correctImageRes = PhocaGalleryPicasa::correctSizeWithRate($this->categories[$i]->extw, $this->categories[$i]->exth, $this->tmpl['picasa_correct_width'], $this->tmpl['picasa_correct_height']);
+			echo JHTML::_( 'image', $this->categories[$i]->linkthumbnailpath, str_replace('&raquo;', '-',$this->categories[$i]->title), array('width' => $correctImageRes['width'], 'height' => $correctImageRes['height']), '', '', 'style="border:0"');
+			
+		} else {
+		
+			echo JHTML::_( 'image.site', $this->categories[$i]->linkthumbnailpath, '', '', '', str_replace('&raquo;', '-',$this->categories[$i]->title), 'style="border:0"' );
+		}
+
+		echo '</a></td>'
+			.'  </tr>'
+			.' </table>'
+			.'</div>';
+		
+		
+		echo '<div style="margin-right:5px;margin-left:'.$this->tmpl['imagewidth'].'px;">';
+		
+		echo '<div style="padding-top:5px"><a href="'.$this->categories[$i]->link.'" class="category'.$this->params->get( 'pageclass_sfx' ).'">'.$this->categories[$i]->title_self.'</a> ';
+			
+		if ($this->categories[$i]->numlinks > 0) {
+			echo '<span class="small">('.$this->categories[$i]->numlinks.')</span>';
+		}
+		echo '</div>';
+		
+		if ($this->categories[$i]->description != '') {
+		   echo '<div style="margin-top:5px">'.$this->categories[$i]->description.'</div>';
+		}
+		
+		echo '</div>'
+		     //.'<div style="clear:both;"></div>'
+			 .'</div>';
+	
+		
+		echo '</div>';
+		
+	}
+	echo '<div style="clear:both"></div>';
+	echo '</div>';
+
+}
+
+// -------------------
 // UL LAYOUT
 // -------------------
 else {
@@ -416,10 +480,10 @@ else {
 
 
 if (count($this->categories)) {
-	echo '<div><center>';
+	echo '<div class="pgcenter">';
 	if ($this->params->get('show_pagination_limit_categories')) {
 		
-		echo '<div style="margin:0 10px 0 10px;display:inline;">'
+		echo '<div class="pginline">'
 			.JText::_('Display Num') .'&nbsp;'
 			.$this->tmpl['pagination']->getLimitBox()
 			.'</div>';
@@ -435,6 +499,6 @@ if (count($this->categories)) {
 			.$this->tmpl['pagination']->getPagesCounter()
 			.'</div>';
 	}
-	echo '</center></div>';
+	echo '</div>';
 }
 echo '</form><div>&nbsp;</div>' . $this->tmpl['ab'].'</div>';

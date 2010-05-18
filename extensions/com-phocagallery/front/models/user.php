@@ -986,5 +986,23 @@ class PhocagalleryModelUser extends JModel
 		}
 		return $row->id;
 	}
+	
+	function removeAvatarFromDisc($avatar) {
+		jimport( 'joomla.filesystem.file' );
+		phocagalleryimport('phocagallery.path.path');
+		phocagalleryimport('phocagallery.file.file');
+		$path				= &PhocaGalleryPath::getPath();
+		$pathAvatarAbs[]	= $path->avatar_abs  . $avatar;
+		$pathAvatarAbs[]	= $path->avatar_abs  .'thumbs'.DS.'phoca_thumb_l_'. $avatar;
+		$pathAvatarAbs[]	= $path->avatar_abs  .'thumbs'.DS.'phoca_thumb_m_'. $avatar;
+		$pathAvatarAbs[]	= $path->avatar_abs  .'thumbs'.DS.'phoca_thumb_s_'. $avatar;
+		
+		foreach ($pathAvatarAbs as $value) {
+			if (JFile::exists($value)){
+				JFile::delete($value);
+			}
+		}
+		return true;
+	}
 }
 ?>

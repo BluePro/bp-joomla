@@ -48,12 +48,13 @@ class PhocaGalleryViewInfo extends JView
 		$tmpl['detailwindowbackgroundcolor']= $params->get( 'detail_window_background_color', '#ffffff' );
 		$tmpl['detailwindow']			 	= $params->get( 'detail_window', 0 );
 		$description_lightbox_font_color 	= $params->get( 'description_lightbox_font_color', '#ffffff' );
-		$tmpl['pgl'] 						= PhocaGalleryRenderInfo::getPhocaIc((int)$params->get( 'display_phoca_info', 1 ));
 		$description_lightbox_bg_color 		= $params->get( 'description_lightbox_bg_color', '#000000' );
 		$description_lightbox_font_size 	= $params->get( 'description_lightbox_font_size', 12 );
-		$tmpl['stm'] = PhocaGalleryRenderFront::getString();
-		$tmpl['gallerymetakey'] 		= $params->get( 'gallery_metakey', '' );
-		$tmpl['gallerymetadesc'] 		= $params->get( 'gallery_metadesc', '' );
+		$tmpl['stm'] 						= PhocaGalleryRenderFront::getString();
+		$tmpl['gallerymetakey'] 			= $params->get( 'gallery_metakey', '' );
+		$tmpl['gallerymetadesc'] 			= $params->get( 'gallery_metadesc', '' );
+		$tmpl['pgl'] 						= PhocaGalleryRenderInfo::getPhocaIc((int)$params->get( 'display_phoca_info', 1 ));
+		
 		if ($tmpl['gallerymetakey'] != '') {
 			$mainframe->addMetaTag('keywords', $tmpl['gallerymetakey']);
 		}
@@ -67,7 +68,7 @@ class PhocaGalleryViewInfo extends JView
 			." center, table {background:".$tmpl['detailwindowbackgroundcolor'].";} \n" 
 			." #sbox-window {background-color:#fff;padding:5px} \n" 
 			." </style> \n");
-	*/	
+*/	
 		
 		// PARAMS - Get image height and width
 		$tmpl['boxlargewidth']		= $params->get( 'front_modal_box_width', 680 );
@@ -103,7 +104,6 @@ class PhocaGalleryViewInfo extends JView
 				. JHTML::_('image', 'components/com_phocagallery/assets/images/icon-up-images.' . $formatIcon, JText::_( 'Back to category' )).'</a></div>';
 		}
 		
-		
 		// EXIF DATA
 		$outputExif 	= '';
 		$originalFile 	= '';
@@ -123,7 +123,6 @@ class PhocaGalleryViewInfo extends JView
 				$outputExif .= JText::_('No header data found');
 			}
 			
-				
 			$setExif 		= $tmpl['exifinformation'];
 			$setExifArray	= explode(";", $setExif, 200);
 			$exif 			= @exif_read_data($originalFile, 0, true);
@@ -661,10 +660,8 @@ class PhocaGalleryViewInfo extends JView
 							.'<td>'. JText::_($vs) . '</td>'
 							.'<td>'.$exifValue. '</td>'
 							.'</tr>';
-				
 						}
-				
-				
+
 					}
 				}
 				$i++;

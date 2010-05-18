@@ -3,13 +3,13 @@
 $xml_item = "component";// component | template
 $xml_file = "phocagallery.xml";		
 $xml_name = "PhocaGallery";
-$xml_creation_date = "08/01/2009";
+$xml_creation_date = "30/04/2010";
 $xml_author = "Jan Pavelka (www.phoca.cz)";
 $xml_author_email = "";
 $xml_author_url = "www.phoca.cz";
 $xml_copyright = "Jan Pavelka";
 $xml_license = "GNU/GPL";
-$xml_version = "2.6.2";
+$xml_version = "2.7.0";
 $xml_description = "Phoca Gallery";
 $xml_copy_file = 1;//Copy other files in to administration area (only for development), ./front, ./language, ./other
 

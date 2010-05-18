@@ -163,12 +163,12 @@ if (is_array($rows)) {
 ?></tbody>
 <tfoot>
 	<tr>
-	<td colspan="10" class="footer"><?php 
+	<td colspan="9" class="footer"><?php 
 	
 $this->tmpl['imagepagination']->setTab($this->tmpl['currenttab']['images']);
 if (count($this->tmpl['imageitems'])) {
-	echo '<div><center>';
-	echo '<div style="margin:0 10px 0 10px;display:inline;">'
+	echo '<div class="pgcenter">';
+	echo '<div class="pginline">'
 		.JText::_('Display Num') .'&nbsp;'
 		.$this->tmpl['imagepagination']->getLimitBox()
 		.'</div>';
@@ -178,7 +178,7 @@ if (count($this->tmpl['imageitems'])) {
 		.'<div style="margin:0 10px 0 10px;display:inline;" class="pagecounter">'
 		.$this->tmpl['imagepagination']->getPagesCounter()
 		.'</div>';
-	echo '</center></div>';
+	echo '</div>';
 }
 
 ?></td>
@@ -273,7 +273,7 @@ if (isset($this->state->folder) && $this->state->folder != '') {
 		<?php } // end java upload ?>
 				
 				
-<form onsubmit="return OnUploadSubmit();" action="<?php echo $this->tmpl['actionamp'] ?>task=upload&amp;<?php echo $this->session->getName().'='.$this->session->getId(); ?>&amp;<?php echo JUtility::getToken();?>=1" name="phocagalleryuploadform" id="phocagallery-upload-form" method="post" enctype="multipart/form-data">
+<form onsubmit="return OnUploadSubmitPG();" action="<?php echo $this->tmpl['actionamp'] ?>task=upload&amp;<?php echo $this->session->getName().'='.$this->session->getId(); ?>&amp;<?php echo JUtility::getToken();?>=1" name="phocagalleryuploadform" id="phocagallery-upload-form" method="post" enctype="multipart/form-data">
 <table>
 	<tr>
 		<td><strong><?php echo JText::_('PHOCAGALLERY_FILENAME');?>:</strong></td><td>
@@ -308,7 +308,7 @@ if (isset($this->state->folder) && $this->state->folder != '') {
 	<input type="hidden" name="filter_order_Dir_image" value="" />
 	<input type="hidden" name="catid" value="<?php echo $this->tmpl['catidimage'] ?>"/>
 </form>
-<div id="loading-label"><center><?php echo JHTML::_('image', $this->tmpl['pi'].'icon-switch.gif', '') . '  '. JText::_('Loading'); ?></center></div>
+<div id="loading-label" style="text-align:center"><?php echo JHTML::_('image', $this->tmpl['pi'].'icon-switch.gif', '') . '  '. JText::_('Loading'); ?></div>
 </fieldset>
 	<?php
 	}

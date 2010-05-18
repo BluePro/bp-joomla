@@ -28,6 +28,7 @@ class PhocaGalleryViewDetail extends JView
 		$var['download'] 	= JRequest::getVar('phocadownload', 0, '', 'int');
 		$uri 				= &JFactory::getURI();
 		$tmpl['action']		= $uri->toString();
+
 		
 		// Information from the plugin - window is displayed after plugin action
 		$get				= array();
@@ -93,7 +94,7 @@ class PhocaGalleryViewDetail extends JView
 		$tmpl['slideshowrandom'] 				= $params->get( 'slideshow_random', 0 );
 		$tmpl['gallerymetakey'] 				= $params->get( 'gallery_metakey', '' );
 		$tmpl['gallerymetadesc'] 				= $params->get( 'gallery_metadesc', '' );
-		
+		$tmpl['altvalue']		 				= $params->get( 'alt_value', 1 );
 		// Download from the detail view which is not in the popupbox
 		if ($var['download'] == 2 ){
 			$tmpl['displayicondownload'] = 2;
@@ -127,8 +128,11 @@ class PhocaGalleryViewDetail extends JView
 			$rightDisplay = PhocaGalleryAccess::getUserRight('accessuserid', $item->cataccessuserid, $item->cataccess, $user->get('aid', 0), $user->get('id', 0), 0);
 		}
 	
+	
+	
 		if ($rightDisplay == 0) {
-			$mainframe->redirect('index.php?option=com_user&view=login', JText::_("ALERTNOTAUTH"));
+			$tmpl['pl']		= 'index.php?option=com_user&view=login&return='.base64_encode($uri->toString());
+			$mainframe->redirect(JRoute::_($tmpl['pl'], false), JText::_("ALERTNOTAUTH"));
 			exit;
 		}
 		// - - - - - - - - - - - - - - - - - - - - 
@@ -146,6 +150,10 @@ class PhocaGalleryViewDetail extends JView
 		$item->slideshowfiles	= $slideshowData['files'];
 		$item->slideshow		= $var['slideshow'];
 		$item->download			= $var['download'];
+		
+		// ALT VALUE
+		$altValue	= PhocaGalleryRenderFront::getAltValue($tmpl['altvalue'], $item->title, $item->description, $item->metadesc);
+		$item->altvalue			= $altValue;
 			
 		// Get file thumbnail or No Image
 		$item->filenameno		= $item->filename;
@@ -162,13 +170,13 @@ class PhocaGalleryViewDetail extends JView
 				$item->extw	= $extw[0];
 			}
 			$correctImageRes 		= PhocaGalleryPicasa::correctSizeWithRate($item->extw, $item->exth, $tmpl['picasa_correct_width_l'], $tmpl['picasa_correct_height_l']);
-			$item->linkimage		= JHTML::_( 'image', $item->extl, '', array('width' => $correctImageRes['width'], 'height' => $correctImageRes['height']));
+			$item->linkimage		= JHTML::_( 'image', $item->extl, $item->altvalue, array('width' => $correctImageRes['width'], 'height' => $correctImageRes['height']));
 			$item->realimagewidth 	= $correctImageRes['width'];
 			$item->realimageheight	= $correctImageRes['height'];
 			
 		} else {
 			$item->linkthumbnailpath	= PhocaGalleryImageFront::displayCategoryImageOrNoImage($item->filenameno, 'large');
-			$item->linkimage			= JHTML::_( 'image.site', $item->linkthumbnailpath, '');
+			$item->linkimage			= JHTML::_( 'image.site', $item->linkthumbnailpath, '', '', '', $item->altvalue);
 			$realImageSize 				= PhocaGalleryImage::getRealImageSize ($item->filenameno);
 			$item->imagesize			= PhocaGalleryImage::getImageSize($item->filenameno, 1);
 			if (isset($realImageSize['w']) && isset($realImageSize['h'])) {

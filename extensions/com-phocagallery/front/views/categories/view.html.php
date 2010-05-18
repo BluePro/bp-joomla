@@ -10,6 +10,7 @@
  */
 defined('_JEXEC') or die();
 jimport( 'joomla.application.component.view');
+jimport( 'joomla.filesystem.file' );
 phocagalleryimport('phocagallery.access.access');
 phocagalleryimport('phocagallery.path.path');
 phocagalleryimport('phocagallery.file.file');

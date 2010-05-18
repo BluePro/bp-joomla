@@ -807,19 +807,19 @@ class PhocaGalleryCpControllerPhocaGalleryinstall extends PhocaGalleryCpControll
 		$errorMsg	= '';
 		$updateMKC = $this->AddColumnIfNotExists( $errorMsg, "#__phocagallery_categories", "metakey", "text", "params" );
 		if (!$updateMKC) {
-			$msgSQL .= 'Error while updating Metakey column';
+			$msgSQL .= 'Error while updating Metakey column (Categories)';
 		}
 		$updateMD = false;
 		$errorMsg	= '';
 		$updateMD = $this->AddColumnIfNotExists( $errorMsg, "#__phocagallery", "metadesc", "text", "params" );
 		if (!$updateMD) {
-			$msgSQL .= 'Error while updating Metakey column';
+			$msgSQL .= 'Error while updating MetaDescription column';
 		}
 		$updateMDC = false;
 		$errorMsg	= '';
 		$updateMDC = $this->AddColumnIfNotExists( $errorMsg, "#__phocagallery_categories", "metadesc", "text", "params" );
 		if (!$updateMDC) {
-			$msgSQL .= 'Error while updating Metakey column';
+			$msgSQL .= 'Error while updating MetaDescription column (Categories)';
 		}
 		
 		

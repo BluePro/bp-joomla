@@ -19,6 +19,7 @@ if (! class_exists('PhocaGalleryLoader')) {
     require_once( JPATH_ADMINISTRATOR.DS.'components'.DS.'com_phocagallery'.DS.'libraries'.DS.'loader.php');
 }
 phocagalleryimport('phocagallery.path.path');
+phocagalleryimport('phocagallery.path.route');
 phocagalleryimport('phocagallery.library.library');
 phocagalleryimport('phocagallery.text.text');
 phocagalleryimport('phocagallery.access.access');
@@ -144,7 +145,7 @@ class plgContentPhocaGallery extends JPlugin
 			$tmpl['imageordering']				= $paramsC->get( 'image_ordering', 9);
 			$tmpl['highslidedescription']		= $paramsC->get( 'highslide_description', 0 );
 			$tmpl['pluginlink']					= 0;
-			
+			$tmpl['jakdatajs'] 					= array();
 			$minimum_box_width 					= '';
 			
 			// Component settings - some behaviour is set in component and cannot be set in plugin
@@ -430,12 +431,13 @@ class plgContentPhocaGallery extends JPlugin
 			Shadowbox.loadSkin("classic", "'.JURI::base(true).'/components/com_phocagallery/assets/js/shadowbox/src/skin");
 			Shadowbox.loadLanguage("'.$sb_lang.'", "'.JURI::base(true).'/components/com_phocagallery/assets/js/shadowbox/src/lang");
 			Shadowbox.loadPlayer(["img"], "'.JURI::base(true).'/components/com_phocagallery/assets/js/shadowbox/src/player");
-			window.onload = function(){
-			Shadowbox.init();
-			}
+			window.addEvent(\'domready\', function(){
+                        Shadowbox.init()
+                        });
 			</script>');
 					$library->setLibrary('pg-group-shadowbox', 1);
 				}
+
 			}
 			
 			// -------------------------------------------------------
@@ -713,30 +715,9 @@ class plgContentPhocaGallery extends JPlugin
 						
 					$output .= '<table border="0">';
 					foreach ($data_outcome_array as $category) {
-						// -------------------------------------------------------------- SEF PROBLEM
-						// Is there a Itemid for category
-						$items	 = $menu->getItems('link', 'index.php?option=com_phocagallery&view=category&id='. $category->id);
-						$itemscat= $menu->getItems('link', 'index.php?option=com_phocagallery&view=categories');
+						// ROUTE
+						$category->link = JRoute::_(PhocaGalleryRoute::getCategoryRoute($category->id, $category->alias));
 						
-						if(isset($itemscat[0]))
-						{
-							$itemid = $itemscat[0]->id;
-							$category->link = JRoute::_('index.php?option=com_phocagallery&view=category&id='. $category->slug.'&Itemid='.$itemid );
-						}
-						else if(isset($items[0]))
-						{
-							$itemid = $items[0]->id;
-							$category->link = JRoute::_('index.php?option=com_phocagallery&view=category&id='. $category->slug.'&Itemid='.$itemid );
-						}
-						else
-						{							
-							$itemid = 0;
-							//$category->link = JRoute::_('index.php?option=com_phocagallery&view=category&id='. $category->slug.'&Itemid='.$itemid );
-							$category->link = JRoute::_('index.php?option=com_phocagallery&view=category&id='. $category->slug );
-							
-						}
-						// ---------------------------------------------------------------------------------
-
 						$imgCatSizeHelper = 'small';
 						
 						$mediumCSS 	= 'background: url(\''.JURI::base(true).'/components/com_phocagallery/assets/images/shadow1.'.$tmpl['formaticon'].'\') 50% 50% no-repeat;height:'.$medium_image_height	.'px;width:'.$medium_image_width.'px;';
@@ -801,28 +782,8 @@ class plgContentPhocaGallery extends JPlugin
 					$output .= '<ul>';
 					
 					foreach ($data_outcome_array as $category) {
-						// -------------------------------------------------------------- SEF PROBLEM
-						// Is there a Itemid for category
-						$items	 = $menu->getItems('link', 'index.php?option=com_phocagallery&view=category&id='. $category->id);
-						$itemscat= $menu->getItems('link', 'index.php?option=com_phocagallery&view=categories');
-						
-						if(isset($itemscat[0]))
-						{
-							$itemid = $itemscat[0]->id;
-							$category->link = JRoute::_('index.php?option=com_phocagallery&view=category&id='. $category->slug.'&Itemid='.$itemid );
-						}
-						else if(isset($items[0]))
-						{
-							$itemid = $items[0]->id;
-							$category->link = JRoute::_('index.php?option=com_phocagallery&view=category&id='. $category->slug.'&Itemid='.$itemid );
-						}
-						else
-						{
-							$itemid = 0;
-							$category->link = JRoute::_('index.php?option=com_phocagallery&view=category&id='. $category->slug );
-						}
-						// ---------------------------------------------------------------------------------
-					
+						// ROUTE
+						$category->link = JRoute::_(PhocaGalleryRoute::getCategoryRoute($category->id, $category->alias));
 					
 						$output .='<li>'
 								 .'<a href="'.$category->link.'" class="category'.$params->get( 'pageclass_sfx' ).'">'
@@ -883,7 +844,7 @@ class plgContentPhocaGallery extends JPlugin
 					$imageOrdering = ' ORDER BY a.'.PhocaGalleryOrdering::getOrderingString($tmpl['imageordering']);
 				}
 				
-				$query = 'SELECT cc.id, a.id, a.catid, a.title, a.alias, a.filename, a.description, a.extm, a.exts, a.extw, a.exth, a.extid, a.extl, a.exto,'
+				$query = 'SELECT cc.id, cc.alias as catalias, a.id, a.catid, a.title, a.alias, a.filename, a.description, a.extm, a.exts, a.extw, a.exth, a.extid, a.extl, a.exto,'
 				. ' CASE WHEN CHAR_LENGTH(cc.alias) THEN CONCAT_WS(\':\', cc.id, cc.alias) ELSE cc.id END as catslug, '
 				. ' CASE WHEN CHAR_LENGTH(a.alias) THEN CONCAT_WS(\':\', a.id, a.alias) ELSE a.id END as slug'
 				. ' FROM #__phocagallery_categories AS cc'
@@ -974,37 +935,20 @@ class plgContentPhocaGallery extends JPlugin
 					$file_thumbnail 			= PhocaGalleryFileThumbnail::getThumbnailName($image->filename, $imgSize);
 					$image->linkthumbnailpathabs= $file_thumbnail->abs;
 					
-					
-					// -------------------------------------------------------------------- SEF PROBLEM
-					// Is there an Itemid for category
-					$items	 = $menu->getItems('link', 'index.php?option=com_phocagallery&view=category&id='.$image->id);
-					$itemscat= $menu->getItems('link', 'index.php?option=com_phocagallery&view=categories');
-
-					if(isset($itemscat[0])) {
-						$itemid 		= $itemscat[0]->id;
-						$itemIdOutput 	= '&Itemid='.$itemid;
-
-					} else if(isset($items[0])) {
-						$itemid = $items[0]->id;
-						$itemIdOutput 	= '&Itemid='.$itemid;
-					} else {
-						$itemid = 0;
-						$itemIdOutput = '';
-					}
-					// ---------------------------------------------------------------------------------
+					// ROUTE
+					//$siteLink = JRoute::_(PhocaGalleryRoute::getImageRoute($image->id, $image->catid, $image->alias, $image->catalias, 'detail', 'tmpl=component&detail='.$tmpl['detailwindow'].'&buttons='.$detail_buttons );
 
 					// Different links for different actions: image, zoom icon, download icon
 					$thumbLink	= PhocaGalleryFileThumbnail::getThumbnailName($image->filename, 'large');
 					$thumbLinkM	= PhocaGalleryFileThumbnail::getThumbnailName($image->filename, 'medium');
 					
-					$siteLink ='index.php?option=com_phocagallery&view=detail&catid='. $image->catslug .'&id='. $image->slug .'&Itemid='.$itemid . '&tmpl=component&detail='.$tmpl['detailwindow'].'&buttons='.$detail_buttons;
-					
+					// ROUTE
 					if ($tmpl['detailwindow'] == 7) {
-						$siteLink 	= JRoute::_('index.php?option=com_phocagallery&view=detail&catid='.$image->catslug.'&id='. $image->slug.$itemIdOutput. '&detail='.$tmpl['detailwindow'].'&buttons='.$detail_buttons  );
+						$suffix	= 'detail='.$tmpl['detailwindow'].'&buttons='.$detail_buttons;
 					} else {
-						$siteLink 	= JRoute::_('index.php?option=com_phocagallery&view=detail&catid='.$image->catslug.'&id='. $image->slug.$itemIdOutput. '&tmpl=component&detail='.$tmpl['detailwindow'].'&buttons='.$detail_buttons  );
-						
+						$suffix	= 'tmpl=component&detail='.$tmpl['detailwindow'].'&buttons='.$detail_buttons;	
 					}
+					$siteLink 	= JRoute::_(PhocaGalleryRoute::getImageRoute($image->id, $image->catid, $image->alias, $image->catalias, 'detail', $suffix ));
 					$imgLinkOrig= JURI::base(true) . '/' .PhocaGalleryFile::getFileOriginal($image->filename, 1);
 					$imgLink	= $thumbLink->rel;
 					
@@ -1015,12 +959,11 @@ class plgContentPhocaGallery extends JPlugin
 					
 					// Different Link - to all categories
 					if ((int)$tmpl['pluginlink'] == 2) {
-						$siteLink = $imgLinkOrig = $imgLink = 'index.php?option=com_phocagallery&view=categories&Itemid='.$itemid;
-						
+						$siteLink = $imgLinkOrig = $imgLink = PhocaGalleryRoute::getCategoriesRoute();
 					}
 					// Different Link - to all category
 					else if ((int)$tmpl['pluginlink'] == 1) {
-						$siteLink = $imgLinkOrig = $imgLink = 'index.php?option=com_phocagallery&view=category&id='.$image->catslug.'&Itemid='.$itemIdOutput;
+						$siteLink = $imgLinkOrig = $imgLink = PhocaGalleryRoute::getCategoriesRoute($image->catid, $image->catalias);
 					}
 					
 					if ($tmpl['detailwindow'] == 2 ) {
@@ -1258,7 +1201,7 @@ class plgContentPhocaGallery extends JPlugin
 									$output .= ' title="'.$image->title.'"';
 							}
 							
-							$output .=  'href="'. JRoute::_($image->link).'"'; 
+							$output .=  ' href="'. JRoute::_($image->link).'"'; 
 							
 							
 							// DETAIL WINDOW
@@ -1278,19 +1221,26 @@ class plgContentPhocaGallery extends JPlugin
 							
 							// Enable the switch image
 							if ($enable_switch == 1) {
-								
+								// Picasa
 								if ($image->extl != '') {
-								
-									$correctImageRes = PhocaGalleryPicasa::correctSizeWithRate($image->extwswitch, $image->exthswitch, $switch_width, $switch_height);
-
-									$output .=' onmouseover="PhocaGallerySwitchImage(\'PhocaGalleryobjectPicture\', \''. $image->extl.'\', '.$correctImageRes['width'].', '.$correctImageRes['height'].');" ';
-									// onmouseout="PhocaGallerySwitchImage(\'PhocaGalleryobjectPicture\', \''.$image->extl.'\');"
+									if ((int)$switch_width > 0 && (int)$switch_height > 0) {
+										// Custom Size
+										$output .=' onmouseover="PhocaGallerySwitchImage(\'PhocaGalleryobjectPicture\', \''. $image->extl.'\', '.$switch_width.', '.$switch_height.');" ';
+									} else {
+										// Picasa Size
+										$correctImageResL = PhocaGalleryPicasa::correctSizeWithRate($image->extwswitch, $image->exthswitch, $switch_width, $switch_height);
+										$output .=' onmouseover="PhocaGallerySwitchImage(\'PhocaGalleryobjectPicture\', \''. $image->extl.'\', '.$correctImageResL['width'].', '.$correctImageResL['height'].');" '; 
+										// onmouseout="PhocaGallerySwitchImage(\'PhocaGalleryobjectPicture\', \''.$image->extl.'\');"
+									}
 								} else {
 									$switchImg = str_replace('phoca_thumb_m_','phoca_thumb_l_',JURI::base(true).'/'. $image->linkthumbnailpath);
-									$output .=' onmouseover="PhocaGallerySwitchImage(\'PhocaGalleryobjectPicture\', \''. $switchImg.'\');" '; 
-									//onmouseout="PhocaGallerySwitchImage(\'PhocaGalleryobjectPicture\', \''.$switchImg.'\');"
+									if ((int)$switch_width > 0 && (int)$switch_height > 0) {
+										$output .=' onmouseover="PhocaGallerySwitchImage(\'PhocaGalleryobjectPicture\', \''. $switchImg.'\', '.$switch_width.', '.$switch_height.');" ';
+									} else {
+										$output .=' onmouseover="PhocaGallerySwitchImage(\'PhocaGalleryobjectPicture\', \''. $switchImg.'\');" ';
+										// onmouseout="PhocaGallerySwitchImage(\'PhocaGalleryobjectPicture\', \''.$switchImg.'\');"
+									}
 								}
-								
 							} else {
 								// Overlib
 								
@@ -1492,15 +1442,24 @@ class plgContentPhocaGallery extends JPlugin
 					
 					$switchImage = PhocaGalleryImage::correctSwitchSize($switch_height, $switch_width);
 
+					if ((int)$switch_width > 0 && (int)$switch_height > 0) {
+						$wHArray	= array( 'id' => 'PhocaGalleryobjectPicture', 'border' =>'0', 'width' => $switch_width, 'height' => $switch_height);
+						$wHString	= ' id="PhocaGalleryobjectPicture"  border="0" width="'. $switch_width.'" height="'.$switch_height.'"';
+					} else {
+						$wHArray 	= array( 'id' => 'PhocaGalleryobjectPicture', 'border' =>'0');
+						$wHString	= ' id="PhocaGalleryobjectPicture"  border="0"';
+					}
+					
 					
 					if (isset($basicImageArray->extl) && isset($basicImageArray->extid) && $basicImageArray->extid != '') {
-						$basicImage		= JHTML::_( 'image', $basicImageArray->extl, '', array( 'id' => 'PhocaGalleryobjectPicture', 'border' =>'0'));
+						$basicImage		= JHTML::_( 'image', $basicImageArray->extl, '', $wHArray);
 					} else if (isset($basicImageArray->filename)) { 
 						$fileBasicThumb = PhocaGalleryFileThumbnail::getThumbnailName($basicImageArray->filename, 'large');
-						$basicImage		= JHTML::_( 'image.site', $fileBasicThumb->rel , '', '', '', '', ' id="PhocaGalleryobjectPicture"  border="0"' );
+						$basicImage		= JHTML::_( 'image.site', $fileBasicThumb->rel , '', '', '', '', $wHString);
 					} else {
 						$basicImage  = '';
 					}
+					
 				}
 	
 				
@@ -1547,11 +1506,14 @@ class plgContentPhocaGallery extends JPlugin
 			// ADD JAK DATA CSS style
 
 			if ( $tmpl['detailwindow'] == 6 ) {
-				$document->addCustomTag('<script type="text/javascript">'
-				. 'var dataJakJsPl'.$randName.' = ['
-				. implode($tmpl['jakdatajs'], ',')
-				. ']'
-				. '</script>');
+				$scriptJAK = '<script type="text/javascript">'
+				. 'var dataJakJsPl'.$randName.' = [';
+				if (!empty($tmpl['jakdatajs'])) {
+					$scriptJAK .= implode($tmpl['jakdatajs'], ',');
+				}
+				$scriptJAK .= ']'
+				. '</script>';
+				$document->addCustomTag($scriptJAK);
 			}
 			
 		}

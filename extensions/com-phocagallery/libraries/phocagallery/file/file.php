@@ -43,8 +43,8 @@ class PhocaGalleryFile
 
 	
 	function getMimeType($filename) {
-		$ext = JFile::getExt($filename);	
-		switch($ext) {
+		$ext = JFile::getExt($filename);		
+		switch(strtolower($ext)) {
 			case 'png':
 				$mime = 'image/png';
 			break;

@@ -13,6 +13,14 @@ $mainframe->registerEvent( 'onSearch', 'plgSearchPhocagallery' );
 $mainframe->registerEvent( 'onSearchAreas', 'plgSearchPhocagalleryAreas' );
 JPlugin::loadLanguage( 'plg_search_phocagallery' );
 
+if (!JComponentHelper::isEnabled('com_phocagallery', true)) {
+	return JError::raiseError(JText::_('Phoca Gallery Error'), JText::_('Phoca Gallery is not installed on your system'));
+}
+if (! class_exists('PhocaGalleryLoader')) {
+    require_once( JPATH_ADMINISTRATOR.DS.'components'.DS.'com_phocagallery'.DS.'libraries'.DS.'loader.php');
+}
+phocagalleryimport('phocagallery.path.route');
+
 function &plgSearchPhocagalleryAreas() {
 	static $areas = array(
 		'phocagallery' => 'Phoca Gallery'
@@ -66,7 +74,7 @@ function plgSearchPhocagallery( $text, $phrase = '', $ordering = '', $areas = nu
 	$rows = array();
 	
 	// Categories
-	$query = 'SELECT a.id, a.title AS title, "" AS created,'
+	$query = 'SELECT a.id, a.title AS title, a.alias, "" AS created,'
 		. ' CASE WHEN CHAR_LENGTH(a.alias) THEN CONCAT_WS(\':\', a.id, a.alias) ELSE a.id END as slug,'
 		. ' a.description AS text,'
 		. ' CONCAT_WS( " / ", '.$db->Quote($section).', a.title ) AS section,'
@@ -74,6 +82,8 @@ function plgSearchPhocagallery( $text, $phrase = '', $ordering = '', $areas = nu
 		. ' FROM #__phocagallery_categories AS a'
 		. ' WHERE ( a.title LIKE '.$text
 		. ' OR a.name LIKE '.$text
+		. ' OR a.metakey LIKE '.$text
+		. ' OR a.metadesc LIKE '.$text
 		. ' OR a.description LIKE '.$text.' )'
 		. ' AND a.published = 1'
 		. ' AND a.approved = 1'
@@ -84,36 +94,11 @@ function plgSearchPhocagallery( $text, $phrase = '', $ordering = '', $areas = nu
 	$db->setQuery( $query, 0, $limit );
 	$listCategories = $db->loadObjectList();
 	$limit -= count($listCategories);
-	
-	
-	
-	
-	
-	
 
 	if(isset($listCategories)) {
 		foreach($listCategories as $key => $value) {
 			
-			// SEF PROBLEM - - - - - 
-			// Is there an Itemid for category
-			$items	 = $menu->getItems('link', 'index.php?option=com_phocagallery&view=category&id='.$value->id);
-			$itemscat= $menu->getItems('link', 'index.php?option=com_phocagallery&view=categories');
-
-			if(isset($itemscat[0])) {
-				
-				$itemid = $itemscat[0]->id;
-				$catLink ='index.php?option=com_phocagallery&view=category&id='. $value->slug .'&Itemid='.$itemid;
-				
-			} else if(isset($items[0])) {
-				
-				$itemid = $items[0]->id;
-				$catLink ='index.php?option=com_phocagallery&view=category&id='. $value->slug .'&Itemid='.$itemid;
-			} else {
-				$itemid = 0;
-				$catLink ='index.php?option=com_phocagallery&view=category&id='. $value->slug;
-			}
-			// - - - - - - - - - - - - - - - -
-			$listCategories[$key]->href = JRoute::_( $catLink );
+			$listCategories[$key]->href = $link = JRoute::_(PhocaGalleryRoute::getCategoryRoute($value->id, $value->alias));
 		}
 	}
 	$rows[] = $listCategories;
@@ -147,11 +132,13 @@ function plgSearchPhocagallery( $text, $phrase = '', $ordering = '', $areas = nu
 		. ' CASE WHEN CHAR_LENGTH(a.alias) THEN CONCAT_WS(\':\', a.id, a.alias) ELSE a.id END as slug, '
 		. ' CASE WHEN CHAR_LENGTH(b.alias) THEN CONCAT_WS(\':\', b.id, b.alias) ELSE b.id END AS catslug, '
 		. ' CONCAT_WS( " / ", '.$db->Quote($section).', a.title ) AS section,'
-		. ' "2" AS browsernav'
+		. ' "2" AS browsernav, b.id as catid, b.alias as catalias'
 		. ' FROM #__phocagallery AS a'
 		. ' LEFT JOIN #__phocagallery_categories AS b ON b.id = a.catid'
 		. ' WHERE ( a.title LIKE '.$text
 		. ' OR a.filename LIKE '.$text
+		. ' OR a.metakey LIKE '.$text
+		. ' OR a.metadesc LIKE '.$text
 		. ' OR a.description LIKE '.$text.' )'
 		. ' AND a.published = 1'
 		. ' AND b.published = 1'
@@ -165,26 +152,8 @@ function plgSearchPhocagallery( $text, $phrase = '', $ordering = '', $areas = nu
 
 		if(isset($listImages)) {
 			foreach($listImages as $key => $value) {
-				// SEF PROBLEM - - - - - 
-				// Is there an Itemid for category
-				$items	 = $menu->getItems('link', 'index.php?option=com_phocagallery&view=category&id='.$value->id);
-				$itemscat= $menu->getItems('link', 'index.php?option=com_phocagallery&view=categories');
-
-				if(isset($itemscat[0])) {
-					
-					$itemid = $itemscat[0]->id;
-					$catLink ='index.php?option=com_phocagallery&view=category&id='. $value->catslug .'&Itemid='.$itemid;
-					
-				} else if(isset($items[0])) {
-					
-					$itemid = $items[0]->id;
-					$catLink ='index.php?option=com_phocagallery&view=category&id='. $value->catslug .'&Itemid='.$itemid;
-				} else {
-					$itemid = 0;
-					$catLink ='index.php?option=com_phocagallery&view=category&id='. $value->catslug;
-				}
-				// - - - - - - - - - - - - - - - -
-				$listImages[$key]->href = JRoute::_( $catLink );
+				
+				$listImages[$key]->href = JRoute::_(PhocaGalleryRoute::getCategoryRoute($value->catid, $value->catalias));
 			}
 		}
 		$rows[] = $listImages;

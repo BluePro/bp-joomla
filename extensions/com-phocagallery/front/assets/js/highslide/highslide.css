@@ -442,6 +442,12 @@ a.highslide-credits:hover i {
 	border-color: black black #202020 black;
 	background: gray;
 }
+
+.dark .highslide-heading {
+   color: white;
+   background: #111;
+}
+
 .dark .highslide-caption {
 	color: white;
 	background: #111;

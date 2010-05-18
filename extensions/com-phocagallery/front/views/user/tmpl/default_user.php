@@ -43,7 +43,7 @@ if ($this->tmpl['enableuploadavatar'] == 1) {
 	.' '.JText::_('PHOCAGALLERY_MAX_RESOLUTION').':&nbsp;'. $this->tmpl['uploadmaxreswidth'].' x '.$this->tmpl['uploadmaxresheight'].' px ]';
 ?></legend>			
 				
-<form onsubmit="return OnUploadSubmitUser();" action="<?php echo $this->tmpl['actionamp'] . $this->session->getName().'='.$this->session->getId(); ?>&amp;<?php echo JUtility::getToken();?>=1&amp;viewback=user" id="uploadForm" method="post" enctype="multipart/form-data">
+<form onsubmit="return OnUploadSubmitUserPG();" action="<?php echo $this->tmpl['actionamp'] . $this->session->getName().'='.$this->session->getId(); ?>&amp;<?php echo JUtility::getToken();?>=1&amp;viewback=user" id="uploadForm" method="post" enctype="multipart/form-data">
 		
 	<table>
 		<tr>
@@ -82,7 +82,7 @@ if ($this->tmpl['enableuploadavatar'] == 1) {
 	<input type="hidden" name="view" value="user"/>
 	<input type="hidden" name="Itemid" value="<?php echo JRequest::getVar('Itemid', 0, '', 'int') ?>"/>
 </form>
-<div id="loading-label-user"><center><?php echo JHTML::_('image', $this->tmpl['pi'].'icon-switch.gif', '') . '  '. JText::_('Loading'); ?></center></div>
+<div id="loading-label-user" style="text-align:center"><?php echo JHTML::_('image', $this->tmpl['pi'].'icon-switch.gif', '') . '  '. JText::_('Loading'); ?></div>
 </fieldset>
 	<?php
 }

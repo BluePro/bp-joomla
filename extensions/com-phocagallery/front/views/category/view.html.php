@@ -35,6 +35,7 @@ class PhocaGalleryViewCategory extends JView
 		$id 				= JRequest::getVar('id', 0, '', 'int');
 		$tmpl['tab'] 		= JRequest::getVar('tab', 0, '', 'int');
 		$tmpl['formaticon'] = PhocaGalleryImage::getFormatIcon();
+		$tmpl['pl']			= 'index.php?option=com_user&view=login&return='.base64_encode($uri->toString());
 	
 		// LIBRARY
 		$library 							= &PhocaGalleryLibrary::getLibrary();
@@ -108,7 +109,7 @@ class PhocaGalleryViewCategory extends JView
 		$tmpl['large_image_width']			= $params->get( 'large_image_width', 640 );
 		$tmpl['large_image_height']			= $params->get( 'large_image_height', 640 );
 		$tmpl['uploadmaxsize'] 				= $params->get( 'upload_maxsize', 3145728 );
-		$tmpl['uploadmaxsizeread'] 			= PhocaGalleryFile::getFileSizeReadable((int)$tmpl['uploadmaxsize']);
+		$tmpl['uploadmaxsizeread'] 			= PhocaGalleryFile::getFileSizeReadable($tmpl['uploadmaxsize']);
 		$tmpl['uploadmaxreswidth'] 			= $params->get( 'upload_maxres_width', 3072 );
 		$tmpl['uploadmaxresheight'] 		= $params->get( 'upload_maxres_height', 2304 );
 		$tmpl['phocagallerywidth']			= $params->get( 'phocagallery_width', '');
@@ -160,6 +161,7 @@ class PhocaGalleryViewCategory extends JView
 		$tmpl['picasa_correct_height_l']	= (int)$params->get( 'large_image_height', 480 );
 		$tmpl['gallerymetakey'] 			= $params->get( 'gallery_metakey', '' );
 		$tmpl['gallerymetadesc'] 			= $params->get( 'gallery_metadesc', '' );
+		$tmpl['altvalue']		 			= $params->get( 'alt_value', 1 );
 			
 		
 		$catImg = PhocaGalleryImageFront::getCategoriesImageBackground($image_categories_size_cv, $small_image_width_cv, $small_image_height_cv,  $medium_image_height_cv, $medium_image_width_cv);
@@ -173,7 +175,7 @@ class PhocaGalleryViewCategory extends JView
 		if ( $tmpl['displayimageshadow'] != 'none' ) {	
 			// IE hack
 			$shadowPath = $path->image_abs_front . $tmpl['displayimageshadow'].'.'.$tmpl['formaticon'];
-			$shadowSize	= @getimagesize($shadowPath);
+			$shadowSize	= getimagesize($shadowPath);
 			if (isset($shadowSize[0]) && isset($shadowSize[0])) {
 				$w = (int)$tmpl['imagewidth'] + 18 - (int)$shadowSize[0];
 				$h = (int)$tmpl['imageheight'] + 18 - (int)$shadowSize[1];
@@ -584,6 +586,7 @@ window.addEvent(\'domready\', function(){
 		}
 		if ($rightDisplayUpload == 1) {
 			$tmpl['displayupload']	= 1;
+			$document->addCustomTag(PhocaGalleryRenderFront::renderOnUploadJS());
 			$document->addCustomTag(PhocaGalleryRenderFront::renderDescriptionUploadJS((int)$tmpl['maxuploadchar']));
 		}
 		// - - - - - - - - - - - - - - - - - - - - - 
@@ -594,12 +597,15 @@ window.addEvent(\'domready\', function(){
 			$rightDisplay = PhocaGalleryAccess::getUserRight('accessuserid', $category->accessuserid, 0, $user->get('aid', 0), $user->get('id', 0), $display_access_category);
 		}
 		if ($rightDisplay == 0) {
-			$mainframe->redirect(JRoute::_('index.php?option=com_user&view=login', false), JText::_("ALERTNOTAUTH"));
+			
+			$mainframe->redirect(JRoute::_($tmpl['pl'], false), JText::_("ALERTNOTAUTH"));
 			exit;
 		}		
 		// - - - - - - - - - - - - - - - - - - - - - 
 		
-		// 1. GEOTAGGING CATEGORY 
+		// 1. GEOTAGGING CATEGORY
+		$map['longitude'] 	= '';// will be used for 1. default_geotagging to not display pane and 2. to remove pane (line cca 1554)
+		$map['latitude'] 	= '';
 		if (isset($category->latitude) && $category->latitude != '' && $category->latitude != 0
 			&& isset($category->longitude) && $category->longitude != '' && $category->longitude != 0 ) {
 			
@@ -698,6 +704,7 @@ window.addEvent(\'domready\', function(){
 					$items[$iS]->displayiconextlink1	= 0;
 					$items[$iS]->displayiconextlink2	= 0;
 					$items[$iS]->description			= '';
+					$items[$iS]->altvalue				= '';
 					$iS++;
 				} else {
 					// There is no right to see the data but the object exists (because it was loaded from database
@@ -733,6 +740,7 @@ window.addEvent(\'domready\', function(){
 					$items[$iS]->displayiconextlink1	= 0;
 					$items[$iS]->displayiconextlink2	= 0;
 					$items[$iS]->description			= '';
+					$items[$iS]->altvalue				= '';
 					$iS++;
 				}
 			}
@@ -770,6 +778,7 @@ window.addEvent(\'domready\', function(){
 					$itemsCV[$iCV]->numlinks 			= 0;// We are in category view
 					$itemsCV[$iCV]->link = JRoute::_('index.php?option=com_phocagallery&view=category&id='. $itemsCV[$iCV]->slug.'&Itemid='. JRequest::getVar('Itemid', 0, '', 'int')  );
 					$itemsCV[$iCV]->type				= 3;
+					$itemsCV[$iCV]->altvalue			= '';
 					$iCV++;
 				} else {
 					// There is no right to see the data but the object exists (because it was loaded from database
@@ -788,6 +797,7 @@ window.addEvent(\'domready\', function(){
 					$itemsCV[$iCV]->numlinks = 0;// We are in category view
 					$itemsCV[$iCV]->link 				= JRoute::_( $itemsCV[$iCV]->link );
 					$itemsCV[$iCV]->type				= 3;
+					$itemsCV[$iCV]->altvalue			= '';
 					$iCV++;
 				}
 			}
@@ -892,6 +902,7 @@ window.addEvent(\'domready\', function(){
 						$items[$iS]->displayiconextlink2	= 0;
 						$items[$iS]->description			= '';
 						$items[$iS]->displayiconcommentimg	= '';
+						$items[$iS]->altvalue				= '';
 
 						$iS++;
 					} else {
@@ -980,6 +991,7 @@ window.addEvent(\'domready\', function(){
 								$fileThumbnail 	= PhocaGalleryImageFront::displayCategoryImageOrFolder($itemsCV[$iCV]->filename, 'medium', $rightDisplayKey, 'display_category_icon_image_cv');
 							}
 							$itemsCV[$iCV]->linkthumbnailpath	= $fileThumbnail->rel;
+							$items[$iS]->altvalue				= '';
 							
 						}
 						$iCV++;
@@ -1047,10 +1059,19 @@ window.addEvent(\'domready\', function(){
 			// Add the first Image as basic image
 			if ($tmpl['switchimage'] == 1) {
 				if ($basicImageSelected == 0) {
-					if (isset($items[$iS]->extpic) && $items[$iS]->extpic != '') {
-						$tmpl['basicimage']	= JHTML::_( 'image', $items[$iS]->extl, '', array( 'id' => 'PhocaGalleryobjectPicture', 'border' =>'0'));
+				
+					if ((int)$tmpl['switchwidth'] > 0 && (int)$tmpl['switchheight'] > 0) {
+						$wHArray	= array( 'id' => 'PhocaGalleryobjectPicture', 'border' =>'0', 'width' => $tmpl['switchwidth'], 'height' => $tmpl['switchheight']);
+						$wHString	= ' id="PhocaGalleryobjectPicture"  border="0" width="'. $tmpl['switchwidth'].'" height="'.$tmpl['switchheight'].'"';
 					} else {
-						$tmpl['basicimage']	= JHTML::_( 'image.site', str_replace('phoca_thumb_m_','phoca_thumb_l_',$items[$iS]->linkthumbnailpath), '', '', '', '', ' id="PhocaGalleryobjectPicture"  border="0"');
+						$wHArray 	= array( 'id' => 'PhocaGalleryobjectPicture', 'border' =>'0');
+						$wHString	= ' id="PhocaGalleryobjectPicture"  border="0"';
+					}
+				
+					if (isset($items[$iS]->extpic) && $items[$iS]->extpic != '') {
+						$tmpl['basicimage']	= JHTML::_( 'image', $items[$iS]->extl, '', $wHArray);
+					} else {
+						$tmpl['basicimage']	= JHTML::_( 'image.site', str_replace('phoca_thumb_m_','phoca_thumb_l_',$items[$iS]->linkthumbnailpath), '', '', '', '', $wHString);
 						
 					}
 					$basicImageSelected = 1;
@@ -1282,7 +1303,7 @@ window.addEvent(\'domready\', function(){
 					$wHOutput	= PhocaGalleryImage::getTransformImageArray($imgSize, $tmpl['overlibimagerate']);
 				}
 				
-				$oImg		= JHTML::_( 'image', $items[$iS]->extl, '', $wHOutput, '', $items[$iS]->title );
+				$oImg		= JHTML::_( 'image', $items[$iS]->extl, htmlspecialchars( addslashes($items[$iS]->title)), $wHOutput );
 			} else {
 				if ((int)$tmpl['overlibimagerate'] > 0) {
 					$thumbL 	= str_replace ('phoca_thumb_m_','phoca_thumb_l_',$items[$iS]->linkthumbnailpath);
@@ -1294,17 +1315,17 @@ window.addEvent(\'domready\', function(){
 			
 			if ($enable_overlib == 1) { 
 				$items[$iS]->overlib			= 1;
-				$items[$iS]->overlib_value 		= " onmouseover=\"return overlib('".htmlspecialchars( addslashes('<div class="pg-overlib"><center>' . $oImg . "</center></div>"))."', CAPTION, '". $items[$iS]->title."', BELOW, RIGHT, BGCLASS,'bgPhocaClass', FGCOLOR, '".$tmpl['olfgcolor']."', BGCOLOR, '".$tmpl['olbgcolor']."', TEXTCOLOR, '".$tmpl['oltfcolor']."', CAPCOLOR, '".$tmpl['olcfcolor']."');\""
+				$items[$iS]->overlib_value 		= " onmouseover=\"return overlib('".htmlspecialchars( addslashes('<div class="pg-overlib"><center>' . $oImg . "</center></div>"))."', CAPTION, '". htmlspecialchars( addslashes($items[$iS]->title))."', BELOW, RIGHT, BGCLASS,'bgPhocaClass', FGCOLOR, '".$tmpl['olfgcolor']."', BGCOLOR, '".$tmpl['olbgcolor']."', TEXTCOLOR, '".$tmpl['oltfcolor']."', CAPCOLOR, '".$tmpl['olcfcolor']."');\""
 				. " onmouseout=\"return nd();\" ";
 			} else if ($enable_overlib == 2){ 
 				$items[$iS]->overlib			= 2;
 				$items[$iS]->description		= str_replace("\n", '<br />', $items[$iS]->description);
-				$items[$iS]->overlib_value 		= " onmouseover=\"return overlib('".htmlspecialchars( addslashes('<div class="pg-overlib"><div style="'.$divPadding.'">'.$items[$iS]->description.'</div></div>'))."', CAPTION, '". $items[$iS]->title."', BELOW, RIGHT, CSSCLASS, TEXTFONTCLASS, 'fontPhocaClass', FGCLASS, 'fgPhocaClass', BGCLASS, 'bgPhocaClass', CAPTIONFONTCLASS,'capfontPhocaClass', CLOSEFONTCLASS, 'capfontclosePhocaClass');\""
+				$items[$iS]->overlib_value 		= " onmouseover=\"return overlib('".htmlspecialchars( addslashes('<div class="pg-overlib"><div style="'.$divPadding.'">'.$items[$iS]->description.'</div></div>'))."', CAPTION, '". htmlspecialchars( addslashes($items[$iS]->title))."', BELOW, RIGHT, CSSCLASS, TEXTFONTCLASS, 'fontPhocaClass', FGCLASS, 'fgPhocaClass', BGCLASS, 'bgPhocaClass', CAPTIONFONTCLASS,'capfontPhocaClass', CLOSEFONTCLASS, 'capfontclosePhocaClass');\""
 				. " onmouseout=\"return nd();\" ";				
 			} else if ($enable_overlib == 3){ 
 				$items[$iS]->overlib			= 3;
 				$items[$iS]->description		= str_replace("\n", '<br />', $items[$iS]->description);
-				$items[$iS]->overlib_value 		= " onmouseover=\"return overlib('".PhocaGalleryText::strTrimAll(htmlspecialchars( addslashes( '<div class="pg-overlib"><div style="text-align:center"><center>' . $oImg . '</center></div><div style="'.$divPadding.'">' . $items[$iS]->description . '</div></div>')))."', CAPTION, '". $items[$iS]->title."', BELOW, RIGHT, BGCLASS,'bgPhocaClass', FGCLASS,'fgPhocaClass', FGCOLOR, '".$tmpl['olfgcolor']."', BGCOLOR, '".$tmpl['olbgcolor']."', TEXTCOLOR, '".$tmpl['oltfcolor']."', CAPCOLOR, '".$tmpl['olcfcolor']."');\""
+				$items[$iS]->overlib_value 		= " onmouseover=\"return overlib('".PhocaGalleryText::strTrimAll(htmlspecialchars( addslashes( '<div class="pg-overlib"><div style="text-align:center"><center>' . $oImg . '</center></div><div style="'.$divPadding.'">' . $items[$iS]->description . '</div></div>')))."', CAPTION, '". htmlspecialchars( addslashes($items[$iS]->title))."', BELOW, RIGHT, BGCLASS,'bgPhocaClass', FGCLASS,'fgPhocaClass', FGCOLOR, '".$tmpl['olfgcolor']."', BGCOLOR, '".$tmpl['olbgcolor']."', TEXTCOLOR, '".$tmpl['oltfcolor']."', CAPCOLOR, '".$tmpl['olcfcolor']."');\""
 				. " onmouseout=\"return nd();\" ";				
 			} else { 
 				$items[$iS]->overlib			= 0;
@@ -1359,6 +1380,10 @@ window.addEvent(\'domready\', function(){
 				$tmpl['displayiconcommentimgbox']	= 1;// because of height of box
 				
 			}
+			
+			// ALT VALUE
+			$altValue	= PhocaGalleryRenderFront::getAltValue($tmpl['altvalue'], $items[$iS]->title, $items[$iS]->description, $items[$iS]->metadesc);
+			$items[$iS]->altvalue				= $altValue;
 			
 			$iS++;
 		}
@@ -1487,6 +1512,9 @@ window.addEvent(\'domready\', function(){
 					$itemMVI->displayname 			= $tmpl['displayname'];
 					$itemMVI->type		 			= 2;
 					
+					$altValue	= PhocaGalleryRenderFront::getAltValue($tmpl['altvalue'], $itemMVI->title, $itemMVI->description, $itemMVI->metadesc);
+					$itemMVI->altvalue				= $altValue;
+					
 					$thumbLink	= PhocaGalleryFileThumbnail::getThumbnailName($itemMVI->filename, 'large');
 					$siteLink 	= JRoute::_('index.php?option=com_phocagallery&view=detail&catid='.$category->slug.'&id='. $itemMVI->slug.'&tmpl=component'.'&Itemid='. JRequest::getVar('Itemid', 0, '', 'int')  );
 					$imgLink	= JURI::base(true) . '/'.$thumbLink->rel;
@@ -1523,6 +1551,9 @@ window.addEvent(\'domready\', function(){
 					$itemLAI->displayname 			= $tmpl['displayname'];
 					$itemLAI->type		 			= 2;
 					
+					$altValue	= PhocaGalleryRenderFront::getAltValue($tmpl['altvalue'], $itemLAI->title, $itemLAI->description, $itemLAI->metadesc);
+					$itemLAI->altvalue				= $altValue;
+					
 					$thumbLink	= PhocaGalleryFileThumbnail::getThumbnailName($itemLAI->filename, 'large');
 					$siteLink 	= JRoute::_('index.php?option=com_phocagallery&view=detail&catid='.$category->slug.'&id='. $itemLAI->slug.'&tmpl=component'.'&Itemid='. JRequest::getVar('Itemid', 0, '', 'int')  );
 					$imgLink	= JURI::base(true) . '/'.$thumbLink->rel;
@@ -1548,6 +1579,10 @@ window.addEvent(\'domready\', function(){
 		
 		// G E O T A G G I N G
 		if ((int)$tmpl['displaycategorygeotagging'] == 0) {
+			$currentTab['geotagging'] = -1;
+		} else if ( $map['longitude'] == '') {
+			$currentTab['geotagging'] = -1;
+		} else if ( $map['latitude'] == '') {
 			$currentTab['geotagging'] = -1;
 		} else {
 			$currentTab['geotagging'] = $displayTabs;
@@ -1597,7 +1632,7 @@ window.addEvent(\'domready\', function(){
 		} else if ($tmpl['gallerymetadesc'] != '') {
 			$mainframe->addMetaTag('description', $tmpl['gallerymetadesc']);
 		}
-			
+		
 		// ASIGN
 		$this->assignRef( 'tmpl',				$tmpl);
 		$this->assignRef( 'params' ,			$params);
@@ -1610,6 +1645,7 @@ window.addEvent(\'domready\', function(){
 		$this->assignRef( 'buttonother',		$buttonOther );
 		parent::display($tpl);
 		echo $tmpl['em'];
+		
 	}
 	
 	/**

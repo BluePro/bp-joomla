@@ -17,6 +17,7 @@
 	<option value="1">Categories and images</option>
 	<option value="2">Categories, images and detail information</option>
 	<option value="3">Categories, images and detail information (Float)</option>
+	<option value="4">Categories, images and description (Float)</option>
 </param>
 <param name="categories_box_width" default="33%" size="10" type="phocatext" label="PHOCAGALLERY_CATEGORIES_BOX_WIDTH" description="PHOCAGALLERY_CATEGORIES_BOX_WIDTH_DESC" />
 <param name="image_categories_size" type="list" default="4" label="Image Categories Size" description="Image Categories Size DESC">
@@ -155,6 +156,7 @@
 
 <param name="display_img_desc_box" default="0"  type="list" label="Display Image Description in Box" description="Display Image Description in Box DESC" >
 	<option value="1">Yes</option>
+	<option value="2">Yes(HTML)</option>
 	<option value="0">No</option>
 </param>
 <param name="font_size_img_desc" default="10" size="4" type="phocatext" label="Image Description Font Size" description="Image Description Font Size DESC" />
@@ -435,6 +437,19 @@
 
 <param name="gallery_metadesc" type="phocatextarea" label="PHOCAGALLERY_METADESC" description="PHOCAGALLERY_METADESC_DESC" rows="2" cols="26" default="" />
 <param name="gallery_metakey" type="phocatextarea" label="PHOCAGALLERY_METAKEY" description="PHOCAGALLERY_METAKEY_DESC" rows="2" cols="26" default="" />
+
+<param name="alt_value" type="list" default="1" label="PHOCAGALLERY_ALTVALUE" description="PHOCAGALLERY_ALTVALUE_DESC">
+	<option value="0">Empty</option>
+	<option value="1">Title</option>
+	<option value="2">Description</option>
+	<option value="3">Title - Description</option>
+	<option value="4">Meta Description</option>
+	<option value="5">Title > Description > Meta Description</option>
+	<option value="6">Description > Title > Meta Description</option>
+	<option value="7">Description > Meta Description > Title</option>
+	<option value="8">Meta Description > Title > Description</option>
+	<option value="9">Meta Description > Description > Title</option>
+</param>
 
 <param name="@phocahead" type="phocahead" default="USER CONTROL PANEL SETTINGS LABEL" />
 <param name="enable_user_cp" type="list" default="0" label="Enable User Control Panel" description="Enable User Control Panel DESC">
