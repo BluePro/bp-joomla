@@ -1,0 +1,24 @@
+<?xml version="1.0" ?>
+<joomfish type="contentelement">
+  <name>Phoca Gallery Categories</name>
+  <author>Jan Pavelka ( www.phoca.cz )</author>
+  <version>2.0.4</version>
+  <description>Translation - Phoca Gallery Categories</description>
+  <reference>
+  	<table name="phocagallery_categories">
+  		<field type="referenceid" name="id" translate="0">ID</field>
+		<field type="titletext" name="title" translate="1">Title</field>
+  		<field type="text" name="alias" translate="1">Title Alias</field>
+  		<field type="htmltext" name="description" translate="1">Description</field>
+		<field type="text" name="geotitle" translate="1">GEO Title</field>
+		<field type="text" name="metakey" translate="1">META Keywords</field>
+		<field type="text" name="metadesc" translate="1">META Description</field>
+  	</table>
+  </reference>
+  <translationfilters>
+  	  <keyword>title</keyword>
+  	  <published>published</published>
+  	  <changed>created|modified</changed>
+  	  <id>id</id>
+  </translationfilters>
+</joomfish>
