@@ -2,10 +2,10 @@
 <install type="component" version="1.5.0" method="upgrade">
 	<name>BP Mailform</name>
 	<creationDate>2009-07-07</creationDate>
-	<author>Ondøej Hlaváè</author>
+	<author>OndÅ™ej HlavÃ¡Ä</author>
 	<authorEmail>ondrej@hlavacovi.net</authorEmail>
 	<authorUrl>http://ondrej.hlavacovi.net</authorUrl>
-	<copyright>Ondøej Hlaváè 2009</copyright>
+	<copyright>OndÅ™ej HlavÃ¡Ä 2009</copyright>
 	<license>GNU/GPL</license>
 	<version>1.1</version>
 	<description>Simple user mailform.</description>
