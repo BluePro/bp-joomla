@@ -23,9 +23,9 @@ if ($this->params->def('show_description', 1) || $this->params->def('show_descri
 }
 
 // Leading articles
-for ($i = $this->pagination->limitstart, $j = 0; $i < $this->total && $j < $this->params->def('num_leading_articles', 1); $y++, $i++) {
+for ($i = $this->pagination->limitstart, $j = 0; $i < $this->total && $j < $this->params->def('num_leading_articles', 1); $i++, $j++) {
 	echo sprintf('<div class="box_leadingarticles%s">', $this->params->get('pageclass_sfx'));
-	$this->item =& $this->getItem($i, $this->params);
+	$this->item = $this->getItem($i, $this->params);
 	echo $this->loadTemplate('item');
 	echo '</div>';
 }
@@ -39,9 +39,9 @@ $rowcount = ceil($introcount / $columncount);
 echo sprintf('<div class="box_introtexts%s">', $this->params->get('pageclass_sfx'));
 while ($i < $this->total) {
 	echo sprintf('<div class="box_column%s">', $this->params->get('pageclass_sfx'));
-	for ($j = 0; $j < $rowcount; $i++, $j++) {
+	for ($j = 0; $i < $this->total && $j < $rowcount; $i++, $j++) {
 		$this->item = $this->getItem($i, $this->params);
-		$this->loadTemplate('item');
+		echo $this->loadTemplate('item');
 	}
 	echo '</div>';
 }
