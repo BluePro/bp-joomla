@@ -1,6 +1,6 @@
 <?php
 /**
- * @version		$Id: client.php 14401 2010-01-26 14:10:00Z louis $
+ * @version		$Id: client.php 18162 2010-07-16 07:00:47Z ian $
  * @package		Joomla
  * @subpackage	Banners
  * @copyright	Copyright (C) 2005 - 2010 Open Source Matters. All rights reserved.
@@ -44,7 +44,10 @@ class BannerControllerClient extends JController
 		$filter_order		= $mainframe->getUserStateFromRequest( $context.'filter_order',		'filter_order',		'a.name',	'cmd' );
 		$filter_order_Dir	= $mainframe->getUserStateFromRequest( $context.'filter_order_Dir',	'filter_order_Dir',	'',			'word' );
 		$search				= $mainframe->getUserStateFromRequest( $context.'search',			'search',			'',			'string' );
-		$search				= JString::strtolower( $search );
+		if (strpos($search, '"') !== false) {
+			$search = str_replace(array('=', '<'), '', $search);
+		}
+		$search = JString::strtolower($search);
 
 		$limit		= $mainframe->getUserStateFromRequest( 'global.list.limit',		'limit',		$mainframe->getCfg('list_limit'), 'int' );
 		$limitstart	= $mainframe->getUserStateFromRequest( $context.'limitstart',	'limitstart',	0, 'int' );
@@ -56,6 +59,11 @@ class BannerControllerClient extends JController
 		}
 
 		$where		= ( count( $where ) ? ' WHERE ' . implode( ' AND ', $where ) : '' );
+
+		if (!in_array($filter_order, array('a.name', 'a.contact', 'bid', 'a.cid'))) {
+			$filter_order = 'a.name';
+		}
+
 		$orderby = ' ORDER BY '. $filter_order .' '. $filter_order_Dir .', a.cid';
 
 		// get the total number of records

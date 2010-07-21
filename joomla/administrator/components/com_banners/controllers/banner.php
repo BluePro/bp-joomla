@@ -1,6 +1,6 @@
 <?php
 /**
- * @version		$Id: banner.php 14401 2010-01-26 14:10:00Z louis $
+ * @version		$Id: banner.php 18162 2010-07-16 07:00:47Z ian $
  * @package		Joomla
  * @subpackage	Banners
  * @copyright	Copyright (C) 2005 - 2010 Open Source Matters. All rights reserved.
@@ -51,6 +51,10 @@ class BannerControllerBanner extends JController
 		$filter_catid		= $mainframe->getUserStateFromRequest( $context.'filter_catid',		'filter_catid',		'',			'int' );
 		$filter_state		= $mainframe->getUserStateFromRequest( $context.'filter_state',		'filter_state',		'',			'word' );
 		$search				= $mainframe->getUserStateFromRequest( $context.'search',			'search',			'',			'string' );
+		if (strpos($search, '"') !== false) {
+			$search = str_replace(array('=', '<'), '', $search);
+		}
+		$search = JString::strtolower($search);
 
 		$limit		= $mainframe->getUserStateFromRequest( 'global.list.limit', 'limit', $mainframe->getCfg('list_limit'), 'int' );
 		$limitstart = $mainframe->getUserStateFromRequest( $context.'limitstart', 'limitstart', 0, 'int' );
@@ -74,6 +78,12 @@ class BannerControllerBanner extends JController
 		}
 
 		$where		= count( $where ) ? ' WHERE ' . implode( ' AND ', $where ) : '';
+
+		// sanitize $filter_order
+		if (!in_array($filter_order, array('b.name', 'c.name', 'cc.title', 'b.showBanner', 'b.ordering', 'b.sticky', 'b.impmade', 'b.clicks', 'b.bid'))) {
+			$filter_order = 'cc.title';
+		}
+
 		$orderby	= ' ORDER BY '. $filter_order .' '. $filter_order_Dir .', b.ordering';
 
 		// get the total number of records

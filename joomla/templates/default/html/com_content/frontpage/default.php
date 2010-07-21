@@ -16,7 +16,8 @@ if ($this->params->def('num_leading_articles', 1)) {
 	$i = $this->pagination->limitstart;
 }
 
-$intro_articles = $this->params->get('num_intro_articles', 4);
+$num_intro_articles = $this->params->get('num_intro_articles', 4);
+$intro_articles = ($num_intro_articles < $this->total - $i) ? $num_intro_articles : $this->total - $i;
 if ($intro_articles) {
 	$columns = $this->params->def('num_columns', 2);
 	if (!$columns) $columns = 1;
