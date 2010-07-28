@@ -118,9 +118,19 @@ class modBannersHelper
 			$height = $banner_params->get( 'height');
 
 			$imageurl = $baseurl."images/banners/".$item->imageurl;
-			$html =	"<object classid=\"clsid:D27CDB6E-AE6D-11cf-96B8-444553540000\" codebase=\"http://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,0,0\" border=\"0\" width=\"$width\" height=\"$height\">
-						<param name=\"movie\" value=\"$imageurl\"><embed src=\"$imageurl\" loop=\"false\" pluginspage=\"http://www.macromedia.com/go/get/flashplayer\" type=\"application/x-shockwave-flash\" width=\"$width\" height=\"$height\"></embed>
-					</object>";
+			$html = sprintf('
+<!--[if !IE]> -->
+<object type="application/x-shockwave-flash" data="%s" width="%d" height="%s">
+<!-- <![endif]-->
+<!--[if IE]>
+<object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=9,0,0,0" width="%d" height="%d">
+	<param name="movie" value="%s" />
+<!-->
+	<param name="wmode" value="opaque" />
+	
+	<p>Pro použití této aplikace je nutné mít nainstalován Flash.</p>
+</object>
+<!-- <![endif]-->', $imageurl, $width, $height, $width, $height, $imageurl);
 		}
 
 		return $html;
