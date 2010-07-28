@@ -202,7 +202,7 @@ class JDocumentPDF extends JDocument
 		$pdf = &$this->_engine;
 
 		// Set PDF Metadata
-		$pdf->SetCreator($this->getGenerator());
+//		$pdf->SetCreator($this->getGenerator());
 		$pdf->SetTitle($this->getTitle());
 		$pdf->SetSubject($this->getDescription());
 		$pdf->SetKeywords($this->getMetaData('keywords'));
