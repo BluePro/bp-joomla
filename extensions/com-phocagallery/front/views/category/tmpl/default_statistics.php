@@ -41,7 +41,7 @@ if ($this->tmpl['displaymostviewedcatstat']) {
 			?>
 			<div class="phocagallery-box-file" style="height:<?php echo $imageHeightMV['boxsize']; ?>px; width:<?php echo $imageWidthMV['boxsize']; ?>px">
 				
-					<div class="phocagallery-box-file-first" style="height:<?php echo $imageHeightMV['size']; ?>px;width:<?php echo $imageWidthMV['size']; ?>px;">
+					<div class="phocagallery-box-file-first" style="height:<?php echo $imageHeightMV['size']; ?>px;width:<?php echo $imageWidthMV['size']; ?>px;margin:auto">
 						<div class="phocagallery-box-file-second">
 							<div class="phocagallery-box-file-third">
 								
@@ -57,6 +57,8 @@ if ($this->tmpl['displaymostviewedcatstat']) {
 									echo ' onclick="'. $this->tmpl['highslideonclick'].'"';
 								} else if ($this->tmpl['detailwindow'] == 5) {
 									echo ' onclick="'. $this->tmpl['highslideonclick2'].'"';
+								} else if ($this->tmpl['detailwindow'] == 8) {
+									echo ' rel="lightbox-'.$this->category->alias.'-mv" ';
 								}  else {
 									echo ' rel="'. $value->buttonother->options.'"';
 								}
@@ -136,7 +138,7 @@ if ($this->tmpl['displaylastaddedcatstat']) {
 			?>
 			<div class="phocagallery-box-file" style="height:<?php echo $imageHeightLA['boxsize']; ?>px; width:<?php echo $imageWidthLA['boxsize']; ?>px">
 				
-					<div class="phocagallery-box-file-first" style="height:<?php echo $imageHeightLA['size']; ?>px;width:<?php echo $imageWidthLA['size']; ?>px;">
+					<div class="phocagallery-box-file-first" style="height:<?php echo $imageHeightLA['size']; ?>px;width:<?php echo $imageWidthLA['size']; ?>px;margin:auto">
 						<div class="phocagallery-box-file-second">
 							<div class="phocagallery-box-file-third">
 								
@@ -152,6 +154,8 @@ if ($this->tmpl['displaylastaddedcatstat']) {
 									echo ' onclick="'. $this->tmpl['highslideonclick'].'"';
 								} else if ($this->tmpl['detailwindow'] == 5) {
 									echo ' onclick="'. $this->tmpl['highslideonclick2'].'"';
+								} else if ($this->tmpl['detailwindow'] == 8) {
+									echo ' rel="lightbox-'.$this->category->alias.'-la" ';
 								} else {
 									echo ' rel="'. $value->buttonother->options.'"';
 								}

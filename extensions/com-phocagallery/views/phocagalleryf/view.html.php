@@ -25,7 +25,7 @@ class PhocaGalleryCpViewPhocagalleryF extends JView
 		$document->addStyleSheet('../administrator/components/com_phocagallery/assets/phocagallery.css');
 		$document->addStyleSheet('../administrator/templates/system/css/system.css');
 
-		$document->addCustomTag("<!--[if IE]>\n<link rel=\"stylesheet\" href=\"../administrator/components/com_phocagallery/assets/phocagalleryieall.css\" type=\"text/css\" />\n<![endif]-->");
+		$document->addCustomTag("<!--[if lt IE 8]>\n<link rel=\"stylesheet\" href=\"../administrator/components/com_phocagallery/assets/phocagalleryieall.css\" type=\"text/css\" />\n<![endif]-->");
 
 		$path 			= PhocaGalleryPath::getPath();
 		$this->assignRef('session', JFactory::getSession());

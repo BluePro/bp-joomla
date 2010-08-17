@@ -93,7 +93,7 @@ class PhocaGalleryCpViewPhocaGalleryUsers extends JView
 		JToolBarHelper::customX('approve', 'approve.png', '', JText::_( 'PHOCAGALLERY_APPROVE' ), true);
 		JToolBarHelper::customX('disapprove', 'disapprove.png', '', JText::_( 'PHOCAGALLERY_NOT_APPROVE' ), true);
 		$bar = & JToolBar::getInstance('toolbar');
-		$bar->appendButton( 'Custom', '<a href="#" onclick="javascript:if(confirm(\''.JText::_('PHOCAGALLERY_WARNING_AUTHORIZE_ALL').'\')){submitbutton(\'approveall\');}" class="toolbar"><span class="icon-32-authorizeall" title="'.JText::_('PHOCAGALLERY_APPROVE_ALL').'" type="Custom"></span>'.JText::_('PHOCAGALLERY_APPROVE_ALL').'</a>');	
+		$bar->appendButton( 'Custom', '<a href="#" onclick="javascript:if(confirm(\''.addslashes(JText::_('PHOCAGALLERY_WARNING_AUTHORIZE_ALL')).'\')){submitbutton(\'approveall\');}" class="toolbar"><span class="icon-32-authorizeall" title="'.JText::_('PHOCAGALLERY_APPROVE_ALL').'" type="Custom"></span>'.JText::_('PHOCAGALLERY_APPROVE_ALL').'</a>');	
 		JToolBarHelper::deleteList(  JText::_( 'PHOCAGALLERY_WARNDELETEAVATAR' ), 'remove', 'delete');
 		JToolBarHelper::help( 'screen.phocagallery', true );
 	}

@@ -103,6 +103,7 @@ class plgContentPhocaGallery extends JPlugin
 			$switch_width			= $paramsC->get( 'switch_width', 640);
 			$switch_height			= $paramsC->get( 'switch_height', 480);
 			$basic_image_id			= $paramsC->get( 'switch_image', 0);
+			$switch_fixed_size		= $paramsC->get( 'switch_fixed_size', 0);
 			$enable_switch			= 0;
 			
 			$display_name 			= $paramsC->get( 'display_name', 1);
@@ -233,6 +234,7 @@ class plgContentPhocaGallery extends JPlugin
 				else if($values[0]=='switchheight')			{$switch_height			= $values[1];}
 				else if($values[0]=='basicimageid')			{$basic_image_id		= $values[1];}
 				else if($values[0]=='enableswitch')			{$enable_switch			= $values[1];}
+				else if($values[0]=='switchfixedsize')		{$switch_fixed_size		= $values[1];}
 				
 				else if($values[0]=='piclens')				{$enable_piclens				= $values[1];}
 				else if($values[0]=='overlib')				{$enable_overlib				= $values[1];}
@@ -580,6 +582,27 @@ class plgContentPhocaGallery extends JPlugin
 				$buttonOther->set('options', "");
 				$buttonOther->set('optionsrating', "");
 				
+			}
+			
+			// -------------------------------------------------------
+			// SLIMBOX
+			// -------------------------------------------------------
+			
+			else if ($tmpl['detailwindow'] == 8) {
+			
+				$button->set('methodname', 'slimbox');
+				$button2->methodname 		= &$button->methodname;
+				$button2->methodname 		= &$button->methodname;
+				$button2->set('options', "lightbox-images");
+				
+				$buttonOther->set('modal', true);
+				$buttonOther->set('methodname', 'modal-button');
+				$buttonOther->set('options', "{handler: 'iframe', size: {x: ".$popup_width.", y: ".$popup_height."}, overlayOpacity: ".$modal_box_overlay_opacity."}");
+				$buttonOther->set('optionsrating', "{handler: 'iframe', size: {x: ".$popup_width.", y: ".$popup_height_rating."}, overlayOpacity: ".$modal_box_overlay_opacity."}");
+			
+				$document->addScript(JURI::base(true).'/components/com_phocagallery/assets/js/slimbox/slimbox.js');
+				$document->addStyleSheet(JURI::base(true).'/components/com_phocagallery/assets/js/slimbox/slimbox.css');
+
 			}
 
 			$folderButton = new JObject();
@@ -961,9 +984,9 @@ class plgContentPhocaGallery extends JPlugin
 					if ((int)$tmpl['pluginlink'] == 2) {
 						$siteLink = $imgLinkOrig = $imgLink = PhocaGalleryRoute::getCategoriesRoute();
 					}
-					// Different Link - to all category
+					// Different Link - to  category
 					else if ((int)$tmpl['pluginlink'] == 1) {
-						$siteLink = $imgLinkOrig = $imgLink = PhocaGalleryRoute::getCategoriesRoute($image->catid, $image->catalias);
+						$siteLink = $imgLinkOrig = $imgLink = PhocaGalleryRoute::getCategoryRoute($image->catid, $image->catalias);
 					}
 					
 					if ($tmpl['detailwindow'] == 2 ) {
@@ -1032,6 +1055,14 @@ class plgContentPhocaGallery extends JPlugin
 							."big: {url: '".htmlentities(JURI::base(true).'/'.PhocaGalleryText::strTrimAll(addslashes($imgLink)))."'} }";
 						}
 						
+					
+					} else if ( $tmpl['detailwindow'] == 8 ) {
+						
+						$image->link 		= $imgLink;
+						$image->link2 		= $imgLink;
+						$image->linkother	= $imgLink;
+						$image->linkorig	= $imgLinkOrig;
+						
 					} else {
 					
 						$image->link 		= $siteLink;
@@ -1069,6 +1100,8 @@ class plgContentPhocaGallery extends JPlugin
 								$output .= ' onclick="gjaksMod'.$randName.'.show('.$image->linknr.'); return false;"';
 							} else if ($tmpl['detailwindow'] == 7 ) {
 								$output .= '';
+							} else if ($tmpl['detailwindow'] == 8) {
+								$output .=' rel="lightbox-'.$randName.'" ';
 							} else {
 								$output .= ' rel="'.$button->options.'"';
 							}
@@ -1215,6 +1248,8 @@ class plgContentPhocaGallery extends JPlugin
 								$output .= ' onclick="gjaksPl'.$randName.'.show('.$image->linknr.'); return false;"';
 							} else if ($tmpl['detailwindow'] == 7 ) {
 								$output .= '';
+							} else if ($tmpl['detailwindow'] == 8) {
+								$output .=' rel="lightbox-'.$randName.'" ';
 							} else {
 								$output .= ' rel="'.$button->options.'"';
 							}
@@ -1223,7 +1258,7 @@ class plgContentPhocaGallery extends JPlugin
 							if ($enable_switch == 1) {
 								// Picasa
 								if ($image->extl != '') {
-									if ((int)$switch_width > 0 && (int)$switch_height > 0) {
+									if ((int)$switch_width > 0 && (int)$switch_height > 0  && $switch_fixed_size == 1 ) {
 										// Custom Size
 										$output .=' onmouseover="PhocaGallerySwitchImage(\'PhocaGalleryobjectPicture\', \''. $image->extl.'\', '.$switch_width.', '.$switch_height.');" ';
 									} else {
@@ -1234,7 +1269,7 @@ class plgContentPhocaGallery extends JPlugin
 									}
 								} else {
 									$switchImg = str_replace('phoca_thumb_m_','phoca_thumb_l_',JURI::base(true).'/'. $image->linkthumbnailpath);
-									if ((int)$switch_width > 0 && (int)$switch_height > 0) {
+									if ((int)$switch_width > 0 && (int)$switch_height > 0 && $switch_fixed_size == 1) {
 										$output .=' onmouseover="PhocaGallerySwitchImage(\'PhocaGalleryobjectPicture\', \''. $switchImg.'\', '.$switch_width.', '.$switch_height.');" ';
 									} else {
 										$output .=' onmouseover="PhocaGallerySwitchImage(\'PhocaGalleryobjectPicture\', \''. $switchImg.'\');" ';
@@ -1373,6 +1408,8 @@ class plgContentPhocaGallery extends JPlugin
 										$output .=  ' onclick="gjaksPl'.$randName.'.show('.$image->linknr.'); return false;"';
 									} else if ($tmpl['detailwindow'] == 7 ) {
 										$output .= '';
+									} else if ($tmpl['detailwindow'] == 8) {
+										$output .=' rel="lightbox-'.$randName.'2" ';
 									} else {
 										$output .= ' rel="'. $button2->options.'"';
 									}
@@ -1442,7 +1479,7 @@ class plgContentPhocaGallery extends JPlugin
 					
 					$switchImage = PhocaGalleryImage::correctSwitchSize($switch_height, $switch_width);
 
-					if ((int)$switch_width > 0 && (int)$switch_height > 0) {
+					if ((int)$switch_width > 0 && (int)$switch_height > 0 && $switch_fixed_size == 1) {
 						$wHArray	= array( 'id' => 'PhocaGalleryobjectPicture', 'border' =>'0', 'width' => $switch_width, 'height' => $switch_height);
 						$wHString	= ' id="PhocaGalleryobjectPicture"  border="0" width="'. $switch_width.'" height="'.$switch_height.'"';
 					} else {
@@ -1467,7 +1504,7 @@ class plgContentPhocaGallery extends JPlugin
 				$document->addCustomTag(PhocaGalleryRenderFront::switchImage($waitImage));
 				//$switchImage['height']	= $switchImage['height'] + 5;
 			
-				$output .='<div><center class="main-switch-image" style="margin:0px;padding:7px 5px 7px 5px;margin-bottom:15px;"><table border="0" cellspacing="5" cellpadding="5" style="border:1px solid #c2c2c2;"><tr><td align="center" valign="middle" style="text-align:center;width:'. $switchImage['width'] .'px;height:'. $switchImage['height'] .'px; background: url(\''. JURI::root().'components/com_phocagallery/assets/images/icon-switch.gif\') '.$switchImage['centerw'].'px '.$switchImage['centerh'].'px no-repeat;margin:0px;padding:0px;">';
+				$output .='<div><center class="main-switch-image" style="margin:0px;padding:7px 5px 7px 5px;margin-bottom:15px;"><table border="0" cellspacing="5" cellpadding="5" style=""><tr><td align="center" valign="middle" style="text-align:center;width:'. $switchImage['width'] .'px;height:'. $switchImage['height'] .'px; background: url(\''. JURI::root().'components/com_phocagallery/assets/images/icon-switch.gif\') '.$switchImage['centerw'].'px '.$switchImage['centerh'].'px no-repeat;margin:0px;padding:0px;">';
 				$output .= $basicImage
 				.'</td></tr></table></center></div>';
 			

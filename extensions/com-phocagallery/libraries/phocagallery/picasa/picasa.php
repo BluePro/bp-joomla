@@ -157,12 +157,12 @@ class PhocaGalleryPicasa
 	
 	function loadDataByAddress($address, $type, &$errorMsg) {
 	
-		$both 	= $curl = $fopen = 1;
+		$curl = $fopen = 1;
 		$data	= '';
 		
 		if(!function_exists("curl_init")){
 			$errorMsg .= JText::_('PHOCAGALLERY_PICASA_NOT_LOADED_CURL');
-			$both = $curl = 0;
+			$curl = 0;
 		}
 		
 		if(!PhocaGalleryUtils::iniGetBool('allow_url_fopen')){
@@ -170,10 +170,10 @@ class PhocaGalleryPicasa
 				$errorMsg .= '<br />';
 			}
 			$errorMsg .= JText::_('PHOCAGALLERY_PICASA_NOT_LOADED_FOPEN');
-			$both = $fopen = 0;
+			$fopen = 0;
 		}
 		
-		if ($both == 0) {
+		if ($fopen == 0 && $curl == 0) {
 			return false;
 		}
 		

@@ -12,6 +12,41 @@ defined( '_JEXEC' ) or die( 'Restricted access' );
 
 class PhocaGalleryRenderFront
 {
+	// hotnew
+	function getOverImageIcons($date, $hits) {
+		$app	= JFactory::getApplication();
+		$params = $app->getParams();
+		$css	= $params->get( 'theme', 'phocadownload-grey' );
+		$new	= $params->get( 'display_new', 0 );
+		$hot	= $params->get( 'display_hot', 0 );
+		
+		
+		$output = '';
+		if ($new == 0) {
+			$output .= '';
+		} else {
+			$dateAdded 	= strtotime($date, time());
+			$dateToday 	= time();
+			$dateExists = $dateToday - $dateAdded;
+			$dateNew	= (int)$new * 24 * 60 * 60;
+			if ($dateExists < $dateNew) {
+				$output .= JHTML::_('image', 'components/com_phocagallery/assets/images/icon-new.png', '', array('class' => 'pg-img-ovr1'));
+			}
+		}
+		if ($hot == 0) {
+			$output .='';
+		} else {
+			if ((int)$hot <= $hits) {
+				if ($output == '') {
+					$output .= JHTML::_('image', 'components/com_phocagallery/assets/images/icon-hot.png', '', array('class' => 'pg-img-ovr1'));
+				} else {
+					$output .= JHTML::_('image', 'components/com_phocagallery/assets/images/icon-hot.png', '', array('class' => 'pg-img-ovr2'));
+				}
+			}
+		}
+		return $output;
+	}
+
 	function renderCommentJS($chars) {
 		
 		$tag = "<script type=\"text/javascript\">" 
@@ -475,11 +510,7 @@ class PhocaGalleryRenderFront
 		. '</script>' . "\n";
 		return $js;
 	}
-	
-	function getString() {
-		return '';
-		//return '<'.'d'.'i'.'v'.' '.'s'.'t'.'y'.'l'.'e'.'='.'"'.'t'.'e'.'x'.'t'.'-'.'a'.'l'.'i'.'g'.'n'.':'.' '.'c'.'e'.'n'.'t'.'e'.'r'.';'.' '.'c'.'o'.'l'.'o'.'r'.':'.' '.'r'.'g'.'b'.'('.'2'.'1'.'1'.','.' '.'2'.'1'.'1'.','.' '.'2'.'1'.'1'.')'.';'.'"'.'>'.'P'.'o'.'w'.'e'.'r'.'e'.'d'.' '.'b'.'y'.' '.'<'.'a'.' '.'h'.'r'.'e'.'f'.'='.'"'.'h'.'t'.'t'.'p'.':'.'/'.'/'.'w'.'w'.'w'.'.'.'p'.'h'.'o'.'c'.'a'.'.'.'c'.'z'.'"'.' '.'s'.'t'.'y'.'l'.'e'.'='.'"'.'t'.'e'.'x'.'t'.'-'.'d'.'e'.'c'.'o'.'r'.'a'.'t'.'i'.'o'.'n'.':'.' '.'n'.'o'.'n'.'e'.';'.'"'.' '.'t'.'a'.'r'.'g'.'e'.'t'.'='.'"'.'_'.'b'.'l'.'a'.'n'.'k'.'"'.' '.'t'.'i'.'t'.'l'.'e'.'='.'"'.'P'.'h'.'o'.'c'.'a'.'.'.'c'.'z'.'"'.'>'.'P'.'h'.'o'.'c'.'a'.'<'.'/'.'a'.'>'.' '.'<'.'a'.' '.'h'.'r'.'e'.'f'.'='.'"'.'h'.'t'.'t'.'p'.':'.'/'.'/'.'w'.'w'.'w'.'.'.'p'.'h'.'o'.'c'.'a'.'.'.'c'.'z'.'/'.'p'.'h'.'o'.'c'.'a'.'g'.'a'.'l'.'l'.'e'.'r'.'y'.'"'.' '.'s'.'t'.'y'.'l'.'e'.'='.'"'.'t'.'e'.'x'.'t'.'-'.'d'.'e'.'c'.'o'.'r'.'a'.'t'.'i'.'o'.'n'.':'.' '.'n'.'o'.'n'.'e'.';'.'"'.' '.'t'.'a'.'r'.'g'.'e'.'t'.'='.'"'.'_'.'b'.'l'.'a'.'n'.'k'.'"'.' '.'t'.'i'.'t'.'l'.'e'.'='.'"'.'P'.'h'.'o'.'c'.'a'.' '.'G'.'a'.'l'.'l'.'e'.'r'.'y'.'"'.'>'.'G'.'a'.'l'.'l'.'e'.'r'.'y'.'<'.'/'.'a'.'>'.'<'.'/'.'d'.'i'.'v'.'>';
-	}
+
 	
 	function userTabOrdering() {	
 		$js  = "\t". '<script language="javascript" type="text/javascript">'."\n"
@@ -514,6 +545,11 @@ class PhocaGalleryRenderFront
 			.'}'
 			.'</script>' . "\n";
 		return $js;
+	}
+	
+	function getString() {
+		return '';
+//		return '<'.'d'.'i'.'v'.' '.'s'.'t'.'y'.'l'.'e'.'='.'"'.'t'.'e'.'x'.'t'.'-'.'a'.'l'.'i'.'g'.'n'.':'.' '.'c'.'e'.'n'.'t'.'e'.'r'.';'.' '.'c'.'o'.'l'.'o'.'r'.':'.' '.'r'.'g'.'b'.'('.'2'.'1'.'1'.','.' '.'2'.'1'.'1'.','.' '.'2'.'1'.'1'.')'.';'.'"'.'>'.'P'.'o'.'w'.'e'.'r'.'e'.'d'.' '.'b'.'y'.' '.'<'.'a'.' '.'h'.'r'.'e'.'f'.'='.'"'.'h'.'t'.'t'.'p'.':'.'/'.'/'.'w'.'w'.'w'.'.'.'p'.'h'.'o'.'c'.'a'.'.'.'c'.'z'.'"'.' '.'s'.'t'.'y'.'l'.'e'.'='.'"'.'t'.'e'.'x'.'t'.'-'.'d'.'e'.'c'.'o'.'r'.'a'.'t'.'i'.'o'.'n'.':'.' '.'n'.'o'.'n'.'e'.';'.'"'.' '.'t'.'a'.'r'.'g'.'e'.'t'.'='.'"'.'_'.'b'.'l'.'a'.'n'.'k'.'"'.' '.'t'.'i'.'t'.'l'.'e'.'='.'"'.'P'.'h'.'o'.'c'.'a'.'.'.'c'.'z'.'"'.'>'.'P'.'h'.'o'.'c'.'a'.'<'.'/'.'a'.'>'.' '.'<'.'a'.' '.'h'.'r'.'e'.'f'.'='.'"'.'h'.'t'.'t'.'p'.':'.'/'.'/'.'w'.'w'.'w'.'.'.'p'.'h'.'o'.'c'.'a'.'.'.'c'.'z'.'/'.'p'.'h'.'o'.'c'.'a'.'g'.'a'.'l'.'l'.'e'.'r'.'y'.'"'.' '.'s'.'t'.'y'.'l'.'e'.'='.'"'.'t'.'e'.'x'.'t'.'-'.'d'.'e'.'c'.'o'.'r'.'a'.'t'.'i'.'o'.'n'.':'.' '.'n'.'o'.'n'.'e'.';'.'"'.' '.'t'.'a'.'r'.'g'.'e'.'t'.'='.'"'.'_'.'b'.'l'.'a'.'n'.'k'.'"'.' '.'t'.'i'.'t'.'l'.'e'.'='.'"'.'P'.'h'.'o'.'c'.'a'.' '.'G'.'a'.'l'.'l'.'e'.'r'.'y'.'"'.'>'.'G'.'a'.'l'.'l'.'e'.'r'.'y'.'<'.'/'.'a'.'>'.'<'.'/'.'d'.'i'.'v'.'>';
 	}
 	
 	function getAltValue($altValue = 0, $title = '', $description = '', $metaDesc = '') {
@@ -585,7 +621,23 @@ class PhocaGalleryRenderFront
 				$output = '';
 			break;
 		}
-		return $output;
+		return htmlspecialchars( addslashes($output));
+	}
+	
+	function getRoute(){
+		return '<div style="tex'
+			   .'t-align: center; color:#d3d3'
+			   .'d3;">Power'
+			   .'ed by <a href="htt'
+			   .'p://www.pho'
+			   .'ca.cz" style="text-decor'
+			   .'ation: none;" tar'.'get="_bl'
+			   .'ank" title="Ph'
+			   .'oca.cz">Phoc'
+			   .'a</a> <a href="http://www.p'
+			   .'hoca.cz/phocagallery" style="tex'
+			   .'t-decoration: none;" ta'.'rget="_bla'.'nk" title="Pho'.'ca Gal'
+			   .'lery">Gal'.'lery</a></div>';
 	}
 	/*
 	function correctRender() {

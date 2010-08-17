@@ -1,5 +1,8 @@
 <?php
-defined('_JEXEC') or die('Restricted access'); 
+defined('_JEXEC') or die('Restricted access');
+?>
+<!-- <div><a>www.phoca.cz - Begin Categories -->
+<?php
 // Pagetitle
 if ( $this->params->def( 'show_page_title', 1 ) ) {
 	echo '<div class="componentheading'.$this->params->get( 'pageclass_sfx' ).'">'. $this->params->get('page_title').'</div>';
@@ -501,4 +504,6 @@ if (count($this->categories)) {
 	}
 	echo '</div>';
 }
-echo '</form><div>&nbsp;</div>' . $this->tmpl['ab'].'</div>';
+echo '</form><div>&nbsp;</div>' . $this->tmpl['tl'].'</div>';
+?>
+<!-- End Categories </a></div> -->

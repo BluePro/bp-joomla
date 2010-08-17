@@ -48,7 +48,7 @@ class PhocaGalleryImage
 		phocagalleryimport('phocagallery.file.thumbnail');
 		
 		if ($extLink == 1) {
-			list($w, $h, $type) = GetImageSize($filename);
+			list($w, $h, $type) = @GetImageSize($filename);
 		} else {
 			$thumbName			= PhocaGalleryFileThumbnail::getThumbnailName ($filename, $size);
 			list($w, $h, $type) = @getimagesize($thumbName->abs);
@@ -98,7 +98,7 @@ class PhocaGalleryImage
 		$image['size']	= $imageSize;
 		if ($image['size'] < $size ) {
 			$image['size']		= $size;
-			$image['boxsize'] 	= $size;
+			$image['boxsize'] 	= $size + $sizeAdd;
 		} else {
 			$image['boxsize'] 	= $image['size'] + $sizeAdd;
 		}

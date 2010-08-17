@@ -98,9 +98,10 @@ class PhocaGalleryCpControllerPhocaGalleryc extends PhocaGalleryCpController
 					// Category is saved - use this id and don't save it again
 					$post['exta']	= JRequest::getVar( 'picalbum', '', 'get'  );
 					$post['extu']	= JRequest::getVar( 'picuser', '', 'get'  );
+					$post['extauth']= JRequest::getVar( 'picauth', '', 'get'  );
 				}
 				
-				$album = $model->picasaalbum($post['extu'], $post['exta'], $errorMsgA);
+				$album = $model->picasaalbum($post['extu'], $post['extauth'], $post['exta'], $errorMsgA);
 				
 				if (!$album) {
 					if($errorMsgA != '') {
@@ -132,8 +133,8 @@ class PhocaGalleryCpControllerPhocaGalleryc extends PhocaGalleryCpController
 						$start	= JRequest::getVar( 'picstart', 1, 'get', 'int' );
 						$max	= $picasa_load_pagination;
 						$pagination	= '&start-index='.(int)$start.'&max-results='.(int)$max;
+						$picImg = $model->picasaimages($post['extu'],$post['extauth'], $album['id'], $id, $pagination, $errorMsgI);
 						
-						$picImg = $model->picasaimages($post['extu'], $album['id'], $id, $pagination, $errorMsgI);
 						if (!$picImg) {
 							if($errorMsgI != '') {
 								if ($msg != '') {$msg .= '<br />';}
@@ -155,7 +156,7 @@ class PhocaGalleryCpControllerPhocaGalleryc extends PhocaGalleryCpController
 								} else {
 									if ((int)$album['num'] > (int)$newStartIf) {
 										
-										$refreshUrl	= 'index.php?option=com_phocagallery&controller=phocagalleryc&cid[]='.$id.'&task=loadextimg&picalbum='.$post['exta'].'&picuser='.$post['extu'].'&picstart='.(int)$newStart;
+										$refreshUrl	= 'index.php?option=com_phocagallery&controller=phocagalleryc&cid[]='.$id.'&task=loadextimg&picalbum='.$post['exta'].'&picuser='.$post['extu'].'&picauth='.$post['extauth'].'&picstart='.(int)$newStart;
 										$countImg	= $newStartIf + $max;
 										if ($countImg > $album['num']) {
 											$countImg = $album['num'];

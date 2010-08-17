@@ -1,5 +1,6 @@
+<?php defined('_JEXEC') or die('Restricted access'); ?>
+<!-- <div><a>www.phoca.cz - Begin Category -->
 <?php
-defined('_JEXEC') or die('Restricted access'); 
 // Heading
 $heading = '';
 if ($this->params->get( 'page_title' ) != '') {
@@ -50,7 +51,6 @@ if ($this->tmpl['detailwindow'] == 7) {
 } else {
 	$tmplCom = '&tmpl=component';
 }
-
 // Switch image
 $noBaseImg 	= false;
 $noBaseImg	= preg_match("/phoca_thumb_l_no_image/i", $this->tmpl['basicimage']);
@@ -108,11 +108,12 @@ if ( $this->tmpl['displayimageshadow'] != 'none' ) {
 //$miniHS = '';
 
 // Images	
+
 if (!empty($this->items)) {
 	foreach($this->items as $key => $value) {
 		echo "\n\n";
 		echo '<div class="phocagallery-box-file" style="height:'. $imageHeight['boxsize'].'px; width:'.$imageWidth['boxsize'].'px;">';
-		echo '<div class="phocagallery-box-file-first" style="height:'.$imageHeight['size'].'px;width:'.$imageWidth['size'].'px;">';
+		echo '<div class="phocagallery-box-file-first" style="height:'.$imageHeight['size'].'px;width:'.$imageWidth['size'].'px;margin: auto">';
 		echo '<div class="phocagallery-box-file-second">';
 		echo '<div class="phocagallery-box-file-third">';
 		
@@ -145,6 +146,8 @@ if (!empty($this->items)) {
 				echo ' onclick="gjaks.show('.$value->linknr.'); return false;"';
 			} else if ($this->tmpl['detailwindow'] == 7 ) {
 				echo '';
+			} else if ($this->tmpl['detailwindow'] == 8) {
+				echo ' rel="lightbox-'.$this->category->alias.'" ';
 			} else {
 				echo ' rel="'.$value->button->options.'"';
 			}
@@ -153,7 +156,7 @@ if (!empty($this->items)) {
 			if ($this->tmpl['switchimage'] == 1) {
 				// Picasa
 				if ($value->extl != '') {
-					if ((int)$this->tmpl['switchwidth'] > 0 && (int)$this->tmpl['switchheight'] > 0) {
+					if ((int)$this->tmpl['switchwidth'] > 0 && (int)$this->tmpl['switchheight'] > 0 && $this->tmpl['switchfixedsize'] == 1) {
 						// Custom Size
 						echo ' onmouseover="PhocaGallerySwitchImage(\'PhocaGalleryobjectPicture\', \''. $value->extl.'\', '.$this->tmpl['switchwidth'].', '.$this->tmpl['switchheight'].');" ';
 					} else {
@@ -164,7 +167,7 @@ if (!empty($this->items)) {
 					}
 				} else {
 					$switchImg = str_replace('phoca_thumb_m_','phoca_thumb_l_',JURI::base(true).'/'. $value->linkthumbnailpath);
-					if ((int)$this->tmpl['switchwidth'] > 0 && (int)$this->tmpl['switchheight'] > 0) {
+					if ((int)$this->tmpl['switchwidth'] > 0 && (int)$this->tmpl['switchheight'] > 0 && $this->tmpl['switchfixedsize'] == 1) {
 						echo ' onmouseover="PhocaGallerySwitchImage(\'PhocaGalleryobjectPicture\', \''. $switchImg.'\', '.$this->tmpl['switchwidth'].', '.$this->tmpl['switchheight'].');" ';
 					} else {
 						echo ' onmouseover="PhocaGallerySwitchImage(\'PhocaGalleryobjectPicture\', \''. $switchImg.'\');" ';
@@ -220,7 +223,16 @@ if (!empty($this->items)) {
 				echo '</div>';
 			}
 		}
-		echo '</div></div></div>'. "\n\n";
+		
+		// hotnew
+		if ($value->type == 2) {
+			echo PhocaGalleryRenderFront::getOverImageIcons($value->date, $value->hits);
+			
+		}
+		echo '</div>';
+		
+		echo '</div></div>'. "\n\n";
+		
 			
 			
 		// subfolder
@@ -254,7 +266,7 @@ if (!empty($this->items)) {
 				echo ' onclick="'. $this->tmpl['highslideonclick2'].'"';
 			} else if ($this->tmpl['detailwindow'] == 7 ) {
 				echo '';
-			} else {
+			} 	else {
 				echo ' rel="'. $value->buttonother->optionsrating.'"';
 			}
 			echo ' >';
@@ -278,8 +290,9 @@ if (!empty($this->items)) {
 		$value->publishunpublish == 1 || 
 		$value->displayicongeo == 1 || 
 		$value->camerainfo == 1 || 
-		$value->displayiconextlink1	== 1 || 
-		$value->displayiconextlink2	== 1 || 
+		$value->displayiconextlink1   == 1 ||
+		$value->displayiconextlink2   == 1 ||
+		$value->displayiconcommentimg == 1 ||
 		$value->camerainfo == 1) {
 			
 			echo '<div class="detail" style="margin-top:2px">';
@@ -290,7 +303,7 @@ if (!empty($this->items)) {
 				echo JHTML::_('image', 'components/com_phocagallery/assets/images/icon-cooliris.'.$this->tmpl['formaticon'], 'Cooliris');
 				echo '</a>';
 			}
-			
+		//Detail Icon	
 			if ($value->displayicondetail == 1) {
 				echo ' <a class="'.$value->button2->methodname.'" title="'. JText::_('Image Detail').'"'
 					.' href="'.$value->link2.'"';
@@ -306,9 +319,12 @@ if (!empty($this->items)) {
 						echo ' onclick="gjaks.show('.$value->linknr.'); return false;"';
 					} else if ($this->tmpl['detailwindow'] == 7 ) {
 						echo '';
+					} else if ($this->tmpl['detailwindow'] == 8) {
+						echo ' rel="lightbox-'.$this->category->alias.'2" ';
 					} else {
-						echo ' rel="'. $value->button2->options.'"';
+						echo ' rel="'.$value->button2->options.'"';
 					}
+					
 					echo ' >';
 					echo JHTML::_('image', 'components/com_phocagallery/assets/images/icon-view.'.$this->tmpl['formaticon'], JText::_('Image Detail'));
 					echo '</a>';
@@ -577,4 +593,6 @@ if ($this->tmpl['detailwindow'] == 6) {
 	</script><?php
 }
 echo '<div>&nbsp;</div>';
+// Phoca Gallery Width
 ?>
+<!-- End Category </a></div> -->

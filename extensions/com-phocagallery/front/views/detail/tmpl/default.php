@@ -64,6 +64,13 @@ if ($this->tmpl['detailbuttons'] == 1){
 echo '</table></center>';
 echo $this->loadTemplate('rating');
 if ($this->tmpl['detailwindow'] == 7) {
+
+	if (JComponentHelper::isEnabled('com_jcomments', true) && $this->tmpl['externalcommentsystem'] == 1) {
+		include_once(JPATH_BASE.DS.'components'.DS.'com_jcomments'.DS.'jcomments.php');
+		echo JComments::showComments(  $this->item->id, 'com_phocagallery_images', JText::_('PHOCAGALLERY_IMAGE') .' '. $this->item->title);
+	}
+
+
 	echo $this->tmpl['emt'];
 }
 echo '</div>';

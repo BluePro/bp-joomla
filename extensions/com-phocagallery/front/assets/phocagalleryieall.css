@@ -21,3 +21,16 @@
 #description-msg {
 	bottom: 5px;
 }
+
+
+#phocagallery div.phocagallery-box-file-first img.pg-img-ovr1 {
+	position: absolute;
+	top: -6px;
+	left: -8px;
+}
+
+#phocagallery div.phocagallery-box-file-first img.pg-img-ovr2 {
+	position: absolute;
+	top: -6px;
+	left: 24px;
+}

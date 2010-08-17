@@ -116,11 +116,13 @@ class PhocagalleryModelCategory extends JModel
 			
 			$user = &JFactory::getUser();
 			if (!$this->_category->published) {
-				$mainframe->redirect(JRoute::_('index.php', false), JText::_("PHOCAGALLERY_CATEGORY_IS_UNPUBLISHED"));
+				//$mainframe->redirect(JRoute::_('index.php', false), JText::_("PHOCAGALLERY_CATEGORY_IS_UNPUBLISHED"));
+				JError::raiseError( 404, JText::_( "PHOCAGALLERY_CATEGORY_IS_UNPUBLISHED" ) );
 				exit;
 			}
 			if (!$this->_category->approved) {
-				$mainframe->redirect(JRoute::_('index.php', false), JText::_("PHOCAGALLERY_CATEGORY_IS_UNAUTHORIZED"));
+				//$mainframe->redirect(JRoute::_('index.php', false), JText::_("PHOCAGALLERY_CATEGORY_IS_UNAUTHORIZED"));// don't loop
+				JError::raiseError( 404, JText::_( "PHOCAGALLERY_CATEGORY_IS_UNAUTHORIZED" ) );
 				exit;
 			}
 			

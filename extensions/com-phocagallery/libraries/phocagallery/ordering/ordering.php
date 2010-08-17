@@ -60,6 +60,20 @@ class PhocaGalleryOrdering
 			case 10:
 				$orderingOutput = '';
 			break;
+			
+			case 11:
+				$orderingOutput   = 'count ASC';
+			 break;
+			 case 12:
+				$orderingOutput   = 'count DESC';
+			 break;
+			 
+			 case 13:
+				$orderingOutput   = 'average ASC';
+			 break;
+			 case 14:
+				$orderingOutput   = 'average DESC';
+			 break;
 		
 			case 1:
 			default:

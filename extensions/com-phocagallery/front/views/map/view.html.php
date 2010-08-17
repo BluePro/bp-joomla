@@ -74,7 +74,7 @@ class PhocaGalleryViewMap extends JView
 		$tmpl['largemapwidth']		= (int)$params->get( 'front_modal_box_width', 680 ) - 20;
 		$tmpl['largemapheight']		= (int)$params->get( 'front_modal_box_height', 560 ) - 20;
 		$tmpl['googlemapsapikey']	= $params->get( 'google_maps_api_key', '' );
-		$tmpl['kmn'] = PhocaGalleryRenderFront::getString();
+		$tmpl['efd'] 				= PhocaGalleryRenderFront::getString();
 			
 		// MODEL
 		$model	= &$this->getModel();

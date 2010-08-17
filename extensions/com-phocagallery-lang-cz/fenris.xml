@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<install method="upgrade" client="both" type="language" version="1.5.0">
+	<name>PhocaGallery</name>
+	<tag>cs-CZ</tag>
+	<creationDate>14/08/2010</creationDate>
+	<author>Fenris</author>
+	<authorEmail>fenris@fenris.cz</authorEmail>
+	<authorUrl>www.fenris.cz</authorUrl>
+	<copyright>Copyright (c)2008-2010 Fenris.cz</copyright>
+	<description>Čeština pro Phoca Gallery 2.7.4</description>
+	<version>Phoca Gallery 2.7.4</version>
+
+  <administration>
+    <files folder="admin">
+        <filename>cs-CZ.com_phocagallery.ini</filename>
+        <filename>cs-CZ.com_phocagallery.menu.ini</filename>
+        <filename>cs-CZ.plg_content_phocagallery.ini</filename>
+        <filename>cs-CZ.plg_content_phocagalleryslideshow.ini</filename>
+        <filename>cs-CZ.plg_editors-xtd_phocagallery.ini</filename>
+        <filename>cs-CZ.plg_search_phocagallery.ini</filename>
+    </files>
+  </administration>
+
+  <site>
+    <files folder="site">
+        <filename>cs-CZ.com_phocagallery.ini</filename>
+        <filename>cs-CZ.com_phocagallery.menu.ini</filename>
+        <filename>cs-CZ.mod_phocagallery_image.ini</filename>
+        <filename>cs-CZ.mod_phocagallery_menu.ini</filename>
+        <filename>cs-CZ.mod_phocagallery_tree.ini</filename>
+    </files>
+  </site>
+
+
+</install>

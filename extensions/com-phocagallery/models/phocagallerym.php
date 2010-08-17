@@ -267,6 +267,11 @@ class PhocaGalleryCpModelPhocaGalleryM extends JModel
 		$id 			= $this->_getCategoryId( $existingCategories, $categoryName, $parentId ) ;
 		$category 		= null;
 		
+		// Full path: eg. "/home/www/joomla/images/categ/subcat/"
+		$fullPath	   	= str_replace(DS, '/', JPath::clean(DS . $path));
+		// Relative path eg "categ/subcat"
+		$relativePath 	= str_replace($origPathServer, '', $fullPath);
+		
 		// Category doesn't exist
 		if ( $id == -1 ) {
 		  $row =& $this->getTable('phocagalleryc');
@@ -277,7 +282,8 @@ class PhocaGalleryCpModelPhocaGalleryM extends JModel
 		  
 		  // Create the timestamp for the date
 		  $row->date 		= gmdate('Y-m-d H:i:s');
-		  $row->alias 		= PhocaGalleryText::getAliasName($categoryName);;
+		  $row->alias 		= PhocaGalleryText::getAliasName($categoryName);
+		  $row->userfolder	= ltrim(str_replace(DS, '/', JPath::clean($relativePath )), '/');
 		  $row->ordering 	= $row->getNextOrder( "parent_id = " . $this->_db->Quote($row->parent_id) );				
 		
 		  if (!$row->check()) {
@@ -298,10 +304,7 @@ class PhocaGalleryCpModelPhocaGalleryM extends JModel
 		  $this->setCategoryCount(1);//This subcategory was added
 		}
 		
-		// Full path: eg. "/home/www/joomla/images/categ/subcat/"
-		$fullPath	   	= str_replace(DS, '/', JPath::clean(DS . $path));
-		// Relative path eg "categ/subcat"
-		$relativePath 	= str_replace($origPathServer, '', $fullPath);	
+			
 
 		// Add all images from this folder
 		$totalresult->image_count += $this->_addAllImagesFromFolder( $existingImages, $id, $path, $relativePath, $published );

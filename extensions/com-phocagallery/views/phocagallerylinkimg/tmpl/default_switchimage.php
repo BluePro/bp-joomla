@@ -12,7 +12,7 @@ JHTML::_('behavior.tooltip');
 function insertLink() {
 	
 	<?php
-	$items = array('switchheight', 'switchwidth' );
+	$items = array('switchheight', 'switchwidth', 'switchfixedsize' );
 	$itemsArrayOutput = '';
 	foreach ($items as $key => $value) {
 		
@@ -185,6 +185,14 @@ function insertLink() {
 		.'<td nowrap="nowrap"><input type="text" name="'.$key.'" id="'.$key.'" value="'.$value[1].'" class="text_area" /></td>'
 		.'</tr>';
 	}
+	
+	echo '<tr>'
+		.'<td class="key" align="right" width="30%"><label for="switchfixedsize">'.JText::_('Switch Fixed Size').'</label></td>'
+		.'<td nowrap><select name="pgslink" id="switchfixedsize" class="inputbox">'
+		.'<option value="0"  selected="selected">'. JText::_( 'No' ).'</option>'
+		.'<option value="1" >'.JText::_( 'Yes' ).'</option>'
+		.'</select></td></tr>';
+	
 	?>
 
 	

@@ -59,6 +59,7 @@
 	<option value="0">No</option>
 </param>
 <param name="hide_categories" type="phocatextarea" rows="2" cols="26" default="" label="Hide Categories" description="Hide Categories DESC" />
+<param name="show_categories" type="phocatextarea" rows="2" cols="26" default="" label="Show Categories" description="Show Categories DESC" />
 <param name="display_access_category" type="list" default="0" label="Display Access Categories" description="Display Access Categories DESC">
 	<option value="1">Yes</option>
 	<option value="0">No</option>
@@ -88,6 +89,10 @@
 <param name="padding_box" default="5" size="10" type="phocatext" label="Padding Box" description="Padding Box DESC" />
 		
 <param name="@spacer" type="spacer" default="" label="" description="" />
+
+<param name="display_new" default="0" size="10" type="phocatext" label="COM_PHOCAGALLERY_FIELD_DISPLAY_NEW_ICON_LABEL" description="COM_PHOCAGALLERY_FIELD_DISPLAY_NEW_ICON_DESC" />
+
+<param name="display_hot" default="0" size="10" type="phocatext" label="COM_PHOCAGALLERY_FIELD_DISPLAY_HOT_ICON_LABEL" description="COM_PHOCAGALLERY_FIELD_DISPLAY_HOT_ICON_DESC" />
 		
 <param name="display_name" type="list" default="1" label="Display Name" description="Display/Hide Name DESC">
 		<option value="0">Hide</option>
@@ -236,6 +241,7 @@
 	<option value="5">Highslide (Image only)</option>
 	<option value="6">JAK Lightbox</option>
 	<option value="7">No Popup</option>
+	<option value="8">Slimbox</option>
 </param>
 
 <param name="@spacer" type="spacer" default="Modal Box" label="Modal Box" description="" />
@@ -423,6 +429,10 @@
 	<option value="6">Date DESC</option>
 	<option value="7">Id ASC</option>
 	<option value="8">Id DESC</option>
+	<option value="11">Count ASC</option>
+   <option value="12">Count DESC</option>
+   <option value="13">Average ASC</option>
+   <option value="14">Average DESC</option>
 </param>
 <param name="image_ordering" type="list" default="1" label="Image Ordering" description="Image Ordering DESC">
 	<option value="1">Ordering ASC</option>
@@ -558,6 +568,10 @@
 </param>
 <param name="switch_width" default="640" size="4" type="phocatext" label="Switch Image Width" description="Switch Image Width DESC" />
 <param name="switch_height" default="480" size="4" type="phocatext" label="Switch Image Height" description="Switch Image Height DESC" />
+<param name="switch_fixed_size" type="list" default="0" label="Switch Fixed Size" description="Switch Fixed Size DESC">
+	<option value="1">Yes</option>
+	<option value="0">No</option>
+</param>
 
 
 <param name="@phocahead" type="phocahead" default="OVERLIB EFFECT SETTINGS LABEL" />

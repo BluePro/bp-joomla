@@ -336,7 +336,7 @@ function submitbutton(pressbutton, parent_id) {
 		<table class="admintable">
 			<tr>
 				<td valign="middle" align="right" class="key">
-					<label for="geotitle">
+					<label for="extu">
 						<?php echo JText::_( 'PHOCAGALLERY_PICASA_USER' ); ?>:
 					</label>
 				</td>
@@ -347,13 +347,23 @@ function submitbutton(pressbutton, parent_id) {
 			
 			<tr>
 				<td valign="middle" align="right" class="key">
-					<label for="geotitle">
+					<label for="exta">
 						<?php echo JText::_( 'PHOCAGALLERY_PICASA_ALBUM_NAME' ); ?>:
 					</label>
 				</td>
 				<td valign="middle">
 					<input class="text_area" type="text" name="exta" id="exta" value="<?php echo $this->items->exta; ?>" size="32" maxlength="250" />
 				</td>
+			</tr>			
+ 			<tr>
+ 				<td valign="middle" align="right" class="key">
+ 					<label for="extauth">
+ 						<?php echo JText::_( 'PHOCAGALLERY_PICASA_AUTH_KEY' ); ?>:
+ 					</label>
+ 				</td>
+ 				<td valign="middle">
+ 					<input class="text_area" type="text" name="extauth" id="extauth" value="<?php echo $this->items->extauth; ?>" size="32" maxlength="250" />
+ 				</td>
 			</tr>
 			</table>
 			<input type="hidden" name="extid" value="<?php echo $this->items->extid; ?>" />

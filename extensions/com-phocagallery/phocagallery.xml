@@ -2,14 +2,14 @@
 <!DOCTYPE install SYSTEM "http://dev.joomla.org/xml/1.5/component-install.dtd">
 <install method="upgrade" type="component" version="1.5.0">
 	<name>PhocaGallery</name>
-	<creationDate>30/04/2010</creationDate>
+	<creationDate>09/08/2010</creationDate>
 	<author>Jan Pavelka (www.phoca.cz)</author>
 	<authorEmail></authorEmail>
 	<authorUrl>www.phoca.cz</authorUrl>
 	<copyright>Jan Pavelka</copyright>
 	<license>GNU/GPL</license>
 	<!-- The version string is recorded in the components table -->
-	<version>2.7.0</version>
+	<version>2.7.4</version>
 	<!-- The description is optional and defaults to the name -->
 	<description>Phoca Gallery</description>
 
@@ -76,6 +76,7 @@
 		<filename>assets/images/icon-folder-small.png</filename>
 		<filename>assets/images/icon-geo.gif</filename>
 		<filename>assets/images/icon-geo.png</filename>
+		<filename>assets/images/icon-hot.png</filename>
 		<filename>assets/images/icon-i.gif</filename>
 		<filename>assets/images/icon-i.png</filename>
 		<filename>assets/images/icon-images.gif</filename>
@@ -83,6 +84,7 @@
 		<filename>assets/images/icon-info.gif</filename>
 		<filename>assets/images/icon-info.png</filename>
 		<filename>assets/images/icon-loading.gif</filename>
+		<filename>assets/images/icon-new.png</filename>
 		<filename>assets/images/icon-next-grey.gif</filename>
 		<filename>assets/images/icon-next-grey.png</filename>
 		<filename>assets/images/icon-next.gif</filename>
@@ -126,6 +128,7 @@
 		<filename>assets/images/icon-subcategories.gif</filename>
 		<filename>assets/images/icon-subcategories.png</filename>
 		<filename>assets/images/icon-switch.gif</filename>
+		<filename>assets/images/icon-top.png</filename>
 		<filename>assets/images/icon-trash.gif</filename>
 		<filename>assets/images/icon-trash.png</filename>
 		<filename>assets/images/icon-u.gif</filename>
@@ -215,6 +218,7 @@
 		<filename>assets/js/highslide/index.html</filename>
 		<filename>assets/js/index.html</filename>
 		<filename>assets/js/jak/img/bg.png</filename>
+		<filename>assets/js/jak/img/index.html</filename>
 		<filename>assets/js/jak/img/lb-close-active.png</filename>
 		<filename>assets/js/jak/img/lb-close-hover.png</filename>
 		<filename>assets/js/jak/img/lb-next-active.png</filename>
@@ -267,6 +271,17 @@
 		<filename>assets/js/shadowbox/src/skin/classic/skin.css</filename>
 		<filename>assets/js/shadowbox/src/skin/classic/skin.js</filename>
 		<filename>assets/js/shadowbox/src/skin/index.html</filename>
+		<filename>assets/js/slimbox/graphics/closelabel.gif</filename>
+		<filename>assets/js/slimbox/graphics/index.html</filename>
+		<filename>assets/js/slimbox/graphics/loading.gif</filename>
+		<filename>assets/js/slimbox/graphics/nextlabel.gif</filename>
+		<filename>assets/js/slimbox/graphics/prevlabel.gif</filename>
+		<filename>assets/js/slimbox/index.html</filename>
+		<filename>assets/js/slimbox/slimbox.css</filename>
+		<filename>assets/js/slimbox/slimbox.js</filename>
+		<filename>assets/js/slimbox/src/autoload.js</filename>
+		<filename>assets/js/slimbox/src/index.html</filename>
+		<filename>assets/js/slimbox/src/slimbox.js</filename>
 		<filename>assets/phocagallery.css</filename>
 		<filename>assets/phocagalleryieall.css</filename>
 		<filename>controllers/category.php</filename>
@@ -726,6 +741,7 @@
 			<filename>front/assets/images/icon-folder-small.png</filename>
 			<filename>front/assets/images/icon-geo.gif</filename>
 			<filename>front/assets/images/icon-geo.png</filename>
+			<filename>front/assets/images/icon-hot.png</filename>
 			<filename>front/assets/images/icon-i.gif</filename>
 			<filename>front/assets/images/icon-i.png</filename>
 			<filename>front/assets/images/icon-images.gif</filename>
@@ -733,6 +749,7 @@
 			<filename>front/assets/images/icon-info.gif</filename>
 			<filename>front/assets/images/icon-info.png</filename>
 			<filename>front/assets/images/icon-loading.gif</filename>
+			<filename>front/assets/images/icon-new.png</filename>
 			<filename>front/assets/images/icon-next-grey.gif</filename>
 			<filename>front/assets/images/icon-next-grey.png</filename>
 			<filename>front/assets/images/icon-next.gif</filename>
@@ -776,6 +793,7 @@
 			<filename>front/assets/images/icon-subcategories.gif</filename>
 			<filename>front/assets/images/icon-subcategories.png</filename>
 			<filename>front/assets/images/icon-switch.gif</filename>
+			<filename>front/assets/images/icon-top.png</filename>
 			<filename>front/assets/images/icon-trash.gif</filename>
 			<filename>front/assets/images/icon-trash.png</filename>
 			<filename>front/assets/images/icon-u.gif</filename>
@@ -865,6 +883,7 @@
 			<filename>front/assets/js/highslide/index.html</filename>
 			<filename>front/assets/js/index.html</filename>
 			<filename>front/assets/js/jak/img/bg.png</filename>
+			<filename>front/assets/js/jak/img/index.html</filename>
 			<filename>front/assets/js/jak/img/lb-close-active.png</filename>
 			<filename>front/assets/js/jak/img/lb-close-hover.png</filename>
 			<filename>front/assets/js/jak/img/lb-next-active.png</filename>
@@ -917,6 +936,17 @@
 			<filename>front/assets/js/shadowbox/src/skin/classic/skin.css</filename>
 			<filename>front/assets/js/shadowbox/src/skin/classic/skin.js</filename>
 			<filename>front/assets/js/shadowbox/src/skin/index.html</filename>
+			<filename>front/assets/js/slimbox/graphics/closelabel.gif</filename>
+			<filename>front/assets/js/slimbox/graphics/index.html</filename>
+			<filename>front/assets/js/slimbox/graphics/loading.gif</filename>
+			<filename>front/assets/js/slimbox/graphics/nextlabel.gif</filename>
+			<filename>front/assets/js/slimbox/graphics/prevlabel.gif</filename>
+			<filename>front/assets/js/slimbox/index.html</filename>
+			<filename>front/assets/js/slimbox/slimbox.css</filename>
+			<filename>front/assets/js/slimbox/slimbox.js</filename>
+			<filename>front/assets/js/slimbox/src/autoload.js</filename>
+			<filename>front/assets/js/slimbox/src/index.html</filename>
+			<filename>front/assets/js/slimbox/src/slimbox.js</filename>
 			<filename>front/assets/phocagallery.css</filename>
 			<filename>front/assets/phocagalleryieall.css</filename>
 			<filename>front/controller.php</filename>

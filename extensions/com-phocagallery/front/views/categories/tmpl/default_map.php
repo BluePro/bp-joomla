@@ -1,7 +1,9 @@
 <?php
 defined('_JEXEC') or die('Restricted access');
 phocagalleryimport('phocagallery.render.rendermap');
-
+?>
+<!-- <div><a>www.phoca.cz - Begin Categories -->
+<?php
 if ( $this->params->def( 'show_page_title', 1 ) ) {
    echo '<div class="componentheading'.$this->params->get( 'pageclass_sfx' ).'">'.$this->params->get('page_title').'</div>';
 } 
@@ -78,5 +80,6 @@ if ($this->tmplGeo['categorieslng'] == '' || $this->tmplGeo['categorieslat'] == 
 	echo $map->setInitializeF();
 	?>//]]></script><?php
 }
-echo '<div>&nbsp;</div><div>' . $this->tmpl['ab'].'</div></div>';
+echo '<div>&nbsp;</div><div>' . $this->tmpl['tl'].'</div></div>';
 ?>
+<!-- End Categories </a></div> -->

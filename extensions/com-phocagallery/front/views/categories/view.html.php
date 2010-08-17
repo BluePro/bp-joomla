@@ -48,6 +48,7 @@ class PhocaGalleryViewCategories extends JView
 		$display_access_category 		= $params->get( 'display_access_category', 1 );
 		$display_empty_categories		= $params->get( 'display_empty_categories', 0 );
 		$hideCatArray					= explode( ';', trim( $params->get( 'hide_categories', '' ) ) );
+		$showCatArray    				= explode( ';', trim( $params->get( 'show_categories', '' ) ) );
 		$tmpl['equalpercentagewidth']	= $params->get( 'equal_percentage_width');
 		$tmpl['categoriesdisplayavatar']= $params->get( 'categories_display_avatar');
 		$tmpl['categoriesboxwidth']		= $params->get( 'categories_box_width');
@@ -100,7 +101,6 @@ class PhocaGalleryViewCategories extends JView
 		// Add link and unset the categories which user cannot see (if it is enabled in params)
 		// If it will be unset while access view, we must sort the keys from category array - ACCESS
 		$unSet = 0;
-		
 		foreach ($items as $key => $item) {
 
 			// Unset empty categories if it is set
@@ -111,6 +111,28 @@ class PhocaGalleryViewCategories extends JView
 					continue;
 				}
 			}
+			 
+			// Set only selected category ID    
+			if (!empty($showCatArray[0]) && is_array($showCatArray)) {
+				$unSetHCA = 0;
+         
+				foreach ($showCatArray as $valueHCA) {
+            
+					if((int)trim($valueHCA) == $items[$key]->id) {
+						$unSetHCA 	= 0;
+						$unSet 		= 0;
+						break;
+					} else {
+						$unSetHCA 	= 1;
+						$unSet 		= 1;
+                    }
+                }
+				if ($unSetHCA == 1) {
+					unset($items[$key]);
+					continue;
+				}
+			}
+
 			
 			// Unset hidden category
 			if (!empty($hideCatArray) && is_array($hideCatArray)) {
@@ -195,6 +217,7 @@ class PhocaGalleryViewCategories extends JView
 		
 		$tmpl['mtb'] = PhocaGalleryRenderInfo::getPhocaIc((int)$params->get( 'display_phoca_info', 1 ));
 		
+		
 		// ACCESS - - - - - - 
 		// In case we unset some category from the list, we must sort the array new
 		if ($unSet == 1) {
@@ -217,9 +240,10 @@ class PhocaGalleryViewCategories extends JView
 			// Use the static HTML library to build the image tag
 			$tmpl['image'] 		= JHTML::_('image', 'images/stories/'.$params->get('image'), JText::_('Phoca Gallery'), $attribs);
 		}
-		$tmpl['ab'] = base64_decode('PGRpdiBzdHlsZT0idGV4dC1hbGlnbjogY2VudGVyOyBjb2xvcjogcmdiKDIxMSwgMjExLCAyMTEpOyI+UG93ZXJlZCBieSA8YSBocmVmPSJodHRwOi8vd3d3LnBob2NhLmN6IiBzdHlsZT0idGV4dC1kZWNvcmF0aW9uOiBub25lOyIgdGFyZ2V0PSJfYmxhbmsiIHRpdGxlPSJQaG9jYS5jeiI+UGhvY2E8L2E+IDxhIGhyZWY9Imh0dHA6Ly93d3cucGhvY2EuY3ovcGhvY2FnYWxsZXJ5IiBzdHlsZT0idGV4dC1kZWNvcmF0aW9uOiBub25lOyIgdGFyZ2V0PSJfYmxhbmsiIHRpdGxlPSJQaG9jYSBHYWxsZXJ5Ij5HYWxsZXJ5PC9hPjwvZGl2Pg0K');
 		// ACTION
 		$tmpl['action']	= $uri->toString();
+		$tmpl['action'] = str_replace ('&amp;', '&', $tmpl['action']);// in case mixed amp will be included in the link
+		$tmpl['action'] = str_replace ('&', '&amp;', $tmpl['action']);
 		
 		// ASSIGN
 		$this->assignRef('tmpl',		$tmpl);
@@ -234,6 +258,8 @@ class PhocaGalleryViewCategories extends JView
 			$mainframe->addMetaTag('description', $tmpl['gallerymetadesc']);
 		}
 		
+		
+		$tmpl['tl'] = '<div style="text-align: center; color: rgb(211, 211, 211);">Powered by <a href="http://www.phoca.cz" style="text-decoration: none;" target="_blank" title="Phoca.cz">Phoca</a> <a href="http://www.phoca.cz/phocagallery" style="text-decoration: none;" target="_blank" title="Phoca Gallery">Gallery</a></div>';
 		
 		if ($display_categories_geotagging == 1) {
 		

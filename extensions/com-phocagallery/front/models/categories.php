@@ -46,6 +46,7 @@ class PhocagalleryModelCategories extends JModel
 			// Order Categories to tree
 			$text = ''; // test is tree name e.g. Category >> Subcategory
 			$tree = array();
+			
 			$this->_data = $this->_categoryTree($this->_data, $tree, 0, $text, -1);
 			return $this->_data;
 		}
@@ -109,7 +110,26 @@ class PhocagalleryModelCategories extends JModel
 		}*/
 		phocagalleryimport('phocagallery.ordering.ordering');
 		$categoryOrdering = PhocaGalleryOrdering::getOrderingString($category_ordering);
-				
+		
+		   
+		$votes	= ' ORDER BY cc.';
+		switch ($categoryOrdering) {
+		  case 'count ASC':
+			$votes	= ' ORDER BY r.';
+			break;
+		  case 'count DESC':
+			$votes	= ' ORDER BY r.';
+			break;
+		  case 'average ASC':
+			$votes	= ' ORDER BY r.';
+			break;
+		  case 'average DESC':
+			$votes	= ' ORDER BY r.';
+			break;
+		  default:
+			$votes	= ' ORDER BY cc.';
+		}
+		
 		$query = 'SELECT cc.*, a.catid, COUNT(a.id) AS numlinks, u.username AS username, r.count AS ratingcount, r.average AS ratingaverage, uc.avatar AS avatar, uc.approved AS avatarapproved, uc.published AS avatarpublished, a.filename, a.exts, a.extm, a.extw, a.exth,'
 		. ' CASE WHEN CHAR_LENGTH(cc.alias) THEN CONCAT_WS(\':\', cc.id, cc.alias) ELSE cc.id END as slug'
 		. ' FROM #__phocagallery_categories AS cc'
@@ -125,8 +145,8 @@ class PhocagalleryModelCategories extends JModel
 		. $hideSubCatSql
 		//. $hideCatSql - need to be set in tree
 		. ' GROUP BY cc.id'
-		. ' ORDER BY cc.'.$categoryOrdering;
-		
+		//. ' ORDER BY cc.'.$categoryOrdering;
+		. $votes . $categoryOrdering;
 		return $query;
 	}
 	

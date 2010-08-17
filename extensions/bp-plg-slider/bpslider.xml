@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<install version="1.5" type="plugin" group="content" method="upgrade">
+	<name>BluePro Slider</name>
+	<creationDate>2010-08-03</creationDate>
+	<author>Ondřej Hlaváč (BluePro)</author>
+	<authorEmail>ondrej@hlavacovi.net</authorEmail>
+	<authorUrl>http://ondrej.hlavacovi.net</authorUrl>
+	<copyright>Ondřej Hlaváč 2010</copyright>
+	<license>GNU/GPL</license>
+	<version>1.0</version>
+	<description>DESCBPMAP</description>
+	
+	<files>
+		<filename plugin="bpslider">bpslider.php</filename>
+	</files>
+	
+	<params>
+		<param name="show_first" type="list" default="1" label="Show first block" description="Load the page with the first block expanded">
+			<option value="0">No</option>
+			<option value="1">Yes</option>
+		</param>
+		<param name="first_transition" type="list" default="0" label="Show first block with transition" description="Use a transition when the page is loaded to expand it">
+			<option value="0">No</option>
+			<option value="1">Yes</option>
+		</param>
+		<param name="always_hide" type="list" default="0" label="Allow all blocks to be collapsed" description="Makes it possible to close all displayable blocks">
+			<option value="0">No</option>
+			<option value="1">Yes</option>
+		</param>
+		<param name="@spacer" type="spacer" default="Transition effect settings" label="" description="" />
+		<param name="duration" type="list" default="500" label="Transition length" description="Duration of the transition effect">
+			<option value="250">Short</option>
+			<option value="500">Normal</option>
+			<option value="900">Long</option>
+		</param>
+		<param name="transition" type="list" default="0" label="Effect type" description="Type of transition effect">
+			<option value="0">Sine</option>
+			<option value="Bounce">Bounce</option>
+			<option value="Elastic">Elastic</option>
+			<option value="Back">Back</option>
+		</param>
+		<param name="opacity" type="list" default="1" label="Opacity transition" description="Use an opacity transition effect when switching between displayed blocks">
+			<option value="0">No</option>
+			<option value="1">Yes</option>
+		</param>
+	</params>
+	<languages>
+		<language tag="cs-CZ">language/cs-cz/cs-CZ.plg_content_bpslider.ini</language>
+	</languages>
+</install>

@@ -126,6 +126,6 @@ if (JComponentHelper::isEnabled('com_jcomments', true) && $this->tmpl['externalc
 }
 echo '</div>';
 if ($this->tmpl['detailwindow'] == 7) {
-	echo $this->tmpl['psd'];
+	echo $this->tmpl['df'];
 }
 ?>

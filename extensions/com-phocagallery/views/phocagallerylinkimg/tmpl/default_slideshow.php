@@ -91,14 +91,16 @@ function insertLink() {
 		.'<option value="L"  selected="selected">'. JText::_( 'Large' ).'</option>'
 		.'<option value="M" >'.JText::_( 'Medium' ).'</option>'
 		.'<option value="S" >'.JText::_( 'Small' ).'</option>'
-		.'<option value="O" >'.JText::_( 'Original' ).'</option>';
+		.'<option value="O" >'.JText::_( 'Original' ).'</option>'
+		.'</select></td></tr>';
 	
 	echo '<tr>'
 		.'<td class="key" align="right" width="30%"><label for="pgslink">'.JText::_('Slideshow Link').'</label></td>'
 		.'<td nowrap><select name="pgslink" id="pgslink" class="inputbox">'
 		.'<option value=""  selected="selected">'. JText::_( 'Default' ).'</option>'
 		.'<option value="1" >'.JText::_( 'Link to Category' ).'</option>'
-		.'<option value="2" >'.JText::_( 'Link to Categories' ).'</option>';
+		.'<option value="2" >'.JText::_( 'Link to Categories' ).'</option>'
+		.'</select></td></tr>';
 	?>	
 		<tr>
 		<td class="key" align="right" width="30%"><label for="imageordering"><?php echo JText::_( 'Image Ordering' ); ?></label></td>

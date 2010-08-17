@@ -170,6 +170,7 @@ function insertLink() {
 		<option value="4" ><?php echo JText::_( 'Highslide' ); ?></option>
 		<option value="5" ><?php echo JText::_( 'Highslide (Image Only)' ); ?></option>
 		<option value="6" ><?php echo JText::_( 'JAK Lightbox' ); ?></option>
+		<option value="8" ><?php echo JText::_( 'Slimbox' ); ?></option>
 		<?php /*<option value="7" >No Popup</option>*/ ?>
 		</select></td>
 	</tr>

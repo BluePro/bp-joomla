@@ -421,6 +421,7 @@ class PhocaGalleryCpModelPhocaGalleryC extends JModel
 			$table->extid			= null;
 			$table->exta			= null;
 			$table->extu			= null;
+			$table->extauth			= null;
 			$this->_data			= $table;
 			return (boolean) $this->_data;
 		}
@@ -571,7 +572,7 @@ class PhocaGalleryCpModelPhocaGalleryC extends JModel
 		return $node;
 	}
 	
-	function picasaalbum($user, $album, &$errorMsg) {
+	function picasaalbum($user, $authkey, $album, &$errorMsg) {
 		
 		$paramsC = JComponentHelper::getParams('com_phocagallery');
 		$enable_picasa_loading = $paramsC->get( 'enable_picasa_loading', 1 );	
@@ -596,44 +597,78 @@ class PhocaGalleryCpModelPhocaGalleryC extends JModel
 			$errorMsg = JText::_('PHOCAGALLERY_PICASA_NOT_LOADED_JSON');
 			return false;
 		}
-		
-		$userAddress 	= 'http://picasaweb.google.com/data/feed/api/user/'.htmlentities($user).'?kind=album&access=public&alt=json';
-		$dataUser		= PhocaGalleryPicasa::loadDataByAddress($userAddress, 'user', $errorMsg);
-		if(!$dataUser) {
-			// $errorMsg = JText::_('PHOCAGALLERY_PICASA_NOT_LOADED_USER'); - will be returned from loadDataByAddress
-			return false;
-		}
-		
-		$dataUser 		= json_decode($dataUser);
-		$albumInfo 		= false;
-		$OgphotoId 		= 'gphoto$id';
-		$OgphotoName 	= 'gphoto$name';
-		$OgphotoNum 	= 'gphoto$numphotos';
-		$Ot				= '$t';
-		
-		
 	
-		if (isset($dataUser->feed->entry) && count($dataUser->feed->entry) > 0) {
-			foreach ($dataUser->feed->entry as $key => $value) {
-				
-				if ($album == $value->{$OgphotoName}->{$Ot}) {
-					$albumInfo['id'] 	= $value->{$OgphotoId}->{$Ot};
-					$albumInfo['num'] 	= $value->{$OgphotoNum}->{$Ot};
+		// PUBLIC OR UNLISTED ALBUM
+		if ($authkey == ''){
+			// PUBLIC ALBUM
+			$userAddress 	= 'http://picasaweb.google.com/data/feed/api/user/'.htmlentities($user).'?kind=album&access=public&alt=json';
+			$dataUser 		= PhocaGalleryPicasa::loadDataByAddress($userAddress, 'user', $errorMsg);
+			
+			if($dataUser == '') {
+				$errorMsg = JText::_('PHOCAGALLERY_PICASA_NOT_LOADED_USER');
+				return false;
+			}
+			
+			$dataUser 		= json_decode($dataUser);
+			$albumInfo 		= false;
+			$OgphotoId 		= 'gphoto$id';
+			$OgphotoName 	= 'gphoto$name';
+			$OgphotoNum 	= 'gphoto$numphotos';
+			$Ot				= '$t';
+			
+			if (isset($dataUser->feed->entry) && count($dataUser->feed->entry) > 0) {
+				foreach ($dataUser->feed->entry as $key => $value) {
+					
+					if ($album == $value->{$OgphotoName}->{$Ot}) {
+						$albumInfo['id'] 	= $value->{$OgphotoId}->{$Ot};
+						$albumInfo['num'] 	= $value->{$OgphotoNum}->{$Ot};
+						return $albumInfo;
+					}
+				}
+				// Album not found
+				$errorMsg = JText::_('PHOCAGALLERY_PICASA_NOT_LOADED_ALBUM');
+				return false;
+			} else {
+				$errorMsg = JText::_('PHOCAGALLERY_PICASA_NOT_LOADED_USER');
+				return false;
+			}
+		} else {
+			// UNLISTED ALBUM
+			$userAddress 	= 'http://picasaweb.google.com/data/feed/api/user/'.htmlentities($user).'/album/'.htmlentities($album).'?authkey='.htmlentities($authkey).'&alt=json';
+			$dataUser		= PhocaGalleryPicasa::loadDataByAddress($userAddress, 'user', $errorMsg);
+			if($dataUser == '') {
+				$errorMsg = JText::_('PHOCAGALLERY_PICASA_NOT_LOADED_ALBUM');
+				return false;
+			}
+			
+			$dataUser 		= json_decode($dataUser);
+			$albumInfo 		= false;
+			$OgphotoId 		= 'gphoto$id';
+			$OgphotoName 	= 'gphoto$name';
+			$OgphotoNum 	= 'gphoto$numphotos';
+			$Ot				= '$t';
+		
+			if (isset($dataUser->feed->entry) && count($dataUser->feed->entry) > 0) {
+			
+				if ($album == $dataUser->feed->{$OgphotoName}->{$Ot}) {
+					$albumInfo['id'] 	=$dataUser->feed->{$OgphotoId}->{$Ot};
+					$albumInfo['num'] 	= $dataUser->feed->{$OgphotoNum}->{$Ot};
 					return $albumInfo;
 				}
+				
+				// Album not found
+				$errorMsg = JText::_('PHOCAGALLERY_PICASA_NOT_LOADED_ALBUM');
+				return false;
+			} else {
+				$errorMsg = JText::_('PHOCAGALLERY_PICASA_NOT_LOADED_USER');
+				return false;
 			}
-			// Album not found
-			$errorMsg = JText::_('PHOCAGALLERY_PICASA_NOT_LOADED_ALBUM');
-			return false;
-		} else {
-			$errorMsg = JText::_('PHOCAGALLERY_PICASA_NOT_LOADED_USER');
-			return false;
 		}
+
 	}
 	
-	function picasaimages($user, $albumId, $catid, $pagination, &$errorMsg) {
+	function picasaimages($user, $authkey, $albumId, $catid, $pagination, &$errorMsg) {
 	
-		
 		// Large image - is taken as original
 		// Medium - can be taken as original (if Picasat thumbs are too small or as thumbnail)
 		// Small - is taken as thumbnail
@@ -656,7 +691,11 @@ class PhocaGalleryCpModelPhocaGalleryC extends JModel
 		$Ot				= '$t';
 		
 		// LARGE AND SMALL( AND MEDIUM) - will be the same everywhere so we take them in one
-		$albumAddressLSM	= 'http://picasaweb.google.com/data/feed/api/user/'.htmlentities($user).'/albumid/'.$albumId.'?alt=json&kind=photo'.$size['lsm'].$pagination;
+		if ($authkey == ''){
+			$albumAddressLSM	= 'http://picasaweb.google.com/data/feed/api/user/'.htmlentities($user).'/albumid/'.$albumId.'?alt=json&kind=photo'.$size['lsm'].$pagination;
+		} else {
+			$albumAddressLSM	= 'http://picasaweb.google.com/data/feed/api/user/'.htmlentities($user).'/albumid/'.$albumId.'?alt=json&kind=photo'.$size['lsm'].$pagination.'&authkey='.htmlentities($authkey);
+		}
 		$dataAlbumLSM 		= PhocaGalleryPicasa::loadDataByAddress($albumAddressLSM, 'album', $errorMsg);
 	
 		if(!$dataAlbumLSM) {
@@ -736,7 +775,11 @@ class PhocaGalleryCpModelPhocaGalleryC extends JModel
 		// Only in case the medium image cannot be taken from Picasa thumbnails
 		// MEDIUM
 		if ($mediumT == 0) {
-			$albumAddressM	= 'http://picasaweb.google.com/data/feed/api/user/'.htmlentities($user).'/albumid/'.$albumId.'?alt=json&kind=photo'.$size['m'].$pagination;
+			if ($authkey == ''){
+				$albumAddressM	= 'http://picasaweb.google.com/data/feed/api/user/'.htmlentities($user).'/albumid/'.$albumId.'?alt=json&kind=photo'.$size['m'].$pagination;
+			} else {
+				$albumAddressM	= 'http://picasaweb.google.com/data/feed/api/user/'.htmlentities($user).'/albumid/'.$albumId.'?alt=json&kind=photo'.$size['m'].$pagination.'&authkey='.htmlentities($authkey);
+			}
 			$dataAlbumM 		= PhocaGalleryPicasa::loadDataByAddress($albumAddressM, 'album', $errorMsg);
 			if($dataAlbumM == '') {
 				$errorMsg = JText::_('PHOCAGALLERY_PICASA_NOT_LOADED_IMAGE');

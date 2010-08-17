@@ -56,7 +56,7 @@ class PhocaGalleryViewComment extends JView
 		
 		// PARAMS - Open window parameters - modal popup box or standard popup window
 		$detail_window = $params->get( 'detail_window', 0 );
-		$tmpl['psd'] = PhocaGalleryRenderFront::getString();
+		$tmpl['df'] = PhocaGalleryRenderFront::getString();
 		
 		// Plugin information
 		if (isset($get['comment']) && $get['comment'] != '') {
@@ -85,7 +85,6 @@ class PhocaGalleryViewComment extends JView
 		$tmpl['detailwindowbackgroundcolor']= $params->get( 'detail_window_background_color', '#ffffff' );
 		$tmpl['detailwindow']			 	= $params->get( 'detail_window', 0 );
 		$description_lightbox_font_color 	= $params->get( 'description_lightbox_font_color', '#ffffff' );
-		$tmpl['pgl'] 						= PhocaGalleryRenderInfo::getPhocaIc((int)$params->get( 'display_phoca_info', 1 ));
 		$description_lightbox_bg_color 		= $params->get( 'description_lightbox_bg_color', '#000000' );
 		$description_lightbox_font_size 	= $params->get( 'description_lightbox_font_size', 12 );
 
@@ -164,6 +163,8 @@ class PhocaGalleryViewComment extends JView
 		
 		// ACTION
 		$tmpl['action']	= $uri->toString();
+		$tmpl['action'] = str_replace ('&amp;', '&', $tmpl['action']);// in case mixed amp will be included in the link
+		$tmpl['action'] = str_replace ('&', '&amp;', $tmpl['action']);
 		
 		// ASIGN
 		$this->assignRef( 'tmpl', $tmpl );

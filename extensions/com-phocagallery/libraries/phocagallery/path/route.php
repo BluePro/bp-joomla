@@ -18,9 +18,13 @@ class PhocaGalleryRoute
 			'categories' => ''
 		);
 		
+		// Current Itemid on the site
+		// Can be a categories Itemid or category Itemid
+		//$itemIdSite = JRequest::getVar('Itemid', 0, '', 'int')
+		
 		$link = 'index.php?option=com_phocagallery&view=categories';
 
-		if($item = PhocaGalleryRoute::_findItem($needles)) {
+		if($item = PhocaGalleryRoute::_findItem($needles, 1)) {
 			if(isset($item->query['layout'])) {
 				$link .= '&layout='.$item->query['layout'];
 			}
@@ -100,32 +104,63 @@ class PhocaGalleryRoute
 	}
 
 	function _findItem($needles, $notCheckId = 0) {
-		$component =& JComponentHelper::getComponent('com_phocagallery');
-
-		$menus	= &JApplication::getMenu('site', array());
-		$items	= $menus->getItems('componentid', $component->id);
-
+		$component 		= &JComponentHelper::getComponent('com_phocagallery');
+		$menus			= &JApplication::getMenu('site', array());
+		$items			= $menus->getItems('componentid', $component->id);
+		$currentItemId 	= JRequest::getVar('Itemid', 0, '', 'int');
+		
 		if(!$items) {
 			return JRequest::getVar('Itemid', 0, '', 'int');
-			//return null;
 		}
 		
 		$match = null;
-		
 		foreach($needles as $needle => $id) {
 			
 			if ($notCheckId == 0) {
+
+				// Try to find the same Itemid like the current site has
+				// The itemid of current site can be itemid of other view
+				// In such case and in case no itemid will be found
+				// try to find some other itemid
+				// Example: categories view - if not found: currentItemid is not
+				//          found in categories view, try to find some other
+				//          categories view itemid (by backlinks e.g.)
+				$sameIdFound = 0;
 				foreach($items as $item) {
-					if ((@$item->query['view'] == $needle) && (@$item->query['id'] == $id)) {
+					if ((int)$currentItemId > 0) {
+						if ((@$item->query['view'] == $needle) && (@$item->query['id'] == $id) && ($currentItemId == $item->id)) {
 						$match = $item;
+						$sameIdFound = 1;
 						break;
+						}
+					}
+				}	
+				// Continue searching of other itemid
+				if ($sameIdFound == 0) {
+					foreach($items as $item) {
+						if ((@$item->query['view'] == $needle) && (@$item->query['id'] == $id)) {
+							$match = $item;
+							break;
+						}
 					}
 				}
 			} else {
+				$sameIdFound = 0;
 				foreach($items as $item) {
-					if (@$item->query['view'] == $needle) {
+					if ((int)$currentItemId > 0) {
+						if ((@$item->query['view'] == $needle) && ($currentItemId == $item->id)) {
 						$match = $item;
+						$sameIdFound = 1;
 						break;
+						}
+					}
+				}
+				if ($sameIdFound == 0) {
+					foreach($items as $item) {
+						if (@$item->query['view'] == $needle) {
+							$match = $item;
+							break;
+						}
 					}
 				}
 			}

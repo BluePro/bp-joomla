@@ -28,6 +28,8 @@ class PhocaGalleryViewDetail extends JView
 		$var['download'] 	= JRequest::getVar('phocadownload', 0, '', 'int');
 		$uri 				= &JFactory::getURI();
 		$tmpl['action']		= $uri->toString();
+		$tmpl['action'] = str_replace ('&amp;', '&', $tmpl['action']);// in case mixed amp will be included in the link
+		$tmpl['action'] = str_replace ('&', '&amp;', $tmpl['action']);
 
 		
 		// Information from the plugin - window is displayed after plugin action
@@ -70,7 +72,7 @@ class PhocaGalleryViewDetail extends JView
 			$tmpl['detailwindowclose']	= 'window.parent.document.getElementById(\'sbox-window\').close();';
 			$tmpl['detailwindowreload']	= 'window.location.reload(true);';
 		} 
-		
+		$tmpl['externalcommentsystem'] 			= $params->get( 'external_comment_system', 0 );
 		$tmpl['displaydescriptiondetail']		= $params->get( 'display_description_detail', 0 );
 		$tmpl['displaytitleindescription']		= $params->get( 'display_title_description', 0 );
 		$tmpl['descriptiondetailheight']		= $params->get( 'description_detail_height', 16 );
@@ -164,6 +166,7 @@ class PhocaGalleryViewDetail extends JView
 			$item->extl			=	$item->extl;
 			$item->exto			=	$item->exto;
 			$realImageSize 		= PhocaGalleryImage::getRealImageSize($item->extl, '', 1);
+			
 			$item->imagesize 	= PhocaGalleryImage::getImageSize($item->exto, 1, 1);
 			if ($item->extw != '') {
 				$extw 		= explode(',',$item->extw);

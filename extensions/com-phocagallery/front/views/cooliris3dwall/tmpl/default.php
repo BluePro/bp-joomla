@@ -58,4 +58,4 @@ echo '</div>';
 <?php
 }
 echo '<div>&nbsp;</div>';
-echo $this->tmpl['fs'];?>
+echo $this->tmpl['nm'];?>

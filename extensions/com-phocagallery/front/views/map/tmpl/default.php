@@ -58,6 +58,6 @@ if (empty($this->map) || $this->map->longitude == '' || $this->map->latitude == 
 }
 if ($this->tmpl['detailwindow'] == 7) {
 	echo '<div>&nbsp;</div>'
-	. $this->tmpl['kmn'];
+	. $this->tmpl['efd'];
 }
 ?>

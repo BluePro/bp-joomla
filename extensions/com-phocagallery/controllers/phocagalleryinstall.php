@@ -112,6 +112,7 @@ class PhocaGalleryCpControllerPhocaGalleryinstall extends PhocaGalleryCpControll
 		$query.=' '.$db->nameQuote('extid').' varchar(255) NOT NULL default \'\','."\n";
 		$query.=' '.$db->nameQuote('exta').' varchar(255) NOT NULL default \'\','."\n";
 		$query.=' '.$db->nameQuote('extu').' varchar(255) NOT NULL default \'\','."\n";
+		$query.=' '.$db->nameQuote('extauth').' varchar(255) NOT NULL default \'\','."\n";
 		$query.=' '.$db->nameQuote('params').' text,'."\n";
 		$query.=' '.$db->nameQuote('metakey').' text,'."\n";
 		$query.=' '.$db->nameQuote('metadesc').' text,'."\n";
@@ -186,7 +187,7 @@ class PhocaGalleryCpControllerPhocaGalleryinstall extends PhocaGalleryCpControll
 		$query =' CREATE TABLE '.$db->nameQuote('#__phocagallery_votes_statistics').' ('."\n";
 		$query.=' '.$db->nameQuote('id').' int(11) NOT NULL auto_increment,'."\n";
 		$query.=' '.$db->nameQuote('catid').' int(11) NOT NULL default 0,'."\n";
-		$query.=' '.$db->nameQuote('count').' tinyint(11) NOT NULL default \'0\','."\n";
+		$query.=' '.$db->nameQuote('count').' int(11) NOT NULL default \'0\','."\n";
 		$query.=' '.$db->nameQuote('average').' float(8,6) NOT NULL default \'0\','."\n";
 		$query.=' PRIMARY KEY  ('.$db->nameQuote('id').')'."\n";
 		$query.=') TYPE=MyISAM CHARACTER SET '.$db->nameQuote('utf8').';'."\n";
@@ -250,7 +251,7 @@ class PhocaGalleryCpControllerPhocaGalleryinstall extends PhocaGalleryCpControll
 		$query =' CREATE TABLE '.$db->nameQuote('#__phocagallery_img_votes_statistics').' ('."\n";
 		$query.=' '.$db->nameQuote('id').' int(11) NOT NULL auto_increment,'."\n";
 		$query.=' '.$db->nameQuote('imgid').' int(11) NOT NULL default 0,'."\n";
-		$query.=' '.$db->nameQuote('count').' tinyint(11) NOT NULL default \'0\','."\n";
+		$query.=' '.$db->nameQuote('count').' int(11) NOT NULL default \'0\','."\n";
 		$query.=' '.$db->nameQuote('average').' float(8,6) NOT NULL default \'0\','."\n";
 		$query.=' PRIMARY KEY  ('.$db->nameQuote('id').')'."\n";
 		$query.=') TYPE=MyISAM CHARACTER SET '.$db->nameQuote('utf8').';'."\n";
@@ -412,7 +413,7 @@ class PhocaGalleryCpControllerPhocaGalleryinstall extends PhocaGalleryCpControll
 		$query =' CREATE TABLE IF NOT EXISTS '.$db->nameQuote('#__phocagallery_votes_statistics').' ('."\n";
 		$query.=' '.$db->nameQuote('id').' int(11) NOT NULL auto_increment,'."\n";
 		$query.=' '.$db->nameQuote('catid').' int(11) NOT NULL default 0,'."\n";
-		$query.=' '.$db->nameQuote('count').' tinyint(11) NOT NULL default \'0\','."\n";
+		$query.=' '.$db->nameQuote('count').' int(11) NOT NULL default \'0\','."\n";
 		$query.=' '.$db->nameQuote('average').' float(8,6) NOT NULL default \'0\','."\n";
 		$query.=' PRIMARY KEY  ('.$db->nameQuote('id').')'."\n";
 		$query.=') TYPE=MyISAM CHARACTER SET '.$db->nameQuote('utf8').';'."\n";
@@ -670,7 +671,7 @@ class PhocaGalleryCpControllerPhocaGalleryinstall extends PhocaGalleryCpControll
 		$query =' CREATE TABLE IF NOT EXISTS '.$db->nameQuote('#__phocagallery_img_votes_statistics').' ('."\n";
 		$query.=' '.$db->nameQuote('id').' int(11) NOT NULL auto_increment,'."\n";
 		$query.=' '.$db->nameQuote('imgid').' int(11) NOT NULL default 0,'."\n";
-		$query.=' '.$db->nameQuote('count').' tinyint(11) NOT NULL default \'0\','."\n";
+		$query.=' '.$db->nameQuote('count').' int(11) NOT NULL default \'0\','."\n";
 		$query.=' '.$db->nameQuote('average').' float(8,6) NOT NULL default \'0\','."\n";
 		$query.=' PRIMARY KEY  ('.$db->nameQuote('id').')'."\n";
 		$query.=') TYPE=MyISAM CHARACTER SET '.$db->nameQuote('utf8').';'."\n";
@@ -888,6 +889,16 @@ class PhocaGalleryCpControllerPhocaGalleryinstall extends PhocaGalleryCpControll
 
 		
 		// END 2.6
+		
+		// UPDATE 2.7.1
+		$updateextAuth = false;
+		$errorMsg	= '';
+		$updateextAuth = $this->AddColumnIfNotExists( $errorMsg, "#__phocagallery_categories", "extauth", "varchar(255) NOT NULL default ''", "hits" );
+		if (!$updateextAuth) {
+			$msgSQL .= 'Error while updating External Image Album - Auth column';
+		}
+		
+		//END 2.7.1
 		
 		
 		// CHECK TABLES
