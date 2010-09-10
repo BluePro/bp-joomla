@@ -127,6 +127,7 @@ class modBannersHelper
 	<param name="movie" value="%s" />
 <!-->
 	<param name="wmode" value="opaque" />
+	<param name="loop" value="true" />
 	
 	<p>Pro použití této aplikace je nutné mít nainstalován Flash.</p>
 </object>
