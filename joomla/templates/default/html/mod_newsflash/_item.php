@@ -3,7 +3,7 @@ defined('_JEXEC') or die('Restricted access');
 
 if ($params->get('item_title')) {
 	if ($params->get('link_titles') && $item->linkOn != '')
-		echo sprintf('<h3><a href="%s">%s</a></h3>', JRoute::_($linkOn), $item->title);
+		echo sprintf('<h3><a href="%s">%s</a></h3>', JRoute::_($item->linkOn), $item->title);
 	else
 		echo sprintf('<h3>%s</h3>', $item->title);
 }
