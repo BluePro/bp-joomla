@@ -69,6 +69,19 @@ class JComponentHelper
 	}
 
 	/**
+	 * Checks if the component is installed
+	 *
+	 * @access	public
+	 * @param	string	$component The component name
+	 * @return	boolean
+	 */
+	function exist( $component )
+	{
+		$result = &JComponentHelper::getComponent( $component, true );
+		return $result->enabled;
+	}
+	
+	/**
 	 * Gets the parameter object for the component
 	 *
 	 * @access public

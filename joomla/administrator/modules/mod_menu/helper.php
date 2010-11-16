@@ -193,12 +193,14 @@ class modMenuHelper
 		/*
 		 * Extensions SubMenu
 		 */
-		if ($installModules)
+		if ($installModules || $editAllModules || $editAllPlugins || $manageTemplates || $manageLanguages)
 		{
 			$menu->addChild(new JMenuNode(JText::_('Extensions')), true);
 
-			$menu->addChild(new JMenuNode(JText::_('Install/Uninstall'), 'index.php?option=com_installer', 'class:install'));
-			$menu->addSeparator();
+			if ($installModules) {
+				$menu->addChild(new JMenuNode(JText::_('Install/Uninstall'), 'index.php?option=com_installer', 'class:install'));
+				$menu->addSeparator();
+			}
 			if ($editAllModules) {
 				$menu->addChild(new JMenuNode(JText::_('Module Manager'), 'index.php?option=com_modules', 'class:module'));
 			}
