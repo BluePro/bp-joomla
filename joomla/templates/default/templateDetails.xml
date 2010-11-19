@@ -27,10 +27,14 @@
 		<filename>html/com_content/frontpage/default_item.php</filename>
 		<filename>html/com_content/frontpage/default_links.php</filename>
 		<filename>html/com_content/section/default.php</filename>
+		<filename>html/com_content/section/blog.php</filename>
+		<filename>html/com_content/section/blog_item.php</filename>
+		<filename>html/com_content/section/blog_links.php</filename>
 		<filename>html/com_search/search/default.php</filename>
 		<filename>html/com_search/search/default_error.php</filename>
 		<filename>html/com_search/search/default_form.php</filename>
 		<filename>html/com_search/search/default_results.php</filename>
+		<filename>html/mod_banners/default.php</filename>
 		<filename>html/mod_breadcrumbs/default.php</filename>
 		<filename>html/mod_footer/default.php</filename>
 		<filename>html/mod_newsflash/_item.php</filename>

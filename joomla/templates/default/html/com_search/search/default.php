@@ -14,3 +14,5 @@ if (!$this->error && count($this->results) > 0) {
 } else {
 	echo $this->loadTemplate('error');
 }
+
+echo '</div>';
