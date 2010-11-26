@@ -2,14 +2,14 @@
 <!DOCTYPE install SYSTEM "http://dev.joomla.org/xml/1.5/component-install.dtd">
 <install method="upgrade" type="component" version="1.5.0">
 	<name>PhocaGallery</name>
-	<creationDate>09/08/2010</creationDate>
+	<creationDate>23/09/2010</creationDate>
 	<author>Jan Pavelka (www.phoca.cz)</author>
 	<authorEmail></authorEmail>
 	<authorUrl>www.phoca.cz</authorUrl>
 	<copyright>Jan Pavelka</copyright>
 	<license>GNU/GPL</license>
 	<!-- The version string is recorded in the components table -->
-	<version>2.7.4</version>
+	<version>2.7.5</version>
 	<!-- The description is optional and defaults to the name -->
 	<description>Phoca Gallery</description>
 
@@ -44,6 +44,10 @@
 		<filename>assets/images/icon-cart.gif</filename>
 		<filename>assets/images/icon-cart.png</filename>
 		<filename>assets/images/icon-comment-a.gif</filename>
+		<filename>assets/images/icon-comment-fb-small.gif</filename>
+		<filename>assets/images/icon-comment-fb-small.png</filename>
+		<filename>assets/images/icon-comment-fb.gif</filename>
+		<filename>assets/images/icon-comment-fb.png</filename>
 		<filename>assets/images/icon-comment.gif</filename>
 		<filename>assets/images/icon-comment.png</filename>
 		<filename>assets/images/icon-cooliris.gif</filename>
@@ -310,6 +314,7 @@
 		<filename>views/category/tmpl/default.php</filename>
 		<filename>views/category/tmpl/default.xml</filename>
 		<filename>views/category/tmpl/default_categories.php</filename>
+		<filename>views/category/tmpl/default_comments-fb.php</filename>
 		<filename>views/category/tmpl/default_comments.php</filename>
 		<filename>views/category/tmpl/default_geotagging.php</filename>
 		<filename>views/category/tmpl/default_rating.php</filename>
@@ -709,6 +714,10 @@
 			<filename>front/assets/images/icon-cart.gif</filename>
 			<filename>front/assets/images/icon-cart.png</filename>
 			<filename>front/assets/images/icon-comment-a.gif</filename>
+			<filename>front/assets/images/icon-comment-fb-small.gif</filename>
+			<filename>front/assets/images/icon-comment-fb-small.png</filename>
+			<filename>front/assets/images/icon-comment-fb.gif</filename>
+			<filename>front/assets/images/icon-comment-fb.png</filename>
 			<filename>front/assets/images/icon-comment.gif</filename>
 			<filename>front/assets/images/icon-comment.png</filename>
 			<filename>front/assets/images/icon-cooliris.gif</filename>
@@ -979,6 +988,7 @@
 			<filename>front/views/category/tmpl/default.php</filename>
 			<filename>front/views/category/tmpl/default.xml</filename>
 			<filename>front/views/category/tmpl/default_categories.php</filename>
+			<filename>front/views/category/tmpl/default_comments-fb.php</filename>
 			<filename>front/views/category/tmpl/default_comments.php</filename>
 			<filename>front/views/category/tmpl/default_geotagging.php</filename>
 			<filename>front/views/category/tmpl/default_rating.php</filename>

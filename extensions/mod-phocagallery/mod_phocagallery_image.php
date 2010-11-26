@@ -721,6 +721,13 @@ if ($images) {
 					
 				} else if (JFile::exists($valueImages->linkthumbnailpathabs)) {
 					list($imageOrigWidth, $imageOrigHeight) = getimagesize( $valueImages->linkthumbnailpathabs );
+					
+					if ((int)$custom_image_width > 0) {
+						$imageOrigWidth = $custom_image_width;
+					}
+					if ((int)$custom_image_height > 0) {
+						$imageOrigHeight = $custom_image_height;
+					}
 				}
 			
 				

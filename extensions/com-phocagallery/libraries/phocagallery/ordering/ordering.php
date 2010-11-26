@@ -74,6 +74,14 @@ class PhocaGalleryOrdering
 			 case 14:
 				$orderingOutput   = 'average DESC';
 			 break;
+			 
+			case 15:
+				$orderingOutput	= 'hits ASC';
+			break;
+			
+			case 16:
+				$orderingOutput	= 'hits DESC';
+			break;
 		
 			case 1:
 			default:

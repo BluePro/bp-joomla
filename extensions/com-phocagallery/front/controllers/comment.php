@@ -39,13 +39,14 @@ class PhocaGalleryControllerComment extends PhocaGalleryController
 		$tab			= JRequest::getVar( 'tab', 0, '', 'int' );
 
 		
-		$params			= &$mainframe->getParams();
-		$detailWindow	= $params->get( 'detail_window', 0 );
-		$maxCommentChar	= $params->get( 'max_comment_char', 1000 );
+		$params					= &$mainframe->getParams();
+		$detailWindow			= $params->get( 'detail_window', 0 );
+		$maxCommentChar			= $params->get( 'max_comment_char', 1000 );
+		$displayCommentNoPopup	= $params->get( 'display_comment_nopup', 0);
 		// Maximum of character, they will be saved in database
 		$post['comment']	= substr($post['comment'], 0, (int)$maxCommentChar);
 		
-		if ($detailWindow == 7) {
+		if ($detailWindow == 7 || $displayCommentNoPopup == 1) {
 			$tmplCom = '';
 		} else {
 			$tmplCom = '&tmpl=component';

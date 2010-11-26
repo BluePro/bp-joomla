@@ -114,9 +114,9 @@ if ($this->tmpl['displayimagecategories'] == 1) {
 				}
 			}
 		}
-	}
+	} 
 }
- 
+
 // -------------------
 // DETAIL LAYOUT 2 (with columns)
 // -------------------
@@ -504,6 +504,6 @@ if (count($this->categories)) {
 	}
 	echo '</div>';
 }
-echo '</form><div>&nbsp;</div>' . $this->tmpl['tl'].'</div>';
+echo '</form><div>&nbsp;</div>' . $this->tmpl['phoac'].'</div>';
 ?>
 <!-- End Categories </a></div> -->

@@ -97,12 +97,32 @@ class PhocagalleryModelCategory extends JModel
 			$published  = '';
 		}
 		
-		$query = 'SELECT a.*'
+		$votes	= ' ORDER BY a.';
+		switch ($imageOrdering) {
+		  case 'count ASC':
+			$votes	= ' ORDER BY r.';
+			break;
+		  case 'count DESC':
+			$votes	= ' ORDER BY r.';
+			break;
+		  case 'average ASC':
+			$votes	= ' ORDER BY r.';
+			break;
+		  case 'average DESC':
+			$votes	= ' ORDER BY r.';
+			break;
+		  default:
+			$votes	= ' ORDER BY a.';
+		}
+		
+		$query = 'SELECT a.*, r.count as count, r.average as average'
 			.' FROM #__phocagallery AS a'
+			.' LEFT JOIN #__phocagallery_img_votes_statistics AS r ON r.imgid = a.id'
 			.' WHERE a.catid = '.(int) $this->_id
 			.$wherecimgid
 			.$published
-			.' ORDER BY a.'.$imageOrdering;
+			. $votes . $imageOrdering;
+			
 		return $query;
 	}
 

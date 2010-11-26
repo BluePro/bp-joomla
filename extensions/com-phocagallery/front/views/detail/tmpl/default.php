@@ -9,7 +9,7 @@ echo '<center style="padding-top:10px">'
 	.'<tr>'
 	.'<td colspan="6" align="center" valign="middle" height="'.$this->tmpl['largeheight'].'"'
 	.' style="height:'.$this->tmpl['largeheight'].'px" >'
-	.'<div id="image-box" style="width:'.$this->item->realimagewidth.'px;">'
+	.'<div id="image-box" style="width:'.$this->item->realimagewidth.'px;margin: auto;padding: 0;">'
 	.'<a href="#" onclick="'.$this->tmpl['detailwindowclose'].'">'.$this->item->linkimage.'</a>';
 			
 $titleDesc = '';

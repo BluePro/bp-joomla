@@ -42,14 +42,41 @@ class PhocaGalleryModelDetail extends JModel
 			$params				= &$mainframe->getParams();
 			$image_ordering		= $params->get( 'image_ordering', 1 );
 			$imageOrdering 		= PhocaGalleryOrdering::getOrderingString($image_ordering);
+			
+			$votes	= ' ORDER BY a.';
+			switch ($imageOrdering) {
+			  case 'count ASC':
+				$votes	= ' ORDER BY r.';
+				break;
+			  case 'count DESC':
+				$votes	= ' ORDER BY r.';
+				break;
+			  case 'average ASC':
+				$votes	= ' ORDER BY r.';
+				break;
+			  case 'average DESC':
+				$votes	= ' ORDER BY r.';
+				break;
+			  default:
+				$votes	= ' ORDER BY a.';
+			}
 
-			$query = 'SELECT a.*, c.accessuserid as cataccessuserid, c.access as cataccess,'
+			$query = 'SELECT a.*, c.accessuserid as cataccessuserid, c.access as cataccess, r.count as count, r.average as average,'
 					.' CASE WHEN CHAR_LENGTH(c.alias) THEN CONCAT_WS(\':\', c.id, c.alias) ELSE c.id END as catslug,'
 					.' CASE WHEN CHAR_LENGTH(a.alias) THEN CONCAT_WS(\':\', a.id, a.alias) ELSE a.id END as slug'
 					.' FROM #__phocagallery AS a'
 					.' LEFT JOIN #__phocagallery_categories AS c ON c.id = a.catid'
+					.' LEFT JOIN #__phocagallery_img_votes_statistics AS r ON r.imgid = a.id'
 					.' WHERE a.id = '.(int) $this->_id
-					.' ORDER BY a.'.$imageOrdering;
+					. $votes .$imageOrdering;
+			/*$query = 'SELECT a.*, c.accessuserid as cataccessuserid, c.access as cataccess,'
+					.' CASE WHEN CHAR_LENGTH(c.alias) THEN CONCAT_WS(\':\', c.id, c.alias) ELSE c.id END as catslug,'
+					.' CASE WHEN CHAR_LENGTH(a.alias) THEN CONCAT_WS(\':\', a.id, a.alias) ELSE a.id END as slug'
+					.' FROM #__phocagallery AS a'
+					.' LEFT JOIN #__phocagallery_categories AS c ON c.id = a.catid'
+					//.' LEFT JOIN #__phocagallery_img_votes_statistics AS r ON r.imgid = a.id'
+					.' WHERE a.id = '.(int) $this->_id
+					.' ORDER BY a.ordering';*/
 			$this->_db->setQuery($query);
 			$this->_data = $this->_db->loadObject();
 			return (boolean) $this->_data;	

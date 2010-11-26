@@ -673,6 +673,9 @@ div.current dd {
 	text-align: left;
 }
 
+#phocagallery table #image-box{
+   margin: 0 auto;
+}
 
 
 

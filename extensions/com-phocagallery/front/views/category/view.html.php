@@ -36,6 +36,8 @@ class PhocaGalleryViewCategory extends JView
 		$tmpl['tab'] 		= JRequest::getVar('tab', 0, '', 'int');
 		$tmpl['formaticon'] = PhocaGalleryImage::getFormatIcon();
 		$tmpl['pl']			= 'index.php?option=com_user&view=login&return='.base64_encode($uri->toString());
+		
+	
 	
 		// LIBRARY
 		$library 							= &PhocaGalleryLibrary::getLibrary();
@@ -155,6 +157,10 @@ class PhocaGalleryViewCategory extends JView
 		$tmpl['overlibimagerate']			= (int)$params->get( 'overlib_image_rate', '' );
 		
 		
+		$tmpl['fb_comment_app_id']			= $params->get( 'fb_comment_app_id', '');
+		$tmpl['fb_comment_width']			= (int)$params->get( 'fb_comment_width', '550');
+		$tmpl['display_comment_nopup']		= $params->get( 'display_comment_nopup', 0);
+		
 		$tmpl['picasa_correct_width_m']		= (int)$params->get( 'medium_image_width', 100 );	
 		$tmpl['picasa_correct_height_m']	= (int)$params->get( 'medium_image_height', 100 );
 		$tmpl['picasa_correct_width_s']		= (int)$params->get( 'small_image_width', 50 );	
@@ -164,7 +170,7 @@ class PhocaGalleryViewCategory extends JView
 		$tmpl['gallerymetakey'] 			= $params->get( 'gallery_metakey', '' );
 		$tmpl['gallerymetadesc'] 			= $params->get( 'gallery_metadesc', '' );
 		$tmpl['altvalue']		 			= $params->get( 'alt_value', 1 );	
-		$tmpl['route']						= PhocaGalleryRenderFront::getRoute();
+		$tmpl['divs']						= PhocaGalleryRenderFront::getDivs();
 		$catImg = PhocaGalleryImageFront::getCategoriesImageBackground($image_categories_size_cv, $small_image_width_cv, $small_image_height_cv,  $medium_image_height_cv, $medium_image_width_cv);
 		
 		$tmpl['imagebgcv'] 		= $catImg->image;
@@ -1005,12 +1011,12 @@ window.addEvent(\'domready\', function(){
 							if ($imagePic->extw != '') {
 								$extw 				= explode(',',$imagePic->extw);
 								$itemsCV[$iCV]->extw= $extw[1];
-								$items[$iCV]->extwswitch	= $extw[0];
+								$itemsCV[$iCV]->extwswitch	= $extw[0];
 							}
 							if ($imagePic->exth != '') {
 								$exth 				= explode(',',$imagePic->exth);
 								$itemsCV[$iCV]->exth= $exth[1];
-								$items[$iCV]->exthswitch	= $exth[0];
+								$itemsCV[$iCV]->exthswitch	= $exth[0];
 							}
 							$itemsCV[$iCV]->extpic	= $fileThumbnail->extpic;
 						} else {							
@@ -1691,7 +1697,7 @@ window.addEvent(\'domready\', function(){
 		$this->assignRef( 'button2',			$button2 );
 		$this->assignRef( 'buttonother',		$buttonOther );
 		parent::display($tpl);
-		echo $tmpl['route'];
+		echo $tmpl['divs'];
 		
 	}
 	

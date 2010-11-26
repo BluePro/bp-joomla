@@ -80,6 +80,6 @@ if ($this->tmplGeo['categorieslng'] == '' || $this->tmplGeo['categorieslat'] == 
 	echo $map->setInitializeF();
 	?>//]]></script><?php
 }
-echo '<div>&nbsp;</div><div>' . $this->tmpl['tl'].'</div></div>';
+echo '<div>&nbsp;</div><div>' . $this->tmpl['phoac'].'</div></div>';
 ?>
 <!-- End Categories </a></div> -->

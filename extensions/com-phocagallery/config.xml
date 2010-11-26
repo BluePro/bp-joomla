@@ -443,6 +443,12 @@
 	<option value="6">Date DESC</option>
 	<option value="7">Id ASC</option>
 	<option value="8">Id DESC</option>
+	<option value="11">Count ASC</option>
+   <option value="12">Count DESC</option>
+   <option value="13">Average ASC</option>
+   <option value="14">Average DESC</option>
+	<option value="15">Hits ASC</option>
+	<option value="16">Hits DESC</option>
 </param>
 
 <param name="gallery_metadesc" type="phocatextarea" label="PHOCAGALLERY_METADESC" description="PHOCAGALLERY_METADESC_DESC" rows="2" cols="26" default="" />
@@ -539,11 +545,21 @@
 </param>
 <param name="comment_width" default="500" size="6" type="phocatext" label="Comment Width" description="Comment Width DESC" />
 <param name="max_comment_char" default="1000" size="6" type="phocatext" label="Maximum Comment Characters" description="Maximum Comment Characters DESC" />
+
+<param name="display_comment_nopup" type="list" default="0" label="Display Comments in No Popup Window" description="Display Comments in No Popup Window DESC">
+	<option value="1">Yes</option>
+	<option value="0">No</option>
+</param>
+
 <param name="@spacer" type="spacer" default="" label="" description="" />
 <param name="external_comment_system" type="list" default="0" label="PHOCAGALLERY_EXTERNAL_COMMENT_SYSTEM" description="PHOCAGALLERY_EXTERNAL_COMMENT_SYSTEM_DESC">
 	<option value="0">None</option>
 	<option value="1">JComments</option>
+	<option value="2">Facebook</option>
 </param>
+
+<param name="fb_comment_app_id" default="" size="18" type="phocatext" label="Facebook Comments Application ID" description="Facebook Comments Application ID DESC" />
+<param name="fb_comment_width" default="550" size="6" type="phocatext" label="Facebook Comments Width" description="Facebook Comments Width DESC" />
 
 
 

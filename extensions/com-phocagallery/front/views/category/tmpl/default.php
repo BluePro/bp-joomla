@@ -46,10 +46,10 @@ if ($this->tmpl['phocagallerywidth'] != '') {
 
 
 // Detail Window
-if ($this->tmpl['detailwindow'] == 7) {
-	$tmplCom = '';
+if ($this->tmpl['detailwindow'] == 7 || $this->tmpl['display_comment_nopup'] == 1) {
+	$tmplCom	= '';
 } else {
-	$tmplCom = '&tmpl=component';
+	$tmplCom 	= '&tmpl=component';
 }
 // Switch image
 $noBaseImg 	= false;
@@ -331,7 +331,8 @@ if (!empty($this->items)) {
 			}
 			
 			if ($value->displayiconfolder == 1) {
-				echo ' <a class="'.$value->buttonother->methodname.'" title="'.JText::_('Sub category').'"'
+				//echo ' <a class="'.$value->buttonother->methodname.'" title="'.JText::_('Sub category').'"'
+				echo ' <a title="'.JText::_('Sub category').'"'
 					.' href="'.$value->link.'">';
 				echo JHTML::_('image', 'components/com_phocagallery/assets/images/icon-folder-small.'.$this->tmpl['formaticon'], $value->title);	
 				echo '</a>';
@@ -402,18 +403,31 @@ if (!empty($this->items)) {
 			}
 			
 			if ($value->displayiconcommentimg == 1) {
-				echo ' <a class="'.$value->buttonother->methodname.'" title="'.JText::_('PHOCAGALLERY_COMMENT_IMAGE').'"'
+				
+				if ($this->tmpl['detailwindow'] == 7 || $this->tmpl['display_comment_nopup'] == 1) {
+					$tmplClass	= '';
+				} else {
+					$tmplClass 	= 'class="'.$value->buttonother->methodname.'"';
+				}
+			
+				echo ' <a '.$tmplClass.' title="'.JText::_('PHOCAGALLERY_COMMENT_IMAGE').'"'
 					.' href="'. JRoute::_('index.php?option=com_phocagallery&view=comment&catid='.$this->category->slug.'&id='.$value->slug.$tmplCom.'&Itemid='. JRequest::getVar('Itemid', 0, '', 'int') ).'"';
-				if ($this->tmpl['detailwindow'] == 1) {
-					echo ' onclick="'. $value->buttonother->options.'"';
-				} else if ($this->tmpl['detailwindow'] == 4 ) {
-					echo ' onclick="'. $this->tmpl['highslideonclick'].'"';
-				} else if ($this->tmpl['detailwindow'] == 5 ) {
-					echo ' onclick="'. $this->tmpl['highslideonclick2'].'"';
-				} else if ($this->tmpl['detailwindow'] == 7 ) {
+				
+				if ($this->tmpl['display_comment_nopup'] == 1) {
 					echo '';
 				} else {
-					echo ' rel="'. $value->buttonother->options.'"';
+				
+					if ($this->tmpl['detailwindow'] == 1) {
+						echo ' onclick="'. $value->buttonother->options.'"';
+					} else if ($this->tmpl['detailwindow'] == 4 ) {
+						echo ' onclick="'. $this->tmpl['highslideonclick'].'"';
+					} else if ($this->tmpl['detailwindow'] == 5 ) {
+						echo ' onclick="'. $this->tmpl['highslideonclick2'].'"';
+					} else if ($this->tmpl['detailwindow'] == 7 ) {
+						echo '';
+					} else {
+						echo ' rel="'. $value->buttonother->options.'"';
+					}
 				}
 				echo ' >';
 				// If you go from RSS or administration (e.g. jcomments) to category view, you will see already commented image (animated icon)
@@ -421,7 +435,9 @@ if (!empty($this->items)) {
 				if($cimgid > 0) {
 					echo JHTML::_('image', 'components/com_phocagallery/assets/images/icon-comment-a.gif', JText::_('PHOCAGALLERY_COMMENT_IMAGE'));
 				} else {
-					echo JHTML::_('image', 'components/com_phocagallery/assets/images/icon-comment.'.$this->tmpl['formaticon'], JText::_('PHOCAGALLERY_COMMENT_IMAGE'));
+					
+					$commentImg = ($this->tmpl['externalcommentsystem'] == 2) ? 'icon-comment-fb-small' : 'icon-comment';
+					echo JHTML::_('image', 'components/com_phocagallery/assets/images/'.$commentImg.'.'.$this->tmpl['formaticon'], JText::_('PHOCAGALLERY_COMMENT_IMAGE'));
 				}
 				echo '</a>';	
 			}
@@ -548,12 +564,16 @@ if ($this->tmpl['displaytabs'] > 0) {
 	}
 
 	if ((int)$this->tmpl['displaycomment'] == 1) {
-		echo $pane->startPanel( JHTML::_( 'image.site', 'components/com_phocagallery/assets/images/icon-comment.'.$this->tmpl['formaticon'],'', '', '', '', '') . '&nbsp;'.JText::_('Comments'), 'pgcomments' );
+		$commentImg = ($this->tmpl['externalcommentsystem'] == 2) ? 'icon-comment-fb' : 'icon-comment';
+		
+		echo $pane->startPanel( JHTML::_( 'image.site', 'components/com_phocagallery/assets/images/'.$commentImg.'.'.$this->tmpl['formaticon'],'', '', '', '', '') . '&nbsp;'.JText::_('Comments'), 'pgcomments' );
 		
 	
 		if (JComponentHelper::isEnabled('com_jcomments', true) && $this->tmpl['externalcommentsystem'] == 1) {
 			include_once(JPATH_BASE.DS.'components'.DS.'com_jcomments'.DS.'jcomments.php');
 			echo JComments::showComments($this->category->id, 'com_phocagallery', JText::_('PHOCAGALLERY_CATEGORY') .' '. $this->category->title);
+		} else if($this->tmpl['externalcommentsystem'] == 2) {
+			echo $this->loadTemplate('comments-fb');
 		} else {
 			echo $this->loadTemplate('comments');
 		}

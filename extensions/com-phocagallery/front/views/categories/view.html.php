@@ -258,8 +258,8 @@ class PhocaGalleryViewCategories extends JView
 			$mainframe->addMetaTag('description', $tmpl['gallerymetadesc']);
 		}
 		
-		
-		$tmpl['tl'] = '<div style="text-align: center; color: rgb(211, 211, 211);">Powered by <a href="http://www.phoca.cz" style="text-decoration: none;" target="_blank" title="Phoca.cz">Phoca</a> <a href="http://www.phoca.cz/phocagallery" style="text-decoration: none;" target="_blank" title="Phoca Gallery">Gallery</a></div>';
+		$tmpl['phoac'] = '<div style="tex'.'t-align: center; color:#d3d3'.'d3;">Power'.'ed by <a href="htt'.'p://www.pho'.'ca.cz" style="text-decor'.'ation: none;" tar'.'get="_bl'.'ank" title="Ph'.'oca.cz">Phoc'.'a</a> <a href="http://www.p'
+			   .'hoca.cz/phocagallery" style="tex'.'t-decoration: none;" ta'.'rget="_bla'.'nk" title="Pho'.'ca Gal'.'lery">Gal'.'lery</a></div>';
 		
 		if ($display_categories_geotagging == 1) {
 		
@@ -283,6 +283,7 @@ class PhocaGalleryViewCategories extends JView
 			$this->assignRef('tmplGeo',	$tmplGeo);
 			parent::display('map');
 		} else {
+		
 			parent::display($tpl);
 		}
 	}

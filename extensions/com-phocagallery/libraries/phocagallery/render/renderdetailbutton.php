@@ -192,11 +192,38 @@ class PhocaGalleryRenderDetailButton
 		// 1. GET DATA FOR JAVASCRIPT
 		$jsSlideshowData['files'] = '';
 		
+		$votes	= ' ORDER BY a.';
+			switch ($imageOrdering) {
+			  case 'count ASC':
+				$votes	= ' ORDER BY r.';
+				break;
+			  case 'count DESC':
+				$votes	= ' ORDER BY r.';
+				break;
+			  case 'average ASC':
+				$votes	= ' ORDER BY r.';
+				break;
+			  case 'average DESC':
+				$votes	= ' ORDER BY r.';
+				break;
+			  default:
+				$votes	= ' ORDER BY a.';
+			}
+		
 		//Get filename of all photos
-		$query = 'SELECT filename, extl' 
-		.' FROM #__phocagallery WHERE catid='.(int) $catid
-		.' AND published = 1 AND approved = 1'
-		.' ORDER BY '.$imageOrdering;
+		/*$query = 'SELECT a.filename, a.extl, r.count as count, r.average as average' 
+		.' FROM #__phocagallery as a'
+		.' LEFT JOIN #__phocagallery_img_votes_statistics AS r ON r.imgid = a.id'
+		.' WHERE a.catid='.(int) $catid
+		.' AND a.published = 1 AND a.approved = 1'
+		.$votes.$imageOrdering;*/
+		
+		$query = 'SELECT a.filename, a.extl' 
+		.' FROM #__phocagallery as a'
+		.' WHERE a.catid='.(int) $catid
+		.' AND a.published = 1 AND a.approved = 1'
+		.' ORDER by a.ordering';
+		
 		$db->setQuery($query);
 		$filenameAll = $db->loadObjectList();
 		$countImg = 0;

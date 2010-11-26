@@ -3,13 +3,47 @@ if ($this->tmpl['backbutton'] != '') {
 	echo $this->tmpl['backbutton'];
 } 
 echo '<div id="phocagallery-comments">';
-if ($this->tmpl['detailwindow'] == 7) {
+if ($this->tmpl['detailwindow'] == 7 || $this->tmpl['display_comment_nopup'] == 1) {
 	echo '<div id="image-box" style="text-align:center">'.$this->item->linkimage.'</div>';
 }
 
 if (JComponentHelper::isEnabled('com_jcomments', true) && $this->tmpl['externalcommentsystem'] == 1) {
 	include_once(JPATH_BASE.DS.'components'.DS.'com_jcomments'.DS.'jcomments.php');
 	echo JComments::showComments(  $this->tmpl['id'], 'com_phocagallery_images', JText::_('PHOCAGALLERY_IMAGE') .' '. $this->tmpl['imgtitle']);
+} else if($this->tmpl['externalcommentsystem'] == 2) {
+	
+	$option = JRequest::getVar('option', 'com_phocagallery');
+	$view 	= JRequest::getVar('view', 'detail');
+	$xid 	= md5(JURI::base() . $option . $view) . 'pgimg'.(int)$this->tmpl['id'];
+	
+	echo '<div style="margin:10px">';
+	if ($this->tmpl['fb_comment_app_id'] == '') {
+		echo JText::_('COM_PHOCAGALLERY_ERROR_FB_APP_ID_EMPTY');
+	} else {
+
+?><fb:comments xid="<?php echo $xid ?>" simple="1" width="<?php echo (int)$this->tmpl['fb_comment_width'] ?>"></fb:comments>
+<div id="fb-root"></div>
+<script>
+  window.fbAsyncInit = function() {
+   FB.init({
+     appId: '<?php echo $this->tmpl['fb_comment_app_id'] ?>',
+     status: true,
+	 cookie: true,
+     xfbml: true
+   });
+ }; 
+  (function() {
+    var e = document.createElement('script');
+    e.type = 'text/javascript';
+    e.src = document.location.protocol + '//connect.facebook.net/en_US/all.js';
+    e.async = true;
+    document.getElementById('fb-root').appendChild(e);
+   }());
+</script>
+<?php 
+	echo '</div>';
+	} 
+
 } else {
 
 	if (!empty($this->commentitem)){
@@ -125,7 +159,7 @@ if (JComponentHelper::isEnabled('com_jcomments', true) && $this->tmpl['externalc
 	echo '</fieldset>';
 }
 echo '</div>';
-if ($this->tmpl['detailwindow'] == 7) {
+if ($this->tmpl['detailwindow'] == 7 || $this->tmpl['display_comment_nopup']) {
 	echo $this->tmpl['df'];
 }
 ?>

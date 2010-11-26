@@ -44,6 +44,10 @@ class PhocaGalleryViewComment extends JView
 		$tmpl['picasa_correct_width_l']	= (int)$params->get( 'large_image_width', 640 );	
 		$tmpl['picasa_correct_height_l']= (int)$params->get( 'large_image_height', 480 );
 		
+		$tmpl['fb_comment_app_id']			= $params->get( 'fb_comment_app_id', '');
+		$tmpl['fb_comment_width']			= (int)$params->get( 'fb_comment_width', '550');
+		$tmpl['display_comment_nopup']		= $params->get( 'display_comment_nopup', 0);
+		
 		if ($tmpl['gallerymetakey'] != '') {
 			$mainframe->addMetaTag('keywords', $tmpl['gallerymetakey']);
 		}
@@ -101,7 +105,7 @@ class PhocaGalleryViewComment extends JView
 		
 		// Back button
 		$tmpl['backbutton'] = '';
-		if ($tmpl['detailwindow'] == 7) {
+		if ($tmpl['detailwindow'] == 7 || $tmpl['display_comment_nopup']) {
 		
 			// Display Image
 			// Access check - don't display the image if you have no access to this image (if user add own url)
