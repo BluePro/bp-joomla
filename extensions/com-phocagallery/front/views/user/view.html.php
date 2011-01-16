@@ -206,6 +206,10 @@ class PhocaGalleryViewUser extends JView
 			$filter_order_subcat	= $mainframe->getUserStateFromRequest( $this->_context_subcat.'.filter_order',	'filter_order_subcat',	'a.ordering', 'cmd' );
 			$filter_order_Dir_subcat= $mainframe->getUserStateFromRequest( $this->_context_subcat.'.filter_order_Dir',	'filter_order_Dir_subcat',	'',	'word' );
 			$search_subcat			= $mainframe->getUserStateFromRequest( $this->_context_subcat.'.search', 'phocagallerysubcatsearch', '',	'string' );
+			
+			if (strpos($search_subcat, '"') !== false) {
+				$search_subcat = str_replace(array('=', '<'), '', $search_subcat);
+			}
 			$search_subcat			= JString::strtolower( $search_subcat );
 			
 			$categories 				= $model->getCategoryList($user->id);
@@ -258,6 +262,9 @@ class PhocaGalleryViewUser extends JView
 			$filter_order_image	= $mainframe->getUserStateFromRequest( $this->_context_image.'.filter_order',	'filter_order_image',	'a.ordering', 'cmd' );
 			$filter_order_Dir_image= $mainframe->getUserStateFromRequest( $this->_context_image.'.filter_order_Dir',	'filter_order_Dir_image',	'',	'word' );
 			$search_image			= $mainframe->getUserStateFromRequest( $this->_context_image.'.search', 'phocagalleryimagesearch', '',	'string' );
+			if (strpos($search_image, '"') !== false) {
+				$search_image = str_replace(array('=', '<'), '', $search_image);
+			}
 			$search_image			= JString::strtolower( $search_image );
 			
 			$categoriesImage 		= $model->getCategoryList($user->id);

@@ -99,6 +99,9 @@ class PhocaGalleryCpModelPhocaGalleryRa extends JModel
 
 		$filter_order_Dir	= $mainframe->getUserStateFromRequest( $this->_context.'.filter_order_Dir',	'filter_order_Dir',	'',	'word' );
 		$search				= $mainframe->getUserStateFromRequest( $this->_context.'.search', 'search', '', 'string' );
+		if (strpos($search, '"') !== false) {
+			$search = str_replace(array('=', '<'), '', $search);
+		}
 		$search				= JString::strtolower( $search );
 		
 		$where = array();

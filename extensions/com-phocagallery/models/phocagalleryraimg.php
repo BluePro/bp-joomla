@@ -90,6 +90,9 @@ class PhocaGalleryCpModelPhocaGalleryRaImg extends JModel
 		$filter_catid		= $mainframe->getUserStateFromRequest( $this->_context.'.filter_catid',	'filter_catid',	0, 'int' );
 		$filter_order_Dir	= $mainframe->getUserStateFromRequest( $this->_context.'.filter_order_Dir',	'filter_order_Dir',	'',	'word' );
 		$search				= $mainframe->getUserStateFromRequest( $this->_context.'.search', 'search', '', 'string' );
+		if (strpos($search, '"') !== false) {
+			$search = str_replace(array('=', '<'), '', $search);
+		}
 		$search				= JString::strtolower( $search );
 		
 		$where = array();

@@ -29,6 +29,9 @@ class PhocaGalleryCpViewPhocaGalleryCos extends JView
 		$filter_order		= $mainframe->getUserStateFromRequest( $this->_context.'.filter_order',	'filter_order',	'a.ordering', 'cmd' );
 		$filter_order_Dir	= $mainframe->getUserStateFromRequest( $this->_context.'.filter_order_Dir',	'filter_order_Dir',	'',	'word' );
 		$search				= $mainframe->getUserStateFromRequest( $this->_context.'.search', 'search',	'',	'string' );
+		if (strpos($search, '"') !== false) {
+			$search = str_replace(array('=', '<'), '', $search);
+		}
 		$search				= JString::strtolower( $search );
 
 		// Get data from the model
@@ -75,7 +78,7 @@ class PhocaGalleryCpViewPhocaGalleryCos extends JView
 	}
 	
 	function _setToolbar() {
-		JToolBarHelper::title(   JText::_( 'PHOCAGALLERY_PG_IMAGE_COMMENTS' ), 'comment' );
+		JToolBarHelper::title(   JText::_( 'PHOCAGALLERY_PG_CATEGORY_COMMENTS' ), 'comment' );
 		JToolBarHelper::publishList();
 		JToolBarHelper::unpublishList();
 		JToolBarHelper::deleteList(  JText::_( 'WARNWANTDELLISTEDITEMS' ), 'remove', 'delete');

@@ -61,7 +61,7 @@ class PhocaGalleryModelDetail extends JModel
 				$votes	= ' ORDER BY a.';
 			}
 
-			$query = 'SELECT a.*, c.accessuserid as cataccessuserid, c.access as cataccess, r.count as count, r.average as average,'
+			/*$query = 'SELECT a.*, c.accessuserid as cataccessuserid, c.access as cataccess, r.count as count, r.average as average,'
 					.' CASE WHEN CHAR_LENGTH(c.alias) THEN CONCAT_WS(\':\', c.id, c.alias) ELSE c.id END as catslug,'
 					.' CASE WHEN CHAR_LENGTH(a.alias) THEN CONCAT_WS(\':\', a.id, a.alias) ELSE a.id END as slug'
 					.' FROM #__phocagallery AS a'
@@ -77,6 +77,17 @@ class PhocaGalleryModelDetail extends JModel
 					//.' LEFT JOIN #__phocagallery_img_votes_statistics AS r ON r.imgid = a.id'
 					.' WHERE a.id = '.(int) $this->_id
 					.' ORDER BY a.ordering';*/
+			$query = 'SELECT a.*, c.accessuserid as cataccessuserid, c.access as cataccess, r.count as count, r.average as average,'
+					.' CASE WHEN CHAR_LENGTH(c.alias) THEN CONCAT_WS(\':\', c.id, c.alias) ELSE c.id END as catslug,'
+					.' CASE WHEN CHAR_LENGTH(a.alias) THEN CONCAT_WS(\':\', a.id, a.alias) ELSE a.id END as slug'
+					.' FROM #__phocagallery AS a'
+					.' LEFT JOIN #__phocagallery_categories AS c ON c.id = a.catid'
+					.' LEFT JOIN #__phocagallery_img_votes_statistics AS r ON r.imgid = a.id'
+					.' WHERE a.id = '.(int) $this->_id
+					.' AND a.PUBLISHED > 0'
+					.' AND a.APPROVED > 0'
+					. $votes .$imageOrdering;
+
 			$this->_db->setQuery($query);
 			$this->_data = $this->_db->loadObject();
 			return (boolean) $this->_data;	

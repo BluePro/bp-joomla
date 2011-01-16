@@ -171,6 +171,9 @@ class PhocagalleryModelUser extends JModel
 		$filter_order		= $mainframe->getUserStateFromRequest( $this->_context_subcat.'.filter_order','filter_order_subcat','a.ordering','cmd' );
 		$filter_order_Dir	= $mainframe->getUserStateFromRequest( $this->_context_subcat.'.filter_order_Dir','filter_order_Dir_subcat',	'', 'word' );
 		$search				= $mainframe->getUserStateFromRequest( $this->_context_subcat.'.search', 'phocagallerysubcatsearch', '', 'string' );
+		if (strpos($search, '"') !== false) {
+			$search = str_replace(array('=', '<'), '', $search);
+		}
 		$search				= JString::strtolower( $search );
 
 		$where = array();
@@ -203,6 +206,9 @@ class PhocagalleryModelUser extends JModel
 		$filter_order		= $mainframe->getUserStateFromRequest( $this->_context_image.'.filter_order','filter_order_image','a.ordering', 'cmd' );
 		$filter_order_Dir	= $mainframe->getUserStateFromRequest( $this->_context_image.'.filter_order_Dir','filter_order_Dir_image','', 'word' );
 		$search				= $mainframe->getUserStateFromRequest( $this->_context_image.'.search', 'phocagalleryimagesearch', '', 'string' );
+		if (strpos($search, '"') !== false) {
+			$search = str_replace(array('=', '<'), '', $search);
+		}
 		$search				= JString::strtolower( $search );
 
 		$where = array();
