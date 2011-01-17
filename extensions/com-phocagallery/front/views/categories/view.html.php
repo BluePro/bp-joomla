@@ -258,8 +258,7 @@ class PhocaGalleryViewCategories extends JView
 			$mainframe->addMetaTag('description', $tmpl['gallerymetadesc']);
 		}
 		
-		$tmpl['phoac'] = '<div style="tex'.'t-align: center; color:#d3d3'.'d3;">Power'.'ed by <a href="htt'.'p://www.pho'.'ca.cz" style="text-decor'.'ation: none;" tar'.'get="_bl'.'ank" title="Ph'.'oca.cz">Phoc'.'a</a> <a href="http://www.p'
-			   .'hoca.cz/phocagallery" style="tex'.'t-decoration: none;" ta'.'rget="_bla'.'nk" title="Pho'.'ca Gal'.'lery">Gal'.'lery</a></div>';
+		$tmpl['phoac'] = '';
 		
 		if ($display_categories_geotagging == 1) {
 		
