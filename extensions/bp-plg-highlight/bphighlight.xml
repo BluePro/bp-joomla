@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<install version="1.5" type="plugin" group="content" method="upgrade">
+	<name>BluePro Highlight</name>
+	<creationDate>2011-03-01</creationDate>
+	<author>Ondřej Hlaváč (BluePro)</author>
+	<authorEmail>ondrej@hlavacovi.net</authorEmail>
+	<authorUrl>http://www.bluepro.cz</authorUrl>
+	<copyright>Ondřej Hlaváč 2011</copyright>
+	<license>GNU/GPL</license>
+	<version>1.0</version>
+	<description>Zobrazí označený obsah v okně shadowboxu.</description>
+	
+	<files>
+		<filename plugin="bphighlight">bphighlight.php</filename>
+	</files>
+	<media>
+		<filename plugin="blueprogallery">bphighlight/close.png</filename>
+		<filename plugin="blueprogallery">bphighlight/LICENSE</filename>
+		<filename plugin="blueprogallery">bphighlight/loading.gif</filename>
+		<filename plugin="blueprogallery">bphighlight/next.png</filename>
+		<filename plugin="blueprogallery">bphighlight/pause.png</filename>
+		<filename plugin="blueprogallery">bphighlight/play.png</filename>
+		<filename plugin="blueprogallery">bphighlight/previous.png</filename>
+		<filename plugin="blueprogallery">bphighlight/shadowbox.css</filename>
+		<filename plugin="blueprogallery">bphighlight/shadowbox.js</filename>
+	</media>
+	
+	<params>
+		<param name="tag_name" type="text" default="highlight" label="Název tagu" description="Název tagu pro označení textu v článku" />
+		<param name="window_width" type="text" label="Šířka okna" />
+		<param name="window_height" type="text" label="Výška okna" />
+	</params>
+</install>

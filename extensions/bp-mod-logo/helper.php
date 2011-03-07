@@ -6,36 +6,54 @@ class modBPLogoHelper {
 	function getImage(&$params) {
 		jimport('joomla.filesystem.file');
 		
+		$base_path = JPATH_BASE . DS . 'images' . DS . 'stories' . DS;
+		
 		$image = new StdClass();
-		$menu_image = null;
+		$images = array();
+		$image_path = null;
+		$image_folder = null;
 		
 		$menu =& JSite::getMenu();
-		$menu_item = &$menu->getActive();
+		$menu_item =& $menu->getActive();
 		
-		// Get menu image or try default
+		// Get menu image
 		if ($menu_item) {
 			$menu_params = new JParameter($menu_item->params);
-			$menu_image = $menu_params->get('menu_image');
-			if ($menu_image == -1 || !JFile::exists(JPATH_BASE . DS . 'images' . DS . 'stories' . DS . $menu_image)) {
-				$menu_image = null;
+			$image_path = $menu_params->get('menu_image');
+			if ($image_path == -1 || !JFile::exists($base_path . $image_path)) {
+				$image_path = null;
+			} else {
+				$images[] = $image_path;
 			}
 		}
-		if (!$menu_image) {
-			$menu_image = $params->get('default_image', '');
-			if ($menu_image && !JFile::exists(JPATH_BASE . DS . 'images' . DS . 'stories' . DS . $menu_image)) {
-				$menu_image = null;
+		// Get default image
+		if (!$image_path) {
+			$image_path = $params->get('default_image', -1);
+			if ($image_path == -1 || !JFile::exists($base_path . $image_path)) {
+				$image_path = null;
+			} else {
+				$images[] = $image_path;
 			}
 		}
-		if (!$menu_image) return false;
+		// Get default folder and initiate images
+		if (!$image_path) {
+			$image_folder = $params->get('default_folder', -1);
+			if ($image_folder != -1 && JFolder::exists($base_path . $image_folder)) {
+				foreach (JFolder::files($base_path . $image_folder, '.', false, false, array('.htm, .html')) as $image_path) {
+					$images[] = $image_folder . DS . $image_path;
+				}
+			}
+		}
 		
-		$image->name = $menu_image;
-		$image->uri = JURI::base(true) . '/images/stories/' . $menu_image;
-		$image->path = JPATH_BASE . DS . 'images' . DS . 'stories' . DS . $menu_image;
+		if (!$images) return true;
+		foreach ($images as $image_path) {
+			$image->uri[] = JURI::base(true) . '/images/stories/' . str_replace(DS, '/', $image_path);
+		}
 		
 		// Calculate maximal width and height
 		$width = $params->get('width');
 		$height = $params->get('height');
-		$size = getimagesize($image->path);
+		$size = getimagesize($base_path . $images[0]);
 		if (!$width && !$height) {
 			$image->width = $size[0];
 			$image->height = $size[1];

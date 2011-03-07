@@ -20,10 +20,12 @@
 	</files>
 	
 	<params>
-		<param name="default_image" type="imagelist" directory="/images/stories" hide_default="1" default="" label="Default image" />
+		<param name="default_image" type="imagelist" directory="/images/stories" hide_default="1" default="-1" label="Default image" />
+		<param name="default_folder" type="folderlist" directory="/images/stories" hide_default="1" default="-1" label="Default image folder" />
 		<param name="link" type="text" default="" label="Link" />
 		<param name="width" type="text" default="" label="Width" />
 		<param name="height" type="text" default="" label="Height" />
+		<param name="timeout" type="text" default="4" label="Timeout" />
 		<param name="@spacer" type="spacer" default="" label="" description="" />
 		<param name="moduleclass_sfx" type="text" default="" label="Module Class Suffix" description="PARAMMODULECLASSSUFFIX" />
 	</params>
