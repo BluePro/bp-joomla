@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<install type="module" version="1.5.0">
+	<name>Category Content</name>
+	<author>Peter Breeze</author>
+	<creationDate>January 2010</creationDate>
+	<copyright>Copyright (C) Peter Breeze. All rights reserved.</copyright>
+	<license>http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL</license>
+	<authorEmail>pbreeze@clearsailing.net</authorEmail>
+	<authorUrl>www.clearsailing.net</authorUrl>
+	<version>1.0.0</version>
+	<description>The Module will generate a list of all articles contained the selected category.</description>
+	<files>
+		<filename module="mod_category_content">mod_category_content.php</filename>
+		<filename module="mod_category_content">index.html</filename>
+		<filename module="mod_category_content">helper.php</filename>
+		<filename module="mod_category_content">tmpl/default.php</filename>
+		<filename module="mod_category_content">tmpl/index.html</filename>	
+	</files>
+   <files folder="admin">
+	</files>
+	<params>
+		<param name="user_id" type="list" default="0" label="Authors" description="A filter for the authors">
+			<option value="0">Anyone</option>
+			<option value="by_me">Added or modified by me</option>
+			<option value="not_me">Not added or modified by me</option>
+	  	</param>
+		<param name="@spacer" type="spacer" default="" label="" description="" />
+		<param name="catid" type="category" default="" label="Category" description="Select a category" />	
+		<param name="@spacer" type="spacer" default="" label="" description="" />
+		<param name="moduleclass_sfx" type="text" default="" label="Module Class Suffix" description="PARAMMODULECLASSSUFFIX" />
+	</params>
+
+--></install>
