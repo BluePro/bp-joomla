@@ -41,11 +41,6 @@ if (count($image->uri) > 1) {
 			
 			setInterval(switchLogo, %d);
 	});
-	
-	function switchBPLogo() {
-		var newImg = document.getElementById();
-		var oldImg = document.getElementById();
-	}
 </script>", $timeout * 1000);
 	
 }

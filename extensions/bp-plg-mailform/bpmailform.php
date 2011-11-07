@@ -17,7 +17,31 @@ jimport('joomla.plugin.plugin');
 class plgContentBPMailform extends JPlugin {
 
 	function onPrepareContent(&$article, &$params, $limitstart) {
-		$script = sprintf('
+		if (strpos($article->text, '{bpmailform}') !== false) {
+			str_replace('{bpmailform}', $this->_getFormPre(), $article->text);
+			str_replace('{/bpmailform}', $this->_getFormPost(), $article->text);
+			
+			$document = JFactory::getDocument();
+			$document->addScriptDeclaration($this->_getScript());
+		}
+	}
+	
+	function _getFormPre() {
+		return sprintf('<form action="%s" method="post" onsubmit="return validateForm(this);">',
+			JRoute::_('index.php?option=com_bpmailform'));
+	}
+	
+	function _getFormPost() {
+		return sprintf('
+				<img src="%s" alt="Captcha" />
+				<input type="text" name="bpmailform_captcha" value="" />
+				<input type="submit" value="%s" />
+			</form>',
+			JRoute::_('index.php?option=com_bpmailform&task=display&view=captcha&format=img'), JText::_('Odeslat'));
+	}
+	
+	function _getScript() {
+		return sprintf('
 			function validateForm(form) {
 				for (var i = 0; i < form.length; i++) {
 					if (form[i].name && form[i].name.indexOf("mailform[#") == 0 && !form[i].value) {
@@ -28,10 +52,6 @@ class plgContentBPMailform extends JPlugin {
 				}
 				return true;
 			}', JText::_('Nejsou vyplněny všechny povinné položky!'));
-
-		
-		$document = JFactory::getDocument();
-		$document->addScriptDeclaration($script);
 	}
 
 }

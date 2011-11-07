@@ -6,7 +6,7 @@ jimport('joomla.application.component.controller');
 class BPMailFormController extends JController {
 	
 	function save()	{
-		$data = JRequest::getVar('mailform', array());
+		$data = JRequest::getVar('bpmailform', array());
 		$params = JComponentHelper::getParams('com_bpmailform');
 		$message = $params->get('prefix');
 		$error = '';
@@ -20,7 +20,7 @@ class BPMailFormController extends JController {
 					$error = JText::_('Nejsou vyplněny všechny povinné položky!');
 					break;
 				} else {
-					$message .= sprintf("%s: %s\n", htmlspecialchars($item_name), htmlspecialchars($item));
+					$message .= sprintf("%s: %s\r\n", htmlspecialchars($item_name), htmlspecialchars($item));
 				}
 			}
 		}
