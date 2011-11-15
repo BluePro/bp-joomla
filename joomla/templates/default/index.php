@@ -14,7 +14,7 @@ $template_url = sprintf('%s/templates/%s', $this->baseurl, $this->template);
 	<jdoc:include type="head" />
 	<link rel="stylesheet" href="<?php echo $template_url; ?>/css/screen.css" type="text/css" media="screen" />
 	<link rel="stylesheet" href="<?php echo $template_url; ?>/css/content.css" type="text/css" media="screen" />
-	<link rel="stylesheet" href="<?php echo $template_url; ?>/print.css" type="text/css" media="print" />
+	<link rel="stylesheet" href="<?php echo $template_url; ?>/css/print.css" type="text/css" media="print" />
 <!--[if lte IE 6]>
 	<link rel="stylesheet" href="<?php echo $template_url; ?>/css/ie6.css" type="text/css" media="screen" />
 <![endif]-->
