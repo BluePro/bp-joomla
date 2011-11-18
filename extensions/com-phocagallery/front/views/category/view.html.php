@@ -114,6 +114,7 @@ class PhocaGalleryViewCategory extends JView
 		$tmpl['large_image_height']			= $params->get( 'large_image_height', 640 );
 		$tmpl['uploadmaxsize'] 				= $params->get( 'upload_maxsize', 3145728 );
 		$tmpl['uploadmaxsizeread'] 			= PhocaGalleryFile::getFileSizeReadable($tmpl['uploadmaxsize']);
+		$tmpl['swit']							= PhocaGalleryRenderFront::getDivs();
 		$tmpl['uploadmaxreswidth'] 			= $params->get( 'upload_maxres_width', 3072 );
 		$tmpl['uploadmaxresheight'] 		= $params->get( 'upload_maxres_height', 2304 );
 		$tmpl['phocagallerywidth']			= $params->get( 'phocagallery_width', '');
@@ -159,6 +160,7 @@ class PhocaGalleryViewCategory extends JView
 		
 		$tmpl['fb_comment_app_id']			= $params->get( 'fb_comment_app_id', '');
 		$tmpl['fb_comment_width']			= (int)$params->get( 'fb_comment_width', '550');
+		$tmpl['fb_comment_count']			= (int)$params->get( 'fb_comment_count', '');
 		$tmpl['display_comment_nopup']		= $params->get( 'display_comment_nopup', 0);
 		
 		$tmpl['picasa_correct_width_m']		= (int)$params->get( 'medium_image_width', 100 );	
@@ -170,7 +172,7 @@ class PhocaGalleryViewCategory extends JView
 		$tmpl['gallerymetakey'] 			= $params->get( 'gallery_metakey', '' );
 		$tmpl['gallerymetadesc'] 			= $params->get( 'gallery_metadesc', '' );
 		$tmpl['altvalue']		 			= $params->get( 'alt_value', 1 );	
-		$tmpl['divs']						= PhocaGalleryRenderFront::getDivs();
+		
 		$catImg = PhocaGalleryImageFront::getCategoriesImageBackground($image_categories_size_cv, $small_image_width_cv, $small_image_height_cv,  $medium_image_height_cv, $medium_image_width_cv);
 		
 		$tmpl['imagebgcv'] 		= $catImg->image;
@@ -563,8 +565,8 @@ window.addEvent(\'domready\', function(){
 		
 		// Define image tag attributes
 		if (!empty ($category->image)) {
-			$attribs['align'] = '"'.$category->image_position.'"';
-			$attribs['hspace'] = '"6"';
+			$attribs['align'] = $category->image_position;
+			$attribs['hspace'] = 6;
 			$tmpl['image'] = JHTML::_('image', 'images/stories/'.$category->image, JText::_('Phoca gallery'), $attribs);
 		}
 		
@@ -1364,23 +1366,48 @@ window.addEvent(\'domready\', function(){
 				$oImg	= JHTML::_( 'image.site', str_replace ('phoca_thumb_m_','phoca_thumb_l_',$items[$iS]->linkthumbnailpath), '', '', '', $items[$iS]->title, $wHOutput );
 			}
 			
-			if ($enable_overlib == 1) { 
-				$items[$iS]->overlib			= 1;
-				$items[$iS]->overlib_value 		= " onmouseover=\"return overlib('".htmlspecialchars( addslashes('<div class="pg-overlib"><center>' . $oImg . "</center></div>"))."', CAPTION, '". htmlspecialchars( addslashes($items[$iS]->title))."', BELOW, RIGHT, BGCLASS,'bgPhocaClass', FGCOLOR, '".$tmpl['olfgcolor']."', BGCOLOR, '".$tmpl['olbgcolor']."', TEXTCOLOR, '".$tmpl['oltfcolor']."', CAPCOLOR, '".$tmpl['olcfcolor']."');\""
+			switch ($enable_overlib) {
+				
+				case 1:
+				case 4:
+					$uBy = '';//Uploaded by ...
+					if ($enable_overlib == 4 && isset($items[$iS]->usernameno) && $items[$iS]->usernameno != '') {
+						$uBy = '<div>' . JText::_('COM_PHOCAGALLERY_UPLOADED_BY') . ' <strong>'.$items[$iS]->usernameno.'</strong></div>';
+					}
+					$items[$iS]->overlib			= 1;
+					$items[$iS]->overlib_value 		= " onmouseover=\"return overlib('".htmlspecialchars( addslashes('<div class="pg-overlib"><center>' . $oImg . "</center></div>" . $uBy ))."', CAPTION, '". htmlspecialchars( addslashes($items[$iS]->title))."', BELOW, RIGHT, BGCLASS,'bgPhocaClass', FGCOLOR, '".$tmpl['olfgcolor']."', BGCOLOR, '".$tmpl['olbgcolor']."', TEXTCOLOR, '".$tmpl['oltfcolor']."', CAPCOLOR, '".$tmpl['olcfcolor']."');\""
 				. " onmouseout=\"return nd();\" ";
-			} else if ($enable_overlib == 2){ 
-				$items[$iS]->overlib			= 2;
-				$items[$iS]->description		= str_replace("\n", '<br />', $items[$iS]->description);
-				$items[$iS]->overlib_value 		= " onmouseover=\"return overlib('".htmlspecialchars( addslashes('<div class="pg-overlib"><div style="'.$divPadding.'">'.$items[$iS]->description.'</div></div>'))."', CAPTION, '". htmlspecialchars( addslashes($items[$iS]->title))."', BELOW, RIGHT, CSSCLASS, TEXTFONTCLASS, 'fontPhocaClass', FGCLASS, 'fgPhocaClass', BGCLASS, 'bgPhocaClass', CAPTIONFONTCLASS,'capfontPhocaClass', CLOSEFONTCLASS, 'capfontclosePhocaClass');\""
-				. " onmouseout=\"return nd();\" ";				
-			} else if ($enable_overlib == 3){ 
-				$items[$iS]->overlib			= 3;
-				$items[$iS]->description		= str_replace("\n", '<br />', $items[$iS]->description);
-				$items[$iS]->overlib_value 		= " onmouseover=\"return overlib('".PhocaGalleryText::strTrimAll(htmlspecialchars( addslashes( '<div class="pg-overlib"><div style="text-align:center"><center>' . $oImg . '</center></div><div style="'.$divPadding.'">' . $items[$iS]->description . '</div></div>')))."', CAPTION, '". htmlspecialchars( addslashes($items[$iS]->title))."', BELOW, RIGHT, BGCLASS,'bgPhocaClass', FGCLASS,'fgPhocaClass', FGCOLOR, '".$tmpl['olfgcolor']."', BGCOLOR, '".$tmpl['olbgcolor']."', TEXTCOLOR, '".$tmpl['oltfcolor']."', CAPCOLOR, '".$tmpl['olcfcolor']."');\""
-				. " onmouseout=\"return nd();\" ";				
-			} else { 
-				$items[$iS]->overlib			= 0;
-				$items[$iS]->overlib_value		= '';				
+				
+				break;
+				
+				case 2:
+				case 5:
+					$uBy = '';//Uploaded by ...
+					if ($enable_overlib == 5 && isset($items[$iS]->usernameno) && $items[$iS]->usernameno != '') {
+						$uBy = '<div>' . JText::_('Uploaded by') . ' <strong>'.$items[$iS]->usernameno.'</strong></div>';
+					}
+					$items[$iS]->overlib			= 2;
+					$items[$iS]->description		= str_replace("\n", '<br />', $items[$iS]->description);
+					$items[$iS]->overlib_value 		= " onmouseover=\"return overlib('".htmlspecialchars( addslashes('<div class="pg-overlib"><div style="'.$divPadding.'">'.$items[$iS]->description.'</div></div>'. $uBy))."', CAPTION, '". htmlspecialchars( addslashes($items[$iS]->title))."', BELOW, RIGHT, CSSCLASS, TEXTFONTCLASS, 'fontPhocaClass', FGCLASS, 'fgPhocaClass', BGCLASS, 'bgPhocaClass', CAPTIONFONTCLASS,'capfontPhocaClass', CLOSEFONTCLASS, 'capfontclosePhocaClass');\""
+				. " onmouseout=\"return nd();\" ";
+				break;
+				
+				case 3:
+				case 6:
+					$uBy = '';//Uploaded by ...
+					if ($enable_overlib == 6 && isset($items[$iS]->usernameno) && $items[$iS]->usernameno != '') {
+						$uBy = '<div>' . JText::_('Uploaded by') . ' <strong>'.$items[$iS]->usernameno.'</strong></div>';
+					}
+					$items[$iS]->overlib			= 3;
+					$items[$iS]->description		= str_replace("\n", '<br />', $items[$iS]->description);
+					$items[$iS]->overlib_value 		= " onmouseover=\"return overlib('".PhocaGalleryText::strTrimAll(htmlspecialchars( addslashes( '<div class="pg-overlib"><div style="text-align:center"><center>' . $oImg . '</center></div><div style="'.$divPadding.'">' . $items[$iS]->description . '</div></div>' . $uBy)))."', CAPTION, '". htmlspecialchars( addslashes($items[$iS]->title))."', BELOW, RIGHT, BGCLASS,'bgPhocaClass', FGCLASS,'fgPhocaClass', FGCOLOR, '".$tmpl['olfgcolor']."', BGCOLOR, '".$tmpl['olbgcolor']."', TEXTCOLOR, '".$tmpl['oltfcolor']."', CAPCOLOR, '".$tmpl['olcfcolor']."');\""
+				. " onmouseout=\"return nd();\" ";
+				break;
+				
+				default:
+					$items[$iS]->overlib			= 0;
+					$items[$iS]->overlib_value		= '';
+				break;
 			}
 			
 						
@@ -1697,7 +1724,7 @@ window.addEvent(\'domready\', function(){
 		$this->assignRef( 'button2',			$button2 );
 		$this->assignRef( 'buttonother',		$buttonOther );
 		parent::display($tpl);
-		echo $tmpl['divs'];
+		echo $tmpl['swit'];
 		
 	}
 	

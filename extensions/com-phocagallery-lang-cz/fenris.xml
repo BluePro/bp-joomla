@@ -2,13 +2,13 @@
 <install method="upgrade" client="both" type="language" version="1.5.0">
 	<name>PhocaGallery</name>
 	<tag>cs-CZ</tag>
-	<creationDate>14/08/2010</creationDate>
+	<creationDate>30/12/2010</creationDate>
 	<author>Fenris</author>
 	<authorEmail>fenris@fenris.cz</authorEmail>
 	<authorUrl>www.fenris.cz</authorUrl>
-	<copyright>Copyright (c)2008-2010 Fenris.cz</copyright>
-	<description>Čeština pro Phoca Gallery 2.7.4</description>
-	<version>Phoca Gallery 2.7.4</version>
+	<copyright>Copyright (c)2009-2011 Fenris.cz</copyright>
+	<description>Čeština pro Phoca Gallery 2.7.6</description>
+	<version>Phoca Gallery 2.7.6</version>
 
   <administration>
     <files folder="admin">

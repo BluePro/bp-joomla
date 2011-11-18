@@ -775,13 +775,13 @@ class PhocaGalleryControllerUser extends PhocaGalleryController
 	function save($catid, $filename, $return, &$succeeded, &$errSaveMsg, $redirect=true) {
 		
 		global $mainframe;
-		
+		$user 	= &JFactory::getUser();
 		$post['filename']		= $filename;
 		$post['title']			= JRequest::getVar( 'phocagalleryuploadtitle', '', 'post', 'string', 0 );
 		$post['description']	= JRequest::getVar( 'phocagalleryuploaddescription', '', 'post', 'string', 0 );
 		$post['catid']			= $catid;
 		$post['published']		= 1;
-		
+		$post['userid']		= $user->id;
 		$paramsC 				= JComponentHelper::getParams('com_phocagallery') ;
 		$maxUploadChar			= $paramsC->get( 'max_upload_char', 1000 );
 		$post['description']	= substr($post['description'], 0, (int)$maxUploadChar);

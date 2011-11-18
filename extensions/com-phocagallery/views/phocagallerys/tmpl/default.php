@@ -55,6 +55,8 @@ if (isset($this->tmpl['notapproved']->count) && (int)$this->tmpl['notapproved']-
 					
 					<th width="5%"><?php echo JHTML::_('grid.sort',  'PHOCAGALLERY_OWNER', 'ownerid', $this->lists['order_Dir'], $this->lists['order'] ); ?></th>
 					
+					<th width="5%"><?php echo JHTML::_('grid.sort',  'Uploaded by', 'uploadusername',$this->lists['order_Dir'], $this->lists['order']  ); ?></th>
+					
 					<th width="5%"><?php echo JHTML::_('grid.sort',  'Rating', 'v.average', $this->lists['order_Dir'], $this->lists['order'] ); ?>
 					</th>
 					
@@ -172,7 +174,12 @@ if (isset($this->tmpl['notapproved']->count) && (int)$this->tmpl['notapproved']-
 					</td>
 					
 					<td align="center"><?php echo $row->usercatname; ?></td>
-					
+					<?php
+					echo '<td>';
+					echo $row->uploadname;
+					echo $row->uploadusername ? ' ('.$row->uploadusername.')' : '';
+					echo '</td>';
+					?>		
 					<td align="center"><?php
 							$voteAvg 		= round(((float)$row->ratingavg / 0.5)) * 0.5;
 							$voteAvgWidth	= 16 * $voteAvg;

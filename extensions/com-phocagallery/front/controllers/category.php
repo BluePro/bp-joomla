@@ -394,12 +394,13 @@ class PhocaGalleryControllerCategory extends PhocaGalleryController
 	function save($catid, $filename, $return, &$succeeded, &$errSaveMsg, $redirect=true) {
 		
 		global $mainframe;
-		
+		$user 	= &JFactory::getUser();
 		$post['filename']		= $filename;
 		$post['title']			= JRequest::getVar( 'phocagalleryuploadtitle', '', 'post', 'string', 0 );
 		$post['description']	= JRequest::getVar( 'phocagalleryuploaddescription', '', 'post', 'string', 0 );
 		$post['catid']			= $catid;
 		$post['published']		= 1;
+		$post['userid']		= $user->id;
 		
 		$paramsC 				= JComponentHelper::getParams('com_phocagallery') ;
 		$maxUploadChar			= $paramsC->get( 'max_upload_char', 1000 );
@@ -466,8 +467,9 @@ class PhocaGalleryControllerCategory extends PhocaGalleryController
 		if ($checkUserVote) {
 			$msg = JText::_('You have already rated this category');
 		} else {
-			if ($post['rating']  < 1 && $post['rating'] > 5) {
-				$this->setRedirect( JRoute::_('index.php?option=com_phocagallery', false)  );
+			if ((int)$post['rating']  < 1 || (int)$post['rating'] > 5) {
+				$mainframe->redirect( JRoute::_('index.php?option=com_phocagallery', false)  );
+				exit;
 			}
 			
 			if ($user->aid > 0 && $user->id > 0) {

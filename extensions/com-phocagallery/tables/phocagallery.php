@@ -51,6 +51,7 @@ class TablePhocaGallery extends JTable
 	var $exto				= null;
 	var $extw				= null;
 	var $exth				= null;
+	var $userid				= null;
 
 	function __construct(& $db) {
 		parent::__construct('#__phocagallery', 'id', $db);

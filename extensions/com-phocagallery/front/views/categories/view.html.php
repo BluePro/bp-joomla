@@ -97,6 +97,7 @@ class PhocaGalleryViewCategories extends JView
 		$model		= &$this->getModel();
 		$items		= $this->get('data');
 		
+		$tmpl['mtb'] = PhocaGalleryRenderInfo::getPhocaIc((int)$params->get( 'display_phoca_info', 1 ));
 		
 		// Add link and unset the categories which user cannot see (if it is enabled in params)
 		// If it will be unset while access view, we must sort the keys from category array - ACCESS
@@ -215,7 +216,7 @@ class PhocaGalleryViewCategories extends JView
 			
 		}
 		
-		$tmpl['mtb'] = PhocaGalleryRenderInfo::getPhocaIc((int)$params->get( 'display_phoca_info', 1 ));
+		
 		
 		
 		// ACCESS - - - - - - 

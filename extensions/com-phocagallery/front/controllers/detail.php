@@ -58,8 +58,9 @@ class PhocaGalleryControllerDetail extends PhocaGalleryController
 		if ($checkUserVote) {
 			$msg = JText::_('You have already rated this image');
 		} else {
-			if ($post['rating']  < 1 && $post['rating'] > 5) {
-				$this->setRedirect( JRoute::_('index.php?option=com_phocagallery', false)  );
+			if ((int)$post['rating']  < 1 || (int)$post['rating'] > 5) {
+				$mainframe->redirect( JRoute::_('index.php?option=com_phocagallery', false)  );
+				exit;
 			}
 			
 			if ($user->aid > 0 && $user->id > 0) {

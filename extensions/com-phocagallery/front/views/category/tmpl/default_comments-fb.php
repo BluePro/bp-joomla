@@ -3,15 +3,24 @@
 ?><div id="phocagallery-comments"><?php
 	echo '<div style="font-size:1px;height:1px;margin:0px;padding:0px;">&nbsp;</div>';//because of IE bug 
 	
-	$option = JRequest::getVar('option', 'com_phocagallery');
-	$view 	= JRequest::getVar('view', 'category');
-	$xid 	= md5(JURI::base() . $option . $view) . 'pgcat'.(int)$this->category->id;
+	$uri 		= &JFactory::getURI();
+	$getParamsArray = explode(',', 'start,limitstart,template,fb_comment_id');
+	if (!empty($getParamsArray) ) {
+		foreach($getParamsArray as $key => $value) {
+			$uri->delVar($value);
+		}
+	}
 	
 	if ($this->tmpl['fb_comment_app_id'] == '') {
 		echo JText::_('COM_PHOCAGALLERY_ERROR_FB_APP_ID_EMPTY');
 	} else {
+	
+		$cCount = '';
+		if ((int)$this->tmpl['fb_comment_count'] > 0) {
+			$cCount = 'numposts="'.$this->tmpl['fb_comment_count'].'"';
+		}
 
-?><fb:comments xid="<?php echo $xid ?>" simple="1" width="<?php echo (int)$this->tmpl['fb_comment_width'] ?>"></fb:comments>
+?><fb:comments href="<?php echo $uri->toString(); ?>" simple="1" <?php echo $cCount;?> width="<?php echo (int)$this->tmpl['fb_comment_width'] ?>"></fb:comments>
 <div id="fb-root"></div>
 <script>
   window.fbAsyncInit = function() {

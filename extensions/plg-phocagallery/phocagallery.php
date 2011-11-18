@@ -44,7 +44,7 @@ class plgContentPhocaGallery extends JPlugin
         parent::__construct( $subject, $params  );
     }
 
-	function onPrepareContent( &$article, &$params, $limitstart )
+	function onPrepareContent( &$article, &$params, $limitstart = null )
 	{
 		$user		= &JFactory::getUser();
 		$gid 		= $user->get('aid', 0);

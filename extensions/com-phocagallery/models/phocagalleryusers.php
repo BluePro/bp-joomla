@@ -68,7 +68,7 @@ class PhocaGalleryCpModelPhocaGalleryUsers extends JModel
 		$where		= $this->_buildContentWhere();
 		$orderby	= $this->_buildContentOrderBy();
 
-		$query = ' SELECT a.*, us.name AS username, u.name AS editor, c.countcid, i.countiid'
+		$query = ' SELECT a.*, us.name AS username, us.username AS usernameno, u.name AS editor, c.countcid, i.countiid'
 			. ' FROM #__phocagallery_user AS a '
 		
 			. ' LEFT JOIN #__users AS us ON us.id = a.userid '

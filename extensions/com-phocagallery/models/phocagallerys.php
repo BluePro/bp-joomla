@@ -136,12 +136,13 @@ class PhocaGalleryCpModelPhocaGalleryS extends JModel
 		$where		= $this->_buildContentWhere();
 		$orderby	= $this->_buildContentOrderBy();
 
-		$query = ' SELECT a.*, cc.title AS category, cc.owner_id AS ownerid, u.name AS editor, v.average AS ratingavg, ua.username AS usercatname'
+		$query = ' SELECT a.*, cc.title AS category, cc.owner_id AS ownerid, u.name AS editor, v.average AS ratingavg, ua.username AS usercatname, uua.id AS uploaduserid, uua.username AS uploadusername, uua.name AS uploadname'
 			. ' FROM #__phocagallery AS a '
 			. ' LEFT JOIN #__phocagallery_categories AS cc ON cc.id = a.catid '
 			. ' LEFT JOIN #__phocagallery_img_votes_statistics AS v ON v.imgid = a.id'
 			. ' LEFT JOIN #__users AS u ON u.id = a.checked_out '
 			. ' LEFT JOIN #__users AS ua ON ua.id = cc.owner_id'
+			. ' LEFT JOIN #__users AS uua ON uua.id = a.userid'
 			. $where
 			. $orderby;
 		return $query;

@@ -12,16 +12,25 @@ if (JComponentHelper::isEnabled('com_jcomments', true) && $this->tmpl['externalc
 	echo JComments::showComments(  $this->tmpl['id'], 'com_phocagallery_images', JText::_('PHOCAGALLERY_IMAGE') .' '. $this->tmpl['imgtitle']);
 } else if($this->tmpl['externalcommentsystem'] == 2) {
 	
-	$option = JRequest::getVar('option', 'com_phocagallery');
-	$view 	= JRequest::getVar('view', 'detail');
-	$xid 	= md5(JURI::base() . $option . $view) . 'pgimg'.(int)$this->tmpl['id'];
+	$uri 		= &JFactory::getURI();
+	$getParamsArray = explode(',', 'start,limitstart,template,fb_comment_id');
+	if (!empty($getParamsArray) ) {
+		foreach($getParamsArray as $key => $value) {
+			$uri->delVar($value);
+		}
+	}
 	
 	echo '<div style="margin:10px">';
 	if ($this->tmpl['fb_comment_app_id'] == '') {
 		echo JText::_('COM_PHOCAGALLERY_ERROR_FB_APP_ID_EMPTY');
 	} else {
+	
+		$cCount = '';
+		if ((int)$this->tmpl['fb_comment_count'] > 0) {
+			$cCount = 'numposts="'.$this->tmpl['fb_comment_count'].'"';
+		}
 
-?><fb:comments xid="<?php echo $xid ?>" simple="1" width="<?php echo (int)$this->tmpl['fb_comment_width'] ?>"></fb:comments>
+?><fb:comments href="<?php echo $uri->toString(); ?>" simple="1" <?php echo $cCount;?> width="<?php echo (int)$this->tmpl['fb_comment_width'] ?>"></fb:comments>
 <div id="fb-root"></div>
 <script>
   window.fbAsyncInit = function() {

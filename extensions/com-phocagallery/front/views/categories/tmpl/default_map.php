@@ -7,6 +7,10 @@ phocagalleryimport('phocagallery.render.rendermap');
 if ( $this->params->def( 'show_page_title', 1 ) ) {
    echo '<div class="componentheading'.$this->params->get( 'pageclass_sfx' ).'">'.$this->params->get('page_title').'</div>';
 } 
+
+$tmpl['def'] = '<div style="tex'.'t-align: center; color:#d3d3'.'d3;">Power'.'ed by <a href="htt'.'p://www.pho'.'ca.cz" style="text-decor'.'ation: none;" tar'.'get="_bl'.'ank" title="Ph'.'oca.cz">Phoc'.'a</a> <a href="http://www.p'
+			   .'hoca.cz/phocagallery" style="tex'.'t-decoration: none;" ta'.'rget="_bla'.'nk" title="Pho'.'ca Gal'.'lery">Gal'.'lery</a></div>';
+
 echo '<div id="phocagallery">';
 if ($this->tmplGeo['categorieslng'] == '' || $this->tmplGeo['categorieslat'] == '') {
 	echo '<p>' . JText::_('Google Maps Error Front') . '</p>';
@@ -80,6 +84,6 @@ if ($this->tmplGeo['categorieslng'] == '' || $this->tmplGeo['categorieslat'] == 
 	echo $map->setInitializeF();
 	?>//]]></script><?php
 }
-echo '<div>&nbsp;</div><div>' . $this->tmpl['phoac'].'</div></div>';
+echo '<div>&nbsp;</div><div>' . $tmpl['def'].'</div></div>';
 ?>
 <!-- End Categories </a></div> -->

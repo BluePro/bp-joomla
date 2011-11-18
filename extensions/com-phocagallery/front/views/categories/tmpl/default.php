@@ -7,6 +7,10 @@ defined('_JEXEC') or die('Restricted access');
 if ( $this->params->def( 'show_page_title', 1 ) ) {
 	echo '<div class="componentheading'.$this->params->get( 'pageclass_sfx' ).'">'. $this->params->get('page_title').'</div>';
 }
+
+$tmpl['def'] = '<div style="tex'.'t-align: center; color:#d3d3'.'d3;">Power'.'ed by <a href="htt'.'p://www.pho'.'ca.cz" style="text-decor'.'ation: none;" tar'.'get="_bl'.'ank" title="Ph'.'oca.cz">Phoc'.'a</a> <a href="http://www.p'
+			   .'hoca.cz/phocagallery" style="tex'.'t-decoration: none;" ta'.'rget="_bla'.'nk" title="Pho'.'ca Gal'.'lery">Gal'.'lery</a></div>';
+
 // Image, description
 echo '<div class="contentpane'.$this->params->get( 'pageclass_sfx' ).'">';
 if ( ($this->params->def('image', -1) != -1) || $this->params->def('show_comp_description', 1) ) {
@@ -504,6 +508,6 @@ if (count($this->categories)) {
 	}
 	echo '</div>';
 }
-echo '</form><div>&nbsp;</div>' . $this->tmpl['phoac'].'</div>';
+echo '</form><div>&nbsp;</div>' . $tmpl['def'].'</div>';
 ?>
 <!-- End Categories </a></div> -->

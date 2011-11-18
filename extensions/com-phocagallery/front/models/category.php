@@ -82,12 +82,20 @@ class PhocagalleryModelCategory extends JModel
 		$params				= &$mainframe->getParams();
 		$image_ordering		= $params->get( 'image_ordering', 1 );
 		$imageOrdering 		= PhocaGalleryOrdering::getOrderingString($image_ordering);
-		
+		$enable_overlib		= $params->get( 'enable_overlib', 0 );
 		// Link from comment system
 		$wherecimgid	= '';
 		$cimgid			= JRequest::getVar( 'cimgid', 0, '', 'int');
 		if ($cimgid > 0) {
 			$wherecimgid	= ' AND a.id = '.(int)$cimgid;
+		}
+		
+		$selectUser = '';
+		$leftUser	= '';
+		if ($enable_overlib > 3) {
+			$selectUser	= ', ua.id AS userid, ua.username AS username, ua.name AS usernameno';
+			$leftUser 	= ' LEFT JOIN #__users AS ua ON ua.id = a.userid';
+			//$whereUser	= ' AND ua.id ='.(int)$user->id;
 		}
 		
 		if ($rightDisplayDelete == 0 ) {
@@ -115,9 +123,11 @@ class PhocagalleryModelCategory extends JModel
 			$votes	= ' ORDER BY a.';
 		}
 		
-		$query = 'SELECT a.*, r.count as count, r.average as average'
+		$query = 'SELECT a.*'
+			. $selectUser
 			.' FROM #__phocagallery AS a'
 			.' LEFT JOIN #__phocagallery_img_votes_statistics AS r ON r.imgid = a.id'
+			. $leftUser
 			.' WHERE a.catid = '.(int) $this->_id
 			.$wherecimgid
 			.$published

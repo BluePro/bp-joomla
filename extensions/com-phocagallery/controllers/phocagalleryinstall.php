@@ -44,6 +44,7 @@ class PhocaGalleryCpControllerPhocaGalleryinstall extends PhocaGalleryCpControll
 		$query.=' '.$db->nameQuote('longitude').' varchar(20) NOT NULL default \'\','."\n";
 		$query.=' '.$db->nameQuote('zoom').' int(3) NOT NULL default \'0\','."\n";
 		$query.=' '.$db->nameQuote('geotitle').' varchar(255) NOT NULL default \'\','."\n";
+		$query.=' '.$db->nameQuote('userid').' int(11) NOT NULL Default \'0\','."\n";
 		$query.=' '.$db->nameQuote('videocode').' text,'."\n";
 		$query.=' '.$db->nameQuote('vmproductid').' int(11) NOT NULL default \'0\','."\n";
 		$query.=' '.$db->nameQuote('imgorigsize').' int(11) NOT NULL default \'0\','."\n";
@@ -66,7 +67,7 @@ class PhocaGalleryCpControllerPhocaGalleryinstall extends PhocaGalleryCpControll
 		$query.=' '.$db->nameQuote('exth').' varchar(255) NOT NULL default \'\','."\n";
 		$query.=' PRIMARY KEY  ('.$db->nameQuote('id').'),'."\n";
 		$query.=' KEY '.$db->nameQuote('catid').' ('.$db->nameQuote('catid').','.$db->nameQuote('published').')'."\n";
-		$query.=') TYPE=MyISAM CHARACTER SET '.$db->nameQuote('utf8').';'."\n";
+		$query.=') ENGINE=MyISAM CHARACTER SET '.$db->nameQuote('utf8').';'."\n";
 		$query.=''."\n";
 		
 		$db->setQuery( $query );
@@ -120,7 +121,7 @@ class PhocaGalleryCpControllerPhocaGalleryinstall extends PhocaGalleryCpControll
 		$query.=' KEY '.$db->nameQuote('cat_idx').' ('.$db->nameQuote('section').','.$db->nameQuote('published').','.$db->nameQuote('access').'),'."\n";
 		$query.=' KEY '.$db->nameQuote('idx_access').' ('.$db->nameQuote('access').'),'."\n";
 		$query.=' KEY '.$db->nameQuote('idx_checkout').' ('.$db->nameQuote('checked_out').')'."\n";
-		$query.=') TYPE=MyISAM CHARACTER SET '.$db->nameQuote('utf8').';';
+		$query.=') ENGINE=MyISAM CHARACTER SET '.$db->nameQuote('utf8').';';
 		
 		$db->setQuery( $query );
 		if (!$result = $db->query()){$msgSQL .= $db->stderr() . '<br />';}
@@ -145,7 +146,7 @@ class PhocaGalleryCpControllerPhocaGalleryinstall extends PhocaGalleryCpControll
 		$query.=' '.$db->nameQuote('ordering').' int(11) NOT NULL default \'0\','."\n";
 		$query.=' '.$db->nameQuote('params').' text,'."\n";
 		$query.=' PRIMARY KEY  ('.$db->nameQuote('id').')'."\n";
-		$query.=') TYPE=MyISAM CHARACTER SET '.$db->nameQuote('utf8').';'."\n";
+		$query.=') ENGINE=MyISAM CHARACTER SET '.$db->nameQuote('utf8').';'."\n";
 		
 		$db->setQuery( $query );
 		if (!$result = $db->query()){$msgSQL .= $db->stderr() . '<br />';}
@@ -171,7 +172,7 @@ class PhocaGalleryCpControllerPhocaGalleryinstall extends PhocaGalleryCpControll
 		$query.=' '.$db->nameQuote('ordering').' int(11) NOT NULL default \'0\','."\n";
 		$query.=' '.$db->nameQuote('params').' text,'."\n";
 		$query.=' PRIMARY KEY  ('.$db->nameQuote('id').')'."\n";
-		$query.=') TYPE=MyISAM CHARACTER SET '.$db->nameQuote('utf8').';'."\n";
+		$query.=') ENGINE=MyISAM CHARACTER SET '.$db->nameQuote('utf8').';'."\n";
 		
 		$db->setQuery( $query );
 		if (!$result = $db->query()){$msgSQL .= $db->stderr() . '<br />';}
@@ -190,7 +191,7 @@ class PhocaGalleryCpControllerPhocaGalleryinstall extends PhocaGalleryCpControll
 		$query.=' '.$db->nameQuote('count').' int(11) NOT NULL default \'0\','."\n";
 		$query.=' '.$db->nameQuote('average').' float(8,6) NOT NULL default \'0\','."\n";
 		$query.=' PRIMARY KEY  ('.$db->nameQuote('id').')'."\n";
-		$query.=') TYPE=MyISAM CHARACTER SET '.$db->nameQuote('utf8').';'."\n";
+		$query.=') ENGINE=MyISAM CHARACTER SET '.$db->nameQuote('utf8').';'."\n";
 		
 		$db->setQuery( $query );
 		if (!$result = $db->query()){$msgSQL .= $db->stderr() . '<br />';}
@@ -210,7 +211,7 @@ class PhocaGalleryCpControllerPhocaGalleryinstall extends PhocaGalleryCpControll
 		$query.=' '.$db->nameQuote('userid').' int(11) NOT NULL default 0,'."\n";
 		$query.=' PRIMARY KEY  ('.$db->nameQuote('id').'),'."\n";
 		$query.=' KEY '.$db->nameQuote('catid').' ('.$db->nameQuote('catid').','.$db->nameQuote('userid').')'."\n";
-		$query.=') TYPE=MyISAM CHARACTER SET '.$db->nameQuote('utf8').';'."\n";
+		$query.=') ENGINE=MyISAM CHARACTER SET '.$db->nameQuote('utf8').';'."\n";
 		
 		$db->setQuery( $query );
 		if (!$result = $db->query()){$msgSQL .= $db->stderr() . '<br />';}
@@ -235,7 +236,7 @@ class PhocaGalleryCpControllerPhocaGalleryinstall extends PhocaGalleryCpControll
 		$query.=' '.$db->nameQuote('ordering').' int(11) NOT NULL default \'0\','."\n";
 		$query.=' '.$db->nameQuote('params').' text,'."\n";
 		$query.=' PRIMARY KEY  ('.$db->nameQuote('id').')'."\n";
-		$query.=') TYPE=MyISAM CHARACTER SET '.$db->nameQuote('utf8').';'."\n";
+		$query.=') ENGINE=MyISAM CHARACTER SET '.$db->nameQuote('utf8').';'."\n";
 		
 		$db->setQuery( $query );
 		if (!$result = $db->query()){$msgSQL .= $db->stderr() . '<br />';}
@@ -254,7 +255,7 @@ class PhocaGalleryCpControllerPhocaGalleryinstall extends PhocaGalleryCpControll
 		$query.=' '.$db->nameQuote('count').' int(11) NOT NULL default \'0\','."\n";
 		$query.=' '.$db->nameQuote('average').' float(8,6) NOT NULL default \'0\','."\n";
 		$query.=' PRIMARY KEY  ('.$db->nameQuote('id').')'."\n";
-		$query.=') TYPE=MyISAM CHARACTER SET '.$db->nameQuote('utf8').';'."\n";
+		$query.=') ENGINE=MyISAM CHARACTER SET '.$db->nameQuote('utf8').';'."\n";
 		
 		$db->setQuery( $query );
 		if (!$result = $db->query()){$msgSQL .= $db->stderr() . '<br />';}
@@ -281,7 +282,7 @@ class PhocaGalleryCpControllerPhocaGalleryinstall extends PhocaGalleryCpControll
 		$query.=' '.$db->nameQuote('params').' text,'."\n";
 		$query.=' PRIMARY KEY  ('.$db->nameQuote('id').'),'."\n";
 		$query.=' KEY '.$db->nameQuote('userid').' ('.$db->nameQuote('userid').')'."\n";
-		$query.=') TYPE=MyISAM CHARACTER SET '.$db->nameQuote('utf8').';'."\n";
+		$query.=') ENGINE=MyISAM CHARACTER SET '.$db->nameQuote('utf8').';'."\n";
 		
 		$db->setQuery( $query );
 		if (!$result = $db->query()){$msgSQL .= $db->stderr() . '<br />';}
@@ -308,7 +309,7 @@ class PhocaGalleryCpControllerPhocaGalleryinstall extends PhocaGalleryCpControll
 		$query.=' '.$db->nameQuote('ordering').' int(11) NOT NULL default \'0\','."\n";
 		$query.=' '.$db->nameQuote('params').' text,'."\n";
 		$query.=' PRIMARY KEY  ('.$db->nameQuote('id').')'."\n";
-		$query.=') TYPE=MyISAM CHARACTER SET '.$db->nameQuote('utf8').';'."\n";
+		$query.=') ENGINE=MyISAM CHARACTER SET '.$db->nameQuote('utf8').';'."\n";
 		
 		$db->setQuery( $query );
 		if (!$result = $db->query()){$msgSQL .= $db->stderr() . '<br />';}
@@ -381,7 +382,7 @@ class PhocaGalleryCpControllerPhocaGalleryinstall extends PhocaGalleryCpControll
 		$query.=' '.$db->nameQuote('ordering').' int(11) NOT NULL default \'0\','."\n";
 		$query.=' '.$db->nameQuote('params').' text,'."\n";
 		$query.=' PRIMARY KEY  ('.$db->nameQuote('id').')'."\n";
-		$query.=') TYPE=MyISAM CHARACTER SET '.$db->nameQuote('utf8').';'."\n";
+		$query.=') ENGINE=MyISAM CHARACTER SET '.$db->nameQuote('utf8').';'."\n";
 		
 		$db->setQuery( $query );
 		if (!$result = $db->query()){$msgSQL .= $db->stderr() . '<br />';}
@@ -402,7 +403,7 @@ class PhocaGalleryCpControllerPhocaGalleryinstall extends PhocaGalleryCpControll
 		$query.=' '.$db->nameQuote('ordering').' int(11) NOT NULL default \'0\','."\n";
 		$query.=' '.$db->nameQuote('params').' text,'."\n";
 		$query.=' PRIMARY KEY  ('.$db->nameQuote('id').')'."\n";
-		$query.=') TYPE=MyISAM CHARACTER SET '.$db->nameQuote('utf8').';'."\n";
+		$query.=') ENGINE=MyISAM CHARACTER SET '.$db->nameQuote('utf8').';'."\n";
 		
 		$db->setQuery( $query );
 		if (!$result = $db->query()){$msgSQL .= $db->stderr() . '<br />';}
@@ -416,7 +417,7 @@ class PhocaGalleryCpControllerPhocaGalleryinstall extends PhocaGalleryCpControll
 		$query.=' '.$db->nameQuote('count').' int(11) NOT NULL default \'0\','."\n";
 		$query.=' '.$db->nameQuote('average').' float(8,6) NOT NULL default \'0\','."\n";
 		$query.=' PRIMARY KEY  ('.$db->nameQuote('id').')'."\n";
-		$query.=') TYPE=MyISAM CHARACTER SET '.$db->nameQuote('utf8').';'."\n";
+		$query.=') ENGINE=MyISAM CHARACTER SET '.$db->nameQuote('utf8').';'."\n";
 		
 		$db->setQuery( $query );
 		if (!$result = $db->query()){$msgSQL .= $db->stderr() . '<br />';}
@@ -431,7 +432,7 @@ class PhocaGalleryCpControllerPhocaGalleryinstall extends PhocaGalleryCpControll
 		$query.=' '.$db->nameQuote('userid').' int(11) NOT NULL default 0,'."\n";
 		$query.=' PRIMARY KEY  ('.$db->nameQuote('id').'),'."\n";
 		$query.=' KEY '.$db->nameQuote('catid').' ('.$db->nameQuote('catid').','.$db->nameQuote('userid').')'."\n";
-		$query.=') TYPE=MyISAM CHARACTER SET '.$db->nameQuote('utf8').';'."\n";
+		$query.=') ENGINE=MyISAM CHARACTER SET '.$db->nameQuote('utf8').';'."\n";
 		
 		$db->setQuery( $query );
 		if (!$result = $db->query()){$msgSQL .= $db->stderr() . '<br />';}
@@ -660,7 +661,7 @@ class PhocaGalleryCpControllerPhocaGalleryinstall extends PhocaGalleryCpControll
 		$query.=' '.$db->nameQuote('ordering').' int(11) NOT NULL default \'0\','."\n";
 		$query.=' '.$db->nameQuote('params').' text,'."\n";
 		$query.=' PRIMARY KEY  ('.$db->nameQuote('id').')'."\n";
-		$query.=') TYPE=MyISAM CHARACTER SET '.$db->nameQuote('utf8').';'."\n";
+		$query.=') ENGINE=MyISAM CHARACTER SET '.$db->nameQuote('utf8').';'."\n";
 		
 		$db->setQuery( $query );
 		if (!$result = $db->query()){$msgSQL .= $db->stderr() . '<br />';}
@@ -674,7 +675,7 @@ class PhocaGalleryCpControllerPhocaGalleryinstall extends PhocaGalleryCpControll
 		$query.=' '.$db->nameQuote('count').' int(11) NOT NULL default \'0\','."\n";
 		$query.=' '.$db->nameQuote('average').' float(8,6) NOT NULL default \'0\','."\n";
 		$query.=' PRIMARY KEY  ('.$db->nameQuote('id').')'."\n";
-		$query.=') TYPE=MyISAM CHARACTER SET '.$db->nameQuote('utf8').';'."\n";
+		$query.=') ENGINE=MyISAM CHARACTER SET '.$db->nameQuote('utf8').';'."\n";
 		
 		$db->setQuery( $query );
 		if (!$result = $db->query()){$msgSQL .= $db->stderr() . '<br />';}
@@ -697,7 +698,7 @@ class PhocaGalleryCpControllerPhocaGalleryinstall extends PhocaGalleryCpControll
 		$query.=' '.$db->nameQuote('params').' text,'."\n";
 		$query.=' PRIMARY KEY  ('.$db->nameQuote('id').'),'."\n";
 		$query.=' KEY '.$db->nameQuote('userid').' ('.$db->nameQuote('userid').')'."\n";
-		$query.=') TYPE=MyISAM CHARACTER SET '.$db->nameQuote('utf8').';'."\n";
+		$query.=') ENGINE=MyISAM CHARACTER SET '.$db->nameQuote('utf8').';'."\n";
 		
 		$db->setQuery( $query );
 		if (!$result = $db->query()){$msgSQL .= $db->stderr() . '<br />';}
@@ -881,7 +882,7 @@ class PhocaGalleryCpControllerPhocaGalleryinstall extends PhocaGalleryCpControll
 		$query.=' '.$db->nameQuote('ordering').' int(11) NOT NULL default \'0\','."\n";
 		$query.=' '.$db->nameQuote('params').' text,'."\n";
 		$query.=' PRIMARY KEY  ('.$db->nameQuote('id').')'."\n";
-		$query.=') TYPE=MyISAM CHARACTER SET '.$db->nameQuote('utf8').';'."\n";
+		$query.=') ENGINE=MyISAM CHARACTER SET '.$db->nameQuote('utf8').';'."\n";
 		
 		$db->setQuery( $query );
 		if (!$result = $db->query()){$msgSQL .= $db->stderr() . '<br />';}
@@ -899,6 +900,15 @@ class PhocaGalleryCpControllerPhocaGalleryinstall extends PhocaGalleryCpControll
 		}
 		
 		//END 2.7.1
+		
+		// UPDATE 2.8.0
+		$updateUID = false;
+		$errorMsg	= '';
+		$updateUID = $this->AddColumnIfNotExists( $errorMsg, "#__phocagallery", "userid", "int(11) NOT NULL Default '0'", "geotitle" );
+		if (!$updateextAuth) {
+			$msgSQL .= 'Error while updating Phoca Gallery Image Table - Userid column';
+		}
+		// END 2.8.0
 		
 		
 		// CHECK TABLES

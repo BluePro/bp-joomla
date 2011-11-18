@@ -560,6 +560,7 @@
 
 <param name="fb_comment_app_id" default="" size="18" type="phocatext" label="Facebook Comments Application ID" description="Facebook Comments Application ID DESC" />
 <param name="fb_comment_width" default="550" size="6" type="phocatext" label="Facebook Comments Width" description="Facebook Comments Width DESC" />
+<param name="fb_comment_count" default="" size="6" type="phocatext" label="Facebook Comments Count" description="Facebook Comments Count DESC" />
 
 
 
@@ -595,6 +596,10 @@
 	<option value="1">Only Image</option>
 	<option value="2">Only Description</option>
 	<option value="3">Image and Description</option>
+	
+	<option value="4">Image and Uploaded By</option>
+	<option value="5">Description and Uploaded By</option>
+	<option value="6">Image, Description and Uploaded By</option>
 	<option value="0">No</option>
 </param>
 

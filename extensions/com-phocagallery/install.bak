@@ -13,6 +13,7 @@ CREATE TABLE `#__phocagallery` (
   `longitude` varchar(20) NOT NULL default '',
   `zoom` int(3) NOT NULL default '0',
   `geotitle` varchar(255) NOT NULL default '',
+  `userid` int(11) NOT NULL Default '0',
   `videocode` text,
   `vmproductid` int(11) NOT NULL default '0',
   `imgorigsize` int(11) NOT NULL default '0',
@@ -35,7 +36,7 @@ CREATE TABLE `#__phocagallery` (
   `exth` varchar(255) NOT NULL default '',
   PRIMARY KEY  (`id`),
   KEY `catid` (`catid`,`published`)
-) TYPE=MyISAM CHARACTER SET `utf8`;
+) ENGINE=MyISAM CHARACTER SET `utf8`;
 
 DROP TABLE IF EXISTS `#__phocagallery_categories`;
 CREATE TABLE `#__phocagallery_categories` (
@@ -78,7 +79,7 @@ CREATE TABLE `#__phocagallery_categories` (
   KEY `cat_idx` (`section`,`published`,`access`),
   KEY `idx_access` (`access`),
   KEY `idx_checkout` (`checked_out`)
-) TYPE=MyISAM CHARACTER SET `utf8`;
+) ENGINE=MyISAM CHARACTER SET `utf8`;
 
 
 DROP TABLE IF EXISTS `#__phocagallery_votes`;
@@ -94,7 +95,7 @@ CREATE TABLE `#__phocagallery_votes` (
   `ordering` int(11) NOT NULL default '0',
   `params` text,
   PRIMARY KEY  (`id`)
-) TYPE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `#__phocagallery_comments`;
 CREATE TABLE `#__phocagallery_comments` (
@@ -110,7 +111,7 @@ CREATE TABLE `#__phocagallery_comments` (
   `ordering` int(11) NOT NULL default '0',
   `params` text,
   PRIMARY KEY  (`id`)
-) TYPE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `#__phocagallery_votes_statistics`;
 CREATE TABLE `#__phocagallery_votes_statistics` (
@@ -119,7 +120,7 @@ CREATE TABLE `#__phocagallery_votes_statistics` (
   `count` int(11) NOT NULL default '0',
   `average` float(8,6) NOT NULL default '0',
   PRIMARY KEY  (`id`)
-) TYPE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- removed in 2.6.0
 -- DROP TABLE IF EXISTS `#__phocagallery_user_category`;
@@ -129,7 +130,7 @@ CREATE TABLE `#__phocagallery_votes_statistics` (
 --  `userid` int(11) NOT NULL default 0,
 --  PRIMARY KEY  (`id`),
 --  KEY `catid` (`catid`,`userid`)
--- ) TYPE=MyISAM DEFAULT CHARSET=utf8;
+-- ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- version 2.5
 DROP TABLE IF EXISTS `#__phocagallery_img_votes`;
@@ -145,7 +146,7 @@ CREATE TABLE `#__phocagallery_img_votes` (
   `ordering` int(11) NOT NULL default '0',
   `params` text,
   PRIMARY KEY  (`id`)
-) TYPE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 
 DROP TABLE IF EXISTS `#__phocagallery_img_votes_statistics`;
@@ -155,7 +156,7 @@ CREATE TABLE `#__phocagallery_img_votes_statistics` (
   `count` int(11) NOT NULL default '0',
   `average` float(8,6) NOT NULL default '0',
   PRIMARY KEY  (`id`)
-) TYPE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- version 2.6.0
 DROP TABLE IF EXISTS `#__phocagallery_user`;
@@ -171,7 +172,7 @@ CREATE TABLE `#__phocagallery_user` (
   `params` text,
   PRIMARY KEY  (`id`),
   KEY `userid` (`userid`)
-) TYPE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `#__phocagallery_img_comments`;
 CREATE TABLE `#__phocagallery_img_comments` (
@@ -187,7 +188,7 @@ CREATE TABLE `#__phocagallery_img_comments` (
   `ordering` int(11) NOT NULL default '0',
   `params` text,
   PRIMARY KEY  (`id`)
-) TYPE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 
 
@@ -222,13 +223,13 @@ CREATE TABLE `#__phocagallery_img_comments` (
 -- 2.6.0
 -- ALTER TABLE `#__phocagallery` ADD `imgorigsize` int(11) NOT NULL default '0' AFTER `hits` ;
 -- ALTER TABLE `#__phocagallery_categories` ADD `owner_id` int(11) NOT NULL default '0' AFTER `parent_id` ;
--- ALTER TABLE `#__phocagallery` `extid` varchar(255) NOT NULL default '' AFTER `hits` ;
--- ALTER TABLE `#__phocagallery` `extl` varchar(255) NOT NULL default '' AFTER `hits` ;
--- ALTER TABLE `#__phocagallery` `extm` varchar(255) NOT NULL default '' AFTER `hits` ;
--- ALTER TABLE `#__phocagallery` `exts` varchar(255) NOT NULL default '' AFTER `hits` ;
--- ALTER TABLE `#__phocagallery` `exto` varchar(255) NOT NULL default '' AFTER `hits` ;
--- ALTER TABLE `#__phocagallery` `extw` varchar(255) NOT NULL default '' AFTER `hits` ;
--- ALTER TABLE `#__phocagallery` `exth` varchar(255) NOT NULL default '' AFTER `hits` ;
+-- ALTER TABLE `#__phocagallery` ADD `extid` varchar(255) NOT NULL default '' AFTER `hits` ;
+-- ALTER TABLE `#__phocagallery` ADD `extl` varchar(255) NOT NULL default '' AFTER `hits` ;
+-- ALTER TABLE `#__phocagallery` ADD `extm` varchar(255) NOT NULL default '' AFTER `hits` ;
+-- ALTER TABLE `#__phocagallery` ADD `exts` varchar(255) NOT NULL default '' AFTER `hits` ;
+-- ALTER TABLE `#__phocagallery` ADD `exto` varchar(255) NOT NULL default '' AFTER `hits` ;
+-- ALTER TABLE `#__phocagallery` ADD `extw` varchar(255) NOT NULL default '' AFTER `hits` ;
+-- ALTER TABLE `#__phocagallery` ADD `exth` varchar(255) NOT NULL default '' AFTER `hits` ;
   
 -- ALTER TABLE `#__phocagallery_categories` ADD `extid` varchar(255) NOT NULL default '' AFTER `hits` ;
 -- ALTER TABLE `#__phocagallery_categories` ADD `exta` varchar(255) NOT NULL default '' AFTER `hits` ;
@@ -246,3 +247,6 @@ CREATE TABLE `#__phocagallery_img_comments` (
 
 -- 2.7.1
 -- ALTER TABLE `#__phocagallery_categories` ADD `extauth` VARCHAR( 255 ) NOT NULL AFTER `exta` ;  
+
+-- 2.8.0
+-- ALTER TABLE `#__phocagallery` ADD `userid` int(11) NOT NULL Default '0'  AFTER `geotitle` ;  

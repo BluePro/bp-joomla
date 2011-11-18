@@ -46,6 +46,7 @@ class PhocaGalleryViewComment extends JView
 		
 		$tmpl['fb_comment_app_id']			= $params->get( 'fb_comment_app_id', '');
 		$tmpl['fb_comment_width']			= (int)$params->get( 'fb_comment_width', '550');
+		$tmpl['fb_comment_count']			= (int)$params->get( 'fb_comment_count', '');
 		$tmpl['display_comment_nopup']		= $params->get( 'display_comment_nopup', 0);
 		
 		if ($tmpl['gallerymetakey'] != '') {

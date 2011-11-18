@@ -67,7 +67,7 @@ JHTML::_('behavior.tooltip');
 				?>
 				<tr class="<?php echo "row$k"; ?>">
 					<td><?php echo $this->tmpl['pagination']->getRowOffset( $i ); ?></td>
-					<td><?php echo $checked;  echo $this->tmpl['avatarpathabs'].$row->avatar ." ...<br>"; ?></td>
+					<td><?php echo $checked; ?></td>
 					<td align="center" valign="middle">
 						<div class="phocagallery-box-file">
 							<center>
@@ -97,7 +97,7 @@ JHTML::_('behavior.tooltip');
 					</td>
 					<td>
 						<a href="<?php echo $link; ?>" title="<?php echo JText::_( 'Edit User' ); ?>">
-								<?php echo $row->username; ?></a>
+								<?php echo $row->username; ?></a> ( <?php echo $row->usernameno; ?> )
 					</td>
 					
 					<td align="center"><?php echo $row->countcid;?></td>
