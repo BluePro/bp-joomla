@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<install method="upgrade" client="both" type="language" version="1.5.0">
+	<name>PhocaGuestbook</name>
+	<tag>cs-CZ</tag>
+	<creationDate>11/10/2011</creationDate>
+	<author>Fenris</author>
+	<authorEmail>fenris@fenris.cz</authorEmail>
+	<authorUrl>www.fenris.cz</authorUrl>
+	<copyright>Copyright (c)2009-2011 Fenris.cz</copyright>
+	<description>Čeština pro Phoca Guestbook 1.4.5</description>
+	<version>Phoca Guestbook 1.4.5</version>
+
+  <administration>
+    <files folder="admin">
+        <filename>cs-CZ.com_phocaguestbook.ini</filename>
+        <filename>cs-CZ.com_phocaguestbook.menu.ini</filename>
+
+    </files>
+  </administration>
+
+  <site>
+    <files folder="site">
+        <filename>cs-CZ.com_phocaguestbook.ini</filename>
+        <filename>cs-CZ.com_phocaguestbook.menu.ini</filename>
+
+    </files>
+  </site>
+
+
+</install>
