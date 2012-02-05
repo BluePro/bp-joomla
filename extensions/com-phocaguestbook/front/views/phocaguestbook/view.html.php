@@ -24,7 +24,8 @@ class PhocaGuestbookViewPhocaGuestbook extends JView
 		$uri 		= &JFactory::getURI();
 		$user 		= &JFactory::getUser();
 		
-		JHTML::stylesheet( 'phocaguestbook.css', 'components/com_phocaguestbook/assets/' );
+		if ($params->get( 'include_css', 1 ))
+			JHTML::stylesheet( 'phocaguestbook.css', 'components/com_phocaguestbook/assets/' );
 		
 		$tmpl['administrator'] = 0;
 		if (strtolower($user->usertype) == strtolower('super administrator') || strtolower($user->usertype) == strtolower('administrator')) {

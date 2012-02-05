@@ -69,7 +69,6 @@ if ($this->tmpl['display_posts'] == 1) {
 	}
 	$form2 .= '</form></div>';
 }	
-$form2 .= $this->tmpl['in'];
 
 // - - - - - - - - - - -
 // Messages - create and correct Messages (Posts, Items)
@@ -250,7 +249,7 @@ if ($this->tmpl['show_form'] == 1) {
 	
 	if ((int)$this->tmpl['display_title_form'] > 0){	
 		echo '<tr>'
-		.'<td width="5"><strong>'.JText::_('Subject'). PhocaguestbookHelper::getRequiredSign((int)$this->tmpl['display_title_form']).' </strong></td>'
+		.'<td width="5"><strong>'.JText::_('Title'). PhocaguestbookHelper::getRequiredSign((int)$this->tmpl['display_title_form']).' </strong></td>'
 		.'<td colspan="3">'
 		.'<input type="text" name="title" id="pgbtitle" value="'. $this->formdata->title .'" size="32" maxlength="200" class="pgbinput" /></td>'
 		.'</tr>';

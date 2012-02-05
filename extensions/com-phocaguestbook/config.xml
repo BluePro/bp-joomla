@@ -70,6 +70,10 @@
 	
 	<param name="@spacer" type="spacer" default="" label="" description="" />
 	
+	<param name="include_css" type="list" default="1" label="Include CSS" description="Include CSS DESC">
+		<option value="1">Yes</option>
+		<option value="0">No</option>
+	</param>
 	<param name="editor_width" default="400" size="6" type="phocatext" label="Editor Width" description="Editor Width DESC" />
 	<param name="editor_height" default="200" size="6" type="phocatext" label="Editor Height" description="Editor Height DESC" />
 	<param name="table_width" default="400" size="6" type="phocatext" label="Table Width" description="Table Width DESC" />
